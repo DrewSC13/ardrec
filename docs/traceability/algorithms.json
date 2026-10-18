@@ -1,0 +1,82 @@
+[
+  {
+    "algorithm": "A1",
+    "name": "Evaluación determinista de reglas",
+    "path": "src/ardrec/rules",
+    "implementation": "PENDING",
+    "verification": "NOT_RUN",
+    "name_en": "Deterministic rule evaluation"
+  },
+  {
+    "algorithm": "A2",
+    "name": "Validación e inicialización",
+    "path": "src/ardrec/initialization",
+    "implementation": "PENDING",
+    "verification": "NOT_RUN",
+    "name_en": "Validation and initialization"
+  },
+  {
+    "algorithm": "A3",
+    "name": "Controles y habilitación operacional",
+    "path": "src/ardrec/controls",
+    "implementation": "PENDING",
+    "verification": "NOT_RUN",
+    "name_en": "Controls and operational enablement"
+  },
+  {
+    "algorithm": "A4",
+    "name": "Priorización y selección voraz",
+    "path": "src/ardrec/selection",
+    "implementation": "PENDING",
+    "verification": "NOT_RUN",
+    "name_en": "Prioritization and greedy selection"
+  },
+  {
+    "algorithm": "A5",
+    "name": "Ejecución y conciliación de intentos",
+    "path": "src/ardrec/attempts",
+    "implementation": "PENDING",
+    "verification": "NOT_RUN",
+    "name_en": "Attempt execution and reconciliation"
+  },
+  {
+    "algorithm": "A6",
+    "name": "Procesamiento de evidencia",
+    "path": "src/ardrec/evidence",
+    "implementation": "PENDING",
+    "verification": "NOT_RUN",
+    "name_en": "Evidence processing"
+  },
+  {
+    "algorithm": "A7",
+    "name": "Actualización analítica",
+    "path": "src/ardrec/analytics",
+    "implementation": "PENDING",
+    "verification": "NOT_RUN",
+    "name_en": "Analytical update"
+  },
+  {
+    "algorithm": "A8",
+    "name": "Parada y estado posterior",
+    "path": "src/ardrec/stopping",
+    "implementation": "PENDING",
+    "verification": "NOT_RUN",
+    "name_en": "Stopping and subsequent state"
+  },
+  {
+    "algorithm": "A9",
+    "name": "Transición, verificación y persistencia",
+    "path": "src/ardrec/transitions",
+    "implementation": "PENDING",
+    "verification": "NOT_RUN",
+    "name_en": "Transition, verification and persistence"
+  },
+  {
+    "algorithm": "A10",
+    "name": "Coordinación y salida",
+    "path": "src/ardrec/coordination",
+    "implementation": "PENDING",
+    "verification": "NOT_RUN",
+    "name_en": "Coordination and output"
+  }
+]

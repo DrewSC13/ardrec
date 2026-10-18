@@ -1,0 +1,53 @@
+# ARDREC
+
+## Español
+
+Algoritmo de Recalibración Dinámica del Riesgo de Exposición y Compromiso.
+
+### Estado
+
+Base inicial de desarrollo académico.
+Los diez algoritmos, el ejecutor y el experimento todavía no están implementados.
+
+### Arquitectura
+
+- Python: reglas, selección, evidencia, riesgo, estados y coordinación.
+- Rust: ejecución técnica controlada, resultados, soportes y limpieza.
+- Intercambio: contratos JSON y transporte mediante socket Unix local.
+- Persistencia: diarios, objetos inmutables y generaciones confirmadas.
+
+### Método de desarrollo
+
+Desarrollo incremental y prototipado evolutivo en el marco de Design Science
+Research. PTES orienta las operaciones técnicas. La selección adaptativa
+emplea la técnica voraz descrita en la tesis.
+
+Cada incremento debe vincular requisito, implementación, prueba y evidencia.
+La existencia de una firma no acredita corrección funcional o científica.
+
+## English
+
+### ARDREC
+
+Algorithm for Dynamic Recalibration of Exposure and Compromise Risk.
+
+#### Status
+
+Initial academic development baseline.
+The ten algorithms, executor and experiment have not yet been implemented.
+
+#### Architecture
+
+- Python: rules, selection, evidence, risk, states and coordination.
+- Rust: controlled technical execution, results, supporting artifacts and cleanup.
+- Exchange: JSON contracts and transport through a local Unix domain socket.
+- Persistence: journals, immutable objects and confirmed generations.
+
+#### Development method
+
+Incremental development and evolutionary prototyping within Design Science
+Research. PTES guides technical operations. Adaptive selection uses the
+greedy technique described in the thesis.
+
+Each increment must link requirements, implementation, tests and evidence.
+A signature does not establish functional or scientific correctness.

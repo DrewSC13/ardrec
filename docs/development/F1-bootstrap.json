@@ -1,0 +1,13 @@
+{
+  "stage": "F1_LOCAL_BOOTSTRAP",
+  "created_at_utc": "2026-10-18T22:15:53.006636+00:00",
+  "python_environment": {
+    "version": "3.14.7",
+    "isolated": true
+  },
+  "python_dependency_compatibility": "NOT_TESTED",
+  "rust_toolchain_selection": "PENDING",
+  "algorithm_validation": "NOT_RUN",
+  "signature_verification": "PENDING_AT_RECORD_CREATION",
+  "github_repository": "NOT_CREATED_BY_THIS_SCRIPT"
+}
