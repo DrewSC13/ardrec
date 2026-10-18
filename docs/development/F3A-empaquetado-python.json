@@ -1,0 +1,34 @@
+{
+  "stage": "F3A_PYTHON_PACKAGING",
+  "observed_at_utc": "2026-10-18T22:41:57.252218+00:00",
+  "baseline_commit": "9741e2d4b6e30fbd71cb7c5f5509dfd7b64fb92c",
+  "python_version": "3.14.7",
+  "uv_version": "uv 0.12.13 (x86_64-unknown-linux-gnu)",
+  "build_backend": "hatchling==1.29.0",
+  "build_dependencies": "RESOLVED_IN_UV_LOCK",
+  "uv_lock_sha256": "026395be64c87818b1bbc75d1524b38ea9469535b73ccc43c01e65df3bf6fa01",
+  "lock_consistency": "PASS",
+  "source_distribution_build": "PASS",
+  "wheel_build_from_source_distribution": "PASS",
+  "clean_installation": {
+    "distribution": "ardrec",
+    "version": "0.1.0.dev0",
+    "isolated_environment": true,
+    "import_from_installed_package": true
+  },
+  "artifacts": [
+    {
+      "filename": "ardrec-0.1.0.dev0.tar.gz",
+      "sha256": "43a2d20c9ac6b33967c6beb058e96acb4de1140d4239fd60780941f2c264adcd"
+    },
+    {
+      "filename": "ardrec-0.1.0.dev0-py3-none-any.whl",
+      "sha256": "2ebf59c1efa6755c403d4487e39fcd34e73f2593d62de0febd23f90b49c3fd5c"
+    }
+  ],
+  "temporary_artifacts_retained": false,
+  "algorithm_validation": "NOT_RUN",
+  "rust_project_build": "NOT_RUN",
+  "ci": "NOT_CONFIGURED",
+  "bit_for_bit_reproducibility": "NOT_TESTED"
+}
