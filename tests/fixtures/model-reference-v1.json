@@ -1,0 +1,2309 @@
+{
+  "schema_version": "1.0",
+  "status": "REFERENCE_CORPUS",
+  "source": {
+    "label": "TESIS ARDREC",
+    "sha256": "da959bd6ab8eb49df5c746f2bfc50df2633794a2c089a2a757ffc65ca39ae9ce"
+  },
+  "baseline_commit": "35c3fd4e05b1f5a812d72d32663ca90cbabcf0ee",
+  "model_verification": "NOT_RUN",
+  "experimental_validation": "NOT_RUN",
+  "groups": [
+    "numeric",
+    "rules",
+    "selection",
+    "evidence",
+    "transitions"
+  ],
+  "numeric_profile": {
+    "beta": [
+      {
+        "numerator": 1,
+        "denominator": 2
+      },
+      {
+        "numerator": 1,
+        "denominator": 2
+      },
+      {
+        "numerator": 1,
+        "denominator": 2
+      },
+      {
+        "numerator": 1,
+        "denominator": 2
+      }
+    ],
+    "lambda": [
+      {
+        "numerator": 1,
+        "denominator": 3
+      },
+      {
+        "numerator": 1,
+        "denominator": 3
+      },
+      {
+        "numerator": 1,
+        "denominator": 3
+      }
+    ],
+    "w": [
+      {
+        "numerator": 1,
+        "denominator": 3
+      },
+      {
+        "numerator": 1,
+        "denominator": 3
+      },
+      {
+        "numerator": 1,
+        "denominator": 3
+      }
+    ]
+  },
+  "candidate_columns": [
+    "service",
+    "case",
+    "priority",
+    "precedence",
+    "service_state",
+    "case_state",
+    "guard",
+    "executions",
+    "limit"
+  ],
+  "cases": [
+    {
+      "id": "REF-N01",
+      "group": "numeric",
+      "operation": "baseline",
+      "source_sections": [
+        "3.2.2"
+      ],
+      "acceptance_criteria": [
+        "AC-07",
+        "AC-15"
+      ],
+      "algorithms": [
+        "A2",
+        "A7"
+      ],
+      "input": {
+        "x": 1,
+        "pi": 1,
+        "impact": 1
+      },
+      "expected": {
+        "R0": {
+          "numerator": 0,
+          "denominator": 1
+        }
+      },
+      "rationale": {
+        "es": "Los mínimos ordinales producen cero.",
+        "en": "Ordinal minima produce zero."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-N02",
+      "group": "numeric",
+      "operation": "baseline",
+      "source_sections": [
+        "3.2.2"
+      ],
+      "acceptance_criteria": [
+        "AC-07",
+        "AC-15"
+      ],
+      "algorithms": [
+        "A2",
+        "A7"
+      ],
+      "input": {
+        "x": 5,
+        "pi": 5,
+        "impact": 5
+      },
+      "expected": {
+        "R0": {
+          "numerator": 1,
+          "denominator": 1
+        }
+      },
+      "rationale": {
+        "es": "Los máximos ordinales producen uno.",
+        "en": "Ordinal maxima produce one."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-N03",
+      "group": "numeric",
+      "operation": "baseline",
+      "source_sections": [
+        "3.2.2"
+      ],
+      "acceptance_criteria": [
+        "AC-07",
+        "AC-15"
+      ],
+      "algorithms": [
+        "A2",
+        "A7"
+      ],
+      "input": {
+        "x": 5,
+        "pi": 1,
+        "impact": 3
+      },
+      "expected": {
+        "R0": {
+          "numerator": 1,
+          "denominator": 2
+        }
+      },
+      "rationale": {
+        "es": "(5+1+3-3)/12 = 1/2.",
+        "en": "(5+1+3-3)/12 = 1/2."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-N04",
+      "group": "numeric",
+      "operation": "criticality",
+      "source_sections": [
+        "3.2.3"
+      ],
+      "acceptance_criteria": [
+        "AC-07",
+        "AC-15"
+      ],
+      "algorithms": [
+        "A2",
+        "A7"
+      ],
+      "input": {
+        "components": [
+          1,
+          1,
+          5
+        ]
+      },
+      "expected": {
+        "C": 4,
+        "CN": {
+          "numerator": 3,
+          "denominator": 4
+        }
+      },
+      "rationale": {
+        "es": "max(1,5-1)=4; un extremo contextual no se promedia.",
+        "en": "max(1,5-1)=4; a contextual extreme is not averaged."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-N05",
+      "group": "numeric",
+      "operation": "criticality",
+      "source_sections": [
+        "3.2.3"
+      ],
+      "acceptance_criteria": [
+        "AC-07",
+        "AC-15"
+      ],
+      "algorithms": [
+        "A2",
+        "A7"
+      ],
+      "input": {
+        "components": [
+          5,
+          1,
+          1
+        ]
+      },
+      "expected": {
+        "C": 4,
+        "CN": {
+          "numerator": 3,
+          "denominator": 4
+        }
+      },
+      "rationale": {
+        "es": "Permutar los componentes conserva el resultado.",
+        "en": "Permuting components preserves the result."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-N06",
+      "group": "numeric",
+      "operation": "criticality",
+      "source_sections": [
+        "3.2.3"
+      ],
+      "acceptance_criteria": [
+        "AC-07",
+        "AC-15"
+      ],
+      "algorithms": [
+        "A2",
+        "A7"
+      ],
+      "input": {
+        "components": [
+          2,
+          3,
+          4
+        ]
+      },
+      "expected": {
+        "C": 3,
+        "CN": {
+          "numerator": 1,
+          "denominator": 2
+        }
+      },
+      "rationale": {
+        "es": "max(3,4-1)=3; normalización (3-1)/4.",
+        "en": "max(3,4-1)=3; normalization (3-1)/4."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-N07",
+      "group": "numeric",
+      "operation": "contribution",
+      "source_sections": [
+        "3.2.4",
+        "3.9.8"
+      ],
+      "acceptance_criteria": [
+        "AC-15"
+      ],
+      "algorithms": [
+        "A2",
+        "A7"
+      ],
+      "input": {
+        "a": 4,
+        "p": 2,
+        "q": 4,
+        "f": 4
+      },
+      "expected": {
+        "T": {
+          "numerator": 3,
+          "denominator": 4
+        },
+        "S": {
+          "numerator": 1,
+          "denominator": 1
+        },
+        "e": {
+          "numerator": 3,
+          "denominator": 4
+        }
+      },
+      "rationale": {
+        "es": "T=6/8, S=8/8; e=48/64.",
+        "en": "T=6/8, S=8/8; e=48/64."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-N08",
+      "group": "numeric",
+      "operation": "contribution",
+      "source_sections": [
+        "3.2.4"
+      ],
+      "acceptance_criteria": [
+        "AC-15"
+      ],
+      "algorithms": [
+        "A2",
+        "A7"
+      ],
+      "input": {
+        "a": 4,
+        "p": 4,
+        "q": 1,
+        "f": 1
+      },
+      "expected": {
+        "T": {
+          "numerator": 1,
+          "denominator": 1
+        },
+        "S": {
+          "numerator": 1,
+          "denominator": 4
+        },
+        "e": {
+          "numerator": 1,
+          "denominator": 4
+        }
+      },
+      "rationale": {
+        "es": "Alcance máximo con respaldo bajo no produce contribución máxima.",
+        "en": "Maximum reach with low support does not produce maximum contribution."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-N09",
+      "group": "numeric",
+      "operation": "contribution",
+      "source_sections": [
+        "3.2.4"
+      ],
+      "acceptance_criteria": [
+        "AC-15"
+      ],
+      "algorithms": [
+        "A2",
+        "A7"
+      ],
+      "input": {
+        "a": 0,
+        "p": 0,
+        "q": 4,
+        "f": 4
+      },
+      "expected": {
+        "T": {
+          "numerator": 0,
+          "denominator": 1
+        },
+        "S": {
+          "numerator": 1,
+          "denominator": 1
+        },
+        "e": {
+          "numerator": 0,
+          "denominator": 1
+        }
+      },
+      "rationale": {
+        "es": "Un negativo válido conserva contribución cero con respaldo suficiente.",
+        "en": "A valid negative retains zero contribution with sufficient support."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-N10",
+      "group": "numeric",
+      "operation": "recalibration",
+      "source_sections": [
+        "3.2.6",
+        "3.2.8"
+      ],
+      "acceptance_criteria": [
+        "AC-16"
+      ],
+      "algorithms": [
+        "A2",
+        "A7"
+      ],
+      "input": {
+        "R0": {
+          "numerator": 1,
+          "denominator": 4
+        },
+        "Et": {
+          "numerator": 0,
+          "denominator": 1
+        },
+        "CN": {
+          "numerator": 1,
+          "denominator": 1
+        },
+        "Rminus": {
+          "numerator": 1,
+          "denominator": 4
+        }
+      },
+      "expected": {
+        "PA": {
+          "numerator": 5,
+          "denominator": 12
+        },
+        "Kplus": {
+          "numerator": 5,
+          "denominator": 12
+        },
+        "Kminus": {
+          "numerator": 1,
+          "denominator": 2
+        },
+        "U": {
+          "numerator": 1,
+          "denominator": 4
+        },
+        "D": {
+          "numerator": 1,
+          "denominator": 4
+        },
+        "Rf": {
+          "numerator": 1,
+          "denominator": 4
+        }
+      },
+      "rationale": {
+        "es": "Et=0 obliga U=R0 aunque Kplus sea mayor; criticidad no es evidencia.",
+        "en": "Et=0 forces U=R0 even when Kplus is larger; criticality is not evidence."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-N11",
+      "group": "numeric",
+      "operation": "recalibration",
+      "source_sections": [
+        "3.2.6",
+        "3.2.8",
+        "3.9.10"
+      ],
+      "acceptance_criteria": [
+        "AC-16"
+      ],
+      "algorithms": [
+        "A2",
+        "A7"
+      ],
+      "input": {
+        "R0": {
+          "numerator": 1,
+          "denominator": 2
+        },
+        "Et": {
+          "numerator": 3,
+          "denominator": 4
+        },
+        "CN": {
+          "numerator": 1,
+          "denominator": 2
+        },
+        "Rminus": {
+          "numerator": 1,
+          "denominator": 3
+        }
+      },
+      "expected": {
+        "PA": {
+          "numerator": 7,
+          "denominator": 12
+        },
+        "Kplus": {
+          "numerator": 7,
+          "denominator": 12
+        },
+        "Kminus": {
+          "numerator": 4,
+          "denominator": 9
+        },
+        "U": {
+          "numerator": 7,
+          "denominator": 12
+        },
+        "D": {
+          "numerator": 4,
+          "denominator": 9
+        },
+        "Rf": {
+          "numerator": 19,
+          "denominator": 36
+        }
+      },
+      "rationale": {
+        "es": "Rf=7/12+4/9-1/2=19/36; prioridad y riesgo son distintos.",
+        "en": "Rf=7/12+4/9-1/2=19/36; priority and risk differ."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-N12",
+      "group": "numeric",
+      "operation": "recalibration",
+      "source_sections": [
+        "3.2.6",
+        "3.2.8"
+      ],
+      "acceptance_criteria": [
+        "AC-16"
+      ],
+      "algorithms": [
+        "A2",
+        "A7"
+      ],
+      "input": {
+        "R0": {
+          "numerator": 3,
+          "denominator": 4
+        },
+        "Et": {
+          "numerator": 0,
+          "denominator": 1
+        },
+        "CN": {
+          "numerator": 0,
+          "denominator": 1
+        },
+        "Rminus": {
+          "numerator": 1,
+          "denominator": 4
+        }
+      },
+      "expected": {
+        "PA": {
+          "numerator": 1,
+          "denominator": 4
+        },
+        "Kplus": {
+          "numerator": 1,
+          "denominator": 4
+        },
+        "Kminus": {
+          "numerator": 1,
+          "denominator": 3
+        },
+        "U": {
+          "numerator": 3,
+          "denominator": 4
+        },
+        "D": {
+          "numerator": 1,
+          "denominator": 3
+        },
+        "Rf": {
+          "numerator": 1,
+          "denominator": 3
+        }
+      },
+      "rationale": {
+        "es": "Sin evidencia positiva, el ajuste autorizado descendente deja Rf=D.",
+        "en": "Without positive evidence, the authorized downward adjustment leaves Rf=D."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-N13",
+      "group": "numeric",
+      "operation": "recalibration",
+      "source_sections": [
+        "3.2.6",
+        "3.2.8"
+      ],
+      "acceptance_criteria": [
+        "AC-16"
+      ],
+      "algorithms": [
+        "A2",
+        "A7"
+      ],
+      "input": {
+        "R0": {
+          "numerator": 1,
+          "denominator": 4
+        },
+        "Et": {
+          "numerator": 1,
+          "denominator": 1
+        },
+        "CN": {
+          "numerator": 1,
+          "denominator": 1
+        },
+        "Rminus": {
+          "numerator": 1,
+          "denominator": 4
+        }
+      },
+      "expected": {
+        "PA": {
+          "numerator": 3,
+          "denominator": 4
+        },
+        "Kplus": {
+          "numerator": 3,
+          "denominator": 4
+        },
+        "Kminus": {
+          "numerator": 1,
+          "denominator": 2
+        },
+        "U": {
+          "numerator": 3,
+          "denominator": 4
+        },
+        "D": {
+          "numerator": 1,
+          "denominator": 4
+        },
+        "Rf": {
+          "numerator": 3,
+          "denominator": 4
+        }
+      },
+      "rationale": {
+        "es": "Sin sustitución negativa D=R0 y Rf=U.",
+        "en": "Without a negative substitution D=R0 and Rf=U."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-N14",
+      "group": "numeric",
+      "operation": "recalibration",
+      "source_sections": [
+        "3.2.6",
+        "3.2.8"
+      ],
+      "acceptance_criteria": [
+        "AC-16"
+      ],
+      "algorithms": [
+        "A2",
+        "A7"
+      ],
+      "input": {
+        "R0": {
+          "numerator": 3,
+          "denominator": 4
+        },
+        "Et": {
+          "numerator": 1,
+          "denominator": 16
+        },
+        "CN": {
+          "numerator": 0,
+          "denominator": 1
+        },
+        "Rminus": {
+          "numerator": 3,
+          "denominator": 4
+        }
+      },
+      "expected": {
+        "PA": {
+          "numerator": 13,
+          "denominator": 48
+        },
+        "Kplus": {
+          "numerator": 13,
+          "denominator": 48
+        },
+        "Kminus": {
+          "numerator": 1,
+          "denominator": 2
+        },
+        "U": {
+          "numerator": 3,
+          "denominator": 4
+        },
+        "D": {
+          "numerator": 3,
+          "denominator": 4
+        },
+        "Rf": {
+          "numerator": 3,
+          "denominator": 4
+        }
+      },
+      "rationale": {
+        "es": "Evidencia positiva pequeña no obliga a aumentar R0.",
+        "en": "Small positive evidence does not necessarily increase R0."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-N15",
+      "group": "numeric",
+      "operation": "tolerance",
+      "source_sections": [
+        "3.2.9",
+        "3.5.7"
+      ],
+      "acceptance_criteria": [
+        "AC-17"
+      ],
+      "algorithms": [
+        "A2",
+        "A7"
+      ],
+      "input": {
+        "previous": {
+          "numerator": 1,
+          "denominator": 2
+        },
+        "current": {
+          "numerator": 289,
+          "denominator": 576
+        },
+        "epsilon": {
+          "numerator": 1,
+          "denominator": 1000
+        }
+      },
+      "expected": {
+        "difference": {
+          "numerator": 1,
+          "denominator": 576
+        },
+        "within_tolerance": false
+      },
+      "rationale": {
+        "es": "1/576 supera 1/1000; redondear antes puede ocultar la diferencia.",
+        "en": "1/576 exceeds 1/1000; early rounding may conceal the difference."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-N16",
+      "group": "numeric",
+      "operation": "substituted_baseline",
+      "source_sections": [
+        "3.2.7"
+      ],
+      "acceptance_criteria": [
+        "AC-15"
+      ],
+      "algorithms": [
+        "A2",
+        "A7"
+      ],
+      "input": {
+        "x": 3,
+        "pi": 5,
+        "impact": 4,
+        "pi_minus": 2,
+        "impact_minus": 1
+      },
+      "expected": {
+        "R0": {
+          "numerator": 3,
+          "denominator": 4
+        },
+        "Rminus": {
+          "numerator": 1,
+          "denominator": 4
+        }
+      },
+      "rationale": {
+        "es": "La sustitución recalcula componentes y conserva la exposición original.",
+        "en": "Substitution recomputes components and preserves original exposure."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-R01",
+      "group": "rules",
+      "operation": "decision_table",
+      "source_sections": [
+        "3.6.1 Figura 3.4"
+      ],
+      "acceptance_criteria": [
+        "AC-06"
+      ],
+      "algorithms": [
+        "A1"
+      ],
+      "input": {
+        "rows": [
+          {
+            "condition": true,
+            "output": "A"
+          },
+          {
+            "condition": false,
+            "output": "B"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "VALUE",
+        "value": "A"
+      },
+      "rationale": {
+        "es": "Existe exactamente una coincidencia y ninguna condición ND.",
+        "en": "There is exactly one match and no ND condition."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-R02",
+      "group": "rules",
+      "operation": "decision_table",
+      "source_sections": [
+        "3.6.1 Figura 3.4"
+      ],
+      "acceptance_criteria": [
+        "AC-06"
+      ],
+      "algorithms": [
+        "A1"
+      ],
+      "input": {
+        "rows": [
+          {
+            "condition": false,
+            "output": "A"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "ND"
+      },
+      "rationale": {
+        "es": "Ninguna coincidencia devuelve ND, no FALSO.",
+        "en": "No match returns ND, not FALSE."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-R03",
+      "group": "rules",
+      "operation": "decision_table",
+      "source_sections": [
+        "3.6.1 Figura 3.4"
+      ],
+      "acceptance_criteria": [
+        "AC-06"
+      ],
+      "algorithms": [
+        "A1"
+      ],
+      "input": {
+        "rows": [
+          {
+            "condition": true,
+            "output": "A"
+          },
+          {
+            "condition": "ND",
+            "output": "B"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "ND"
+      },
+      "rationale": {
+        "es": "Una fila indeterminada impide seleccionar incluso con una coincidencia verdadera.",
+        "en": "An indeterminate row prevents selection even with one true match."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-R04",
+      "group": "rules",
+      "operation": "decision_table",
+      "source_sections": [
+        "3.6.1 Figura 3.4"
+      ],
+      "acceptance_criteria": [
+        "AC-06"
+      ],
+      "algorithms": [
+        "A1"
+      ],
+      "input": {
+        "rows": [
+          {
+            "condition": "ND",
+            "output": "A"
+          },
+          {
+            "condition": false,
+            "output": "B"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "ND"
+      },
+      "rationale": {
+        "es": "La indeterminación no se convierte en una negación.",
+        "en": "Indeterminacy is not converted into negation."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-R05",
+      "group": "rules",
+      "operation": "decision_table",
+      "source_sections": [
+        "3.6.1 Figura 3.4"
+      ],
+      "acceptance_criteria": [
+        "AC-06"
+      ],
+      "algorithms": [
+        "A1"
+      ],
+      "input": {
+        "rows": [
+          {
+            "condition": true,
+            "output": "A"
+          },
+          {
+            "condition": true,
+            "output": "B"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "ERROR",
+        "code": "REGLAS_AMBIGUAS"
+      },
+      "rationale": {
+        "es": "Dos coincidencias son ambiguas; no se aplica primera coincidencia.",
+        "en": "Two matches are ambiguous; first-match selection is not applied."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-R06",
+      "group": "rules",
+      "operation": "decision_table",
+      "source_sections": [
+        "3.6.1 Figura 3.4"
+      ],
+      "acceptance_criteria": [
+        "AC-06"
+      ],
+      "algorithms": [
+        "A1"
+      ],
+      "input": {
+        "rows": [
+          {
+            "condition": true,
+            "output": "A"
+          },
+          {
+            "condition": true,
+            "output": "A"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "ERROR",
+        "code": "REGLAS_AMBIGUAS"
+      },
+      "rationale": {
+        "es": "Salidas iguales no eliminan la ambigüedad de dos filas verdaderas.",
+        "en": "Equal outputs do not remove ambiguity from two true rows."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-R07",
+      "group": "rules",
+      "operation": "decision_table",
+      "source_sections": [
+        "3.6.1 Figura 3.4"
+      ],
+      "acceptance_criteria": [
+        "AC-06"
+      ],
+      "algorithms": [
+        "A1"
+      ],
+      "input": {
+        "rows": []
+      },
+      "expected": {
+        "kind": "ND"
+      },
+      "rationale": {
+        "es": "La tabla vacía no aporta una determinación.",
+        "en": "An empty table provides no determination."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-R08",
+      "group": "rules",
+      "operation": "decision_table",
+      "source_sections": [
+        "3.6.1 Figura 3.4"
+      ],
+      "acceptance_criteria": [
+        "AC-06"
+      ],
+      "algorithms": [
+        "A1"
+      ],
+      "input": {
+        "rows": [
+          {
+            "condition": 1,
+            "output": "A"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "ERROR",
+        "code": "CONDICION_NO_LOGICA"
+      },
+      "rationale": {
+        "es": "El entero 1 no sustituye al booleano VERDADERO.",
+        "en": "Integer 1 does not replace boolean TRUE."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-R09",
+      "group": "rules",
+      "operation": "decision_table",
+      "source_sections": [
+        "3.6.1 Figura 3.4"
+      ],
+      "acceptance_criteria": [
+        "AC-06"
+      ],
+      "algorithms": [
+        "A1"
+      ],
+      "input": {
+        "rows": [
+          {
+            "condition": true,
+            "output": "A"
+          },
+          {
+            "condition": true,
+            "output": "B"
+          },
+          {
+            "condition": "ND",
+            "output": "C"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "ERROR",
+        "code": "REGLAS_AMBIGUAS"
+      },
+      "rationale": {
+        "es": "El diagrama comprueba ambigüedad antes del retorno por indeterminación.",
+        "en": "The diagram checks ambiguity before returning indeterminacy."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-S01",
+      "group": "selection",
+      "operation": "selection",
+      "source_sections": [
+        "3.4.1",
+        "3.4.2"
+      ],
+      "acceptance_criteria": [
+        "AC-09"
+      ],
+      "algorithms": [
+        "A3",
+        "A4"
+      ],
+      "input": {
+        "candidates": [
+          [
+            "S01",
+            "C01",
+            {
+              "numerator": 1,
+              "denominator": 2
+            },
+            0,
+            "PENDIENTE",
+            "PENDIENTE",
+            true,
+            0,
+            1
+          ],
+          [
+            "S02",
+            "C02",
+            {
+              "numerator": 3,
+              "denominator": 4
+            },
+            9,
+            "PENDIENTE",
+            "PENDIENTE",
+            true,
+            0,
+            1
+          ]
+        ]
+      },
+      "expected": {
+        "kind": "SELECTED",
+        "service": "S02",
+        "case": "C02"
+      },
+      "rationale": {
+        "es": "La prioridad se compara antes de la precedencia.",
+        "en": "Priority is compared before precedence."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-S02",
+      "group": "selection",
+      "operation": "selection",
+      "source_sections": [
+        "3.4.2"
+      ],
+      "acceptance_criteria": [
+        "AC-09"
+      ],
+      "algorithms": [
+        "A3",
+        "A4"
+      ],
+      "input": {
+        "candidates": [
+          [
+            "S01",
+            "C01",
+            {
+              "numerator": 1,
+              "denominator": 2
+            },
+            2,
+            "PENDIENTE",
+            "PENDIENTE",
+            true,
+            0,
+            1
+          ],
+          [
+            "S02",
+            "C02",
+            {
+              "numerator": 1,
+              "denominator": 2
+            },
+            1,
+            "PENDIENTE",
+            "PENDIENTE",
+            true,
+            0,
+            1
+          ]
+        ]
+      },
+      "expected": {
+        "kind": "SELECTED",
+        "service": "S02",
+        "case": "C02"
+      },
+      "rationale": {
+        "es": "En empate de prioridad vence la menor precedencia.",
+        "en": "With equal priority, lower precedence wins."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-S03",
+      "group": "selection",
+      "operation": "selection",
+      "source_sections": [
+        "3.4.2"
+      ],
+      "acceptance_criteria": [
+        "AC-09"
+      ],
+      "algorithms": [
+        "A3",
+        "A4"
+      ],
+      "input": {
+        "candidates": [
+          [
+            "S02",
+            "C01",
+            {
+              "numerator": 1,
+              "denominator": 2
+            },
+            1,
+            "PENDIENTE",
+            "PENDIENTE",
+            true,
+            0,
+            1
+          ],
+          [
+            "S01",
+            "C02",
+            {
+              "numerator": 1,
+              "denominator": 2
+            },
+            1,
+            "PENDIENTE",
+            "PENDIENTE",
+            true,
+            0,
+            1
+          ]
+        ]
+      },
+      "expected": {
+        "kind": "SELECTED",
+        "service": "S01",
+        "case": "C02"
+      },
+      "rationale": {
+        "es": "El identificador del servicio precede al del caso.",
+        "en": "Service identifier precedes case identifier."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-S04",
+      "group": "selection",
+      "operation": "selection",
+      "source_sections": [
+        "3.4.2"
+      ],
+      "acceptance_criteria": [
+        "AC-09"
+      ],
+      "algorithms": [
+        "A3",
+        "A4"
+      ],
+      "input": {
+        "candidates": [
+          [
+            "S01",
+            "C02",
+            {
+              "numerator": 1,
+              "denominator": 2
+            },
+            1,
+            "PENDIENTE",
+            "PENDIENTE",
+            true,
+            0,
+            1
+          ],
+          [
+            "S01",
+            "C01",
+            {
+              "numerator": 1,
+              "denominator": 2
+            },
+            1,
+            "PENDIENTE",
+            "PENDIENTE",
+            true,
+            0,
+            1
+          ]
+        ]
+      },
+      "expected": {
+        "kind": "SELECTED",
+        "service": "S01",
+        "case": "C01"
+      },
+      "rationale": {
+        "es": "El identificador del caso resuelve el último empate.",
+        "en": "Case identifier resolves the final tie."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-S05",
+      "group": "selection",
+      "operation": "selection",
+      "source_sections": [
+        "3.4.1",
+        "3.4.2"
+      ],
+      "acceptance_criteria": [
+        "AC-09"
+      ],
+      "algorithms": [
+        "A3",
+        "A4"
+      ],
+      "input": {
+        "candidates": [
+          [
+            "S01",
+            "C01",
+            {
+              "numerator": 1,
+              "denominator": 1
+            },
+            0,
+            "PENDIENTE",
+            "PENDIENTE",
+            false,
+            0,
+            1
+          ],
+          [
+            "S02",
+            "C01",
+            {
+              "numerator": 1,
+              "denominator": 1
+            },
+            0,
+            "PENDIENTE",
+            "PENDIENTE",
+            "ND",
+            0,
+            1
+          ],
+          [
+            "S03",
+            "C01",
+            {
+              "numerator": 1,
+              "denominator": 1
+            },
+            0,
+            "PENDIENTE",
+            "PENDIENTE",
+            true,
+            1,
+            1
+          ],
+          [
+            "S04",
+            "C01",
+            {
+              "numerator": 1,
+              "denominator": 1
+            },
+            0,
+            "PAUSADO",
+            "PENDIENTE",
+            true,
+            0,
+            1
+          ],
+          [
+            "S05",
+            "C01",
+            {
+              "numerator": 1,
+              "denominator": 4
+            },
+            4,
+            "PENDIENTE",
+            "PENDIENTE",
+            true,
+            0,
+            1
+          ]
+        ]
+      },
+      "expected": {
+        "kind": "SELECTED",
+        "service": "S05",
+        "case": "C01"
+      },
+      "rationale": {
+        "es": "Ni una prioridad máxima compensa guarda falsa/ND, presupuesto agotado o pausa.",
+        "en": "Maximum priority cannot override false/ND guards, exhausted budget or pause."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-S06",
+      "group": "selection",
+      "operation": "selection",
+      "source_sections": [
+        "3.4.2"
+      ],
+      "acceptance_criteria": [
+        "AC-09"
+      ],
+      "algorithms": [
+        "A3",
+        "A4"
+      ],
+      "input": {
+        "candidates": []
+      },
+      "expected": {
+        "kind": "NO_SELECTION"
+      },
+      "rationale": {
+        "es": "El conjunto vacío no permite argmax ni inventar un candidato.",
+        "en": "An empty set permits neither argmax nor an invented candidate."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-S07",
+      "group": "selection",
+      "operation": "selection",
+      "source_sections": [
+        "3.4.1",
+        "3.4.2"
+      ],
+      "acceptance_criteria": [
+        "AC-09"
+      ],
+      "algorithms": [
+        "A3",
+        "A4"
+      ],
+      "input": {
+        "candidates": [
+          [
+            "S01",
+            "C01",
+            {
+              "numerator": 1,
+              "denominator": 1
+            },
+            0,
+            "PENDIENTE",
+            "BLOQUEADO",
+            true,
+            0,
+            1
+          ],
+          [
+            "S02",
+            "C01",
+            {
+              "numerator": 1,
+              "denominator": 1
+            },
+            0,
+            "PENDIENTE",
+            "PENDIENTE",
+            "ND",
+            0,
+            1
+          ]
+        ]
+      },
+      "expected": {
+        "kind": "NO_SELECTION"
+      },
+      "rationale": {
+        "es": "Tener registros no implica disponer de candidatos elegibles.",
+        "en": "Having records does not imply having eligible candidates."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-E01",
+      "group": "evidence",
+      "operation": "evidence_projection",
+      "source_sections": [
+        "3.2.5"
+      ],
+      "acceptance_criteria": [
+        "AC-14",
+        "AC-15"
+      ],
+      "algorithms": [
+        "A6",
+        "A7"
+      ],
+      "input": {
+        "units": [
+          {
+            "key": "C1",
+            "admitted": true,
+            "current": true,
+            "e": {
+              "numerator": 3,
+              "denominator": 4
+            },
+            "supports": [
+              "P1",
+              "P2"
+            ]
+          },
+          {
+            "key": "C2",
+            "admitted": true,
+            "current": true,
+            "e": {
+              "numerator": 1,
+              "denominator": 2
+            },
+            "supports": [
+              "P3"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "Et": {
+          "numerator": 3,
+          "denominator": 4
+        },
+        "condition_count": 2
+      },
+      "rationale": {
+        "es": "El máximo es 3/4, no la suma 5/4 ni el número de soportes.",
+        "en": "The maximum is 3/4, not the sum 5/4 or the number of artifacts."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-E02",
+      "group": "evidence",
+      "operation": "evidence_projection",
+      "source_sections": [
+        "3.2.5"
+      ],
+      "acceptance_criteria": [
+        "AC-15"
+      ],
+      "algorithms": [
+        "A6",
+        "A7"
+      ],
+      "input": {
+        "units": []
+      },
+      "expected": {
+        "Et": {
+          "numerator": 0,
+          "denominator": 1
+        },
+        "condition_count": 0
+      },
+      "rationale": {
+        "es": "El máximo incluye cero cuando no hay unidades vigentes.",
+        "en": "The maximum includes zero when no current units exist."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-E03",
+      "group": "evidence",
+      "operation": "evidence_projection",
+      "source_sections": [
+        "3.2.4",
+        "3.2.5"
+      ],
+      "acceptance_criteria": [
+        "AC-15"
+      ],
+      "algorithms": [
+        "A6",
+        "A7"
+      ],
+      "input": {
+        "units": [
+          {
+            "key": "C1",
+            "classification": "NEGATIVO_VALIDO",
+            "admitted": true,
+            "current": true,
+            "e": {
+              "numerator": 0,
+              "denominator": 1
+            }
+          }
+        ]
+      },
+      "expected": {
+        "Et": {
+          "numerator": 0,
+          "denominator": 1
+        },
+        "condition_count": 1
+      },
+      "rationale": {
+        "es": "Evidencia negativa válida es distinta de ausencia de evidencia aunque Et sea cero.",
+        "en": "Valid negative evidence differs from absent evidence even when Et is zero."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-E04",
+      "group": "evidence",
+      "operation": "evidence_projection",
+      "source_sections": [
+        "3.2.5"
+      ],
+      "acceptance_criteria": [
+        "AC-14",
+        "AC-15"
+      ],
+      "algorithms": [
+        "A6",
+        "A7"
+      ],
+      "input": {
+        "units": [
+          {
+            "key": "C1",
+            "admitted": true,
+            "current": true,
+            "e": {
+              "numerator": 3,
+              "denominator": 4
+            }
+          },
+          {
+            "key": "C2",
+            "classification": "NEGATIVO_VALIDO",
+            "admitted": true,
+            "current": true,
+            "e": {
+              "numerator": 0,
+              "denominator": 1
+            }
+          }
+        ]
+      },
+      "expected": {
+        "Et": {
+          "numerator": 3,
+          "denominator": 4
+        },
+        "condition_count": 2
+      },
+      "rationale": {
+        "es": "Un negativo no cancela un positivo vigente.",
+        "en": "A negative does not cancel a current positive."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-E05",
+      "group": "evidence",
+      "operation": "evidence_projection",
+      "source_sections": [
+        "3.2.5"
+      ],
+      "acceptance_criteria": [
+        "AC-14",
+        "AC-15"
+      ],
+      "algorithms": [
+        "A6",
+        "A7"
+      ],
+      "input": {
+        "units": [
+          {
+            "key": "C1",
+            "admitted": true,
+            "current": false,
+            "e": {
+              "numerator": 3,
+              "denominator": 4
+            }
+          },
+          {
+            "key": "C2",
+            "admitted": true,
+            "current": true,
+            "e": {
+              "numerator": 1,
+              "denominator": 2
+            }
+          }
+        ],
+        "withdrawal_authorized": true
+      },
+      "expected": {
+        "Et": {
+          "numerator": 1,
+          "denominator": 2
+        },
+        "condition_count": 1,
+        "historical_units_preserved": 2
+      },
+      "rationale": {
+        "es": "Retirar válidamente el máximo permite disminuir Et sin borrar historia.",
+        "en": "Valid withdrawal of the maximum may decrease Et without deleting history."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-E06",
+      "group": "evidence",
+      "operation": "support_validation",
+      "source_sections": [
+        "3.3.4",
+        "3.6.1 Figura 3.17"
+      ],
+      "acceptance_criteria": [
+        "AC-13"
+      ],
+      "algorithms": [
+        "A6",
+        "A7"
+      ],
+      "input": {
+        "association_valid": true,
+        "examination_allowed": true,
+        "support_integrity_valid": false,
+        "exit_code": 0
+      },
+      "expected": {
+        "classification": "INVALIDO",
+        "admitted": false,
+        "cause": "SOPORTES_INVALIDOS"
+      },
+      "rationale": {
+        "es": "Un código cero no corrige soportes de integridad inválida.",
+        "en": "A zero exit code does not repair invalid artifact integrity."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-E07",
+      "group": "evidence",
+      "operation": "revision_conflict",
+      "source_sections": [
+        "3.2.5",
+        "3.9.8"
+      ],
+      "acceptance_criteria": [
+        "AC-14"
+      ],
+      "algorithms": [
+        "A6",
+        "A7"
+      ],
+      "input": {
+        "previous_revision": 1,
+        "incoming_revision": 2,
+        "profiles_contradict": true,
+        "authorized_resolution": false
+      },
+      "expected": {
+        "history_revisions_preserved": [
+          1,
+          2
+        ],
+        "conflict": true,
+        "promote_by_revision_number": false,
+        "uncontroverted_conclusion_allowed": false
+      },
+      "rationale": {
+        "es": "La revisión mayor no gana automáticamente ni elimina la controversia.",
+        "en": "A higher revision does not automatically win or remove controversy."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-E08",
+      "group": "evidence",
+      "operation": "admission_dimensions",
+      "source_sections": [
+        "3.2.4"
+      ],
+      "acceptance_criteria": [
+        "AC-13",
+        "AC-15"
+      ],
+      "algorithms": [
+        "A6",
+        "A7"
+      ],
+      "input": {
+        "a": 4,
+        "p": 4,
+        "q": 0,
+        "f": 4,
+        "other_admission_requirements_met": true
+      },
+      "expected": {
+        "admitted": false
+      },
+      "rationale": {
+        "es": "q debe ser al menos uno; no basta con calcular un producto numérico.",
+        "en": "q must be at least one; calculating a numeric product is insufficient."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-E09",
+      "group": "evidence",
+      "operation": "repeated_support",
+      "source_sections": [
+        "3.2.5",
+        "3.5.7"
+      ],
+      "acceptance_criteria": [
+        "AC-14",
+        "AC-15"
+      ],
+      "algorithms": [
+        "A6",
+        "A7"
+      ],
+      "input": {
+        "existing_condition": "C1",
+        "current_contribution": {
+          "numerator": 3,
+          "denominator": 4
+        },
+        "support_retransmitted_identically": true,
+        "other_changes": false
+      },
+      "expected": {
+        "Et": {
+          "numerator": 3,
+          "denominator": 4
+        },
+        "conditions_added": 0,
+        "convergence_observations_added": 0
+      },
+      "rationale": {
+        "es": "Retransmitir un soporte idéntico no crea otra condición ni otra observación de convergencia.",
+        "en": "Retransmitting an identical artifact creates neither another condition nor another convergence observation."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-T01",
+      "group": "transitions",
+      "operation": "attempt_acceptance",
+      "source_sections": [
+        "3.4.4",
+        "3.5.2",
+        "3.9.2"
+      ],
+      "acceptance_criteria": [
+        "AC-10",
+        "AC-11"
+      ],
+      "algorithms": [
+        "A5",
+        "A8",
+        "A9",
+        "A10"
+      ],
+      "input": {
+        "confirmed_k": 7,
+        "confirmed_executions": 0,
+        "phase": "PENDIENTE",
+        "accepted": true,
+        "start_verified": false,
+        "attempt_reserved": true
+      },
+      "expected": {
+        "confirmed_k": 7,
+        "confirmed_executions": 0,
+        "phase": "PENDIENTE",
+        "new_dispatch_allowed": false
+      },
+      "rationale": {
+        "es": "Aceptar no acredita inicio ni publica una generación.",
+        "en": "Acceptance neither proves start nor publishes a generation."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-T02",
+      "group": "transitions",
+      "operation": "local_start",
+      "source_sections": [
+        "3.4.4",
+        "3.5.2",
+        "3.5.4"
+      ],
+      "acceptance_criteria": [
+        "AC-10",
+        "AC-19"
+      ],
+      "algorithms": [
+        "A5",
+        "A8",
+        "A9",
+        "A10"
+      ],
+      "input": {
+        "confirmed_k": 7,
+        "confirmed_executions": 0,
+        "start_verified": true,
+        "event_incorporated": false
+      },
+      "expected": {
+        "confirmed_k": 7,
+        "confirmed_executions": 0,
+        "local_phase": "ACTIVO"
+      },
+      "rationale": {
+        "es": "La fase local cambia; el contador confirmado espera incorporación durable del evento.",
+        "en": "The local phase changes; the confirmed counter awaits durable event incorporation."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-T03",
+      "group": "transitions",
+      "operation": "valid_publication",
+      "source_sections": [
+        "3.5.4",
+        "3.8.1",
+        "3.10.1"
+      ],
+      "acceptance_criteria": [
+        "AC-10",
+        "AC-19",
+        "AC-20"
+      ],
+      "algorithms": [
+        "A5",
+        "A8",
+        "A9",
+        "A10"
+      ],
+      "input": {
+        "confirmed_k": 7,
+        "confirmed_executions": 0,
+        "new_event": "Y1",
+        "event_seen": false,
+        "origin_k": 7,
+        "configuration_matches": true,
+        "all_invariants_valid": true,
+        "start_verified": true,
+        "termination_verified": true,
+        "cleanup_verified": true,
+        "admissible_work_remains": true,
+        "higher_precedence_stop_or_pause": false,
+        "ordinary_closure": false,
+        "publication_durable": true
+      },
+      "expected": {
+        "confirmed_k": 8,
+        "confirmed_executions": 1,
+        "event_incorporated_once": "Y1",
+        "service_state": "PENDIENTE"
+      },
+      "rationale": {
+        "es": "Una incorporación válida publica k+1 y contabiliza un único inicio.",
+        "en": "One valid incorporation publishes k+1 and counts one start."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-T04",
+      "group": "transitions",
+      "operation": "replay_after_publication",
+      "source_sections": [
+        "3.9.3",
+        "3.10.2"
+      ],
+      "acceptance_criteria": [
+        "AC-05",
+        "AC-10",
+        "AC-21"
+      ],
+      "algorithms": [
+        "A5",
+        "A8",
+        "A9",
+        "A10"
+      ],
+      "input": {
+        "confirmed_k": 8,
+        "confirmed_executions": 1,
+        "incorporated_event": "Y1",
+        "replayed_event": "Y1",
+        "content_and_context_identical": true
+      },
+      "expected": {
+        "confirmed_k": 8,
+        "confirmed_executions": 1,
+        "technical_dispatches_added": 0,
+        "transitions_added": 0
+      },
+      "rationale": {
+        "es": "La recuperación idempotente no vuelve a ejecutar ni a incorporar el evento.",
+        "en": "Idempotent recovery neither re-executes nor reincorporates the event."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-T05",
+      "group": "transitions",
+      "operation": "stale_origin",
+      "source_sections": [
+        "3.8.1"
+      ],
+      "acceptance_criteria": [
+        "AC-19"
+      ],
+      "algorithms": [
+        "A5",
+        "A8",
+        "A9",
+        "A10"
+      ],
+      "input": {
+        "confirmed_k": 8,
+        "event_origin_k": 7,
+        "event_seen": false,
+        "other_invariants_valid": true
+      },
+      "expected": {
+        "candidate_accepted": false,
+        "confirmed_k": 8,
+        "previous_state_unchanged": true
+      },
+      "rationale": {
+        "es": "Un evento de otra generación no autoriza una transición nueva.",
+        "en": "An event from another generation does not authorize a new transition."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-T06",
+      "group": "transitions",
+      "operation": "changed_configuration",
+      "source_sections": [
+        "3.8.1"
+      ],
+      "acceptance_criteria": [
+        "AC-19"
+      ],
+      "algorithms": [
+        "A5",
+        "A8",
+        "A9",
+        "A10"
+      ],
+      "input": {
+        "confirmed_k": 8,
+        "configuration_hash_matches": false,
+        "other_invariants_valid": true
+      },
+      "expected": {
+        "candidate_accepted": false,
+        "confirmed_k": 8,
+        "previous_state_unchanged": true
+      },
+      "rationale": {
+        "es": "La configuración congelada no se reemplaza silenciosamente.",
+        "en": "Frozen configuration is not silently replaced."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-T07",
+      "group": "transitions",
+      "operation": "terminal_reopening",
+      "source_sections": [
+        "3.5.2",
+        "3.8.1"
+      ],
+      "acceptance_criteria": [
+        "AC-18",
+        "AC-19"
+      ],
+      "algorithms": [
+        "A5",
+        "A8",
+        "A9",
+        "A10"
+      ],
+      "input": {
+        "confirmed_k": 8,
+        "service_state": "CERRADO",
+        "requested_state": "PENDIENTE",
+        "laboratory_restored": true,
+        "same_observation": true
+      },
+      "expected": {
+        "candidate_accepted": false,
+        "confirmed_k": 8,
+        "service_state": "CERRADO"
+      },
+      "rationale": {
+        "es": "Restaurar el laboratorio no reabre la misma observación terminal.",
+        "en": "Restoring the laboratory does not reopen the same terminal observation."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-T08",
+      "group": "transitions",
+      "operation": "generation_without_pointer",
+      "source_sections": [
+        "3.10.1",
+        "3.10.2"
+      ],
+      "acceptance_criteria": [
+        "AC-20",
+        "AC-21"
+      ],
+      "algorithms": [
+        "A5",
+        "A8",
+        "A9",
+        "A10"
+      ],
+      "input": {
+        "previous_generation": 7,
+        "stored_generation": 8,
+        "stored_generation_valid": true,
+        "verified_pointer": 7,
+        "final_marker_present": false
+      },
+      "expected": {
+        "authoritative_generation": 7,
+        "generation_8_confirmed": false,
+        "technical_reexecution_allowed": false
+      },
+      "rationale": {
+        "es": "Escribir el candidato no publica autoridad; recuperar no autoriza repetir una herramienta.",
+        "en": "Writing the candidate does not publish authority; recovery does not authorize rerunning a tool."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-T09",
+      "group": "transitions",
+      "operation": "pointer_without_final_marker",
+      "source_sections": [
+        "3.10.1",
+        "3.10.2"
+      ],
+      "acceptance_criteria": [
+        "AC-20",
+        "AC-21"
+      ],
+      "algorithms": [
+        "A5",
+        "A8",
+        "A9",
+        "A10"
+      ],
+      "input": {
+        "previous_generation": 7,
+        "stored_generation": 8,
+        "stored_generation_valid": true,
+        "verified_pointer": 8,
+        "pointer_publication_durable": true,
+        "final_marker_present": false
+      },
+      "expected": {
+        "authoritative_generation": 8,
+        "complete_pending_records": true,
+        "technical_reexecution_allowed": false
+      },
+      "rationale": {
+        "es": "La marca ausente no invalida un puntero nuevo verificado y durable.",
+        "en": "A missing marker does not invalidate a verified durable new pointer."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    },
+    {
+      "id": "REF-T10",
+      "group": "transitions",
+      "operation": "unresolved_execution",
+      "source_sections": [
+        "3.5.5",
+        "3.9.11"
+      ],
+      "acceptance_criteria": [
+        "AC-11",
+        "AC-18",
+        "AC-22"
+      ],
+      "algorithms": [
+        "A5",
+        "A8",
+        "A9",
+        "A10"
+      ],
+      "input": {
+        "confirmed_k": 7,
+        "start_status": "NO_DETERMINADO",
+        "reconciliation_budget_exhausted": true,
+        "processable_state_event": false
+      },
+      "expected": {
+        "confirmed_k": 7,
+        "new_dispatch_allowed": false,
+        "invocation_status": "DETENIDA",
+        "fabricate_paused_state": false,
+        "pending_reconciliation_reported": true
+      },
+      "rationale": {
+        "es": "La invocación informa incertidumbre y no fabrica un estado confirmado ni una pausa.",
+        "en": "The invocation reports uncertainty and fabricates neither confirmed state nor pause."
+      },
+      "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
+      "production_test_status": "NOT_RUN"
+    }
+  ]
+}
