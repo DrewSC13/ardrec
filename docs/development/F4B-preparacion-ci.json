@@ -1,0 +1,17 @@
+{
+  "stage": "F4B_CI_PREPARATION",
+  "observed_at_utc": "2026-10-18T22:54:31.092767+00:00",
+  "baseline_commit": "110ae619cd3e1787fd78eecfc4a2cc6fb9047792",
+  "runner_configured": "ubuntu-24.04",
+  "local_python_verification": "PASS",
+  "local_rust_verification": "PASS",
+  "user_default_compiler_unchanged": true,
+  "workflow_execution_github": "NOT_RUN",
+  "algorithm_tests": "NOT_RUN",
+  "functional_tests": "NOT_RUN",
+  "sha256": {
+    "scripts/verificar_ci.py": "53f3055cdd4583472e20c3bf846a98bdc2cecf241a5de474e3199d1eb5ba0587",
+    ".github/workflows/ci.yml": "679134cad1772bcc102d5d2e85971a59acee80829d51d221f52352ec613c0008",
+    "docs/development/F4-integracion-continua.md": "c4542eacca3f1847cd50d5191d0d47d33241610b7f558dbacfd19e007403699f"
+  }
+}
