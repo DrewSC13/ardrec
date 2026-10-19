@@ -4,7 +4,7 @@
 
 ### Decisión y fundamento
 
-La sección 3.9.3 de Marco Aplicativo_v3(1).pdf establece un socket Unix
+La sección 3.9.3 de TESIS ARDREC establece un socket Unix
 local y tramas con un prefijo de cuatro bytes en orden de red,
 seguido de un documento JSON UTF-8.
 
@@ -51,7 +51,7 @@ y los mensajes de commit mantienen español primero e inglés después.
 
 ### Decision and rationale
 
-Section 3.9.3 of Marco Aplicativo_v3(1).pdf specifies a local Unix socket
+Section 3.9.3 of TESIS ARDREC specifies a local Unix socket
 and frames with a four-byte network-order length prefix followed by a
 UTF-8 JSON document.
 
