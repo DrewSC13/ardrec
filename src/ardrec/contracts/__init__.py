@@ -1,4 +1,4 @@
-"""Contratos de magnitudes exactas. / Exact magnitude contracts."""
+"""Contratos de magnitudes exactas."""
 
 from dataclasses import dataclass
 from fractions import Fraction
@@ -11,7 +11,7 @@ MAX_JSON_BYTES = 4096
 
 
 class ContractError(ValueError):
-    """Entrada fuera del contrato. / Input violates the contract."""
+    """Entrada fuera del contrato."""
 
 
 def _require(condition: bool, message: str) -> None:
@@ -25,6 +25,7 @@ def _keys(value: object, expected: set[str]) -> None:
 
 
 def _integer(value: object) -> None:
+    # bool hereda de int; por eso se exige el tipo exacto.
     _require(type(value) is int, "Se exige int exacto / Exact int required")
     _require(value.bit_length() <= MAX_INTEGER_BITS,
              "Entero demasiado grande / Integer too large")
@@ -32,7 +33,7 @@ def _integer(value: object) -> None:
 
 @dataclass(frozen=True, slots=True)
 class ND:
-    """Magnitud no determinada con motivo. / Undetermined magnitude with reason."""
+    """Magnitud no determinada con motivo."""
 
     reason_code: str
 
@@ -43,18 +44,19 @@ class ND:
 
 
 def parse_rational(value: object) -> Fraction:
-    """Validar sin corregir la entrada. / Validate without correcting input."""
+    """Validar sin corregir la entrada."""
     _keys(value, {"numerator", "denominator"})
     n, d = value["numerator"], value["denominator"]
     _integer(n)
     _integer(d)
+    # Rechazar entradas no canónicas antes de que Fraction las normalice.
     _require(d > 0 and gcd(abs(n), d) == 1,
              "Racional no canónico / Noncanonical rational")
     return Fraction(n, d)
 
 
 def dump_rational(value: Fraction) -> dict:
-    """Exportar una fracción exacta. / Export an exact fraction."""
+    """Exportar una fracción exacta."""
     _require(type(value) is Fraction, "Se exige Fraction / Fraction required")
     result = {"numerator": value.numerator, "denominator": value.denominator}
     parse_rational(result)
@@ -62,7 +64,7 @@ def dump_rational(value: Fraction) -> dict:
 
 
 def parse_magnitude(value: object) -> Fraction | ND:
-    """Validar la variante explícita. / Validate the explicit variant."""
+    """Validar la variante explícita."""
     _require(type(value) is dict, "Se exige objeto / Object required")
     if value.get("status") == "ND":
         _keys(value, {"status", "reason_code"})
@@ -73,7 +75,7 @@ def parse_magnitude(value: object) -> Fraction | ND:
 
 
 def dump_magnitude(value: Fraction | ND) -> dict:
-    """Conservar valor o indeterminación. / Preserve value or indeterminacy."""
+    """Conservar valor o indeterminación."""
     if type(value) is ND:
         return {"status": "ND", "reason_code": value.reason_code}
     return {"status": "DETERMINADO", "value": dump_rational(value)}
@@ -92,7 +94,7 @@ def _reject_number(token: str) -> None:
 
 
 def decode_magnitude(payload: bytes) -> Fraction | ND:
-    """Leer una magnitud JSON UTF-8. / Read one UTF-8 JSON magnitude."""
+    """Leer una magnitud JSON UTF-8."""
     _require(type(payload) is bytes, "Se exigen bytes / Bytes required")
     _require(len(payload) <= MAX_JSON_BYTES,
              "Magnitud demasiado grande / Magnitude too large")
@@ -105,6 +107,6 @@ def decode_magnitude(payload: bytes) -> Fraction | ND:
 
 
 def encode_magnitude(value: Fraction | ND) -> bytes:
-    """Codificar de forma determinista. / Encode deterministically."""
+    """Codificar de forma determinista."""
     return json.dumps(dump_magnitude(value), ensure_ascii=True, sort_keys=True,
                       separators=(",", ":"), allow_nan=False).encode("utf-8")

@@ -1,4 +1,4 @@
-"""Pruebas del contrato numérico. / Numeric contract tests."""
+"""Pruebas del contrato numérico."""
 
 from dataclasses import FrozenInstanceError
 from fractions import Fraction
@@ -12,7 +12,7 @@ from ardrec.contracts import (
 
 
 class ContractTests(unittest.TestCase):
-    """Casos válidos, adversos y de frontera. / Valid, adverse and boundary cases."""
+    """Casos válidos, adversos y de frontera."""
 
     def test_exact_arithmetic(self):
         a = parse_rational({"numerator": 1, "denominator": 3})

@@ -14,3 +14,6 @@
 ///
 /// Development version declared in Cargo.
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
+
+/// Encuadre de mensajes para el canal local.
+pub mod transport;
