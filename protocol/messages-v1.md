@@ -5,7 +5,7 @@
 ### Fuente y alcance
 
 Se implementa un perfil inicial basado en las secciones 3.9.3 y 3.9.5–3.9.7
-de Marco Aplicativo_v3(1).pdf. Los ejemplos de solicitud, aceptación,
+de TESIS ARDREC. Los ejemplos de solicitud, aceptación,
 consulta y resultado corresponden a las páginas impresas 114–117.
 La huella del documento se conserva en el ADR 0002.
 
@@ -68,7 +68,7 @@ Las pruebas de este perfil no constituyen validación experimental de A1–A10.
 ### Source and scope
 
 This initial profile follows sections 3.9.3 and 3.9.5–3.9.7 of
-Marco Aplicativo_v3(1).pdf. Request, acceptance, query and result examples
+TESIS ARDREC. Request, acceptance, query and result examples
 appear on printed pages 114–117. ADR 0002 records the source document hash.
 
 The Python `ardrec.messages` module validates `execution_request`,

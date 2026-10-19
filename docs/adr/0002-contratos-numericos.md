@@ -5,7 +5,7 @@
 ### Fuente y alcance
 
 Se implementan las magnitudes de la sección 3.9.4 de
-Marco Aplicativo_v3(1).pdf, páginas impresas 112–114.
+TESIS ARDREC, páginas impresas 112–114.
 SHA-256 del documento consultado:
 `da959bd6ab8eb49df5c746f2bfc50df2633794a2c089a2a757ffc65ca39ae9ce`.
 
@@ -59,7 +59,7 @@ Estas pruebas no acreditan validación experimental de ARDREC.
 ### Source and scope
 
 This increment implements the magnitudes described in section 3.9.4 of
-Marco Aplicativo_v3(1).pdf, printed pages 112–114.
+TESIS ARDREC, printed pages 112–114.
 The consulted document's SHA-256 is:
 `da959bd6ab8eb49df5c746f2bfc50df2633794a2c089a2a757ffc65ca39ae9ce`.
 
