@@ -1,0 +1,1231 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "label": "TESIS ARDREC",
+    "sha256": "da959bd6ab8eb49df5c746f2bfc50df2633794a2c089a2a757ffc65ca39ae9ce"
+  },
+  "baseline_commit": "3a04d067afef55b051658c82153681563b5aaf77",
+  "baseline_ci": {
+    "run_id": 39260266310,
+    "url": "https://github.com/DrewSC13/ardrec/actions/runs/39260266310"
+  },
+  "scope": {
+    "es": "Plan de aceptación; no certificación del sistema.",
+    "en": "Acceptance plan; not system certification."
+  },
+  "system_functional_acceptance": "PENDING",
+  "system_experimental_validation": "NOT_RUN",
+  "algorithm_modules": {
+    "A1": "src/ardrec/rules",
+    "A2": "src/ardrec/initialization",
+    "A3": "src/ardrec/controls",
+    "A4": "src/ardrec/selection",
+    "A5": "src/ardrec/attempts",
+    "A6": "src/ardrec/evidence",
+    "A7": "src/ardrec/analytics",
+    "A8": "src/ardrec/stopping",
+    "A9": "src/ardrec/transitions",
+    "A10": "src/ardrec/coordination"
+  },
+  "invariants": [
+    {
+      "id": "INV-01",
+      "es": "Origen coherente: evento, decisión, contexto y generación corresponden.",
+      "en": "Consistent origin: event, decision, context and generation match."
+    },
+    {
+      "id": "INV-02",
+      "es": "Configuración y caracterización congeladas durante la observación.",
+      "en": "Configuration and characterization remain frozen during observation."
+    },
+    {
+      "id": "INV-03",
+      "es": "No se amplía el conjunto de unidades, casos ni acciones autorizadas.",
+      "en": "Authorized units, cases and actions are not expanded."
+    },
+    {
+      "id": "INV-04",
+      "es": "Historia, evidencia y revisiones previas se conservan.",
+      "en": "History, evidence and previous revisions are preserved."
+    },
+    {
+      "id": "INV-05",
+      "es": "Solo transiciones permitidas; estados terminales no se reabren.",
+      "en": "Only allowed transitions; terminal states never reopen."
+    },
+    {
+      "id": "INV-06",
+      "es": "Prioridades y candidatos corresponden al mismo estado.",
+      "en": "Priorities and candidates correspond to the same state."
+    },
+    {
+      "id": "INV-07",
+      "es": "Identidades, referencias, procedencia e integridad se conservan.",
+      "en": "Identities, references, provenance and integrity are preserved."
+    },
+    {
+      "id": "INV-08",
+      "es": "Racionales exactos y dominios válidos; ND nunca se convierte en cero.",
+      "en": "Exact rationals and valid domains; ND is never converted to zero."
+    },
+    {
+      "id": "INV-09",
+      "es": "Presupuesto acotado; cada inicio acreditado se contabiliza una vez.",
+      "en": "Bounded budget; each proven start is counted once."
+    },
+    {
+      "id": "INV-10",
+      "es": "Una acción sin conciliar bloquea nuevos despachos.",
+      "en": "An unreconciled action blocks new dispatch."
+    },
+    {
+      "id": "INV-11",
+      "es": "Decisiones deterministas; Rref queda fuera de la selección y recalibración.",
+      "en": "Deterministic decisions; Rref stays outside selection and recalibration."
+    },
+    {
+      "id": "INV-12",
+      "es": "La convergencia usa historia computable y respeta reinicios.",
+      "en": "Convergence uses computable history and respects resets."
+    },
+    {
+      "id": "INV-13",
+      "es": "Solo una generación íntegra y duraderamente publicada tiene autoridad.",
+      "en": "Only a complete, durably published generation has authority."
+    },
+    {
+      "id": "INV-14",
+      "es": "La invocación progresa con recursos acotados o finaliza explícitamente.",
+      "en": "Invocation progresses with bounded resources or explicitly terminates."
+    },
+    {
+      "id": "INV-15",
+      "es": "Simulación, verificación funcional y observaciones experimentales se separan.",
+      "en": "Simulation, functional verification and experimental observations remain separate."
+    }
+  ],
+  "criteria": [
+    {
+      "id": "AC-01",
+      "source_sections": [
+        "3.9.1"
+      ],
+      "modules": [
+        "src/ardrec/coordination",
+        "crates/ardrec-executor",
+        "src/ardrec/persistence"
+      ],
+      "algorithms": [
+        "A10"
+      ],
+      "invariants": [
+        "INV-01",
+        "INV-07"
+      ],
+      "acceptance": {
+        "es": "Python decide; Rust ejecuta; el transporte no admite evidencia ni confirma estados. Los permisos impiden escrituras ajenas.",
+        "en": "Python decides; Rust executes; transport neither admits evidence nor confirms state. Permissions prevent unauthorized writes."
+      },
+      "planned_test": {
+        "id": "TF-01",
+        "es": "Intentar ejecutar desde la capa analítica y publicar desde el ejecutor; ambos accesos se rechazan.",
+        "en": "Attempt execution from the analytical layer and publication from the executor; both accesses are rejected.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "PARTIAL",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-02",
+      "source_sections": [
+        "3.2.9",
+        "3.9.4"
+      ],
+      "modules": [
+        "src/ardrec/contracts",
+        "src/ardrec/messages.py"
+      ],
+      "algorithms": [
+        "A1",
+        "A2",
+        "A7"
+      ],
+      "invariants": [
+        "INV-08"
+      ],
+      "acceptance": {
+        "es": "Racionales reducidos, denominador positivo, tipos exactos y ND explícito conservan su significado entre Python y Rust.",
+        "en": "Reduced rationals, positive denominators, exact types and explicit ND preserve their meaning across Python and Rust."
+      },
+      "planned_test": {
+        "id": "TF-02",
+        "es": "Probar cero canónico, límites, booleanos, decimales, fracciones no reducidas y equivalencia entre lenguajes.",
+        "en": "Test canonical zero, boundaries, booleans, decimals, unreduced fractions and cross-language equivalence.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [
+        "tests/unit/test_contracts.py"
+      ],
+      "implementation": "PARTIAL",
+      "functional_verification": "PARTIAL",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-03",
+      "source_sections": [
+        "3.9.3",
+        "3.9.4"
+      ],
+      "modules": [
+        "src/ardrec/transport.py",
+        "crates/ardrec-executor"
+      ],
+      "algorithms": [
+        "A5"
+      ],
+      "invariants": [
+        "INV-07",
+        "INV-10"
+      ],
+      "acceptance": {
+        "es": "Las tramas Unix respetan longitud, UTF-8, límites, lecturas parciales y permisos; un canal defectuoso no provoca otro despacho.",
+        "en": "Unix frames enforce length, UTF-8, limits, partial reads and permissions; a faulty channel causes no new dispatch."
+      },
+      "planned_test": {
+        "id": "TF-03",
+        "es": "Fragmentar cabeceras y cuerpos, truncar, exceder límites, denegar acceso al socket y perder la conexión.",
+        "en": "Fragment headers and bodies, truncate, exceed limits, deny socket access and disconnect.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [
+        "tests/unit/test_transport.py",
+        "crates/ardrec-executor/src/transport.rs",
+        "scripts/verificar_transporte.py"
+      ],
+      "implementation": "PARTIAL",
+      "functional_verification": "PARTIAL",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-04",
+      "source_sections": [
+        "3.9.3",
+        "3.9.5",
+        "3.9.6",
+        "3.9.7",
+        "3.9.8",
+        "3.9.9",
+        "3.9.10",
+        "3.9.11"
+      ],
+      "modules": [
+        "src/ardrec/messages.py",
+        "crates/ardrec-executor"
+      ],
+      "algorithms": [
+        "A5",
+        "A6",
+        "A9",
+        "A10"
+      ],
+      "invariants": [
+        "INV-01",
+        "INV-07"
+      ],
+      "acceptance": {
+        "es": "Todos los mensajes declarados tienen perfiles de éxito, rechazo e incertidumbre aplicables; identidades, versiones y referencias se verifican también semánticamente.",
+        "en": "All declared messages have applicable success, rejection and uncertainty profiles; identities, versions and references are also checked semantically."
+      },
+      "planned_test": {
+        "id": "TF-04",
+        "es": "Cubrir descubrimiento, ejecución, consulta/respuesta, supervisión, rechazo, estado persistido y cierre; alterar identidad, versión, referencia y productor.",
+        "en": "Cover discovery, execution, query/response, supervision, rejection, persisted state and closure; alter identity, version, reference and producer.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [
+        "tests/unit/test_messages.py"
+      ],
+      "implementation": "PARTIAL",
+      "functional_verification": "PARTIAL",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-05",
+      "source_sections": [
+        "3.9.3",
+        "3.10.2"
+      ],
+      "modules": [
+        "src/ardrec/messages.py",
+        "src/ardrec/attempts",
+        "src/ardrec/persistence"
+      ],
+      "algorithms": [
+        "A5",
+        "A9"
+      ],
+      "invariants": [
+        "INV-01",
+        "INV-07",
+        "INV-09"
+      ],
+      "acceptance": {
+        "es": "Un mensaje idéntico recupera su respuesta durable; un duplicado distinto produce conflicto; cambiar message_id no permite reutilizar attempt_id.",
+        "en": "An identical message retrieves its durable response; a changed duplicate conflicts; changing message_id cannot reuse attempt_id."
+      },
+      "planned_test": {
+        "id": "TF-05",
+        "es": "Repetir mensajes antes y después de reiniciar; cambiar contenido o contexto; comprobar cero ejecuciones adicionales.",
+        "en": "Repeat messages before and after restart; change content or context; verify zero additional executions.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-06",
+      "source_sections": [
+        "3.3.2",
+        "3.6"
+      ],
+      "modules": [
+        "src/ardrec/rules"
+      ],
+      "algorithms": [
+        "A1"
+      ],
+      "invariants": [
+        "INV-08",
+        "INV-11"
+      ],
+      "acceptance": {
+        "es": "La evaluación tipada es determinista; solo VERDADERO habilita acciones; ND no equivale a FALSO ni a cero.",
+        "en": "Typed evaluation is deterministic; only TRUE enables actions; ND is neither FALSE nor zero."
+      },
+      "planned_test": {
+        "id": "TF-06",
+        "es": "Tablas completas de operadores y decisiones, campos ausentes, tipos inválidos, reglas ambiguas y orden de entrada permutado.",
+        "en": "Complete operator and decision tables, missing fields, invalid types, ambiguous rules and permuted input order.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-07",
+      "source_sections": [
+        "3.2.1",
+        "3.2.2",
+        "3.2.3",
+        "3.6"
+      ],
+      "modules": [
+        "src/ardrec/initialization"
+      ],
+      "algorithms": [
+        "A2"
+      ],
+      "invariants": [
+        "INV-02",
+        "INV-03",
+        "INV-08"
+      ],
+      "acceptance": {
+        "es": "La configuración válida se congela; identidades son únicas; se verifican referencias, pesos, dependencias y límites. Et inicia en cero, Rf en R0, Q en PREPARADO e historia de transiciones vacía.",
+        "en": "Valid configuration is frozen; identities are unique; references, weights, dependencies and limits are checked. Et starts at zero, Rf at R0, Q at PREPARADO and transition history empty."
+      },
+      "planned_test": {
+        "id": "TF-07",
+        "es": "Configuración válida y variantes con duplicados, ciclos no permitidos, pesos inválidos, referencias ausentes y cambio posterior de configuración.",
+        "en": "Valid configuration and variants with duplicates, forbidden cycles, invalid weights, missing references and later configuration changes.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-08",
+      "source_sections": [
+        "3.3.3",
+        "3.4.1",
+        "3.6",
+        "3.9.9"
+      ],
+      "modules": [
+        "src/ardrec/controls"
+      ],
+      "algorithms": [
+        "A3"
+      ],
+      "invariants": [
+        "INV-02",
+        "INV-03",
+        "INV-09",
+        "INV-11"
+      ],
+      "acceptance": {
+        "es": "Los controles respetan origen, autorización, precedencia y consumo único. Los planes potenciales son finitos y operan sobre copias sin crear evidencia real.",
+        "en": "Controls preserve origin, authorization, precedence and single consumption. Potential plans are finite and operate on copies without creating real evidence."
+      },
+      "planned_test": {
+        "id": "TF-08",
+        "es": "Guardas VERDADERO/FALSO/ND, dependencias, control consumido, planes cíclicos y comprobación de que la simulación no altera el estado original.",
+        "en": "TRUE/FALSE/ND guards, dependencies, consumed controls, cyclic plans and verification that simulation leaves original state unchanged.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-09",
+      "source_sections": [
+        "3.4.1",
+        "3.4.2",
+        "3.4.3",
+        "3.6"
+      ],
+      "modules": [
+        "src/ardrec/selection"
+      ],
+      "algorithms": [
+        "A4"
+      ],
+      "invariants": [
+        "INV-03",
+        "INV-06",
+        "INV-11"
+      ],
+      "acceptance": {
+        "es": "Solo se seleccionan candidatos autorizados del servicio PENDIENTE y con presupuesto; se minimiza la clave (-PA, precedencia, id_servicio, id_caso).",
+        "en": "Only authorized candidates from PENDIENTE services with remaining budget are selected; minimize (-PA, precedence, service_id, case_id)."
+      },
+      "planned_test": {
+        "id": "TF-09",
+        "es": "Enumerar candidatos como oráculo independiente; probar empates, entrada permutada, prioridad alta no autorizada y conjunto vacío.",
+        "en": "Enumerate candidates as an independent oracle; test ties, permuted input, unauthorized high priority and an empty set.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-10",
+      "source_sections": [
+        "3.4.4",
+        "3.6",
+        "3.9.2"
+      ],
+      "modules": [
+        "src/ardrec/attempts",
+        "src/ardrec/persistence",
+        "crates/ardrec-executor"
+      ],
+      "algorithms": [
+        "A5"
+      ],
+      "invariants": [
+        "INV-07",
+        "INV-09",
+        "INV-10"
+      ],
+      "acceptance": {
+        "es": "La intención y la decisión son durables; aceptación no acredita inicio. El contador aumenta una vez al incorporar inicio verificado; no inicio verificable no consume ejecución.",
+        "en": "Intent and decision are durable; acceptance does not prove start. The counter increases once when verified start is incorporated; verified non-start consumes no execution."
+      },
+      "planned_test": {
+        "id": "TF-10",
+        "es": "Aceptar sin iniciar, acreditar inicio, repetir el evento y restaurar sesiones; comprobar reserva, contador y límite de una o dos ejecuciones autorizadas.",
+        "en": "Accept without starting, prove start, repeat the event and restore sessions; check reservation, counter and the one-or-two authorized execution limit.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-11",
+      "source_sections": [
+        "3.5.5",
+        "3.9.2",
+        "3.9.3"
+      ],
+      "modules": [
+        "src/ardrec/attempts",
+        "crates/ardrec-executor",
+        "src/ardrec/coordination"
+      ],
+      "algorithms": [
+        "A5",
+        "A10"
+      ],
+      "invariants": [
+        "INV-09",
+        "INV-10"
+      ],
+      "acceptance": {
+        "es": "Solo existe una acción técnica pendiente de conciliación; inicio, terminación o limpieza inciertos bloquean nuevos despachos y no causan reejecución automática.",
+        "en": "Only one technical action awaits reconciliation; uncertain start, termination or cleanup blocks new dispatch and never causes automatic re-execution."
+      },
+      "planned_test": {
+        "id": "TF-11",
+        "es": "Perder respuesta antes/después del inicio, exceder esperas y fallar limpieza; consultar la identidad original y agotar conciliación sin fabricar confirmación.",
+        "en": "Lose responses before/after start, exceed waits and fail cleanup; query the original identity and exhaust reconciliation without fabricating confirmation.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-12",
+      "source_sections": [
+        "3.7",
+        "3.9.2"
+      ],
+      "modules": [
+        "crates/ardrec-executor",
+        "lab"
+      ],
+      "algorithms": [
+        "A3",
+        "A5"
+      ],
+      "invariants": [
+        "INV-03",
+        "INV-07",
+        "INV-10"
+      ],
+      "acceptance": {
+        "es": "El ejecutor aplica perfiles congelados, argumentos separados sin shell, alcance y límites. Conserva soportes y limpia únicamente artefactos previstos; código cero no acredita evidencia.",
+        "en": "The executor enforces frozen profiles, separate arguments without a shell, scope and limits. It preserves supporting artifacts and cleans only intended artifacts; zero exit code does not prove evidence."
+      },
+      "planned_test": {
+        "id": "TF-12",
+        "es": "Destinos/argumentos no autorizados, timeout, salida truncada, hijos activos y limpieza fallida; verificar conservación de archivos ajenos y referencias protegidas.",
+        "en": "Unauthorized targets/arguments, timeout, truncated output, live children and failed cleanup; verify unrelated files remain intact and references are protected.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-13",
+      "source_sections": [
+        "3.3.4",
+        "3.6",
+        "3.9.8"
+      ],
+      "modules": [
+        "src/ardrec/evidence"
+      ],
+      "algorithms": [
+        "A6"
+      ],
+      "invariants": [
+        "INV-04",
+        "INV-07",
+        "INV-08"
+      ],
+      "acceptance": {
+        "es": "Cada condición se clasifica por soportes, procedencia, parámetros y reglas; se distinguen POSITIVO_VALIDO, NEGATIVO_VALIDO, INCONCLUSO, INCIDENCIA, INVALIDO y NO_ADMITIDO.",
+        "en": "Each condition is classified using supporting artifacts, provenance, parameters and rules; distinguish POSITIVO_VALIDO, NEGATIVO_VALIDO, INCONCLUSO, INCIDENCIA, INVALIDO and NO_ADMITIDO."
+      },
+      "planned_test": {
+        "id": "TF-13",
+        "es": "Casos de cada clasificación, soportes alterados o faltantes, salida cero sin prueba y varias condiciones en un intento.",
+        "en": "Cases for every classification, altered or missing artifacts, zero exit without proof and multiple conditions in one attempt.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-14",
+      "source_sections": [
+        "3.2.5",
+        "3.3.4",
+        "3.6",
+        "3.9.9"
+      ],
+      "modules": [
+        "src/ardrec/evidence",
+        "src/ardrec/persistence"
+      ],
+      "algorithms": [
+        "A6"
+      ],
+      "invariants": [
+        "INV-04",
+        "INV-07"
+      ],
+      "acceptance": {
+        "es": "Una condición conserva clave, revisiones y soportes; duplicados no inflan evidencia. Las contradicciones bloquean conclusiones dependientes y solo resoluciones verificadas cambian vigencia.",
+        "en": "A condition preserves its key, revisions and artifacts; duplicates do not inflate evidence. Contradictions block dependent conclusions and only verified resolutions change validity."
+      },
+      "planned_test": {
+        "id": "TF-14",
+        "es": "Duplicar soportes, contradecir perfiles y retirar el máximo; probar resolución autorizada, no autorizada e indicadores de aceptación sin respaldo.",
+        "en": "Duplicate artifacts, contradict profiles and withdraw the maximum; test authorized/unauthorized resolutions and unsupported acceptance flags.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-15",
+      "source_sections": [
+        "3.2.2",
+        "3.2.3",
+        "3.2.4",
+        "3.2.5",
+        "3.2.7"
+      ],
+      "modules": [
+        "src/ardrec/analytics",
+        "src/ardrec/contracts"
+      ],
+      "algorithms": [
+        "A2",
+        "A7"
+      ],
+      "invariants": [
+        "INV-02",
+        "INV-04",
+        "INV-08"
+      ],
+      "acceptance": {
+        "es": "Normalizaciones, criticidad y contribuciones reproducen las ecuaciones; Et es el máximo vigente, no una suma. Sustituciones negativas autorizadas no alteran R0 ni anulan positivos vigentes.",
+        "en": "Normalizations, criticality and contributions reproduce the equations; Et is the current maximum, not a sum. Authorized negative substitutions neither alter R0 nor cancel valid positives."
+      },
+      "planned_test": {
+        "id": "TF-15",
+        "es": "Oráculos racionales independientes, extremos ordinales, evidencia vacía/negativa/positiva, retiro de vigencia y sustituciones incompatibles.",
+        "en": "Independent rational oracles, ordinal extremes, empty/negative/positive evidence, withdrawal and incompatible substitutions.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-16",
+      "source_sections": [
+        "3.2.6",
+        "3.2.8",
+        "3.2.9",
+        "3.6"
+      ],
+      "modules": [
+        "src/ardrec/analytics"
+      ],
+      "algorithms": [
+        "A7"
+      ],
+      "invariants": [
+        "INV-06",
+        "INV-08",
+        "INV-11"
+      ],
+      "acceptance": {
+        "es": "Prioridad y riesgo se calculan con sus fórmulas respectivas; ajustes simultáneos cumplen R0- <= D <= Rf <= U <= 1. No hay redondeo interno ni uso de Rref.",
+        "en": "Priority and risk use their respective formulas; simultaneous adjustments satisfy R0- <= D <= Rf <= U <= 1. No internal rounding or use of Rref occurs."
+      },
+      "planned_test": {
+        "id": "TF-16",
+        "es": "Comparar resultados exactos con cálculo independiente; extremos, ajustes simultáneos, ND, pesos principales y variantes operacionales válidas.",
+        "en": "Compare exact results against independent calculations; extremes, simultaneous adjustments, ND, main weights and valid operational alternatives.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-17",
+      "source_sections": [
+        "3.2.9",
+        "3.5.7",
+        "3.6"
+      ],
+      "modules": [
+        "src/ardrec/analytics",
+        "src/ardrec/stopping"
+      ],
+      "algorithms": [
+        "A7",
+        "A8"
+      ],
+      "invariants": [
+        "INV-04",
+        "INV-08",
+        "INV-12"
+      ],
+      "acceptance": {
+        "es": "La ventana contiene solo actualizaciones computables; retransmisiones no cuentan. Reinicios conservan historia y prevalecen según configuración; estabilidad numérica sola no permite cierre.",
+        "en": "The window contains only computable updates; retransmissions do not count. Resets preserve history and follow configuration precedence; numeric stability alone cannot close a service."
+      },
+      "planned_test": {
+        "id": "TF-17",
+        "es": "Tres variaciones admisibles, ventana incompleta, duplicados, contradicción, reanudación y reinicio coincidente con actualización.",
+        "en": "Three admissible variations, incomplete window, duplicates, contradiction, resumption and reset coinciding with an update.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-18",
+      "source_sections": [
+        "3.5.2",
+        "3.5.3",
+        "3.5.5",
+        "3.5.6",
+        "3.6"
+      ],
+      "modules": [
+        "src/ardrec/stopping",
+        "src/ardrec/coordination"
+      ],
+      "algorithms": [
+        "A8",
+        "A10"
+      ],
+      "invariants": [
+        "INV-05",
+        "INV-10",
+        "INV-12"
+      ],
+      "acceptance": {
+        "es": "Se verifican ES, SA, CV y LE completos; se registran todos los criterios verdaderos y prevalece ES > SA > CV > LE. Seguridad y controles conservan su precedencia; estados terminales no se reabren.",
+        "en": "Full ES, SA, CV and LE predicates are checked; all true criteria are recorded with ES > SA > CV > LE. Safety and controls preserve their precedence; terminal states never reopen."
+      },
+      "planned_test": {
+        "id": "TF-18",
+        "es": "Cada criterio, coincidencias, contraejemplos, incertidumbre y pausa externa conciliada; intentar reabrir CERRADO/DETENIDO.",
+        "en": "Each criterion, simultaneous criteria, counterexamples, uncertainty and reconciled external pause; attempt reopening CERRADO/DETENIDO.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-19",
+      "source_sections": [
+        "3.5.4",
+        "3.6",
+        "3.8.1"
+      ],
+      "modules": [
+        "src/ardrec/transitions",
+        "src/ardrec/persistence"
+      ],
+      "algorithms": [
+        "A9"
+      ],
+      "invariants": [
+        "INV-01",
+        "INV-02",
+        "INV-03",
+        "INV-04",
+        "INV-05",
+        "INV-06",
+        "INV-07",
+        "INV-08"
+      ],
+      "acceptance": {
+        "es": "La transición comprueba origen, configuración, espacio, historia, estado, derivados e integridad sobre una copia; el rechazo conserva íntegramente la generación anterior.",
+        "en": "Transition checks origin, configuration, scope, history, state, derived values and integrity on a copy; rejection preserves the entire previous generation."
+      },
+      "planned_test": {
+        "id": "TF-19",
+        "es": "Alterar por separado cada grupo de invariantes; comprobar rechazo, ausencia de mutación y confirmación íntegra del candidato válido.",
+        "en": "Alter each invariant group separately; verify rejection, no mutation and complete confirmation of a valid candidate.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-20",
+      "source_sections": [
+        "3.6",
+        "3.10.1",
+        "3.10.2"
+      ],
+      "modules": [
+        "src/ardrec/persistence",
+        "src/ardrec/transitions"
+      ],
+      "algorithms": [
+        "A9"
+      ],
+      "invariants": [
+        "INV-01",
+        "INV-04",
+        "INV-07",
+        "INV-13"
+      ],
+      "acceptance": {
+        "es": "Exclusión de escritura, generaciones inmutables, manifiestos y sincronización aseguran publicación íntegra; la autoridad se obtiene del puntero verificado, no de marcas aisladas.",
+        "en": "Writer exclusion, immutable generations, manifests and synchronization ensure complete publication; authority comes from the verified pointer, not isolated markers."
+      },
+      "planned_test": {
+        "id": "TF-20",
+        "es": "Inyectar fallos de escritura, sincronización y reemplazo; intentar dos escritores y corromper manifiesto/puntero; conservar una generación verificable o detener recuperación.",
+        "en": "Inject write, synchronization and replacement failures; attempt two writers and corrupt manifest/pointer; preserve a verifiable generation or stop recovery.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-21",
+      "source_sections": [
+        "3.6",
+        "3.10.2"
+      ],
+      "modules": [
+        "src/ardrec/persistence",
+        "src/ardrec/attempts",
+        "src/ardrec/transitions"
+      ],
+      "algorithms": [
+        "A5",
+        "A9",
+        "A10"
+      ],
+      "invariants": [
+        "INV-01",
+        "INV-09",
+        "INV-10",
+        "INV-13"
+      ],
+      "acceptance": {
+        "es": "La recuperación distingue decisión, intención, resultado durable, generación escrita y puntero publicado; reprocesar el resultado no repite la herramienta ni duplica efectos.",
+        "en": "Recovery distinguishes decision, intent, durable result, written generation and published pointer; replaying a result neither reruns the tool nor duplicates effects."
+      },
+      "planned_test": {
+        "id": "TF-21",
+        "es": "Interrumpir en cada frontera y reiniciar repetidamente; comparar identidad, contador, efectos y autoridad con una ejecución sin interrupción.",
+        "en": "Interrupt at every boundary and restart repeatedly; compare identity, counter, effects and authority against an uninterrupted run.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-22",
+      "source_sections": [
+        "3.5.2",
+        "3.6",
+        "3.9.9",
+        "3.9.11"
+      ],
+      "modules": [
+        "src/ardrec/coordination",
+        "crates/ardrec-executor"
+      ],
+      "algorithms": [
+        "A10"
+      ],
+      "invariants": [
+        "INV-05",
+        "INV-07",
+        "INV-10",
+        "INV-14"
+      ],
+      "acceptance": {
+        "es": "El coordinador integra A1-A9; la supervisión registra intervenciones autorizadas. FINALIZADA/PAUSADA/DETENIDA son salidas distintas de los estados del servicio y refieren una generación confirmada.",
+        "en": "The coordinator integrates A1-A9; supervision records authorized interventions. FINALIZADA/PAUSADA/DETENIDA differ from service states and refer to a confirmed generation."
+      },
+      "planned_test": {
+        "id": "TF-22",
+        "es": "Recorridos completos, pausa/reanudación, parada de seguridad, intervención inválida y salida de emergencia; verificar motivos, referencias y asuntos sin conciliar.",
+        "en": "Complete flows, pause/resume, safety stop, invalid intervention and emergency exit; verify reasons, references and unreconciled matters.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-23",
+      "source_sections": [
+        "3.8.2",
+        "3.8.3",
+        "3.8.4"
+      ],
+      "modules": [
+        "src/ardrec/coordination",
+        "src/ardrec/selection",
+        "src/ardrec/transitions"
+      ],
+      "algorithms": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "A8",
+        "A9",
+        "A10"
+      ],
+      "invariants": [
+        "INV-09",
+        "INV-11",
+        "INV-14"
+      ],
+      "acceptance": {
+        "es": "Mismo estado, configuración y eventos producen mismas decisiones y resultados. El avance consume recursos finitos o termina; con M combinaciones, ejecuciones <= 2M y esperas externas acotadas.",
+        "en": "The same state, configuration and events produce the same decisions and results. Progress consumes finite resources or terminates; with M combinations, executions <= 2M and external waits are bounded."
+      },
+      "planned_test": {
+        "id": "TF-23",
+        "es": "Reordenar entradas, reproducir eventos, buscar ciclos sin progreso y escalar casos/evidencias; medir costes frente al análisis sin inventar un umbral de rendimiento.",
+        "en": "Reorder inputs, replay events, seek non-progress cycles and scale cases/evidence; measure costs against the analysis without inventing a performance threshold.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-24",
+      "source_sections": [
+        "3.7.5",
+        "3.9.1",
+        "3.9.2"
+      ],
+      "modules": [
+        "lab",
+        "crates/ardrec-executor",
+        "experiments"
+      ],
+      "algorithms": [
+        "A3",
+        "A5",
+        "A10"
+      ],
+      "invariants": [
+        "INV-03",
+        "INV-10",
+        "INV-15"
+      ],
+      "acceptance": {
+        "es": "El laboratorio SSH/FTP/SMB está autorizado y aislado; límites y perfiles se congelan tras pilotaje. Simulaciones no modifican contadores reales, evidencia experimental ni I7.",
+        "en": "The SSH/FTP/SMB laboratory is authorized and isolated; limits and profiles are frozen after piloting. Simulations never modify real counters, experimental evidence or I7."
+      },
+      "planned_test": {
+        "id": "TF-24",
+        "es": "Verificar aislamiento y restauración; pérdida de alcance, cambio material y limpieza insegura detienen acciones; comprobar separación de simulación y experimentación.",
+        "en": "Verify isolation and restoration; scope loss, material change and unsafe cleanup stop actions; check simulation/experiment separation.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_APPLICABLE",
+      "experimental_applicability": {
+        "es": "Criterio funcional; el contraste experimental se registra en AC-25 a AC-27.",
+        "en": "Functional criterion; experimental comparison is recorded in AC-25 through AC-27."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-25",
+      "source_sections": [
+        "Resumen",
+        "3.1",
+        "3.2.1",
+        "3.8.2",
+        "3.9.11"
+      ],
+      "modules": [
+        "experiments"
+      ],
+      "algorithms": [
+        "A10"
+      ],
+      "invariants": [
+        "INV-03",
+        "INV-11",
+        "INV-15"
+      ],
+      "acceptance": {
+        "es": "El diseño prevé 54 unidades servicio-escenario, 18 por protocolo; referencia externa y elegibilidad se definen antes de medir. Intentos no aumentan n y exclusiones quedan justificadas.",
+        "en": "The design targets 54 service-scenario units, 18 per protocol; external reference and eligibility are defined before measurement. Attempts do not increase n and exclusions are justified."
+      },
+      "planned_test": {
+        "id": "TE-25",
+        "es": "Auditar manifiesto, referencia congelada, separación de Rref y pares comparables; revisar ausencias, unidades no evaluables y posibles dependencias entre observaciones.",
+        "en": "Audit manifest, frozen reference, Rref separation and comparable pairs; review missing data, non-evaluable units and possible dependencies between observations.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_RUN",
+      "experimental_applicability": {
+        "es": "Incluye contraste o reproducción experimental.",
+        "en": "Includes experimental comparison or reproduction."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-26",
+      "source_sections": [
+        "Resumen",
+        "3.8.2"
+      ],
+      "modules": [
+        "experiments"
+      ],
+      "algorithms": [
+        "A10"
+      ],
+      "invariants": [
+        "INV-11",
+        "INV-15"
+      ],
+      "acceptance": {
+        "es": "Se comparan errores absolutos de R0 y Rf frente a Rref mediante el plan emparejado: MAE, Wilcoxon, alfa 0,05, tamaño del efecto y sensibilidad. El resultado puede no apoyar la hipótesis.",
+        "en": "Compare R0 and Rf absolute errors against Rref using the paired plan: MAE, Wilcoxon, alpha 0.05, effect size and sensitivity. Results may not support the hypothesis."
+      },
+      "planned_test": {
+        "id": "TE-26",
+        "es": "Fijar previamente hipótesis, tratamiento de ceros/empates/ausencias y sensibilidad; verificar cálculos con datos sintéticos separados y ejecutar después sobre datos reales trazables.",
+        "en": "Predefine hypotheses, zero/tie/missing-data handling and sensitivity; verify calculations on separate synthetic data, then run them on traceable real data.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_RUN",
+      "experimental_applicability": {
+        "es": "Incluye contraste o reproducción experimental.",
+        "en": "Includes experimental comparison or reproduction."
+      },
+      "acceptance_status": "PENDING"
+    },
+    {
+      "id": "AC-27",
+      "source_sections": [
+        "3.8.2",
+        "3.9.11",
+        "3.10"
+      ],
+      "modules": [
+        "src/ardrec/coordination",
+        "src/ardrec/persistence",
+        "experiments"
+      ],
+      "algorithms": [
+        "A9",
+        "A10"
+      ],
+      "invariants": [
+        "INV-04",
+        "INV-07",
+        "INV-13",
+        "INV-15"
+      ],
+      "acceptance": {
+        "es": "Un tercero puede reconstruir resultados desde versión, configuración, eventos y soportes conservados; el informe distingue cierre operativo, corrección funcional y resultado experimental.",
+        "en": "A third party can reconstruct results from preserved version, configuration, events and artifacts; the report distinguishes operational closure, functional correctness and experimental outcome."
+      },
+      "planned_test": {
+        "id": "TF-27",
+        "es": "Instalar desde entorno limpio, reproducir el análisis y comparar resultados; comprobar huellas, referencias y discrepancias documentadas.",
+        "en": "Install in a clean environment, replay the analysis and compare results; check hashes, references and documented discrepancies.",
+        "status": "NOT_IMPLEMENTED",
+        "execution_evidence": []
+      },
+      "baseline_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "functional_verification": "NOT_RUN",
+      "experimental_validation": "NOT_RUN",
+      "experimental_applicability": {
+        "es": "Incluye contraste o reproducción experimental.",
+        "en": "Includes experimental comparison or reproduction."
+      },
+      "acceptance_status": "PENDING"
+    }
+  ]
+}
