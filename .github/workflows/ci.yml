@@ -43,6 +43,8 @@ jobs:
 
       - name: Verificar empaquetado / Verify packaging
         run: python scripts/verificar_ci.py python
+      - name: Probar contratos y transporte / Test contracts and transport
+        run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 
   rust:
     name: Rust - compilación / build
@@ -59,3 +61,5 @@ jobs:
 
       - name: Verificar compilación / Verify build
         run: python3 scripts/verificar_ci.py rust
+      - name: Probar transporte Python-Rust / Test Python-Rust transport
+        run: python3 scripts/verificar_transporte.py
