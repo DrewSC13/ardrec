@@ -43,6 +43,8 @@ jobs:
 
       - name: Verificar empaquetado / Verify packaging
         run: python scripts/verificar_ci.py python
+      - name: Probar contratos / Test contracts
+        run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 
   rust:
     name: Rust - compilación / build
