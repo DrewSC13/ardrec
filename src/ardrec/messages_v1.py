@@ -72,6 +72,8 @@ def validate_message(message):
         flags=re.ASCII,
     ) is not None)
     try:
+        # Validar la fecha antes de normalizar una medianoche 24:00.
+        datetime(int(stamp[:4]), int(stamp[5:7]), int(stamp[8:10]))
         datetime.fromisoformat(stamp)
     except ValueError as error:
         raise MessageError() from error

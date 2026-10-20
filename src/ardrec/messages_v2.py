@@ -62,6 +62,8 @@ def timestamp(value):
         r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,6})?Z", value,
     ) is not None)
     try:
+        # Validar la fecha antes de normalizar una medianoche 24:00.
+        datetime(int(value[:4]), int(value[5:7]), int(value[8:10]))
         return datetime.fromisoformat(value)
     except ValueError as error:
         raise MessageError() from error
