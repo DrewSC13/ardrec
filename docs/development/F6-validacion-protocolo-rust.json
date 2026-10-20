@@ -1,0 +1,36 @@
+{
+  "stage": "F6_RUST_PROTOCOL_VALIDATION",
+  "created_at_utc": "2026-10-20T12:16:15.170158+00:00",
+  "source": "TESIS ARDREC",
+  "baseline_commit": "406b2566f7f5e560b4d90b94fcff3734c0396a71",
+  "python": "3.14.7",
+  "rust": "1.98.1",
+  "profiles": [
+    "1.0",
+    "2.0"
+  ],
+  "calendar_regression": "INVALID_ORIGINAL_DATE_REJECTED_BEFORE_ROLLOVER",
+  "protocol_implementation": "IMPLEMENTED",
+  "protocol_differential_verification": "PASS",
+  "differential_counts": {
+    "comparisons": 3052,
+    "accepted": 297,
+    "rejected": 2755
+  },
+  "canonical_bytes": "PASS",
+  "exact_values": "PASS",
+  "error_codes_in_test_corpus": "PASS",
+  "python_unit_tests": "PASS",
+  "rust_unit_tests": "PASS",
+  "rust_format": "PASS",
+  "rust_clippy": "PASS",
+  "cargo_lock_sha256": "7f948f341fb253e6a4d976e2daea9938591186e7de22e4d15efe8e8d100634e0",
+  "global_rust_default_unchanged": true,
+  "signature_verification": "PENDING_AT_RECORD_CREATION",
+  "remote_ci": "NOT_RUN_AT_RECORD_CREATION",
+  "durable_reconciliation": "PENDING",
+  "system_functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN",
+  "algorithm_implementation": "NOT_STARTED",
+  "exhaustive_equivalence_proof": false
+}

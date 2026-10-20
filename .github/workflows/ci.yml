@@ -59,7 +59,18 @@ jobs:
       - name: Preparar Rust / Set up Rust
         run: rustup toolchain install 1.98.1 --profile minimal --component rustfmt --component clippy
 
+      - name: Preparar Python para protocolo / Set up protocol Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version-file: .python-version
+
+      - name: Descargar dependencias Rust / Fetch Rust dependencies
+        run: cargo fetch --locked
+
       - name: Verificar compilación / Verify build
         run: python3 scripts/verificar_ci.py rust
       - name: Probar transporte Python-Rust / Test Python-Rust transport
         run: python3 scripts/verificar_transporte.py
+
+      - name: Contrastar protocolo Python-Rust / Compare Python-Rust protocol
+        run: python3 scripts/verificar_protocolo.py
