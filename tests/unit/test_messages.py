@@ -60,7 +60,7 @@ class MessageTests(unittest.TestCase):
 
     def test_version_type_and_producer(self):
         bad = self.data["request"]
-        bad["schema_version"] = "2.0"
+        bad["schema_version"] = "9.0"
         self.reject(bad, "version_incompatible")
         bad["schema_version"] = "1.0"
         bad["message_type"] = "unknown"
