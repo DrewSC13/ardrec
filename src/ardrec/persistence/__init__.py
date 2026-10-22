@@ -1,5 +1,6 @@
 """Generaciones inmutables y diario transaccional para un escritor local Linux."""
 
+from copy import deepcopy
 from dataclasses import replace
 import fcntl
 import os
@@ -85,6 +86,9 @@ def _reduce(state, operation, args):
         require(state is None, "duplicate_initialization")
         return _initial(args["state"])
     require(state is not None, "initialization_missing")
+    if operation in {"reconcile_query_v1", "reconcile_reply_v1"}:
+        from ardrec.reconciliation import reduce_record
+        return reduce_record(state, operation, args)
     if operation == "reserve":
         exact_fields(args, ("request", "decision_reference"))
         _id(args["decision_reference"])
@@ -131,6 +135,7 @@ class DurableStore:
         self._head_raw = None
         self._head = None
         self._state = None
+        self._queries = {}
         try:
             # Abrir cada componente sin seguir enlaces, conservando descriptores propios.
             parent = os.open("/", os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
@@ -295,8 +300,12 @@ class DurableStore:
     def _commit(self, operation, args):
         self._check()
         # Validar completamente antes de abrir la frontera de escritura.
+        from ardrec.reconciliation import QUERY, REPLY, advance_index
+        queries = advance_index(self._queries, self._state, operation, args)
+        if operation == REPLY and queries is self._queries:
+            return self.state
         new_state = _reduce(self._state, operation, args)
-        if self._state == new_state:
+        if self._state == new_state and operation not in {QUERY, REPLY}:
             return self.state
         packed_args = pack(args)
         state_hash = digest(canonical(pack(new_state)))
@@ -330,6 +339,7 @@ class DurableStore:
             self._fault("head:durable")
             # Solo después de sincronizar el directorio se devuelve confirmación.
             self._head, self._head_raw, self._state = head, raw, new_state
+            self._queries = queries
             if operation == "initialize":
                 self._generation_refs = {new_state.confirmed.generation_reference}
             elif operation == "publish":
@@ -371,8 +381,12 @@ class DurableStore:
         require(sha is None, "journal_root_invalid")
         state, gen = None, None
         self._generation_refs = set()
+        from ardrec.reconciliation import advance_index
+        queries = {}
         for event in reversed(chain):
-            state = _reduce(state, event["operation"], unpack(event["args"]))
+            args = unpack(event["args"])
+            queries = advance_index(queries, state, event["operation"], args)
+            state = _reduce(state, event["operation"], args)
             require(digest(canonical(pack(state))) == event["state_sha256"], "replay_mismatch")
             if event["operation"] in {"initialize", "publish"}:
                 value = self._object("generations", event["generation_digest"])
@@ -396,6 +410,7 @@ class DurableStore:
         os.fsync(self._root)
         require(self._read(self._root, "HEAD") == raw, "head_changed")
         self._head, self._head_raw, self._state = head, raw, state
+        self._queries = queries
         self._check()
 
     @property
@@ -413,10 +428,21 @@ class DurableStore:
         state = self.state
         if state.invocation is not InvocationPhase.EN_CURSO:
             return "INVOCATION_ENDED"
+        if any(entry["reply"] is None for entry in self._queries.values()):
+            return "RECONCILE_QUERY_INCOMPLETE"
         pending = [a for a in state.attempts if a.pending]
         if pending:
             return "INCORPORATE_RESULT" if pending[0].technical_resolved else "RECONCILE_ATTEMPT"
         return "PUBLISH_CANDIDATE" if state.services != state.confirmed.services else "NONE"
+
+    @property
+    def reconciliation_history(self):
+        self._check()
+        return tuple(deepcopy(entry) for entry in self._queries.values())
+
+    def record_reconciliation(self, operation, args):
+        require(operation in {"reconcile_query_v1", "reconcile_reply_v1"}, "operation_unknown")
+        return self._commit(operation, args)
 
     def reserve(self, request, *, decision_reference):
         """Persistir decisión e intención juntas, antes de cualquier posible envío externo."""
