@@ -74,3 +74,6 @@ jobs:
 
       - name: Contrastar protocolo Python-Rust / Compare Python-Rust protocol
         run: python3 scripts/verificar_protocolo.py
+
+      - name: Verificar diario técnico / Verify technical journal
+        run: python3 scripts/verificar_diario_tecnico.py

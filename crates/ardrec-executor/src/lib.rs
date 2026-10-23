@@ -20,3 +20,6 @@ pub mod transport;
 
 /// Contratos de mensajes sin efectos operacionales.
 pub mod messages;
+
+/// Diario técnico durable con recuperación y consultas.
+pub mod journal;
