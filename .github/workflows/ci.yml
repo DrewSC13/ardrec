@@ -77,3 +77,6 @@ jobs:
 
       - name: Verificar diario técnico / Verify technical journal
         run: python3 scripts/verificar_diario_tecnico.py
+
+      - name: Verificar conciliación por socket / Verify socket reconciliation
+        run: python3 scripts/verificar_conciliacion_transporte.py
