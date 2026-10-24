@@ -1149,7 +1149,7 @@
               "numerator": 1,
               "denominator": 2
             },
-            0,
+            1,
             "PENDIENTE",
             "PENDIENTE",
             true,
@@ -1163,7 +1163,7 @@
               "numerator": 3,
               "denominator": 4
             },
-            9,
+            4,
             "PENDIENTE",
             "PENDIENTE",
             true,
@@ -1382,7 +1382,7 @@
               "numerator": 1,
               "denominator": 1
             },
-            0,
+            1,
             "PENDIENTE",
             "PENDIENTE",
             false,
@@ -1396,7 +1396,7 @@
               "numerator": 1,
               "denominator": 1
             },
-            0,
+            1,
             "PENDIENTE",
             "PENDIENTE",
             "ND",
@@ -1410,7 +1410,7 @@
               "numerator": 1,
               "denominator": 1
             },
-            0,
+            1,
             "PENDIENTE",
             "PENDIENTE",
             true,
@@ -1424,7 +1424,7 @@
               "numerator": 1,
               "denominator": 1
             },
-            0,
+            1,
             "PAUSADO",
             "PENDIENTE",
             true,
@@ -1510,7 +1510,7 @@
               "numerator": 1,
               "denominator": 1
             },
-            0,
+            1,
             "PENDIENTE",
             "BLOQUEADO",
             true,
@@ -1524,7 +1524,7 @@
               "numerator": 1,
               "denominator": 1
             },
-            0,
+            1,
             "PENDIENTE",
             "PENDIENTE",
             "ND",
@@ -2305,5 +2305,14 @@
       "expected_origin": "MANUAL_SPECIFICATION_DERIVATION",
       "production_test_status": "NOT_RUN"
     }
-  ]
+  ],
+  "alignment_review": {
+    "record": "docs/traceability/specification-review-20261023.json",
+    "reviewed_source": {
+      "label": "TESIS ARDREC",
+      "sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72"
+    },
+    "scope": "SELECTION_PRECEDENCE_AND_SOURCE_PROVENANCE",
+    "full_specification_alignment": "PENDING"
+  }
 }

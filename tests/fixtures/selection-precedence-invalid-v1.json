@@ -1,0 +1,88 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "label": "TESIS ARDREC",
+    "sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72"
+  },
+  "source_location": {
+    "section": "3.7",
+    "table": "3.8",
+    "printed_page": 136
+  },
+  "scope": "REFERENCE_CATALOG_DOMAIN_AUDIT",
+  "production_algorithm_verification": "NOT_RUN",
+  "cases": [
+    {
+      "id": "REF-PREC-INVALID-01",
+      "input": {
+        "precedence": 0
+      },
+      "expected": {
+        "catalog_validation": "INVALID_PRECEDENCE"
+      }
+    },
+    {
+      "id": "REF-PREC-INVALID-02",
+      "input": {
+        "precedence": 5
+      },
+      "expected": {
+        "catalog_validation": "INVALID_PRECEDENCE"
+      }
+    },
+    {
+      "id": "REF-PREC-INVALID-03",
+      "input": {
+        "precedence": 9
+      },
+      "expected": {
+        "catalog_validation": "INVALID_PRECEDENCE"
+      }
+    },
+    {
+      "id": "REF-PREC-INVALID-04",
+      "input": {
+        "precedence": -1
+      },
+      "expected": {
+        "catalog_validation": "INVALID_PRECEDENCE"
+      }
+    },
+    {
+      "id": "REF-PREC-INVALID-05",
+      "input": {
+        "precedence": true
+      },
+      "expected": {
+        "catalog_validation": "INVALID_PRECEDENCE"
+      }
+    },
+    {
+      "id": "REF-PREC-INVALID-06",
+      "input": {
+        "precedence": false
+      },
+      "expected": {
+        "catalog_validation": "INVALID_PRECEDENCE"
+      }
+    },
+    {
+      "id": "REF-PREC-INVALID-07",
+      "input": {
+        "precedence": "1"
+      },
+      "expected": {
+        "catalog_validation": "INVALID_PRECEDENCE"
+      }
+    },
+    {
+      "id": "REF-PREC-INVALID-08",
+      "input": {
+        "precedence": null
+      },
+      "expected": {
+        "catalog_validation": "INVALID_PRECEDENCE"
+      }
+    }
+  ]
+}

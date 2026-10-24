@@ -1,0 +1,179 @@
+{
+  "schema_version": "1.0",
+  "review_id": "ARDREC-ALIGNMENT-20261023-01",
+  "review_date": "2026-10-23",
+  "base_commit": "8b0b889cdd27678cbb8c58eda997a98fa2960305",
+  "source": {
+    "label": "TESIS ARDREC",
+    "sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72"
+  },
+  "historical_source": {
+    "label": "TESIS ARDREC",
+    "sha256": "da959bd6ab8eb49df5c746f2bfc50df2633794a2c089a2a757ffc65ca39ae9ce"
+  },
+  "historical_records_preserved": [
+    "docs/acceptance/system-v1.json",
+    "docs/adr/0002-contratos-numericos.md"
+  ],
+  "historical_catalog_source_preserved": true,
+  "source_coverage": {
+    "kind": "RECONSTRUCTED_SNAPSHOT_PLUS_DELIVERED_F10_PATCH",
+    "known_files": 114,
+    "fresh_full_remote_checkout": false,
+    "limitation_es": "El archivo dinámico F10 y los archivos omitidos del contexto no se revisaron en esta copia.",
+    "limitation_en": "The dynamic F10 record and files omitted from the context were not reviewed in this copy."
+  },
+  "baseline_audit_evidence": {
+    "environment": {
+      "python": "3.14.7",
+      "rust": "1.98.1"
+    },
+    "execution_scope": "ASSISTANT_ISOLATED_RECONSTRUCTION_NOT_USER_CHECKOUT",
+    "python": {
+      "command": "python3 -m unittest discover -s tests/unit -v",
+      "tests": 205,
+      "result": "PASS"
+    },
+    "rust": {
+      "command": "cargo test --workspace --all-targets --locked --offline",
+      "tests": 60,
+      "result": "PASS"
+    },
+    "ci_claim_for_this_increment": "NOT_RUN"
+  },
+  "precedence_domain": {
+    "type": "EXACT_INTEGER_NOT_BOOL",
+    "minimum": 1,
+    "maximum": 4,
+    "section": "3.7",
+    "table": "3.8",
+    "printed_page": 136
+  },
+  "changes": [
+    {
+      "case": "REF-S01",
+      "candidate_index": 0,
+      "field": "precedence",
+      "before": 0,
+      "after": 1
+    },
+    {
+      "case": "REF-S01",
+      "candidate_index": 1,
+      "field": "precedence",
+      "before": 9,
+      "after": 4
+    },
+    {
+      "case": "REF-S05",
+      "candidate_index": 0,
+      "field": "precedence",
+      "before": 0,
+      "after": 1
+    },
+    {
+      "case": "REF-S05",
+      "candidate_index": 1,
+      "field": "precedence",
+      "before": 0,
+      "after": 1
+    },
+    {
+      "case": "REF-S05",
+      "candidate_index": 2,
+      "field": "precedence",
+      "before": 0,
+      "after": 1
+    },
+    {
+      "case": "REF-S05",
+      "candidate_index": 3,
+      "field": "precedence",
+      "before": 0,
+      "after": 1
+    },
+    {
+      "case": "REF-S07",
+      "candidate_index": 0,
+      "field": "precedence",
+      "before": 0,
+      "after": 1
+    },
+    {
+      "case": "REF-S07",
+      "candidate_index": 1,
+      "field": "precedence",
+      "before": 0,
+      "after": 1
+    }
+  ],
+  "preserved_reference_results": [
+    "REF-S01",
+    "REF-S05",
+    "REF-S07"
+  ],
+  "invalid_precedence_fixture": "tests/fixtures/selection-precedence-invalid-v1.json",
+  "findings": [
+    {
+      "id": "AL-01",
+      "topic": "SOURCE_PROVENANCE",
+      "status": "RECORDED",
+      "es": "Se agrega una revisión vinculada a la fuente vigente; se conserva la procedencia histórica.",
+      "en": "A review linked to the current source is added; historical provenance is retained."
+    },
+    {
+      "id": "AL-02",
+      "topic": "ACCEPTANCE_COVERAGE",
+      "status": "PENDING",
+      "es": "Actualizar cobertura por componente sin declarar aceptación funcional global.",
+      "en": "Update component coverage without claiming overall functional acceptance."
+    },
+    {
+      "id": "AL-03",
+      "topic": "REFERENCE_PRECEDENCE",
+      "status": "CORRECTED_IN_THIS_INCREMENT",
+      "es": "Ocho valores de tres casos se ajustan a 1..4; se agregan ocho entradas inválidas separadas.",
+      "en": "Eight values in three cases are corrected to 1..4; eight separate invalid inputs are added."
+    },
+    {
+      "id": "AL-04",
+      "topic": "TEMPORAL_POLICY",
+      "status": "PENDING",
+      "es": "Definir causalidad y ajustes de reloj; Python y Rust aceptan fechas de ejecución previas a la solicitud.",
+      "en": "Define causality and clock adjustments; Python and Rust accept execution timestamps before the request."
+    },
+    {
+      "id": "AL-05",
+      "topic": "ANALYTICAL_PERSISTENCE",
+      "status": "PENDING",
+      "es": "Definir persistencia versionada de racionales y ND; el contrato numérico y el codec actual tienen rangos diferentes.",
+      "en": "Define versioned rational and ND persistence; the numerical contract and current codec have different ranges."
+    },
+    {
+      "id": "AL-06",
+      "topic": "ANALYTICAL_STATE",
+      "status": "PENDING",
+      "es": "Especificar el estado analítico completo y conectar guardas con comprobaciones efectivas.",
+      "en": "Specify the complete analytical state and connect guards to actual verification."
+    },
+    {
+      "id": "AL-07",
+      "topic": "EXTERNAL_REFERENCES",
+      "status": "PENDING",
+      "es": "Resolver perfiles, autorización y soportes, y autenticar el par al integrar el ejecutor.",
+      "en": "Resolve profiles, authorization and supports, and authenticate the peer when integrating the executor."
+    },
+    {
+      "id": "AL-08",
+      "topic": "EXPERIMENTAL_REQUIREMENTS",
+      "status": "PENDING",
+      "es": "Desglosar unilateralidad, potencia justificada, piloto separado, no reemplazo y panel mínimo de tres especialistas.",
+      "en": "Detail the one-sided test, justified power, separate pilot, no replacement and at least three specialists."
+    }
+  ],
+  "full_specification_alignment": "PENDING",
+  "system_functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN",
+  "algorithm_implementation": "NOT_STARTED",
+  "operational_prototype": "NOT_STARTED"
+}
