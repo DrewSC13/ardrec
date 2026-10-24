@@ -221,3 +221,31 @@ data or Rref values are introduced.
 | REF-T08 | AC-20, AC-21 | Writing the candidate does not publish authority; recovery does not authorize rerunning a tool. |
 | REF-T09 | AC-20, AC-21 | A missing marker does not invalidate a verified durable new pointer. |
 | REF-T10 | AC-11, AC-18, AC-22 | The invocation reports uncertainty and fabricates neither confirmed state nor pause. |
+
+## Revisión de procedencia y dominio / Provenance and domain review
+
+### Español
+
+La fuente indicada al inicio corresponde a la procedencia original. La revisión contra
+la versión vigente de TESIS ARDREC se registra en
+[el informe de alineación](../traceability/specification-review-20261023.md).
+`alignment_review` vincula el catálogo con esa revisión sin borrar su fuente histórica.
+Las precedencias válidas son enteros exactos de 1 a 4; bool no es un entero admisible.
+Se corrigieron ocho valores en REF-S01, REF-S05 y REF-S07, conservando sus resultados.
+Las ocho entradas inválidas separadas en
+[selection-precedence-invalid-v1.json](../../tests/fixtures/selection-precedence-invalid-v1.json)
+comprueban el dominio del catálogo y no cuentan entre los 51 oráculos del modelo.
+`test_reference_alignment.py` verifica dominio y procedencia; no ejecuta A4.
+
+### English
+
+The source at the beginning identifies original provenance. Review against the current
+TESIS ARDREC version is recorded in
+[the alignment report](../traceability/specification-review-20261023.md).
+`alignment_review` links the catalog to that review without removing its historical source.
+Valid precedence values are exact integers from 1 through 4; bool is not an admissible integer.
+Eight values in REF-S01, REF-S05 and REF-S07 were corrected while preserving their results.
+The eight separate invalid inputs in
+[selection-precedence-invalid-v1.json](../../tests/fixtures/selection-precedence-invalid-v1.json)
+audit the catalog domain and do not count toward the 51 model oracles.
+`test_reference_alignment.py` verifies domain and provenance; it does not execute A4.

@@ -816,3 +816,17 @@ A third party can reconstruct results from preserved version, configuration, eve
 - TF-27 (planned): Install in a clean environment, replay the analysis and compare results; check hashes, references and documented discrepancies.
 - Status: implementation=NOT_IMPLEMENTED; functional_verification=NOT_RUN; experimental_validation=NOT_RUN; acceptance=PENDING.
 - Previous partial support: none.
+
+## Revisión posterior de la especificación / Subsequent specification review
+
+Español: esta matriz conserva el punto de partida histórico identificado en system-v1.json.
+La revisión de TESIS ARDREC y los pendientes de cobertura se registran en
+[el informe de alineación](../traceability/specification-review-20261023.md).
+La implementación posterior de componentes no modifica automáticamente los estados
+de aceptación ni sustituye las pruebas completas de cada requisito.
+
+English: this matrix preserves the historical baseline identified in system-v1.json.
+The TESIS ARDREC review and coverage gaps are recorded in
+[the alignment report](../traceability/specification-review-20261023.md).
+Later component implementation does not automatically change acceptance statuses
+or replace complete verification of each requirement.
