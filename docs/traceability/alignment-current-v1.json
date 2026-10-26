@@ -1,0 +1,747 @@
+{
+  "schema_version": "1.0",
+  "review_id": "ARDREC-ALIGNMENT-20261026-02",
+  "source": {
+    "label": "TESIS ARDREC",
+    "sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72"
+  },
+  "baseline_commit": "526276d382798cf5d0cda1d1966b9e0c49ad4d24",
+  "supersedes_for_current_status": "docs/traceability/specification-review-20261023.json",
+  "review_status": "COMPLETE_WITH_OPEN_FINDINGS_FOR_LISTED_SCOPE",
+  "full_specification_alignment": "PENDING",
+  "system_functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN",
+  "algorithm_implementation": "NOT_STARTED",
+  "operational_prototype": "NOT_STARTED",
+  "scope": {
+    "kind": "RECONSTRUCTED_SOURCES_WITH_LOCAL_HASH_PREFLIGHT",
+    "known_files": 118,
+    "source_hashes": {
+      ".editorconfig": "7026f032e92cf368a841d02506ded4c09f98717264c94351149767a28ad65a2f",
+      ".github/workflows/ci.yml": "57ef095b5fbb8cf22bbd577ff8d333b4e6eb1ff41235a8e708817107b7be9390",
+      ".gitignore": "4ef9aa567cae2cf1951181276262a938395a8d07a3890b2c43ff6d87db8ffd9a",
+      ".python-version": "922fe0c3de073b01988e23348ea184456161678c5e329e6f34be89be24383f93",
+      "Cargo.lock": "7f948f341fb253e6a4d976e2daea9938591186e7de22e4d15efe8e8d100634e0",
+      "Cargo.toml": "fe991ffff7fde28a5adab1d388dc1cd513bac60f204cb47ed6bea03da62d376c",
+      "README.md": "f5f10596b2aa447f694f54c23fd337a4158deba6c67ea2871fd43d2a482b6ee0",
+      "crates/ardrec-executor/Cargo.toml": "5de87ee80b3bf8b12e30dd16b5c925f42267288266a6b01412196be898a2fbd9",
+      "crates/ardrec-executor/README.md": "2362d0b3764b87dbafd6f2bf7137576667973b34a55a433fc2a4a385b4948a69",
+      "crates/ardrec-executor/examples/journal_probe.rs": "dc2b3b04e340871a84424e4da5b7d0e4f410232435a5f275d604f25ed22db98d",
+      "crates/ardrec-executor/examples/protocol_probe.rs": "a0ba6522c155218442fb961fbf87eb02805285bd88f4323eeff00b2bc4c93ede",
+      "crates/ardrec-executor/examples/reconciliation_probe.rs": "f52d15c29dbdec2423f90a36502a838f351d2eec08f9f249bdf85e19e20c04d5",
+      "crates/ardrec-executor/examples/transport_probe.rs": "7df849a3e65111dc2e7ca8467399fcbe0ce1b0d2acd86701499e69b2ea889833",
+      "crates/ardrec-executor/src/journal.rs": "d077eb21e3a8c0098ab5195fe993fd8a94e1aac3a9c046582c528af92d0fb315",
+      "crates/ardrec-executor/src/journal/model.rs": "8c02cbeae93addfe8932a6f04884096625a3f510a56fc33ab10c63de410237cc",
+      "crates/ardrec-executor/src/journal/storage.rs": "240df1d4f32750f0556508e57787ff6877d23615ef7919b3334e0d77317920ec",
+      "crates/ardrec-executor/src/journal/tests.rs": "e3de561f19b2b8cb7a5d24981df9e098c83e8a1ef433cea92041ba1703753093",
+      "crates/ardrec-executor/src/lib.rs": "6042c1dc674c40cc770d5bd0fb4e114e5a87471e45ee5530dfa616bd0b0999d4",
+      "crates/ardrec-executor/src/messages.rs": "c23d30a2c6152263db91976334aeeb6af76814de88804c41033844d888ae4fc2",
+      "crates/ardrec-executor/src/messages/json.rs": "bc7011aa7a940088b1beb6aaf416c275bb31cecac825832ad8828271481464e3",
+      "crates/ardrec-executor/src/messages/tests.rs": "8005bfb8c787eec282ed601e49f4d3195e9b913531e88c04f3c2e034cc3949fd",
+      "crates/ardrec-executor/src/messages/v1.rs": "a6a600474e258dd255c195805e49e7bd5ca1f379b152e0c5b9a1234c3f23dd1c",
+      "crates/ardrec-executor/src/messages/v2.rs": "65303e70893bf73c2fc19b336635e266cdef233dcecc9a067e7777ab374b1a11",
+      "crates/ardrec-executor/src/reconciliation_transport.rs": "6904a23074ac1c27e279f9ebc071c34a37e4b83a726f74f7a189337cd1936680",
+      "crates/ardrec-executor/src/transport.rs": "3fbfd375061ee8740d5105357a09ba16e7657855c6fb9ac3c6ddab7ed795a3ea",
+      "docs/acceptance/README.md": "a838ccb64e015222c237b871ac5a03475941f27d18e29fb172e2116d3ec281d3",
+      "docs/acceptance/system-v1.json": "b7f476577c215050ecf85c64a795fcaddff6c974a3d8db32bdce8825272f53f6",
+      "docs/adr/0001-arquitectura.md": "960548de19f31dc43801025989655a0ee533184d48cc1d07137331e402e26c49",
+      "docs/adr/0002-contratos-numericos.md": "5ec4df2137f9b2aed550eede7eb8e902f46f6a4af488c0515fcd772d63323fac",
+      "docs/adr/0003-transporte-local.md": "7dcbdd93a46e6f839667abb636b0c9de705c2f422da3465fc97ed9595c5c0ef9",
+      "docs/adr/0004-modelos-de-estado.md": "31a8ae0bec428d97665c1018691f6fd4f534ec0151ffb022e0f1e1752d05340b",
+      "docs/adr/0005-persistencia-y-diario.md": "d6a3e02847e28a0f047a3aaafe1dc4824b21a5a084558373c7f1c684f62ac3cf",
+      "docs/adr/0006-conciliacion-durable.md": "ea9648eaa5a4ef3fdec872e9fc6d78e735d049bfd4ca6d881976a13c41089a38",
+      "docs/adr/0007-diario-tecnico-rust.md": "b460de2c850a7eeedf493d2dc791dd9268090bb62ce3541405b13f8c5646900d",
+      "docs/adr/0008-conciliacion-por-transporte.md": "7ff92b2c0361302f383ac2c7217b6d7cf57730468a4c71fa1a25f06a88b9e46d",
+      "docs/development/F1-bootstrap.json": "6c81b3f29901ef8bfe7a3a4153682a8eb5784a4089e964db926954ad79703d85",
+      "docs/development/F2-entorno.json": "3ba14ffa18017adec1272cc5dc0259006e2c9f9a94a06791e59467436ef02f04",
+      "docs/development/F3A-empaquetado-python.json": "e605473d28c406c8c4785b61ea66e8b1fe44db4cd1b5e143ea2dafb5f4cec847",
+      "docs/development/F3A-empaquetado-python.md": "a6beae0355fa1868822e4f50e282f28a13764a4497dc2c2637393a0c13e5d981",
+      "docs/development/F3B-base-rust.json": "e36a66f54d9326fdd99ed7aaf347cff676d40937a80d1bf5da52021564a4c877",
+      "docs/development/F3B-base-rust.md": "1286392de9ccf92b440cc89a8cc4c4f68ea3b3f6dd46b5129f4505a2171c2f16",
+      "docs/development/F4-integracion-continua.md": "c4542eacca3f1847cd50d5191d0d47d33241610b7f558dbacfd19e007403699f",
+      "docs/development/F4B-preparacion-ci.json": "b20d817596dd90998a81c42a3b01d1375a4ef697735399390aca98f9cd84f0d2",
+      "docs/development/F6-validacion-protocolo-rust.json": "903df540dfb1466fdf99820cd4d9fe4b726b716c0c2e209cd54d0198aefbb02c",
+      "docs/development/F7-modelos-estado.json": "a324b2ca871b527bbf5b7e8e02caa3e9a74d4766bee39e8a36db2c7f00fc839a",
+      "docs/development/F8-persistencia-diario.json": "24fa32264d440b7156d18ec4e888986255e7c8183ad1d06bd66ad8ac39f62033",
+      "docs/development/F9A-conciliacion-python.json": "f0c6d4e7399fd760227d11f623e7d81c899a7f55136d8ed28b74434f9279b9ee",
+      "docs/development/F9B-diario-tecnico-rust.json": "c1ed54a10e320ed2aaa6aadb7983387b46237982e5e7c4ff0dc1524521ec1a6f",
+      "docs/development/README.md": "fe178a669c8a27ee9057137b29639f163df1a29ef5dc3c466777785f7747bd90",
+      "docs/entorno.md": "d3d247996edd87a427c31d4ccfb07cd986a2656135fc62ee729029f6f9a8aaa3",
+      "docs/idiomas.md": "bb07233e19fab93c60959891fb5d7b05616aa4162e9a34875a7d80bdef556a2a",
+      "docs/pendientes.md": "dbb174fe929598519e7d122deb6496112fa93fdef194657aed0656f64a08850d",
+      "docs/traceability/algorithms.json": "6feedc2b2c184f11ac51b08e5ecdd4390e31f3e94857891676e71db15bcb792b",
+      "docs/traceability/specification-review-20261023.json": "2e4268d79bb31ccdfcc073181fe9d93250626a39294847c4e77876017308a2e5",
+      "docs/traceability/specification-review-20261023.md": "4e8cfaeafee92cb6405c1d63deae228966b9ff1aa66c373e1af66bdfe7ceb409",
+      "docs/verification/model-reference-v1.md": "a96167256c51fe7cbbf9a8417606de553936074317c19293f506d0faf43925d2",
+      "docs/verification/persistence.md": "01721f3803aabb0eed92c172ada16c2f3fad4d534f3fde9d039a8b41c536fac3",
+      "docs/verification/protocol-python-rust.md": "bff4fdfb2ce0a55a9984fb34243de5c098bb51bf5249fcb08d58e2fb52bf3e1d",
+      "docs/verification/reconciliation-transport.md": "3563a2ef1b1758f5602677a21b80a6399120090b7198c8ecc3243d09a29ef602",
+      "docs/verification/reconciliation.md": "aa1253040d5e901ee82a087a76a682093f1c24256e738259595eb42704d499d1",
+      "docs/verification/state-models.md": "cbe0ce92512c3c30dfe89433f4c557987bb9d673bc7d2b006998681c783f7b90",
+      "docs/verification/technical-journal.md": "8bfce64320eb8f6cc1c8261c5240711b87a2d44ab1bd1adc88953dd62fb48d72",
+      "protocol/README.md": "c84a90cbcc4e6058c18b747872007b1222b1e58817435413c53fdc6c3b173222",
+      "protocol/messages-v1.md": "212e18137d8ca70debf49f0ba2142350bd4e2a7d1d572e168a0559f69dffefaa",
+      "protocol/messages-v2.md": "9958beb22e3ffde51e6b433cba91d3b17723eb3b1c23cd6d14b16580458c418c",
+      "pyproject.toml": "6f7a786b075f3d200a9a39e1d2060fe7573a4dc9ae5ab60fdf56c0e5dac9f903",
+      "rust-toolchain.toml": "887f9be066a15585a2c583578e84b0fcb541126d81546276bad3d2ff00d61167",
+      "scripts/README.md": "e778ef1189044e20f71744d4593f605c8952ed6cde3f57ee4b6f06865ea22d26",
+      "scripts/verificar_ci.py": "53f3055cdd4583472e20c3bf846a98bdc2cecf241a5de474e3199d1eb5ba0587",
+      "scripts/verificar_conciliacion.py": "f45fedc60ad0a1a60141f0f0ade31d4df582be016b1efeffc286569eb2f851b2",
+      "scripts/verificar_conciliacion_transporte.py": "d4cdb2b297733b6411bc35891c73cdf307afd39bfdd8db80d685e376108a89f6",
+      "scripts/verificar_diario_tecnico.py": "e23257a49fbfb170432376a13bf8acbb01e181f2084b698c90917e09bc00c261",
+      "scripts/verificar_estados.py": "a257db24af7d1f2a75f6922fc485d413cc40a861130881306bb23e5f0d9ebdcd",
+      "scripts/verificar_persistencia.py": "23482bc2a5a9c16c55cc5fab2e5f4c300e61c0121e4c98c547e916f3285324ad",
+      "scripts/verificar_protocolo.py": "f65e2eadf06be8c42e69335189d15994c2accd8d8e1bcf7e13346a4a1087431d",
+      "scripts/verificar_transporte.py": "8b14a0296679ba52f5956d09b9d17d8bf4cf100070724751d6cf751cf7cf285a",
+      "src/ardrec/__init__.py": "3637808a922dc4628a56a130332d29e7aefa87a252fcb42e509442ed44f73138",
+      "src/ardrec/analytics/README.md": "6f2ba2f8442fc787f3ba82ddcce7047089e10ddd312acbe1927b9f647368eb5d",
+      "src/ardrec/attempts/README.md": "5d2b397cd11c21c000739972582ad85d7da2b68293d4836bdede0045d6afcef6",
+      "src/ardrec/contracts/__init__.py": "375ea7b0d97634f660a695dfcc5eb8d8c4bf3e81c47f40b4749250ecce55d583",
+      "src/ardrec/controls/README.md": "df07c480d21f7b59e06db8c9caf2ecdb31ba73d71efc9091646af46f7f656235",
+      "src/ardrec/coordination/README.md": "3bbb4f69dd4a62cfb73960c019d94c6a594a404ea2e701e7e5776c251f06abb1",
+      "src/ardrec/evidence/README.md": "123c7c4a48eb85514fcfa9cc95296d1e0e42207e0f7a275459bf478c417b21ed",
+      "src/ardrec/initialization/README.md": "91a828fafaad73dd71827db5e221a7a242c396a02f0bd89d92a1716708a91a54",
+      "src/ardrec/messages.py": "951562dcfe37aa62a40e1f34cce4ba06c65c62bade717663659722c17b8cbf6a",
+      "src/ardrec/messages_v1.py": "0774d75342d82ef74bb5564410451f18336648f6e51035c91a57b44ae79ca07e",
+      "src/ardrec/messages_v2.py": "e25ff7dfbc12b8d717bc2fa47dc28a08d73a00591175268706b25d725b5239c8",
+      "src/ardrec/persistence/README.md": "0fefa2225fb5b4d8898daac25a8c6f7c6284fe1f58ba44a5a21755dd7103add1",
+      "src/ardrec/persistence/__init__.py": "0994c6aef1f556960d3caa3cafac5e64dea06b6d2c19b69ba1c51d67bd02ccd1",
+      "src/ardrec/persistence/codec.py": "16a60837e56bf8f0f8cd681653df0017c77280cc9fd7a0bfb92f755ea4c16cc0",
+      "src/ardrec/reconciliation.py": "e6568f478b27a87430737537300ac459218c7a7d93ce0fe710bc22009c346c8a",
+      "src/ardrec/reconciliation_transport.py": "ad7eaf347a73528d67e440142087f423af014b8ad44c9c1cbdf9217fafa8bc29",
+      "src/ardrec/rules/README.md": "49d4be3592a8927e19bd7810394a1cd8c6d4e5ca233781cc6163282abaa88d74",
+      "src/ardrec/selection/README.md": "5df2b87cbf1845686825355b311c6fa3c43f8caa371344d58dcc5ba857e08223",
+      "src/ardrec/state.py": "2380efc61461207e38cd9ad5251e32f3da5fe433912e0e4792b2aea470ca7c83",
+      "src/ardrec/stopping/README.md": "34720b36d6b03a344ee49af466419368eafd219fe7117db433a928a7c821552f",
+      "src/ardrec/transitions/README.md": "6aa98133d9d2d5a5f39309032c3a8b86cf722dfee3bb8ab4fa464a35766e3f3c",
+      "src/ardrec/transport.py": "01d5c6a0e0b4f1db85208c3c3440d7e5ca688cd3efd6b10e8fc1650bbbb3649e",
+      "tests/e2e/README.md": "bebe667bb0e9f49248e911c634da8155edbef068436558b4344002b41b57a90f",
+      "tests/fixtures/messages-v2.json": "2a3402b37d0f1a5ea00ec235e02cfc1b87a4159409eb41e7dc72bbfbd0697400",
+      "tests/fixtures/messages.json": "55a3ba1c7f3e9ba2a0f17a0ff790e49ae13acb6a4296cf997302875e2353c75b",
+      "tests/fixtures/model-reference-v1.json": "7d5534b10fbf3e50e9eb2a010f83a64367d888cd63ef0822c647b3231e2cb4f4",
+      "tests/fixtures/selection-precedence-invalid-v1.json": "1c703814bb2174289535dc75decc2d47ab85d835abb01fa55c956030e071933c",
+      "tests/integration/README.md": "0114b2714322e76f5d78a85b13ef8e86c31b45976c1c0cb0d5883fc37c74f068",
+      "tests/recovery/README.md": "0269f887254f12723dccede0e75a51c20235fc19af3436966d57f78da85cbd60",
+      "tests/unit/README.md": "2eee09ad2055e9f112f8cedb99c42ba860ad0a3f8fd83c6763dd851eed33acc4",
+      "tests/unit/test_contracts.py": "ba7de2c45872931ef38d4974b78e42be72e9dcf2e92702e01336645c41e56014",
+      "tests/unit/test_messages.py": "8f633bba74a19278e4928582341cc1b3a65534672518b262de43fac00bc1b54d",
+      "tests/unit/test_model_references.py": "5608bfa3dee049acb8c9f731580338c07a227107354751febc336fcc0694e28d",
+      "tests/unit/test_persistence.py": "d8bf6c816fae2472e4520f1881ea235d09e472d7e15848ef32331821a4d8eb0c",
+      "tests/unit/test_protocol_equivalence.py": "a6cb31fa6b165b9f3a8480da479feb612564adede2d003290683d26a74d7c0de",
+      "tests/unit/test_protocol_v2.py": "b1c9302020145c558fb0397fd0e1eff49ad67ea43b6565fd3a19e9cfee2dcce4",
+      "tests/unit/test_reconciliation.py": "feafacbaa0bd9a2647fbbf7845cb5e3b25174289acebacefb8b972671de61ca2",
+      "tests/unit/test_reconciliation_transport.py": "02feb5c6b3f4d672aacb411bbb72e7f93e6fa08023279bc7e145333e50872147",
+      "tests/unit/test_reference_alignment.py": "5a355d3bec819012c4cae9174b1b6216a22d82bed1727e7d145ee179824b119b",
+      "tests/unit/test_state.py": "88413499014d6493ebfdd55295cbd218f076f3340b7b70ec6f3a3b985d679b69",
+      "tests/unit/test_transport.py": "89c7658b8a0452f6dd5d97ca23e85823fa253425a7911849bc7d3cd96ecd13be",
+      "uv.lock": "026395be64c87818b1bbc75d1524b38ea9469535b73ccc43c01e65df3bf6fa01"
+    },
+    "exclusions": {
+      "es": "Registros dinámicos omitidos del contexto, instalación real del laboratorio, permisos efectivos, ejecución física y datos experimentales. La revisión no certifica archivos fuera del manifiesto.",
+      "en": "Dynamic records omitted from the context, actual laboratory deployment, effective permissions, physical execution and experimental data. The review does not certify files outside the manifest."
+    },
+    "inventory_rule": {
+      "es": "El aplicador rechaza archivos de implementación, protocolo, pruebas o scripts seguidos por Git y ausentes del manifiesto. Enumera por separado los demás archivos no revisados.",
+      "en": "The installer rejects Git-tracked implementation, protocol, test or script files absent from the manifest. Other unreviewed files are listed separately."
+    }
+  },
+  "baseline_ci": {
+    "provenance": "USER_SUPPLIED_SUCCESSFUL_INTEGRATION_OUTPUT",
+    "run_id": 40049040933,
+    "url": "https://github.com/DrewSC13/ardrec/actions/runs/40049040933",
+    "commit": "526276d382798cf5d0cda1d1966b9e0c49ad4d24",
+    "independently_queried_in_this_review": false
+  },
+  "domains": [
+    {
+      "id": "CONTRACTS",
+      "source_sections": [
+        "3.2.9",
+        "3.9.2",
+        "3.9.3",
+        "3.9.4"
+      ],
+      "assessment": {
+        "es": "Contratos exactos Python, tramas y validadores operacionales de ambos lenguajes presentes. La identidad sintáctica no acredita artefactos ni causalidad física.",
+        "en": "Exact Python contracts, frames and operational validators in both languages are present. Syntactic identity proves neither artifacts nor physical causality."
+      },
+      "findings": [
+        "AL-04",
+        "AL-07",
+        "AL-09"
+      ]
+    },
+    {
+      "id": "STATES",
+      "source_sections": [
+        "3.5",
+        "3.8.1",
+        "3.9.10",
+        "3.9.11"
+      ],
+      "assessment": {
+        "es": "Se representan ocho estados del servicio, intento e invocación; incertidumbre y terminalidad tienen controles. El estado analítico completo y los productores de guardas no están implementados.",
+        "en": "Eight service states, attempts and invocation outcomes are represented; uncertainty and terminality are controlled. Complete analytical state and guard producers are not implemented."
+      },
+      "findings": [
+        "AL-04",
+        "AL-06",
+        "AL-07"
+      ]
+    },
+    {
+      "id": "PERSISTENCE",
+      "source_sections": [
+        "3.9.10",
+        "3.10.1",
+        "3.10.2"
+      ],
+      "assessment": {
+        "es": "Hay diarios, exclusión, integridad, generaciones y recuperación operacional. La publicación analítica completa y las garantías del sistema de archivos del laboratorio necesitan validación adicional.",
+        "en": "Journals, exclusion, integrity, generations and operational recovery exist. Complete analytical publication and laboratory filesystem guarantees need further validation."
+      },
+      "findings": [
+        "AL-05",
+        "AL-06",
+        "AL-07"
+      ]
+    },
+    {
+      "id": "ACCEPTANCE",
+      "source_sections": [
+        "1.9.3",
+        "1.9.4",
+        "1.9.5",
+        "3.8",
+        "3.9",
+        "3.10"
+      ],
+      "assessment": {
+        "es": "Se conservan los 27 criterios y 15 invariantes históricos. Una vista actual separa soporte de componentes, verificación integral y experimentación; desglosa obligaciones metodológicas vigentes.",
+        "en": "The 27 historical criteria and 15 invariants are preserved. A current view separates component support, system verification and experimentation, and details current methodological obligations."
+      },
+      "findings": [
+        "AL-02",
+        "AL-08"
+      ]
+    },
+    {
+      "id": "REFERENCE_CASES",
+      "source_sections": [
+        "3.2",
+        "3.3",
+        "3.4",
+        "3.5",
+        "3.6",
+        "3.7",
+        "3.10"
+      ],
+      "assessment": {
+        "es": "Los 51 casos son oráculos de referencia: 16 numéricos auditados por cálculo independiente y 35 casos semánticos documentados. No constituyen 51 pruebas contra algoritmos implementados ni cobertura exhaustiva de la tesis.",
+        "en": "The 51 cases are reference oracles: 16 numerical cases audited by independent calculation and 35 documented semantic cases. They are neither 51 tests against implemented algorithms nor exhaustive thesis coverage."
+      },
+      "findings": [
+        "AL-03"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "AL-01",
+      "topic": "SOURCE_PROVENANCE",
+      "status": "RESOLVED_IN_REVIEW",
+      "gate": "REVIEW",
+      "source_sections": [
+        "3.9",
+        "3.10"
+      ],
+      "decision": {
+        "es": "Mantener la huella vigente y la histórica como fuentes distintas; no reetiquetar evidencia antigua.",
+        "en": "Keep current and historical hashes as distinct sources; do not relabel old evidence."
+      },
+      "observation": {
+        "es": "La revisión PR13 conserva ambas procedencias y sus pruebas pasan.",
+        "en": "PR13 preserves both provenances and its tests pass."
+      },
+      "closure_evidence_required": {
+        "es": "Cada evidencia debe identificar fuente y commit examinados.",
+        "en": "Each evidence item must identify its reviewed source and commit."
+      }
+    },
+    {
+      "id": "AL-02",
+      "topic": "ACCEPTANCE_COVERAGE",
+      "status": "RESOLVED_IN_REVIEW",
+      "gate": "TRACEABILITY",
+      "source_sections": [
+        "3.8",
+        "3.9",
+        "3.10"
+      ],
+      "decision": {
+        "es": "Agregar cobertura actual sin editar estados históricos ni convertir pruebas parciales en aceptación del sistema.",
+        "en": "Add current coverage without editing historical states or treating partial tests as system acceptance."
+      },
+      "observation": {
+        "es": "current-coverage-v1.json incluye los 27 criterios y sus carencias actuales.",
+        "en": "current-coverage-v1.json includes all 27 criteria and their current gaps."
+      },
+      "closure_evidence_required": {
+        "es": "La trazabilidad siguiente debe vincular métodos de prueba y evidencia por requisito.",
+        "en": "The next traceability stage must link test methods and evidence per requirement."
+      }
+    },
+    {
+      "id": "AL-03",
+      "topic": "REFERENCE_PRECEDENCE",
+      "status": "RESOLVED_IN_PR13",
+      "gate": "ALGORITHM_VERIFICATION",
+      "source_sections": [
+        "3.7"
+      ],
+      "decision": {
+        "es": "Conservar precedencias 1..4, los 51 resultados literales y ocho entradas inválidas separadas.",
+        "en": "Preserve precedence 1..4, all 51 literal outcomes and eight separate invalid inputs."
+      },
+      "observation": {
+        "es": "Ocho valores corregidos en PR13; los algoritmos siguen sin ejecutarse.",
+        "en": "Eight values corrected in PR13; algorithms are still not executed."
+      },
+      "closure_evidence_required": {
+        "es": "A4 deberá contrastarse con los oráculos y rechazar el dominio inválido.",
+        "en": "A4 must be checked against the oracles and reject the invalid domain."
+      }
+    },
+    {
+      "id": "AL-04",
+      "topic": "TEMPORAL_POLICY",
+      "status": "OPEN",
+      "gate": "BEFORE_REAL_EXECUTOR",
+      "source_sections": [
+        "3.9.2",
+        "3.9.3",
+        "3.10.2"
+      ],
+      "decision": {
+        "es": "Definir causalidad, ajustes UTC y duración monotónica con compatibilidad explícita. La tesis exige tiempos y secuencia, pero no prescribe un esquema de reloj monotónico compartido.",
+        "en": "Define causality, UTC adjustments and monotonic duration with explicit compatibility. The thesis requires timestamps and sequence but does not prescribe a shared monotonic clock schema."
+      },
+      "observation": {
+        "es": "Python y Rust aceptan un resultado fechado antes de su solicitud; AttemptState también lo acepta. La paridad no prueba causalidad.",
+        "en": "Python and Rust accept a result dated before its request; AttemptState also accepts it. Parity does not prove causality."
+      },
+      "closure_evidence_required": {
+        "es": "Probar inversión temporal, ajuste UTC, duración, reinicio y lectura de diarios previos. Una comparación UTC aislada no debe autorizar ni repetir ejecución.",
+        "en": "Test reversed timestamps, UTC adjustments, duration, restart and old journal readability. An isolated UTC comparison must not authorize or repeat execution."
+      }
+    },
+    {
+      "id": "AL-05",
+      "topic": "ANALYTICAL_PERSISTENCE",
+      "status": "OPEN",
+      "gate": "BEFORE_ANALYTICAL_STATE",
+      "source_sections": [
+        "3.2.9",
+        "3.9.4",
+        "3.9.10",
+        "3.10"
+      ],
+      "decision": {
+        "es": "Definir un formato analítico versionado que conserve racionales y ND y sus límites; no ampliar silenciosamente el dominio de enteros operacionales.",
+        "en": "Define a versioned analytical format preserving rational values, ND and their limits; do not silently widen operational integer domains."
+      },
+      "observation": {
+        "es": "El contrato admite componentes de 256 bits; el codec operacional restringe enteros a 64 bits. Fraction y ND directos se rechazan; la magnitud serializada de denominador 2**100+1 también.",
+        "en": "The contract admits 256-bit components; the operational codec restricts integers to 64 bits. Direct Fraction and ND are rejected; an encoded magnitude with denominator 2**100+1 is also rejected."
+      },
+      "closure_evidence_required": {
+        "es": "Demostrar ida y vuelta exacta, fronteras, motivos ND, integridad, interrupciones y compatibilidad/migración sin pérdida.",
+        "en": "Demonstrate exact round trips, boundaries, ND reasons, integrity, interruptions and lossless compatibility/migration."
+      }
+    },
+    {
+      "id": "AL-06",
+      "topic": "ANALYTICAL_STATE",
+      "status": "OPEN",
+      "gate": "BEFORE_ALGORITHMS",
+      "source_sections": [
+        "3.2",
+        "3.3",
+        "3.5",
+        "3.8.1",
+        "3.9.10"
+      ],
+      "decision": {
+        "es": "Mantener los modelos actuales como núcleo operacional; añadir de forma versionada estado analítico y verificación efectiva de invariantes antes de publicar resultados del modelo.",
+        "en": "Keep current models as an operational core; add versioned analytical state and effective invariant verification before publishing model results."
+      },
+      "observation": {
+        "es": "ServiceState y ConfirmedState no representan todas las magnitudes, repositorios y ventanas analíticas; GuardFact recibe valores suministrados por el llamador.",
+        "en": "ServiceState and ConfirmedState do not represent all analytical magnitudes, repositories and windows; GuardFact receives caller-supplied values."
+      },
+      "closure_evidence_required": {
+        "es": "Cubrir caracterización congelada, R0/CN/Et/R0-/U/D/Rf/PA, evidencia, revisiones, contadores por caso, objetivos, historial, ventana y controles; comprobar guardas con sus fuentes.",
+        "en": "Cover frozen characterization, R0/CN/Et/R0-/U/D/Rf/PA, evidence, revisions, per-case counters, objectives, history, window and controls; verify guards against their sources."
+      }
+    },
+    {
+      "id": "AL-07",
+      "topic": "EXTERNAL_REFERENCES",
+      "status": "OPEN",
+      "gate": "BEFORE_REAL_EXECUTOR",
+      "source_sections": [
+        "3.7.5",
+        "3.9.1",
+        "3.9.2",
+        "3.9.8",
+        "3.9.9",
+        "3.9.10"
+      ],
+      "decision": {
+        "es": "Resolver identidad, existencia, pertenencia e integridad de referencias y autenticar procesos antes del despacho. Un identificador válido o una guarda declarada no son una autorización.",
+        "en": "Resolve reference identity, existence, ownership and integrity and authenticate processes before dispatch. A valid identifier or declared guard is not authorization."
+      },
+      "observation": {
+        "es": "El transporte recibe un socket ya conectado y de confianza; los validadores y diarios no acreditan artefactos externos ni aislamiento del laboratorio.",
+        "en": "Transport receives an already connected trusted socket; validators and journals establish neither external artifacts nor laboratory isolation."
+      },
+      "closure_evidence_required": {
+        "es": "Probar par no autorizado, referencia cruzada/ausente/alterada, permisos, cambio de artefacto y perfiles congelados. Rechazar antes de ejecutar.",
+        "en": "Test unauthorized peers, cross-context/missing/altered references, permissions, artifact changes and frozen profiles. Reject before execution."
+      }
+    },
+    {
+      "id": "AL-08",
+      "topic": "EXPERIMENTAL_REQUIREMENTS",
+      "status": "RESOLVED_IN_SPECIFICATION",
+      "gate": "BEFORE_EXPERIMENTAL_FREEZE",
+      "source_sections": [
+        "1.9.3",
+        "1.9.4",
+        "1.9.5"
+      ],
+      "decision": {
+        "es": "Desglosar obligaciones metodológicas sin presentar un protocolo congelado ni evidencia experimental inexistente.",
+        "en": "Detail methodological obligations without claiming a frozen protocol or nonexistent experimental evidence."
+      },
+      "observation": {
+        "es": "Esta revisión registra obligaciones explícitas con sección, criterio y producto exigido; todas permanecen sin ejecución experimental.",
+        "en": "This review records explicit obligations with section, criterion and required deliverable; all remain experimentally unexecuted."
+      },
+      "closure_evidence_required": {
+        "es": "Validar instrumentos, pilotar por separado y congelar protocolo, análisis y versiones antes de medir.",
+        "en": "Validate instruments, run a separate pilot and freeze protocol, analysis and versions before measurement."
+      }
+    },
+    {
+      "id": "AL-09",
+      "topic": "NUMERIC_PARITY_SCOPE",
+      "status": "OPEN",
+      "gate": "BEFORE_NUMERIC_INTERCHANGE",
+      "source_sections": [
+        "3.2.9",
+        "3.9.4"
+      ],
+      "decision": {
+        "es": "Distinguir paridad de mensajes operacionales de paridad del contrato numérico completo; AC-02 permanece parcial.",
+        "en": "Distinguish operational-message parity from full numerical-contract parity; AC-02 remains partial."
+      },
+      "observation": {
+        "es": "contracts es Python; las pruebas de equivalencia operacional no demuestran ida y vuelta de racionales arbitrarios de 256 bits y ND por Rust.",
+        "en": "contracts is Python; operational equivalence tests do not demonstrate round trips of arbitrary 256-bit rational values and ND through Rust."
+      },
+      "closure_evidence_required": {
+        "es": "Añadir un contrato numérico compartido o delimitar y justificar el intercambio; probar canonicidad, magnitudes límite y ND entre lenguajes.",
+        "en": "Add a shared numerical contract or delimit and justify interchange; test canonical form, boundary magnitudes and ND across languages."
+      }
+    }
+  ],
+  "methodological_requirements": [
+    {
+      "id": "MET-01",
+      "source_section": "1.9.3",
+      "acceptance_criteria": [
+        "AC-25",
+        "AC-26"
+      ],
+      "requirement": {
+        "es": "Comparación emparejada por servicio-escenario bajo condiciones equivalentes.",
+        "en": "Paired service-scenario comparison under equivalent conditions."
+      },
+      "required_evidence": {
+        "es": "Protocolo de comparación y registros I1/I8.",
+        "en": "Comparison protocol and I1/I8 records."
+      },
+      "experimental_verification": "NOT_RUN"
+    },
+    {
+      "id": "MET-02",
+      "source_section": "1.9.3",
+      "acceptance_criteria": [
+        "AC-25",
+        "AC-26"
+      ],
+      "requirement": {
+        "es": "Congelar el método estático antes de pruebas técnicas y de conocer salidas ARDREC; conservar originales de correcciones justificadas.",
+        "en": "Freeze the static method before technical tests and before seeing ARDREC outputs; preserve originals of justified corrections."
+      },
+      "required_evidence": {
+        "es": "I2 con versión, fecha, fuentes, responsable y cierre.",
+        "en": "I2 with version, date, sources, responsible person and closure."
+      },
+      "experimental_verification": "NOT_RUN"
+    },
+    {
+      "id": "MET-03",
+      "source_section": "1.9.3",
+      "acceptance_criteria": [
+        "AC-25",
+        "AC-26"
+      ],
+      "requirement": {
+        "es": "Rúbrica independiente y verificación mínima común definidas sin resultados ni reglas internas de los métodos.",
+        "en": "Independent rubric and common minimum verification defined without method outputs or internal rules."
+      },
+      "required_evidence": {
+        "es": "I4 validada y paquete uniforme de evidencia.",
+        "en": "Validated I4 and uniform evidence package."
+      },
+      "experimental_verification": "NOT_RUN"
+    },
+    {
+      "id": "MET-04",
+      "source_section": "1.9.3",
+      "acceptance_criteria": [
+        "AC-25",
+        "AC-27"
+      ],
+      "requirement": {
+        "es": "Cegar al evaluador cuando sea viable; documentar información disponible y medidas si no lo es.",
+        "en": "Blind the evaluator where feasible; otherwise document available information and mitigation."
+      },
+      "required_evidence": {
+        "es": "Registro de acceso y condiciones de valoración.",
+        "en": "Access and assessment-condition record."
+      },
+      "experimental_verification": "NOT_RUN"
+    },
+    {
+      "id": "MET-05",
+      "source_section": "1.9.3",
+      "acceptance_criteria": [
+        "AC-24",
+        "AC-25"
+      ],
+      "requirement": {
+        "es": "Demostración mínima suficiente; no aplicable, inconcluso y ausencia de evidencia no se convierten automáticamente en puntuaciones.",
+        "en": "Minimum sufficient demonstration; inapplicability, inconclusive outcomes and missing evidence do not automatically become scores."
+      },
+      "required_evidence": {
+        "es": "Reglas previas y registros de incidencias.",
+        "en": "Predefined rules and incident records."
+      },
+      "experimental_verification": "NOT_RUN"
+    },
+    {
+      "id": "MET-06",
+      "source_section": "1.9.3",
+      "acceptance_criteria": [
+        "AC-26"
+      ],
+      "requirement": {
+        "es": "Wilcoxon emparejado unilateral, dirección menor error absoluto ARDREC y alfa 0,05.",
+        "en": "One-sided paired Wilcoxon, direction of lower ARDREC absolute error and alpha 0.05."
+      },
+      "required_evidence": {
+        "es": "Plan estadístico previo, software y verificación con datos sintéticos separados.",
+        "en": "Prespecified statistical plan, software and verification using separate synthetic data."
+      },
+      "experimental_verification": "NOT_RUN"
+    },
+    {
+      "id": "MET-07",
+      "source_section": "1.9.3",
+      "acceptance_criteria": [
+        "AC-26"
+      ],
+      "requirement": {
+        "es": "Informar dirección, magnitud, tamaño del efecto, consistencia y relevancia; separar análisis secundarios preespecificados.",
+        "en": "Report direction, magnitude, effect size, consistency and relevance; separate prespecified secondary analyses."
+      },
+      "required_evidence": {
+        "es": "Plantilla de análisis; comparador contextual y ablaciones congelados sin ajuste por Rref.",
+        "en": "Analysis template; contextual comparator and ablations frozen without Rref-driven tuning."
+      },
+      "experimental_verification": "NOT_RUN"
+    },
+    {
+      "id": "MET-08",
+      "source_section": "1.9.3",
+      "acceptance_criteria": [
+        "AC-25",
+        "AC-26"
+      ],
+      "requirement": {
+        "es": "Predefinir ceros, empates, ausencias, atípicos, exclusiones y repeticiones; ningún descarte por favorecer la hipótesis.",
+        "en": "Predefine zeros, ties, missing data, outliers, exclusions and repeats; no exclusions to favor the hypothesis."
+      },
+      "required_evidence": {
+        "es": "Reglas de evaluabilidad y registro de decisiones.",
+        "en": "Evaluability rules and decision record."
+      },
+      "experimental_verification": "NOT_RUN"
+    },
+    {
+      "id": "MET-09",
+      "source_section": "1.9.4",
+      "acceptance_criteria": [
+        "AC-25"
+      ],
+      "requirement": {
+        "es": "Planificar 54 unidades: 18 SSH, 18 FTP y 18 SMB; selección intencional sin generalización probabilística automática.",
+        "en": "Plan 54 units: 18 SSH, 18 FTP and 18 SMB; purposive sampling without automatic probabilistic generalization."
+      },
+      "required_evidence": {
+        "es": "Manifiesto congelado de identidades y diferencias técnicas.",
+        "en": "Frozen manifest of identities and technical differences."
+      },
+      "experimental_verification": "NOT_RUN"
+    },
+    {
+      "id": "MET-10",
+      "source_section": "1.9.4",
+      "acceptance_criteria": [
+        "AC-25"
+      ],
+      "requirement": {
+        "es": "Repeticiones técnicas no aumentan n; unidades excluidas conservan identidad y registros; no reemplazar ni ampliar muestra tras congelamiento por resultados.",
+        "en": "Technical repeats do not increase n; excluded units retain identity and records; do not replace or expand the frozen sample in response to results."
+      },
+      "required_evidence": {
+        "es": "Censo planificado/analizado y causas de exclusión.",
+        "en": "Planned/analyzed census and exclusion reasons."
+      },
+      "experimental_verification": "NOT_RUN"
+    },
+    {
+      "id": "MET-11",
+      "source_section": "1.9.4",
+      "acceptance_criteria": [
+        "AC-26"
+      ],
+      "requirement": {
+        "es": "Justificar potencia objetivo 0,80 con efecto mínimo, supuestos sobre diferencias/ceros, herramienta y resultado; 54 no garantiza potencia.",
+        "en": "Justify target power 0.80 using minimum effect, assumptions on differences/zeros, tool and result; 54 does not guarantee power."
+      },
+      "required_evidence": {
+        "es": "Análisis de potencia previo sin datos definitivos.",
+        "en": "Prospective power analysis without definitive data."
+      },
+      "experimental_verification": "NOT_RUN"
+    },
+    {
+      "id": "MET-12",
+      "source_section": "1.9.4",
+      "acceptance_criteria": [
+        "AC-24",
+        "AC-25"
+      ],
+      "requirement": {
+        "es": "Pilotaje separado de las 54 unidades; corregir antes del congelamiento y no incorporar datos piloto a la muestra principal.",
+        "en": "Pilot separately from the 54 units; correct before freezing and exclude pilot data from the main sample."
+      },
+      "required_evidence": {
+        "es": "Manifiesto y datos piloto separados.",
+        "en": "Separate pilot manifest and data."
+      },
+      "experimental_verification": "NOT_RUN"
+    },
+    {
+      "id": "MET-13",
+      "source_section": "1.9.5",
+      "acceptance_criteria": [
+        "AC-25",
+        "AC-27"
+      ],
+      "requirement": {
+        "es": "I1-I8 tienen finalidad distinta y el mismo identificador de servicio-escenario; la matriz no reemplaza registros originales.",
+        "en": "I1-I8 have distinct purposes and share service-scenario identity; the matrix does not replace originals."
+      },
+      "required_evidence": {
+        "es": "Instrumentos versionados y procedencia de cada dato.",
+        "en": "Versioned instruments and per-datum provenance."
+      },
+      "experimental_verification": "NOT_RUN"
+    },
+    {
+      "id": "MET-14",
+      "source_section": "1.9.5",
+      "acceptance_criteria": [
+        "AC-25"
+      ],
+      "requirement": {
+        "es": "Al menos tres especialistas pertinentes revisan independientemente claridad, coherencia, relevancia y suficiencia.",
+        "en": "At least three relevant specialists independently assess clarity, coherence, relevance and sufficiency."
+      },
+      "required_evidence": {
+        "es": "I5, perfiles, valoraciones individuales, cambios y discrepancias conservados.",
+        "en": "I5, profiles, individual ratings, changes and disagreements preserved."
+      },
+      "experimental_verification": "NOT_RUN"
+    },
+    {
+      "id": "MET-15",
+      "source_section": "1.9.5",
+      "acceptance_criteria": [
+        "AC-25",
+        "AC-27"
+      ],
+      "requirement": {
+        "es": "Pilotar todos los instrumentos; fijar versión, fecha, instrucciones, responsable y reglas de incidencias/correcciones.",
+        "en": "Pilot every instrument; specify version, date, instructions, responsible person and incident/correction rules."
+      },
+      "required_evidence": {
+        "es": "Instrumentos estables aprobados antes de recolección.",
+        "en": "Stable instruments approved before data collection."
+      },
+      "experimental_verification": "NOT_RUN"
+    },
+    {
+      "id": "MET-16",
+      "source_section": "1.9.5",
+      "acceptance_criteria": [
+        "AC-25",
+        "AC-27"
+      ],
+      "requirement": {
+        "es": "Con varios observadores verificar concordancia según plan; con uno no atribuir confiabilidad interobservador.",
+        "en": "With multiple observers assess agreement as planned; with one do not claim inter-rater reliability."
+      },
+      "required_evidence": {
+        "es": "Diseño y resultado de evaluación de concordancia cuando corresponda.",
+        "en": "Agreement-assessment design and result where applicable."
+      },
+      "experimental_verification": "NOT_RUN"
+    },
+    {
+      "id": "MET-17",
+      "source_section": "1.9.5",
+      "acceptance_criteria": [
+        "AC-27"
+      ],
+      "requirement": {
+        "es": "Conservar originales, transformaciones y huellas; ningún cambio manual silencioso de datos o matriz definitiva.",
+        "en": "Preserve originals, transformations and hashes; no silent manual changes to data or the final matrix."
+      },
+      "required_evidence": {
+        "es": "Cadena de procedencia y reconstrucción independiente.",
+        "en": "Provenance chain and independent reconstruction."
+      },
+      "experimental_verification": "NOT_RUN"
+    }
+  ],
+  "traceability_handoff": {
+    "es": "La siguiente etapa debe enlazar cada requisito con su algoritmo o responsabilidad no algorítmica, módulo, prueba ejecutable, evidencia identificada por commit y hallazgo abierto. Tener una fila no acredita cumplimiento.",
+    "en": "The next stage must link each requirement to its algorithm or non-algorithmic responsibility, module, executable test, commit-bound evidence and open finding. A row does not establish compliance."
+  }
+}
