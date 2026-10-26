@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0",
+  "baseline_commit": "e72830432bc1c26cf5f8679752eddf28077e82a0",
+  "source": {
+    "label": "TESIS ARDREC",
+    "sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72"
+  },
+  "policy": {
+    "es": "Una URL o una prueba existente no acredita ejecución individual. Las evidencias recibidas se distinguen de verificaciones independientes. Ninguna evidencia de esta versión acredita aceptación integral o validación experimental.",
+    "en": "A URL or an existing test does not establish individual execution. Received evidence is distinguished from independent verification. No evidence in this version establishes system acceptance or experimental validation."
+  },
+  "items": [
+    {
+      "id": "EV-PR14-CI",
+      "kind": "USER_REPORTED_CI",
+      "commit": "714cb4cddfb0e5b51f5ddf9b910d4760feade92e",
+      "run_id": 40388033084,
+      "event": "pull_request",
+      "workflow": ".github/workflows/ci.yml",
+      "url": "https://github.com/DrewSC13/ardrec/actions/runs/40388033084",
+      "reported_conclusion": "success",
+      "independently_queried": false,
+      "raw_logs_archived_in_repository": false,
+      "per_test_results_available": false,
+      "proof_level": "BASELINE_WORKFLOW_ONLY",
+      "proves_system_acceptance": false,
+      "proves_experimental_validation": false,
+      "reported_checks": [
+        "PYTHON_PACKAGING",
+        "PYTHON_UNIT_STEP",
+        "RUST_BUILD",
+        "TRANSPORT_INTEGRATION",
+        "PROTOCOL_EQUIVALENCE",
+        "TECHNICAL_JOURNAL",
+        "SOCKET_RECONCILIATION"
+      ],
+      "acquisition_note": {
+        "es": "Salida de integración compartida por el usuario; no se descargaron logs ni se consultó nuevamente la API en este incremento.",
+        "en": "Integration output supplied by the user; logs were not downloaded and the API was not queried again in this increment."
+      }
+    },
+    {
+      "id": "EV-MAIN14-CI",
+      "kind": "USER_REPORTED_CI",
+      "commit": "e72830432bc1c26cf5f8679752eddf28077e82a0",
+      "run_id": 40389092388,
+      "event": "push",
+      "workflow": ".github/workflows/ci.yml",
+      "url": "https://github.com/DrewSC13/ardrec/actions/runs/40389092388",
+      "reported_conclusion": "success",
+      "independently_queried": false,
+      "raw_logs_archived_in_repository": false,
+      "per_test_results_available": false,
+      "proof_level": "BASELINE_WORKFLOW_ONLY",
+      "proves_system_acceptance": false,
+      "proves_experimental_validation": false,
+      "reported_checks": [
+        "PYTHON_PACKAGING",
+        "PYTHON_UNIT_STEP",
+        "RUST_BUILD",
+        "TRANSPORT_INTEGRATION",
+        "PROTOCOL_EQUIVALENCE",
+        "TECHNICAL_JOURNAL",
+        "SOCKET_RECONCILIATION"
+      ],
+      "acquisition_note": {
+        "es": "Salida de integración compartida por el usuario; no se descargaron logs ni se consultó nuevamente la API en este incremento.",
+        "en": "Integration output supplied by the user; logs were not downloaded and the API was not queried again in this increment."
+      }
+    }
+  ]
+}
