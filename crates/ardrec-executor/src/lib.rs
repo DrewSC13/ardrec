@@ -26,3 +26,6 @@ pub mod journal;
 
 /// Consultas durables por un canal Unix de uso exclusivo.
 pub mod reconciliation_transport;
+
+/// Magnitudes analíticas exactas independientes del protocolo operacional.
+pub mod magnitudes;
