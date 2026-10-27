@@ -1,0 +1,111 @@
+{
+  "schema_version": "1.0",
+  "increment": "EXACT_ANALYTICAL_MAGNITUDES",
+  "baseline_commit": "00f4d8e40e11b90a615e8b3fc603aba0dc6c194d",
+  "source": {
+    "name": "TESIS ARDREC",
+    "sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+    "sections": [
+      "3.2.9",
+      "3.9.4",
+      "3.9.10",
+      "3.10"
+    ]
+  },
+  "implementation": "IMPLEMENTED_IN_INCREMENT",
+  "local_verification": "REQUIRED_BY_INSTALLER",
+  "remote_ci": "PENDING",
+  "finding_resolution": {
+    "AL-05": "COMPONENT_PREPARED_INTEGRATION_PENDING",
+    "AL-09": "COMPONENT_PREPARED_INTEGRATION_PENDING"
+  },
+  "full_specification_alignment": "PENDING",
+  "system_functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN",
+  "algorithm_implementation": "NOT_STARTED",
+  "operational_prototype": "NOT_STARTED",
+  "historical_registry": "docs/traceability/development-v1.json",
+  "historical_registry_modified": false,
+  "scope": {
+    "es": "Formato y archivo de magnitudes individuales; no confirma generaciones analíticas ni valida ecuaciones de A7.",
+    "en": "Individual magnitude format and archive; does not commit analytical generations or validate A7 equations."
+  },
+  "requirements": [
+    {
+      "id": "AC-02",
+      "algorithms": [
+        "A1",
+        "A2",
+        "A7"
+      ],
+      "invariants": [
+        "INV-08"
+      ],
+      "modules": [
+        "src/ardrec/persistence/magnitudes.py",
+        "crates/ardrec-executor/src/magnitudes.rs"
+      ],
+      "checks": [
+        "scripts/verificar_magnitudes.py",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_exact_record_round_trips",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_invalid_values_are_not_normalized"
+      ],
+      "coverage": "COMPONENT_ONLY",
+      "fulfills_full_requirement": false
+    },
+    {
+      "id": "AC-20",
+      "algorithms": [
+        "A9"
+      ],
+      "invariants": [
+        "INV-01",
+        "INV-07",
+        "INV-13"
+      ],
+      "modules": [
+        "src/ardrec/persistence/magnitudes.py"
+      ],
+      "checks": [
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_fields_versions_duplicates_and_utf8",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_payload_boundaries",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_archive_reopen_and_immutable_reuse",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_operational_codec_is_unchanged",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_corruption_blocks_session",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_noncanonical_object_is_not_authoritative",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_reference_path_rejected",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_concurrent_writer_is_blocked",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_symlink_and_hardlink_are_rejected",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_existing_object_is_not_overwritten",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_short_writes_are_completed",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_zero_write_and_sync_failure_do_not_confirm",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_exception_after_publication_requires_reopen",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_sigkill_preserves_previous_and_no_partial_confirmation",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_replaced_lock_and_directory_block_use",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_directory_sync_failure_requires_recovery",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_read_sync_failure_does_not_confirm_recovery",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_changed_permissions_block_publication",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_object_symlink_is_rejected",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_directory_privacy_and_existing_creation"
+      ],
+      "coverage": "COMPONENT_ONLY",
+      "fulfills_full_requirement": false
+    }
+  ],
+  "expected_verification": {
+    "new_python_methods": 22,
+    "total_python_methods": 242,
+    "sigkill_boundaries": 6,
+    "new_rust_methods": 3,
+    "parity_cases": 520,
+    "accepted": 420,
+    "rejected": 100,
+    "corpus_seed": 20261026,
+    "corpus_sha256": "68848ada4e6948c849cb05eaf4ffe389a2495c8f33247aa4817e8ac2dc641c32",
+    "operational_parity_comparisons": 3052
+  },
+  "remaining_work": {
+    "es": "Confirmar pruebas locales y CI; revisar cierre de AL-05/AL-09. Completar estado analítico integral AL-06, referencias AL-07 y temporalidad AL-04 antes de sus usos dependientes.",
+    "en": "Confirm local checks and CI; review closure of AL-05/AL-09. Complete analytical state AL-06, references AL-07 and temporal semantics AL-04 before dependent uses."
+  }
+}

@@ -80,3 +80,6 @@ jobs:
 
       - name: Verificar conciliación por socket / Verify socket reconciliation
         run: python3 scripts/verificar_conciliacion_transporte.py
+
+      - name: Verificar magnitudes exactas / Verify exact magnitudes
+        run: python3 scripts/verificar_magnitudes.py
