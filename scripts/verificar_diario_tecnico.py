@@ -69,7 +69,7 @@ def verify(binary, directory):
     from ardrec.reconciliation import begin_query, complete_query, inspect_recovery
     from test_persistence import INITIAL, prepare, reserve, reopen
 
-    fixtures = json.loads((ROOT / "tests/fixtures/messages-v2.json").read_text())
+    fixtures = json.loads((ROOT / "tests/fixtures/messages-temporal-v1.json").read_text())
     request = fixtures["request"]
 
     def create(path, register=True, result=False):
@@ -156,7 +156,7 @@ def verify(binary, directory):
     replay = probe(binary, "answer", rust_path, decode_message(raw_query))
     require(replay["replay"] and replay["response"] == reply["response"] and replay["result"] == reply["result"],
             "El diario no recuperó la respuesta exacta")
-    return {"rust_test_methods": 34, "sigkill_cases": crashes, "process_lock": "PASS",
+    return {"rust_test_methods": 36, "sigkill_cases": crashes, "process_lock": "PASS",
             "python_rust_durable_exchange": "PASS", "new_execution_authorized": False,
             "real_tools": "NOT_RUN", "power_loss": "NOT_SIMULATED"}
 
@@ -170,8 +170,8 @@ def main():
             cwd=ROOT, env=env, text=True, capture_output=True, timeout=300,
         )
         print(result.stdout + result.stderr, flush=True)
-        require(result.returncode == 0 and re.search(r"test result: ok\. 34 passed; 0 failed; 0 ignored;", result.stdout),
-                "No se confirmaron las 34 pruebas Rust del diario")
+        require(result.returncode == 0 and re.search(r"test result: ok\. 36 passed; 0 failed; 0 ignored;", result.stdout),
+                "No se confirmaron las 36 pruebas Rust del diario")
         subprocess.run(["cargo", "build", "--locked", "--offline", "--package", "ardrec-executor",
                         "--example", "journal_probe"], cwd=ROOT, env=env, check=True, timeout=300)
         evidence = verify(directory / "target/debug/examples/journal_probe", directory)

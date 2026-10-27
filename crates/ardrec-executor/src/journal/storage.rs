@@ -278,6 +278,7 @@ impl TechnicalJournal {
         self.check()?;
         let mut candidate = self.model.clone();
         let recorded = candidate.apply(op, &args)?;
+        candidate.audit_temporal()?;
         if recorded == Recorded::Replay {
             return Ok(recorded);
         }
@@ -327,6 +328,7 @@ impl TechnicalJournal {
             q["message_type"] == "attempt_status_request",
             "query_required",
         )?;
+        self.model.audit_temporal()?;
         if let Some(answer) = self.model.replay_query(&q)? {
             return Ok(answer);
         }
@@ -353,6 +355,11 @@ impl TechnicalJournal {
             .get(text(&q["message_id"])?)
             .ok_or_else(|| error("query_missing"))?;
         Ok(answer.clone())
+    }
+    /// Auditar registros recuperados sin reescribirlos ni autorizar ejecuciones.
+    pub fn audit_temporal(&self) -> Result<()> {
+        self.check()?;
+        self.model.audit_temporal()
     }
     /// Copiar el último estado registrado; no afirma que un proceso siga vivo.
     pub fn snapshot(&self, attempt_id: &str) -> Result<Value> {

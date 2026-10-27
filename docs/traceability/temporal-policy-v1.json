@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "policy": "temporal-v1",
+  "base_commit": "07858cde11ccbf9881a24589184964f2f2f8c7d7",
+  "source_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "source_sections": [
+    "3.9.2",
+    "3.9.3",
+    "3.10.2"
+  ],
+  "finding": "AL-04",
+  "finding_status": "IMPLEMENTED_PENDING_REVIEW_INTEGRATION",
+  "point_1": "IN_PROGRESS",
+  "open_findings": [
+    "AL-04",
+    "AL-06",
+    "AL-07"
+  ],
+  "historical_records": "UNCHANGED",
+  "wire_schema": "2.0_UNCHANGED",
+  "current_admission": "temporal-v1",
+  "python_tests": 254,
+  "rust_tests": 69,
+  "temporal_oracles": 19,
+  "temporal_comparisons": 38,
+  "checks": [
+    "tests/unit/test_temporal.py",
+    "crates/ardrec-executor/src/messages/temporal.rs",
+    "crates/ardrec-executor/src/journal/tests.rs",
+    "crates/ardrec-executor/src/timing.rs",
+    "scripts/verificar_tiempos.py"
+  ],
+  "remote_ci": "PENDING",
+  "full_specification_alignment": "PENDING",
+  "system_functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN",
+  "algorithm_implementation": "NOT_STARTED",
+  "operational_prototype": "NOT_STARTED",
+  "physical_supervisor_clock_binding": "PENDING",
+  "host_suspend_control": "PENDING_LAB_VALIDATION"
+}

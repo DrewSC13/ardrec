@@ -125,8 +125,10 @@ mod tests {
         }
     }
     fn fixture(key: &str) -> Vec<u8> {
-        let f: Value =
-            serde_json::from_str(include_str!("../../../tests/fixtures/messages-v2.json")).unwrap();
+        let f: Value = serde_json::from_str(include_str!(
+            "../../../tests/fixtures/messages-temporal-v1.json"
+        ))
+        .unwrap();
         encode_message(&f[key]).unwrap()
     }
     fn exchange(

@@ -83,3 +83,6 @@ jobs:
 
       - name: Verificar magnitudes exactas / Verify exact magnitudes
         run: python3 scripts/verificar_magnitudes.py
+
+      - name: Verificar política temporal / Verify temporal policy
+        run: python3 scripts/verificar_tiempos.py
