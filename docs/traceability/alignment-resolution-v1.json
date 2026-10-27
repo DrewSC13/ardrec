@@ -1,0 +1,122 @@
+{
+  "schema_version": "1.0",
+  "review_base": "0efec398fa72403aeda4cb98fe8783db22fcf57d",
+  "implementation_commit": "18117fbc3f6d3442174a32ba1c9ebcfd20d0784b",
+  "implementation_pr": 16,
+  "historical_review": "docs/traceability/alignment-current-v1.json",
+  "findings": {
+    "AL-05": "CLOSED_WITHIN_DEFINED_SCOPE",
+    "AL-09": "CLOSED_WITHIN_DEFINED_SCOPE"
+  },
+  "open_findings": [
+    "AL-04",
+    "AL-06",
+    "AL-07"
+  ],
+  "point_1": "IN_PROGRESS",
+  "full_specification_alignment": "PENDING",
+  "system_functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN",
+  "algorithm_implementation": "NOT_STARTED",
+  "operational_prototype": "NOT_STARTED",
+  "ci_runs": [
+    {
+      "id": 40431825584,
+      "sha": "18117fbc3f6d3442174a32ba1c9ebcfd20d0784b",
+      "event": "pull_request"
+    },
+    {
+      "id": 40432151051,
+      "sha": "0efec398fa72403aeda4cb98fe8783db22fcf57d",
+      "event": "push"
+    }
+  ],
+  "evidence_level": "WORKFLOW_AND_REQUIRED_STEPS_NOT_INDIVIDUAL_TEST_REPORTS",
+  "component_sha256": {
+    ".github/workflows/ci.yml": "39b4c3b8205ac80f728ba2acd9c6db00b02c471011a668e4ec3411c4922f10bb",
+    "crates/ardrec-executor/Cargo.toml": "91402ae3911d64259aa4b9c13905cd025e0f6505abb319285024175fdfbbe65e",
+    "crates/ardrec-executor/examples/magnitude_probe.rs": "3d299cebea7d6af952bc6440a65051b2feb45bc4b7f4bf75ce85427f4fe68d2b",
+    "crates/ardrec-executor/src/lib.rs": "f627b6eb8d9f330afb1743846624bf5242ec612288433bb6a24f3a1c13ca3d3c",
+    "crates/ardrec-executor/src/magnitudes.rs": "aeed3f77134a10351e6573cf4a69322649c045039d863b2f85ec669d526c688a",
+    "docs/adr/0009-magnitudes-analiticas.md": "c37efae4f246482be02b15d1d288e0210d5f853d15937fffc372e29c949826d3",
+    "docs/traceability/README.md": "5ac3276feb583edf37ddf74dedd0881454b5bb8f4a746e77337cd79644bc6dd9",
+    "docs/traceability/exact-magnitudes-v1.json": "d5c006b40b746760c32a4b24bac3eeb2687bb6a8a9956ef3cd28f447e32ce2eb",
+    "docs/verification/exact-magnitudes.md": "1ce3e8668b8621d4e74cabb510f1517cbafa2fa21e9baeacbcc53f979c95d161",
+    "scripts/verificar_magnitudes.py": "7d6c2f79c81f78f1bd58e1f4b1dce463df2b12bfb2e813f834b9876b800d3fd7",
+    "src/ardrec/persistence/magnitudes.py": "7f8695e47daa66c4f673314bcdf8bb33e7271ccc426153f4b672873a9cedf762",
+    "tests/unit/test_magnitude_persistence.py": "aae9895a0397528c790ffc388b10df3499d059f3f171d800994bf15f0db375af"
+  },
+  "criteria": [
+    {
+      "finding": "AL-05",
+      "criterion_es": "Ida y vuelta, fronteras y motivos ND",
+      "criterion_en": "Round trips, bounds and ND reasons",
+      "evidence": [
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_exact_record_round_trips",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_invalid_values_are_not_normalized",
+        "scripts/verificar_magnitudes.py"
+      ]
+    },
+    {
+      "finding": "AL-05",
+      "criterion_es": "Integridad, reapertura y canonicidad",
+      "criterion_en": "Integrity, reopen and canonical form",
+      "evidence": [
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_archive_reopen_and_immutable_reuse",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_corruption_blocks_session",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_noncanonical_object_is_not_authoritative"
+      ]
+    },
+    {
+      "finding": "AL-05",
+      "criterion_es": "Interrupciones y exclusión de escritores",
+      "criterion_en": "Interruptions and writer exclusion",
+      "evidence": [
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_sigkill_preserves_previous_and_no_partial_confirmation",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_concurrent_writer_is_blocked",
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_directory_sync_failure_requires_recovery"
+      ]
+    },
+    {
+      "finding": "AL-05",
+      "criterion_es": "Compatibilidad por formatos separados; sin migración implícita",
+      "criterion_en": "Compatibility through separate formats; no implicit migration",
+      "evidence": [
+        "tests/unit/test_magnitude_persistence.py::MagnitudePersistenceTests.test_operational_codec_is_unchanged",
+        "docs/adr/0009-magnitudes-analiticas.md",
+        "scripts/verificar_protocolo.py"
+      ]
+    },
+    {
+      "finding": "AL-09",
+      "criterion_es": "Intercambio delimitado, canonicidad, límites y ND en ambos lenguajes",
+      "criterion_en": "Delimited interchange, canonical form, bounds and ND in both languages",
+      "evidence": [
+        "scripts/verificar_magnitudes.py",
+        "crates/ardrec-executor/src/magnitudes.rs",
+        "crates/ardrec-executor/examples/magnitude_probe.rs",
+        "docs/adr/0009-magnitudes-analiticas.md"
+      ]
+    }
+  ],
+  "limits_es": [
+    "Solo magnitudes individuales; no confirma una generación analítica.",
+    "No acredita ecuaciones A7 ni transición A9 ni aceptación íntegra AC-02/AC-20.",
+    "SIGKILL no demuestra resistencia a corte físico de energía.",
+    "Linux local con propietario confiable, flock, fsync y renombrado efectivos. No NFS ni adversario con el mismo UID.",
+    "Corpus finito de 520 casos; no prueba exhaustiva.",
+    "No hay migración de datos analíticos anteriores: se preserva el formato operacional."
+  ],
+  "limits_en": [
+    "Individual magnitudes only; no analytical-generation commitment.",
+    "Does not establish A7 equations, A9 transitions or full AC-02/AC-20 acceptance.",
+    "SIGKILL does not prove resistance to physical power loss.",
+    "Local Linux with trusted owner and effective flock, fsync and rename; excludes NFS and same-UID adversaries.",
+    "Finite 520-case corpus; not exhaustive.",
+    "No prior analytical-data migration: operational formats remain."
+  ],
+  "ci_association_policy": {
+    "es": "Se admite pull_requests vacío solo con ID de ejecución, workflow, evento, rama y SHA fijados, PR16 integrado con su base/cabecera exactas y padres/firma del merge verificados. Una asociación presente contradictoria se rechaza.",
+    "en": "Empty pull_requests is accepted only with pinned run ID, workflow, event, branch and SHA, merged PR16 with exact base/head, and verified merge parents/signature. Contradictory present associations are rejected."
+  }
+}
