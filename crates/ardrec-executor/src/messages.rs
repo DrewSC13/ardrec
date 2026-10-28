@@ -1,8 +1,10 @@
 //! Validación exacta de los perfiles operacionales 1.0 y 2.0.
 
 mod json;
+mod temporal;
 mod v1;
 mod v2;
+pub use temporal::correlate_current;
 
 use serde_json::Value;
 use std::{collections::BTreeSet, fmt};

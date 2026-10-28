@@ -1,0 +1,1948 @@
+{
+  "policy": "temporal-v1",
+  "cases": [
+    {
+      "id": "same_second_start",
+      "request": {
+        "schema_version": "2.0",
+        "message_type": "execution_request",
+        "message_id": "REQ-1",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:00Z",
+        "producer": "analitico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "protocol": "ssh",
+          "port": 22,
+          "host_reference": "HOST-1",
+          "authorization_reference": "AUTH-1",
+          "scope_reference": "SCOPE-1",
+          "profile_reference": "PROFILE-1",
+          "parameters_reference": "PARAM-1",
+          "authentication": {
+            "mode": "referenced",
+            "credential_reference": "CRED-1"
+          },
+          "limits": {
+            "timeout_seconds": 30,
+            "stdout_max_bytes": 4096,
+            "stderr_max_bytes": 4096,
+            "artifact_max_bytes": 1048576,
+            "max_supports": 10
+          }
+        }
+      },
+      "related": {
+        "schema_version": "2.0",
+        "message_type": "execution_result",
+        "message_id": "RESULT-completed",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:01Z",
+        "producer": "tecnico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "request_reference": "REQ-1",
+          "snapshot": {
+            "phase": "completed",
+            "start": {
+              "status": "VERIFICADO",
+              "reference": "INI-1"
+            },
+            "termination": {
+              "status": "VERIFICADO",
+              "reference": "FIN-1"
+            },
+            "cleanup": {
+              "status": "completed",
+              "reference": "LIM-1"
+            },
+            "result": {
+              "status": "DISPONIBLE",
+              "reference": "RESULT-completed"
+            },
+            "reason_code": null,
+            "observed_at": "2026-10-19T12:00:01Z",
+            "journal_reference": "JOURNAL-1",
+            "reconciliation_required": false,
+            "new_execution_authorized": false
+          },
+          "outcome": {
+            "started_at": "2026-10-19T12:00:00Z",
+            "ended_at": "2026-10-19T12:00:01Z",
+            "exit_code": 0,
+            "signal": null,
+            "timed_out": false,
+            "duration_ms": 1000,
+            "stdout_reference": "OUT-1",
+            "stderr_reference": "ERR-1",
+            "stdout_truncated": false,
+            "stderr_truncated": false,
+            "effective_parameters_reference": "EFFECTIVE-1",
+            "supports": [
+              "SUP-1"
+            ]
+          }
+        }
+      },
+      "expected_error": null
+    },
+    {
+      "id": "historical_start_before_request",
+      "request": {
+        "schema_version": "2.0",
+        "message_type": "execution_request",
+        "message_id": "REQ-1",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:01Z",
+        "producer": "analitico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "protocol": "ssh",
+          "port": 22,
+          "host_reference": "HOST-1",
+          "authorization_reference": "AUTH-1",
+          "scope_reference": "SCOPE-1",
+          "profile_reference": "PROFILE-1",
+          "parameters_reference": "PARAM-1",
+          "authentication": {
+            "mode": "referenced",
+            "credential_reference": "CRED-1"
+          },
+          "limits": {
+            "timeout_seconds": 30,
+            "stdout_max_bytes": 4096,
+            "stderr_max_bytes": 4096,
+            "artifact_max_bytes": 1048576,
+            "max_supports": 10
+          }
+        }
+      },
+      "related": {
+        "schema_version": "2.0",
+        "message_type": "execution_result",
+        "message_id": "RESULT-completed",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:01Z",
+        "producer": "tecnico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "request_reference": "REQ-1",
+          "snapshot": {
+            "phase": "completed",
+            "start": {
+              "status": "VERIFICADO",
+              "reference": "INI-1"
+            },
+            "termination": {
+              "status": "VERIFICADO",
+              "reference": "FIN-1"
+            },
+            "cleanup": {
+              "status": "completed",
+              "reference": "LIM-1"
+            },
+            "result": {
+              "status": "DISPONIBLE",
+              "reference": "RESULT-completed"
+            },
+            "reason_code": null,
+            "observed_at": "2026-10-19T12:00:01Z",
+            "journal_reference": "JOURNAL-1",
+            "reconciliation_required": false,
+            "new_execution_authorized": false
+          },
+          "outcome": {
+            "started_at": "2026-10-19T12:00:00Z",
+            "ended_at": "2026-10-19T12:00:01Z",
+            "exit_code": 0,
+            "signal": null,
+            "timed_out": false,
+            "duration_ms": 1000,
+            "stdout_reference": "OUT-1",
+            "stderr_reference": "ERR-1",
+            "stdout_truncated": false,
+            "stderr_truncated": false,
+            "effective_parameters_reference": "EFFECTIVE-1",
+            "supports": [
+              "SUP-1"
+            ]
+          }
+        }
+      },
+      "expected_error": "temporal_inversion"
+    },
+    {
+      "id": "start_before_request",
+      "request": {
+        "schema_version": "2.0",
+        "message_type": "execution_request",
+        "message_id": "REQ-1",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:00Z",
+        "producer": "analitico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "protocol": "ssh",
+          "port": 22,
+          "host_reference": "HOST-1",
+          "authorization_reference": "AUTH-1",
+          "scope_reference": "SCOPE-1",
+          "profile_reference": "PROFILE-1",
+          "parameters_reference": "PARAM-1",
+          "authentication": {
+            "mode": "referenced",
+            "credential_reference": "CRED-1"
+          },
+          "limits": {
+            "timeout_seconds": 30,
+            "stdout_max_bytes": 4096,
+            "stderr_max_bytes": 4096,
+            "artifact_max_bytes": 1048576,
+            "max_supports": 10
+          }
+        }
+      },
+      "related": {
+        "schema_version": "2.0",
+        "message_type": "execution_result",
+        "message_id": "RESULT-completed",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:01Z",
+        "producer": "tecnico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "request_reference": "REQ-1",
+          "snapshot": {
+            "phase": "completed",
+            "start": {
+              "status": "VERIFICADO",
+              "reference": "INI-1"
+            },
+            "termination": {
+              "status": "VERIFICADO",
+              "reference": "FIN-1"
+            },
+            "cleanup": {
+              "status": "completed",
+              "reference": "LIM-1"
+            },
+            "result": {
+              "status": "DISPONIBLE",
+              "reference": "RESULT-completed"
+            },
+            "reason_code": null,
+            "observed_at": "2026-10-19T12:00:01Z",
+            "journal_reference": "JOURNAL-1",
+            "reconciliation_required": false,
+            "new_execution_authorized": false
+          },
+          "outcome": {
+            "started_at": "2026-10-18T23:59:59Z",
+            "ended_at": "2026-10-19T12:00:01Z",
+            "exit_code": 0,
+            "signal": null,
+            "timed_out": false,
+            "duration_ms": 1000,
+            "stdout_reference": "OUT-1",
+            "stderr_reference": "ERR-1",
+            "stdout_truncated": false,
+            "stderr_truncated": false,
+            "effective_parameters_reference": "EFFECTIVE-1",
+            "supports": [
+              "SUP-1"
+            ]
+          }
+        }
+      },
+      "expected_error": "temporal_inversion"
+    },
+    {
+      "id": "both_process_times_before_request",
+      "request": {
+        "schema_version": "2.0",
+        "message_type": "execution_request",
+        "message_id": "REQ-1",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:00Z",
+        "producer": "analitico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "protocol": "ssh",
+          "port": 22,
+          "host_reference": "HOST-1",
+          "authorization_reference": "AUTH-1",
+          "scope_reference": "SCOPE-1",
+          "profile_reference": "PROFILE-1",
+          "parameters_reference": "PARAM-1",
+          "authentication": {
+            "mode": "referenced",
+            "credential_reference": "CRED-1"
+          },
+          "limits": {
+            "timeout_seconds": 30,
+            "stdout_max_bytes": 4096,
+            "stderr_max_bytes": 4096,
+            "artifact_max_bytes": 1048576,
+            "max_supports": 10
+          }
+        }
+      },
+      "related": {
+        "schema_version": "2.0",
+        "message_type": "execution_result",
+        "message_id": "RESULT-completed",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:01Z",
+        "producer": "tecnico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "request_reference": "REQ-1",
+          "snapshot": {
+            "phase": "completed",
+            "start": {
+              "status": "VERIFICADO",
+              "reference": "INI-1"
+            },
+            "termination": {
+              "status": "VERIFICADO",
+              "reference": "FIN-1"
+            },
+            "cleanup": {
+              "status": "completed",
+              "reference": "LIM-1"
+            },
+            "result": {
+              "status": "DISPONIBLE",
+              "reference": "RESULT-completed"
+            },
+            "reason_code": null,
+            "observed_at": "2026-10-19T12:00:01Z",
+            "journal_reference": "JOURNAL-1",
+            "reconciliation_required": false,
+            "new_execution_authorized": false
+          },
+          "outcome": {
+            "started_at": "2026-10-18T23:59:58Z",
+            "ended_at": "2026-10-18T23:59:59Z",
+            "exit_code": 0,
+            "signal": null,
+            "timed_out": false,
+            "duration_ms": 1000,
+            "stdout_reference": "OUT-1",
+            "stderr_reference": "ERR-1",
+            "stdout_truncated": false,
+            "stderr_truncated": false,
+            "effective_parameters_reference": "EFFECTIVE-1",
+            "supports": [
+              "SUP-1"
+            ]
+          }
+        }
+      },
+      "expected_error": "temporal_inversion"
+    },
+    {
+      "id": "utc_rollback",
+      "request": {
+        "schema_version": "2.0",
+        "message_type": "execution_request",
+        "message_id": "REQ-1",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:00Z",
+        "producer": "analitico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "protocol": "ssh",
+          "port": 22,
+          "host_reference": "HOST-1",
+          "authorization_reference": "AUTH-1",
+          "scope_reference": "SCOPE-1",
+          "profile_reference": "PROFILE-1",
+          "parameters_reference": "PARAM-1",
+          "authentication": {
+            "mode": "referenced",
+            "credential_reference": "CRED-1"
+          },
+          "limits": {
+            "timeout_seconds": 30,
+            "stdout_max_bytes": 4096,
+            "stderr_max_bytes": 4096,
+            "artifact_max_bytes": 1048576,
+            "max_supports": 10
+          }
+        }
+      },
+      "related": {
+        "schema_version": "2.0",
+        "message_type": "accepted_for_execution",
+        "message_id": "ACK-1",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-18T23:59:59Z",
+        "producer": "tecnico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "request_reference": "REQ-1",
+          "snapshot": {
+            "phase": "accepted",
+            "start": {
+              "status": "NO_ACREDITADO",
+              "reference": null
+            },
+            "termination": {
+              "status": "NO_DETERMINADO",
+              "reference": null
+            },
+            "cleanup": {
+              "status": "pending",
+              "reference": null
+            },
+            "result": {
+              "status": "PENDIENTE",
+              "reference": null
+            },
+            "reason_code": null,
+            "observed_at": "2026-10-18T23:59:59Z",
+            "journal_reference": "JOURNAL-1",
+            "reconciliation_required": true,
+            "new_execution_authorized": false
+          }
+        }
+      },
+      "expected_error": "temporal_inversion"
+    },
+    {
+      "id": "snapshot_before_request",
+      "request": {
+        "schema_version": "2.0",
+        "message_type": "execution_request",
+        "message_id": "REQ-1",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:00Z",
+        "producer": "analitico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "protocol": "ssh",
+          "port": 22,
+          "host_reference": "HOST-1",
+          "authorization_reference": "AUTH-1",
+          "scope_reference": "SCOPE-1",
+          "profile_reference": "PROFILE-1",
+          "parameters_reference": "PARAM-1",
+          "authentication": {
+            "mode": "referenced",
+            "credential_reference": "CRED-1"
+          },
+          "limits": {
+            "timeout_seconds": 30,
+            "stdout_max_bytes": 4096,
+            "stderr_max_bytes": 4096,
+            "artifact_max_bytes": 1048576,
+            "max_supports": 10
+          }
+        }
+      },
+      "related": {
+        "schema_version": "2.0",
+        "message_type": "accepted_for_execution",
+        "message_id": "ACK-1",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:01Z",
+        "producer": "tecnico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "request_reference": "REQ-1",
+          "snapshot": {
+            "phase": "accepted",
+            "start": {
+              "status": "NO_ACREDITADO",
+              "reference": null
+            },
+            "termination": {
+              "status": "NO_DETERMINADO",
+              "reference": null
+            },
+            "cleanup": {
+              "status": "pending",
+              "reference": null
+            },
+            "result": {
+              "status": "PENDIENTE",
+              "reference": null
+            },
+            "reason_code": null,
+            "observed_at": "2026-10-18T23:59:59Z",
+            "journal_reference": "JOURNAL-1",
+            "reconciliation_required": true,
+            "new_execution_authorized": false
+          }
+        }
+      },
+      "expected_error": "temporal_inversion"
+    },
+    {
+      "id": "utc_forward_not_duration",
+      "request": {
+        "schema_version": "2.0",
+        "message_type": "execution_request",
+        "message_id": "REQ-1",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:00Z",
+        "producer": "analitico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "protocol": "ssh",
+          "port": 22,
+          "host_reference": "HOST-1",
+          "authorization_reference": "AUTH-1",
+          "scope_reference": "SCOPE-1",
+          "profile_reference": "PROFILE-1",
+          "parameters_reference": "PARAM-1",
+          "authentication": {
+            "mode": "referenced",
+            "credential_reference": "CRED-1"
+          },
+          "limits": {
+            "timeout_seconds": 30,
+            "stdout_max_bytes": 4096,
+            "stderr_max_bytes": 4096,
+            "artifact_max_bytes": 1048576,
+            "max_supports": 10
+          }
+        }
+      },
+      "related": {
+        "schema_version": "2.0",
+        "message_type": "execution_result",
+        "message_id": "RESULT-completed",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-20T12:00:00Z",
+        "producer": "tecnico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "request_reference": "REQ-1",
+          "snapshot": {
+            "phase": "completed",
+            "start": {
+              "status": "VERIFICADO",
+              "reference": "INI-1"
+            },
+            "termination": {
+              "status": "VERIFICADO",
+              "reference": "FIN-1"
+            },
+            "cleanup": {
+              "status": "completed",
+              "reference": "LIM-1"
+            },
+            "result": {
+              "status": "DISPONIBLE",
+              "reference": "RESULT-completed"
+            },
+            "reason_code": null,
+            "observed_at": "2026-10-20T12:00:00Z",
+            "journal_reference": "JOURNAL-1",
+            "reconciliation_required": false,
+            "new_execution_authorized": false
+          },
+          "outcome": {
+            "started_at": "2026-10-19T12:00:00Z",
+            "ended_at": "2026-10-20T12:00:00Z",
+            "exit_code": 0,
+            "signal": null,
+            "timed_out": false,
+            "duration_ms": 1000,
+            "stdout_reference": "OUT-1",
+            "stderr_reference": "ERR-1",
+            "stdout_truncated": false,
+            "stderr_truncated": false,
+            "effective_parameters_reference": "EFFECTIVE-1",
+            "supports": [
+              "SUP-1"
+            ]
+          }
+        }
+      },
+      "expected_error": null
+    },
+    {
+      "id": "microsecond_inversion",
+      "request": {
+        "schema_version": "2.0",
+        "message_type": "execution_request",
+        "message_id": "REQ-1",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:00.000001Z",
+        "producer": "analitico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "protocol": "ssh",
+          "port": 22,
+          "host_reference": "HOST-1",
+          "authorization_reference": "AUTH-1",
+          "scope_reference": "SCOPE-1",
+          "profile_reference": "PROFILE-1",
+          "parameters_reference": "PARAM-1",
+          "authentication": {
+            "mode": "referenced",
+            "credential_reference": "CRED-1"
+          },
+          "limits": {
+            "timeout_seconds": 30,
+            "stdout_max_bytes": 4096,
+            "stderr_max_bytes": 4096,
+            "artifact_max_bytes": 1048576,
+            "max_supports": 10
+          }
+        }
+      },
+      "related": {
+        "schema_version": "2.0",
+        "message_type": "execution_result",
+        "message_id": "RESULT-completed",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:01Z",
+        "producer": "tecnico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "request_reference": "REQ-1",
+          "snapshot": {
+            "phase": "completed",
+            "start": {
+              "status": "VERIFICADO",
+              "reference": "INI-1"
+            },
+            "termination": {
+              "status": "VERIFICADO",
+              "reference": "FIN-1"
+            },
+            "cleanup": {
+              "status": "completed",
+              "reference": "LIM-1"
+            },
+            "result": {
+              "status": "DISPONIBLE",
+              "reference": "RESULT-completed"
+            },
+            "reason_code": null,
+            "observed_at": "2026-10-19T12:00:01Z",
+            "journal_reference": "JOURNAL-1",
+            "reconciliation_required": false,
+            "new_execution_authorized": false
+          },
+          "outcome": {
+            "started_at": "2026-10-19T12:00:00Z",
+            "ended_at": "2026-10-19T12:00:01Z",
+            "exit_code": 0,
+            "signal": null,
+            "timed_out": false,
+            "duration_ms": 1000,
+            "stdout_reference": "OUT-1",
+            "stderr_reference": "ERR-1",
+            "stdout_truncated": false,
+            "stderr_truncated": false,
+            "effective_parameters_reference": "EFFECTIVE-1",
+            "supports": [
+              "SUP-1"
+            ]
+          }
+        }
+      },
+      "expected_error": "temporal_inversion"
+    },
+    {
+      "id": "microsecond_equality",
+      "request": {
+        "schema_version": "2.0",
+        "message_type": "execution_request",
+        "message_id": "REQ-1",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:00.000001Z",
+        "producer": "analitico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "protocol": "ssh",
+          "port": 22,
+          "host_reference": "HOST-1",
+          "authorization_reference": "AUTH-1",
+          "scope_reference": "SCOPE-1",
+          "profile_reference": "PROFILE-1",
+          "parameters_reference": "PARAM-1",
+          "authentication": {
+            "mode": "referenced",
+            "credential_reference": "CRED-1"
+          },
+          "limits": {
+            "timeout_seconds": 30,
+            "stdout_max_bytes": 4096,
+            "stderr_max_bytes": 4096,
+            "artifact_max_bytes": 1048576,
+            "max_supports": 10
+          }
+        }
+      },
+      "related": {
+        "schema_version": "2.0",
+        "message_type": "execution_result",
+        "message_id": "RESULT-completed",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:01Z",
+        "producer": "tecnico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "request_reference": "REQ-1",
+          "snapshot": {
+            "phase": "completed",
+            "start": {
+              "status": "VERIFICADO",
+              "reference": "INI-1"
+            },
+            "termination": {
+              "status": "VERIFICADO",
+              "reference": "FIN-1"
+            },
+            "cleanup": {
+              "status": "completed",
+              "reference": "LIM-1"
+            },
+            "result": {
+              "status": "DISPONIBLE",
+              "reference": "RESULT-completed"
+            },
+            "reason_code": null,
+            "observed_at": "2026-10-19T12:00:01Z",
+            "journal_reference": "JOURNAL-1",
+            "reconciliation_required": false,
+            "new_execution_authorized": false
+          },
+          "outcome": {
+            "started_at": "2026-10-19T12:00:00.000001Z",
+            "ended_at": "2026-10-19T12:00:01Z",
+            "exit_code": 0,
+            "signal": null,
+            "timed_out": false,
+            "duration_ms": 1000,
+            "stdout_reference": "OUT-1",
+            "stderr_reference": "ERR-1",
+            "stdout_truncated": false,
+            "stderr_truncated": false,
+            "effective_parameters_reference": "EFFECTIVE-1",
+            "supports": [
+              "SUP-1"
+            ]
+          }
+        }
+      },
+      "expected_error": null
+    },
+    {
+      "id": "midnight_normalization",
+      "request": {
+        "schema_version": "2.0",
+        "message_type": "execution_request",
+        "message_id": "REQ-1",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-18T24:00:00Z",
+        "producer": "analitico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "protocol": "ssh",
+          "port": 22,
+          "host_reference": "HOST-1",
+          "authorization_reference": "AUTH-1",
+          "scope_reference": "SCOPE-1",
+          "profile_reference": "PROFILE-1",
+          "parameters_reference": "PARAM-1",
+          "authentication": {
+            "mode": "referenced",
+            "credential_reference": "CRED-1"
+          },
+          "limits": {
+            "timeout_seconds": 30,
+            "stdout_max_bytes": 4096,
+            "stderr_max_bytes": 4096,
+            "artifact_max_bytes": 1048576,
+            "max_supports": 10
+          }
+        }
+      },
+      "related": {
+        "schema_version": "2.0",
+        "message_type": "execution_result",
+        "message_id": "RESULT-completed",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T00:00:01Z",
+        "producer": "tecnico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "request_reference": "REQ-1",
+          "snapshot": {
+            "phase": "completed",
+            "start": {
+              "status": "VERIFICADO",
+              "reference": "INI-1"
+            },
+            "termination": {
+              "status": "VERIFICADO",
+              "reference": "FIN-1"
+            },
+            "cleanup": {
+              "status": "completed",
+              "reference": "LIM-1"
+            },
+            "result": {
+              "status": "DISPONIBLE",
+              "reference": "RESULT-completed"
+            },
+            "reason_code": null,
+            "observed_at": "2026-10-19T00:00:01Z",
+            "journal_reference": "JOURNAL-1",
+            "reconciliation_required": false,
+            "new_execution_authorized": false
+          },
+          "outcome": {
+            "started_at": "2026-10-19T00:00:00Z",
+            "ended_at": "2026-10-19T00:00:01Z",
+            "exit_code": 0,
+            "signal": null,
+            "timed_out": false,
+            "duration_ms": 1000,
+            "stdout_reference": "OUT-1",
+            "stderr_reference": "ERR-1",
+            "stdout_truncated": false,
+            "stderr_truncated": false,
+            "effective_parameters_reference": "EFFECTIVE-1",
+            "supports": [
+              "SUP-1"
+            ]
+          }
+        }
+      },
+      "expected_error": null
+    },
+    {
+      "id": "snapshot_precedes_query",
+      "request": {
+        "schema_version": "2.0",
+        "message_type": "attempt_status_request",
+        "message_id": "QUERY-1",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:02Z",
+        "producer": "analitico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "request_reference": "REQ-1",
+          "requested_information": [
+            "INICIO",
+            "TERMINACION",
+            "RESULTADO",
+            "LIMPIEZA"
+          ]
+        }
+      },
+      "related": {
+        "schema_version": "2.0",
+        "message_type": "attempt_status_result",
+        "message_id": "STATUS-completed",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:02Z",
+        "producer": "tecnico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "request_reference": "REQ-1",
+          "query_reference": "QUERY-1",
+          "requested_information": [
+            "INICIO",
+            "TERMINACION",
+            "RESULTADO",
+            "LIMPIEZA"
+          ],
+          "snapshot": {
+            "phase": "completed",
+            "start": {
+              "status": "VERIFICADO",
+              "reference": "INI-1"
+            },
+            "termination": {
+              "status": "VERIFICADO",
+              "reference": "FIN-1"
+            },
+            "cleanup": {
+              "status": "completed",
+              "reference": "LIM-1"
+            },
+            "result": {
+              "status": "DISPONIBLE",
+              "reference": "RESULT-1"
+            },
+            "reason_code": null,
+            "observed_at": "2026-10-19T12:00:01Z",
+            "journal_reference": "JOURNAL-1",
+            "reconciliation_required": false,
+            "new_execution_authorized": false
+          }
+        }
+      },
+      "expected_error": null
+    },
+    {
+      "id": "result_precedes_recovery_query",
+      "request": {
+        "schema_version": "2.0",
+        "message_type": "execution_request",
+        "message_id": "REQ-1",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:00Z",
+        "producer": "analitico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "protocol": "ssh",
+          "port": 22,
+          "host_reference": "HOST-1",
+          "authorization_reference": "AUTH-1",
+          "scope_reference": "SCOPE-1",
+          "profile_reference": "PROFILE-1",
+          "parameters_reference": "PARAM-1",
+          "authentication": {
+            "mode": "referenced",
+            "credential_reference": "CRED-1"
+          },
+          "limits": {
+            "timeout_seconds": 30,
+            "stdout_max_bytes": 4096,
+            "stderr_max_bytes": 4096,
+            "artifact_max_bytes": 1048576,
+            "max_supports": 10
+          }
+        }
+      },
+      "related": {
+        "schema_version": "2.0",
+        "message_type": "execution_result",
+        "message_id": "RESULT-completed",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:01Z",
+        "producer": "tecnico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "request_reference": "REQ-1",
+          "snapshot": {
+            "phase": "completed",
+            "start": {
+              "status": "VERIFICADO",
+              "reference": "INI-1"
+            },
+            "termination": {
+              "status": "VERIFICADO",
+              "reference": "FIN-1"
+            },
+            "cleanup": {
+              "status": "completed",
+              "reference": "LIM-1"
+            },
+            "result": {
+              "status": "DISPONIBLE",
+              "reference": "RESULT-completed"
+            },
+            "reason_code": null,
+            "observed_at": "2026-10-19T12:00:01Z",
+            "journal_reference": "JOURNAL-1",
+            "reconciliation_required": false,
+            "new_execution_authorized": false
+          },
+          "outcome": {
+            "started_at": "2026-10-19T12:00:00Z",
+            "ended_at": "2026-10-19T12:00:01Z",
+            "exit_code": 0,
+            "signal": null,
+            "timed_out": false,
+            "duration_ms": 1000,
+            "stdout_reference": "OUT-1",
+            "stderr_reference": "ERR-1",
+            "stdout_truncated": false,
+            "stderr_truncated": false,
+            "effective_parameters_reference": "EFFECTIVE-1",
+            "supports": [
+              "SUP-1"
+            ]
+          }
+        }
+      },
+      "expected_error": null
+    },
+    {
+      "id": "identity_precedes_time",
+      "request": {
+        "schema_version": "2.0",
+        "message_type": "execution_request",
+        "message_id": "REQ-1",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:00Z",
+        "producer": "analitico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "protocol": "ssh",
+          "port": 22,
+          "host_reference": "HOST-1",
+          "authorization_reference": "AUTH-1",
+          "scope_reference": "SCOPE-1",
+          "profile_reference": "PROFILE-1",
+          "parameters_reference": "PARAM-1",
+          "authentication": {
+            "mode": "referenced",
+            "credential_reference": "CRED-1"
+          },
+          "limits": {
+            "timeout_seconds": 30,
+            "stdout_max_bytes": 4096,
+            "stderr_max_bytes": 4096,
+            "artifact_max_bytes": 1048576,
+            "max_supports": 10
+          }
+        }
+      },
+      "related": {
+        "schema_version": "2.0",
+        "message_type": "execution_result",
+        "message_id": "RESULT-completed",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "OTHER",
+        "created_at": "2026-10-19T12:00:01Z",
+        "producer": "tecnico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "request_reference": "REQ-1",
+          "snapshot": {
+            "phase": "completed",
+            "start": {
+              "status": "VERIFICADO",
+              "reference": "INI-1"
+            },
+            "termination": {
+              "status": "VERIFICADO",
+              "reference": "FIN-1"
+            },
+            "cleanup": {
+              "status": "completed",
+              "reference": "LIM-1"
+            },
+            "result": {
+              "status": "DISPONIBLE",
+              "reference": "RESULT-completed"
+            },
+            "reason_code": null,
+            "observed_at": "2026-10-19T12:00:01Z",
+            "journal_reference": "JOURNAL-1",
+            "reconciliation_required": false,
+            "new_execution_authorized": false
+          },
+          "outcome": {
+            "started_at": "2026-10-19T12:00:00Z",
+            "ended_at": "2026-10-19T12:00:01Z",
+            "exit_code": 0,
+            "signal": null,
+            "timed_out": false,
+            "duration_ms": 1000,
+            "stdout_reference": "OUT-1",
+            "stderr_reference": "ERR-1",
+            "stdout_truncated": false,
+            "stderr_truncated": false,
+            "effective_parameters_reference": "EFFECTIVE-1",
+            "supports": [
+              "SUP-1"
+            ]
+          }
+        }
+      },
+      "expected_error": "identifier_mismatch"
+    },
+    {
+      "id": "exact_large_duration",
+      "request": {
+        "schema_version": "2.0",
+        "message_type": "execution_request",
+        "message_id": "REQ-1",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:00Z",
+        "producer": "analitico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "protocol": "ssh",
+          "port": 22,
+          "host_reference": "HOST-1",
+          "authorization_reference": "AUTH-1",
+          "scope_reference": "SCOPE-1",
+          "profile_reference": "PROFILE-1",
+          "parameters_reference": "PARAM-1",
+          "authentication": {
+            "mode": "referenced",
+            "credential_reference": "CRED-1"
+          },
+          "limits": {
+            "timeout_seconds": 30,
+            "stdout_max_bytes": 4096,
+            "stderr_max_bytes": 4096,
+            "artifact_max_bytes": 1048576,
+            "max_supports": 10
+          }
+        }
+      },
+      "related": {
+        "schema_version": "2.0",
+        "message_type": "execution_result",
+        "message_id": "RESULT-completed",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:01Z",
+        "producer": "tecnico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "request_reference": "REQ-1",
+          "snapshot": {
+            "phase": "completed",
+            "start": {
+              "status": "VERIFICADO",
+              "reference": "INI-1"
+            },
+            "termination": {
+              "status": "VERIFICADO",
+              "reference": "FIN-1"
+            },
+            "cleanup": {
+              "status": "completed",
+              "reference": "LIM-1"
+            },
+            "result": {
+              "status": "DISPONIBLE",
+              "reference": "RESULT-completed"
+            },
+            "reason_code": null,
+            "observed_at": "2026-10-19T12:00:01Z",
+            "journal_reference": "JOURNAL-1",
+            "reconciliation_required": false,
+            "new_execution_authorized": false
+          },
+          "outcome": {
+            "started_at": "2026-10-19T12:00:00Z",
+            "ended_at": "2026-10-19T12:00:01Z",
+            "exit_code": 0,
+            "signal": null,
+            "timed_out": false,
+            "duration_ms": 9007199254740993,
+            "stdout_reference": "OUT-1",
+            "stderr_reference": "ERR-1",
+            "stdout_truncated": false,
+            "stderr_truncated": false,
+            "effective_parameters_reference": "EFFECTIVE-1",
+            "supports": [
+              "SUP-1"
+            ]
+          }
+        }
+      },
+      "expected_error": null
+    },
+    {
+      "id": "not_started",
+      "request": {
+        "schema_version": "2.0",
+        "message_type": "execution_request",
+        "message_id": "REQ-1",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:00Z",
+        "producer": "analitico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "protocol": "ssh",
+          "port": 22,
+          "host_reference": "HOST-1",
+          "authorization_reference": "AUTH-1",
+          "scope_reference": "SCOPE-1",
+          "profile_reference": "PROFILE-1",
+          "parameters_reference": "PARAM-1",
+          "authentication": {
+            "mode": "referenced",
+            "credential_reference": "CRED-1"
+          },
+          "limits": {
+            "timeout_seconds": 30,
+            "stdout_max_bytes": 4096,
+            "stderr_max_bytes": 4096,
+            "artifact_max_bytes": 1048576,
+            "max_supports": 10
+          }
+        }
+      },
+      "related": {
+        "schema_version": "2.0",
+        "message_type": "execution_result",
+        "message_id": "RESULT-not_started",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:01Z",
+        "producer": "tecnico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "request_reference": "REQ-1",
+          "snapshot": {
+            "phase": "not_started",
+            "start": {
+              "status": "NO_INICIADO",
+              "reference": "INI-1"
+            },
+            "termination": {
+              "status": "NO_APLICA",
+              "reference": null
+            },
+            "cleanup": {
+              "status": "not_required",
+              "reference": "LIM-1"
+            },
+            "result": {
+              "status": "NO_DISPONIBLE",
+              "reference": null
+            },
+            "reason_code": "SPAWN_FAILED",
+            "observed_at": "2026-10-19T12:00:01Z",
+            "journal_reference": "JOURNAL-1",
+            "reconciliation_required": false,
+            "new_execution_authorized": false
+          },
+          "outcome": {
+            "started_at": null,
+            "ended_at": null,
+            "exit_code": null,
+            "signal": null,
+            "timed_out": false,
+            "duration_ms": null,
+            "stdout_reference": null,
+            "stderr_reference": null,
+            "stdout_truncated": false,
+            "stderr_truncated": false,
+            "effective_parameters_reference": null,
+            "supports": []
+          }
+        }
+      },
+      "expected_error": null
+    },
+    {
+      "id": "uncertain",
+      "request": {
+        "schema_version": "2.0",
+        "message_type": "execution_request",
+        "message_id": "REQ-1",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:00Z",
+        "producer": "analitico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "protocol": "ssh",
+          "port": 22,
+          "host_reference": "HOST-1",
+          "authorization_reference": "AUTH-1",
+          "scope_reference": "SCOPE-1",
+          "profile_reference": "PROFILE-1",
+          "parameters_reference": "PARAM-1",
+          "authentication": {
+            "mode": "referenced",
+            "credential_reference": "CRED-1"
+          },
+          "limits": {
+            "timeout_seconds": 30,
+            "stdout_max_bytes": 4096,
+            "stderr_max_bytes": 4096,
+            "artifact_max_bytes": 1048576,
+            "max_supports": 10
+          }
+        }
+      },
+      "related": {
+        "schema_version": "2.0",
+        "message_type": "execution_result",
+        "message_id": "RESULT-uncertain",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:01Z",
+        "producer": "tecnico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "request_reference": "REQ-1",
+          "snapshot": {
+            "phase": "uncertain",
+            "start": {
+              "status": "NO_DETERMINADO",
+              "reference": null
+            },
+            "termination": {
+              "status": "NO_DETERMINADO",
+              "reference": null
+            },
+            "cleanup": {
+              "status": "unknown",
+              "reference": null
+            },
+            "result": {
+              "status": "NO_DISPONIBLE",
+              "reference": null
+            },
+            "reason_code": "CONNECTION_LOST",
+            "observed_at": "2026-10-19T12:00:01Z",
+            "journal_reference": "JOURNAL-1",
+            "reconciliation_required": true,
+            "new_execution_authorized": false
+          },
+          "outcome": {
+            "started_at": null,
+            "ended_at": null,
+            "exit_code": null,
+            "signal": null,
+            "timed_out": false,
+            "duration_ms": null,
+            "stdout_reference": null,
+            "stderr_reference": null,
+            "stdout_truncated": false,
+            "stderr_truncated": false,
+            "effective_parameters_reference": null,
+            "supports": []
+          }
+        }
+      },
+      "expected_error": null
+    },
+    {
+      "id": "discovery",
+      "request": {
+        "schema_version": "2.0",
+        "message_type": "discovery_request",
+        "message_id": "DISC-REQ-1",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "discovery",
+        "service_scenario_id": "S01",
+        "derived_case_id": null,
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:00Z",
+        "producer": "analitico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "protocol": "ssh",
+          "port": 22,
+          "host_reference": "HOST-1",
+          "authorization_reference": "AUTH-1",
+          "scope_reference": "SCOPE-1",
+          "profile_reference": "PROFILE-1",
+          "parameters_reference": "PARAM-1",
+          "authentication": {
+            "mode": "none"
+          },
+          "limits": {
+            "timeout_seconds": 30,
+            "stdout_max_bytes": 4096,
+            "stderr_max_bytes": 4096,
+            "artifact_max_bytes": 1048576,
+            "max_supports": 10
+          }
+        }
+      },
+      "related": {
+        "schema_version": "2.0",
+        "message_type": "discovery_result",
+        "message_id": "DISC-RESULT-1",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "discovery",
+        "service_scenario_id": "S01",
+        "derived_case_id": null,
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:01Z",
+        "producer": "tecnico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "request_reference": "DISC-REQ-1",
+          "snapshot": {
+            "phase": "completed",
+            "start": {
+              "status": "VERIFICADO",
+              "reference": "INI-1"
+            },
+            "termination": {
+              "status": "VERIFICADO",
+              "reference": "FIN-1"
+            },
+            "cleanup": {
+              "status": "completed",
+              "reference": "LIM-1"
+            },
+            "result": {
+              "status": "DISPONIBLE",
+              "reference": "DISC-RESULT-1"
+            },
+            "reason_code": null,
+            "observed_at": "2026-10-19T12:00:01Z",
+            "journal_reference": "JOURNAL-1",
+            "reconciliation_required": false,
+            "new_execution_authorized": false
+          },
+          "outcome": {
+            "started_at": "2026-10-19T12:00:00Z",
+            "ended_at": "2026-10-19T12:00:01Z",
+            "exit_code": 0,
+            "signal": null,
+            "timed_out": false,
+            "duration_ms": 1000,
+            "stdout_reference": "OUT-1",
+            "stderr_reference": "ERR-1",
+            "stdout_truncated": false,
+            "stderr_truncated": false,
+            "effective_parameters_reference": "EFFECTIVE-1",
+            "supports": [
+              "SUP-1"
+            ]
+          },
+          "characterization_reference": "CHAR-1"
+        }
+      },
+      "expected_error": null
+    },
+    {
+      "id": "request_to_query",
+      "request": {
+        "schema_version": "2.0",
+        "message_type": "execution_request",
+        "message_id": "REQ-1",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:00Z",
+        "producer": "analitico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "protocol": "ssh",
+          "port": 22,
+          "host_reference": "HOST-1",
+          "authorization_reference": "AUTH-1",
+          "scope_reference": "SCOPE-1",
+          "profile_reference": "PROFILE-1",
+          "parameters_reference": "PARAM-1",
+          "authentication": {
+            "mode": "referenced",
+            "credential_reference": "CRED-1"
+          },
+          "limits": {
+            "timeout_seconds": 30,
+            "stdout_max_bytes": 4096,
+            "stderr_max_bytes": 4096,
+            "artifact_max_bytes": 1048576,
+            "max_supports": 10
+          }
+        }
+      },
+      "related": {
+        "schema_version": "2.0",
+        "message_type": "attempt_status_request",
+        "message_id": "QUERY-1",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:01Z",
+        "producer": "analitico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "request_reference": "REQ-1",
+          "requested_information": [
+            "INICIO",
+            "TERMINACION",
+            "RESULTADO",
+            "LIMPIEZA"
+          ]
+        }
+      },
+      "expected_error": null
+    },
+    {
+      "id": "malformed_interval",
+      "request": {
+        "schema_version": "2.0",
+        "message_type": "execution_request",
+        "message_id": "REQ-1",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:00Z",
+        "producer": "analitico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "protocol": "ssh",
+          "port": 22,
+          "host_reference": "HOST-1",
+          "authorization_reference": "AUTH-1",
+          "scope_reference": "SCOPE-1",
+          "profile_reference": "PROFILE-1",
+          "parameters_reference": "PARAM-1",
+          "authentication": {
+            "mode": "referenced",
+            "credential_reference": "CRED-1"
+          },
+          "limits": {
+            "timeout_seconds": 30,
+            "stdout_max_bytes": 4096,
+            "stderr_max_bytes": 4096,
+            "artifact_max_bytes": 1048576,
+            "max_supports": 10
+          }
+        }
+      },
+      "related": {
+        "schema_version": "2.0",
+        "message_type": "execution_result",
+        "message_id": "RESULT-completed",
+        "record_id": "REG-1",
+        "execution_id": "EXE-1",
+        "correlation_id": "DEC-1",
+        "decision_index": 1,
+        "scope": "attempt",
+        "service_scenario_id": "S01",
+        "derived_case_id": "CASE-1",
+        "attempt_id": "ATT-1",
+        "created_at": "2026-10-19T12:00:01Z",
+        "producer": "tecnico",
+        "versions": {
+          "reference": "VERS-1",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "simulation": false,
+        "payload": {
+          "request_reference": "REQ-1",
+          "snapshot": {
+            "phase": "completed",
+            "start": {
+              "status": "VERIFICADO",
+              "reference": "INI-1"
+            },
+            "termination": {
+              "status": "VERIFICADO",
+              "reference": "FIN-1"
+            },
+            "cleanup": {
+              "status": "completed",
+              "reference": "LIM-1"
+            },
+            "result": {
+              "status": "DISPONIBLE",
+              "reference": "RESULT-completed"
+            },
+            "reason_code": null,
+            "observed_at": "2026-10-19T12:00:01Z",
+            "journal_reference": "JOURNAL-1",
+            "reconciliation_required": false,
+            "new_execution_authorized": false
+          },
+          "outcome": {
+            "started_at": "2026-10-19T12:00:00Z",
+            "ended_at": "2026-10-18T23:59:59Z",
+            "exit_code": 0,
+            "signal": null,
+            "timed_out": false,
+            "duration_ms": 1000,
+            "stdout_reference": "OUT-1",
+            "stderr_reference": "ERR-1",
+            "stdout_truncated": false,
+            "stderr_truncated": false,
+            "effective_parameters_reference": "EFFECTIVE-1",
+            "supports": [
+              "SUP-1"
+            ]
+          }
+        }
+      },
+      "expected_error": "schema_invalid"
+    }
+  ]
+}

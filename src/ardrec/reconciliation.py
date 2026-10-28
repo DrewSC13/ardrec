@@ -199,7 +199,9 @@ def inspect_recovery(store):
             if reply is not None and reply["result"] is not None:
                 if _raw(reply["result"])["message_id"] == reference:
                     result = reply["result"]
-    if state.invocation is not InvocationPhase.EN_CURSO:
+    if store.temporal_status != "PASS":
+        action = "TEMPORAL_REVIEW_REQUIRED"
+    elif state.invocation is not InvocationPhase.EN_CURSO:
         action = "INVOCATION_ENDED"
     elif opened is not None:
         action = "QUERY_INCOMPLETE"

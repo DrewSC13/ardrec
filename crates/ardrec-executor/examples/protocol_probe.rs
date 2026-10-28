@@ -33,7 +33,7 @@ fn evaluate(command: &Value) -> Result<Value, String> {
     let op = command["op"].as_str().ok_or("Falta la operación")?;
     let a = command["args"].as_array().ok_or("Faltan argumentos")?;
     let count = match op {
-        "correlate" | "compare_delivery" => 2,
+        "correlate" | "correlate_current" | "compare_delivery" => 2,
         "correlate_status" => 3,
         "decode_message" | "encode_message" | "validate_message" => 1,
         _ => return Err("Operación desconocida".into()),
@@ -51,6 +51,7 @@ fn evaluate(command: &Value) -> Result<Value, String> {
         "encode_message" => messages::encode_message(&a[0]).map(|b| json!({"hex":hex(&b)})),
         "validate_message" => messages::validate_message(&a[0]).map(|()| json!({})),
         "correlate" => messages::correlate(&a[0], &a[1]).map(|()| json!({})),
+        "correlate_current" => messages::correlate_current(&a[0], &a[1]).map(|()| json!({})),
         "correlate_status" => messages::correlate_status(&a[0], &a[1], &a[2]).map(|()| json!({})),
         _ => messages::compare_delivery(&a[0], &a[1])
             .map(|v| json!({"delivery":match v {Delivery::Replay=>"REPLAY",Delivery::New=>"NEW"}})),

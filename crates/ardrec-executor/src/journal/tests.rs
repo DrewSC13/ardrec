@@ -31,7 +31,7 @@ impl Drop for Directory {
 fn fixture(name: &str) -> Value {
     let all: Value = serde_json::from_str(include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
-        "/../../tests/fixtures/messages-v2.json"
+        "/../../tests/fixtures/messages-temporal-v1.json"
     )))
     .unwrap();
     all[name].clone()
@@ -476,4 +476,66 @@ fn invalid_sequence_and_unknown_operation_are_rejected() {
     head["sequence"] = (MAX_RECORDS + 1).into();
     fs::write(headpath, canonical(&head).unwrap()).unwrap();
     assert!(TechnicalJournal::open(d.store()).is_err());
+}
+
+#[test]
+fn current_admission_rejects_early_start_without_writing() {
+    let (_d, mut s) = setup();
+    let mut result = report(&s, "result_completed");
+    result["payload"]["outcome"]["started_at"] = "2026-10-18T23:59:59Z".into();
+    let sequence = s.sequence().unwrap();
+    assert_eq!(
+        s.record_report(&bytes(&result)).unwrap_err().code(),
+        "temporal_inversion"
+    );
+    assert_eq!(s.sequence().unwrap(), sequence);
+    assert!(s.result("ATT-1").unwrap().is_none());
+}
+#[test]
+fn legacy_temporal_inversion_is_readable_but_blocked() {
+    use std::os::unix::fs::PermissionsExt;
+    let d = Directory::new();
+    drop(TechnicalJournal::create(d.store()).unwrap());
+    let old: Value = serde_json::from_str(include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../tests/fixtures/messages-v2.json"
+    )))
+    .unwrap();
+    let request = &old["request"];
+    let mut result = old["result_completed"].clone();
+    result["payload"]["snapshot"]["journal_reference"] =
+        format!("TJ-{}", hash(&bytes(request))).into();
+    let mut previous = "0".repeat(64);
+    let mut original = Vec::new();
+    for (i, (operation, message)) in [("request", request.clone()), ("report", result.clone())]
+        .into_iter()
+        .enumerate()
+    {
+        let raw=canonical(&json!({"format":"ardrec-technical-journal-1","sequence":i+1,"previous":previous,"operation":operation,"args":{"message":message}})).unwrap();
+        previous = hash(&raw);
+        let path = d.store().join("records").join(format!("{previous}.json"));
+        fs::write(&path, &raw).unwrap();
+        fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+        original.push((path, raw));
+    }
+    let head =
+        canonical(&json!({"format":"ardrec-technical-journal-1","sequence":2,"tip":previous}))
+            .unwrap();
+    fs::write(d.store().join("HEAD"), &head).unwrap();
+    let mut store = TechnicalJournal::open(d.store()).unwrap();
+    assert_eq!(store.result("ATT-1").unwrap(), Some(bytes(&result)));
+    assert_eq!(
+        store.audit_temporal().unwrap_err().code(),
+        "temporal_inversion"
+    );
+    assert_eq!(
+        store.record_report(&bytes(&result)).unwrap_err().code(),
+        "temporal_inversion"
+    );
+    assert_eq!(store.sequence().unwrap(), 2);
+    drop(store);
+    assert_eq!(fs::read(d.store().join("HEAD")).unwrap(), head);
+    for (path, raw) in original {
+        assert_eq!(fs::read(path).unwrap(), raw);
+    }
 }

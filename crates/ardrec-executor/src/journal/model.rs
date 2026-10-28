@@ -171,6 +171,31 @@ fn advance(attempt: &Attempt, next: &Value, result: Option<&Value>) -> Result<()
     Ok(())
 }
 impl Model {
+    pub(super) fn audit_temporal(&self) -> Result<()> {
+        use crate::messages::correlate_current;
+        for raw in self.messages.values() {
+            let m = message(raw)?;
+            if matches!(
+                m["message_type"].as_str(),
+                Some("execution_request" | "discovery_request")
+            ) {
+                continue;
+            }
+            let attempt = self.attempt(text(&m["attempt_id"])?)?;
+            correlate_current(&attempt.request, &m)?;
+        }
+        for (query, answer) in self.answers.values() {
+            let response = message(&answer.response)?;
+            correlate_current(query, &response)?;
+            if let Some(raw) = &answer.result {
+                let result = message(raw)?;
+                let attempt = self.attempt(text(&query["attempt_id"])?)?;
+                correlate_current(&attempt.request, &result)?;
+            }
+        }
+        Ok(())
+    }
+
     fn known(&self, v: &Value) -> Result<bool> {
         let key = text(&v["message_id"])?;
         if let Some(raw) = self.messages.get(key) {

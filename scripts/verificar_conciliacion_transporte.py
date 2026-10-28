@@ -72,7 +72,7 @@ raise RuntimeError("No se alcanzó el punto de interrupción")
 
 
 def verify(journal_binary, channel_binary, directory):
-    fixtures = json.loads((ROOT / "tests/fixtures/messages-v2.json").read_text())
+    fixtures = json.loads((ROOT / "tests/fixtures/messages-temporal-v1.json").read_text())
     def setup(label, phase="completed", exact=False):
         rust, python = directory / (label + "-r"), directory / (label + "-p")
         probe(journal_binary, "create", rust)

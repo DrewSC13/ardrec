@@ -29,3 +29,6 @@ pub mod reconciliation_transport;
 
 /// Magnitudes analíticas exactas independientes del protocolo operacional.
 pub mod magnitudes;
+
+/// Duración monotónica local independiente de UTC.
+pub mod timing;

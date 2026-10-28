@@ -302,9 +302,14 @@ class DurableStore:
         # Validar completamente antes de abrir la frontera de escritura.
         from ardrec.reconciliation import QUERY, REPLY, advance_index
         queries = advance_index(self._queries, self._state, operation, args)
+        from ardrec.temporal import audit_current
         if operation == REPLY and queries is self._queries:
+            audit_current(self._state, queries)
             return self.state
         new_state = _reduce(self._state, operation, args)
+        # Revalidar antes de escribir; mantener la reducción histórica congelada.
+        if operation not in {"uncertain", "finish"}:
+            audit_current(new_state, queries)
         if self._state == new_state and operation not in {QUERY, REPLY}:
             return self.state
         packed_args = pack(args)
@@ -424,8 +429,21 @@ class DurableStore:
         return digest(self._head_raw)
 
     @property
+    def temporal_status(self):
+        from ardrec.messages import MessageError
+        from ardrec.temporal import audit_current
+        self._check()
+        try:
+            audit_current(self._state, self._queries)
+        except MessageError:
+            return "TEMPORAL_REVIEW_REQUIRED"
+        return "PASS"
+
+    @property
     def recovery_action(self):
         state = self.state
+        if self.temporal_status != "PASS":
+            return "TEMPORAL_REVIEW_REQUIRED"
         if state.invocation is not InvocationPhase.EN_CURSO:
             return "INVOCATION_ENDED"
         if any(entry["reply"] is None for entry in self._queries.values()):

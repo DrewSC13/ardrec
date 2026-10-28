@@ -22,7 +22,7 @@ from ardrec.state import (
     ServiceState, StateError, Transition, TransitionContext, Truth,
 )
 
-FIXTURES = json.loads((Path(__file__).resolve().parents[1] / "fixtures/messages-v2.json").read_text())
+FIXTURES = json.loads((Path(__file__).resolve().parents[1] / "fixtures/messages-temporal-v1.json").read_text())
 BASE = ConfirmedState("REG-1", 0, "GEN-0", "a" * 64, "VERS-1",
                       (ServiceState("S01", ServicePhase.PREPARADO), ServiceState("S02", ServicePhase.PREPARADO)))
 INITIAL = GlobalState(BASE, "EXE-1", BASE.services)
