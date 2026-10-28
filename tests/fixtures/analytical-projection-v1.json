@@ -1,0 +1,99 @@
+{
+  "format": "ardrec-analytical-projection-1",
+  "record_id": "REG-EXAMPLE",
+  "execution_id": "EXE-EXAMPLE",
+  "configuration_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "service_scenario_id": "S01",
+  "generation_index": 18,
+  "operational_state": "PENDIENTE",
+  "frozen": {
+    "initial_risk": {
+      "status": "DETERMINADO",
+      "value": {
+        "numerator": 1,
+        "denominator": 2
+      }
+    },
+    "normalized_criticality": {
+      "status": "DETERMINADO",
+      "value": {
+        "numerator": 1,
+        "denominator": 2
+      }
+    },
+    "characterization": {
+      "reference": "CAR-EJEMPLO-S01",
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    }
+  },
+  "analysis": {
+    "accumulated_evidence": {
+      "status": "DETERMINADO",
+      "value": {
+        "numerator": 3,
+        "denominator": 4
+      }
+    },
+    "substituted_baseline": {
+      "status": "DETERMINADO",
+      "value": {
+        "numerator": 1,
+        "denominator": 3
+      }
+    },
+    "upper_bound": {
+      "status": "DETERMINADO",
+      "value": {
+        "numerator": 7,
+        "denominator": 12
+      }
+    },
+    "lower_adjustment_bound": {
+      "status": "DETERMINADO",
+      "value": {
+        "numerator": 4,
+        "denominator": 9
+      }
+    },
+    "recalibrated_risk": {
+      "status": "DETERMINADO",
+      "value": {
+        "numerator": 19,
+        "denominator": 36
+      }
+    },
+    "priority": {
+      "status": "DETERMINADO",
+      "value": {
+        "numerator": 7,
+        "denominator": 12
+      }
+    }
+  },
+  "references": {
+    "evidence_repository": {
+      "reference": "REPO-EJEMPLO-S01-018",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "execution_counters": {
+      "reference": "CONT-EJEMPLO-S01-018",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "objective_status": {
+      "reference": "OBJ-EJEMPLO-S01-018",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "history": {
+      "reference": "HIST-EJEMPLO-S01-018",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "convergence_window": {
+      "reference": "VENT-EJEMPLO-S01-018",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "pending_controls": {
+      "reference": "CTRL-EJEMPLO-S01-018",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  }
+}
