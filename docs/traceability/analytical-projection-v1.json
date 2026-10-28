@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "component": "analytical-projection-v1",
+  "finding": "AL-06",
+  "finding_status": "OPEN",
+  "component_status": "IMPLEMENTED_PENDING_LOCAL_VERIFICATION_AND_INTEGRATION",
+  "base_commit": "73fc572fb3df8a9d45c300e8264b196d44be0bbd",
+  "source_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "source_sections": [
+    "3.2.1",
+    "3.2.2",
+    "3.2.3",
+    "3.2.6",
+    "3.2.7",
+    "3.2.8",
+    "3.2.9",
+    "3.8.1",
+    "3.9.10"
+  ],
+  "baseline_ci": {
+    "provenance": "USER_SUPPLIED_PR19_INTEGRATION_OUTPUT",
+    "pr_run": 40613247502,
+    "main_run": 40613560728,
+    "independently_queried_in_this_increment": false
+  },
+  "format": "ardrec-analytical-projection-1",
+  "module": "src/ardrec/analytical.py",
+  "fixture": "tests/fixtures/analytical-projection-v1.json",
+  "tests": "tests/unit/test_analytical_projection.py",
+  "added_python_tests": 21,
+  "expected_python_total": 275,
+  "reference_resolution": "NOT_IMPLEMENTED",
+  "full_analytical_state": "PENDING",
+  "global_publication": "NOT_CONNECTED",
+  "guard_sources": "PENDING",
+  "open_findings": [
+    "AL-06",
+    "AL-07"
+  ],
+  "point_1": "IN_PROGRESS",
+  "remote_ci": "NOT_RUN",
+  "full_specification_alignment": "PENDING",
+  "system_functional_acceptance": "PENDING",
+  "algorithm_implementation": "NOT_STARTED",
+  "operational_prototype": "NOT_STARTED",
+  "experimental_validation": "NOT_RUN",
+  "before_real_executor_gate": "BLOCKED_BY_RESIDUAL_OBLIGATIONS",
+  "al04_residual_obligations": [
+    "AL04-R01",
+    "AL04-R02",
+    "AL04-R03"
+  ]
+}
