@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "component": "analytical-archive-v1",
+  "base_commit": "302db91b4a5566d399fe12a3ac708f570485d02b",
+  "source_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "source_sections": [
+    "3.2.1",
+    "3.9.10",
+    "3.10.1",
+    "3.10.2"
+  ],
+  "added_python_tests": 27,
+  "expected_python_total": 329,
+  "archive_status": "COMPONENT_PENDING_LOCAL_APPLICATION_AND_INTEGRATION",
+  "reference_resolution": "STRUCTURAL_COMPONENT_ONLY",
+  "payload_semantics": "NOT_VALIDATED",
+  "durable_manifest_anchor": "NOT_CONNECTED_TO_GLOBAL_PUBLICATION",
+  "snapshot_hash_origin": "EXTERNAL_CALLER",
+  "freshness_anchor": "NOT_IMPLEMENTED",
+  "global_publication": "NOT_CONNECTED",
+  "guard_sources": "PENDING",
+  "full_analytical_state": "PENDING",
+  "existing_persistence": "UNCHANGED",
+  "rust_code": "UNCHANGED",
+  "open_findings": [
+    "AL-06",
+    "AL-07"
+  ],
+  "point_1": "IN_PROGRESS",
+  "before_real_executor_gate": "BLOCKED_BY_RESIDUAL_OBLIGATIONS",
+  "al04_residual_obligations": [
+    "AL04-R01",
+    "AL04-R02",
+    "AL04-R03"
+  ],
+  "filesystem_power_loss_validation": "NOT_RUN",
+  "experimental_validation": "NOT_RUN",
+  "system_functional_acceptance": "PENDING",
+  "algorithm_implementation": "NOT_STARTED",
+  "assistant_component_validation": {
+    "environment": "Linux/Python 3.12",
+    "tests": 27,
+    "result": "PASS",
+    "injected_fault_boundaries": 7,
+    "sigkill_boundaries": 5
+  },
+  "baseline_evidence": {
+    "provenance": "USER_SUPPLIED_PR21_INTEGRATION_OUTPUT",
+    "pr_run": 40870075966,
+    "main_run": 40870794372
+  },
+  "files": {
+    "module": "src/ardrec/persistence/analytical_archive.py",
+    "tests": "tests/unit/test_analytical_archive.py",
+    "decision": "docs/adr/0013-archivo-analitico.md",
+    "verification": "docs/verification/analytical-archive.md"
+  }
+}
