@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "component": "analytical-references-v1",
+  "base_commit": "79d58794ed75e9ec422d5178a93e1d60de393b02",
+  "source_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "added_python_tests": 27,
+  "expected_python_total": 302,
+  "reference_resolution": "STRUCTURAL_COMPONENT_PENDING_VERIFICATION_INTEGRATION",
+  "payload_semantics": "NOT_VALIDATED",
+  "durable_manifest_anchor": "NOT_CONNECTED",
+  "reference_disk_adapter": "NOT_IMPLEMENTED",
+  "guard_sources": "PENDING",
+  "full_analytical_state": "PENDING",
+  "global_publication": "NOT_CONNECTED",
+  "open_findings": [
+    "AL-06",
+    "AL-07"
+  ],
+  "point_1": "IN_PROGRESS",
+  "remote_ci": "NOT_RUN",
+  "before_real_executor_gate": "BLOCKED_BY_RESIDUAL_OBLIGATIONS",
+  "al04_residual_obligations": [
+    "AL04-R01",
+    "AL04-R02",
+    "AL04-R03"
+  ],
+  "system_functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN",
+  "baseline_evidence": {
+    "provenance": "USER_SUPPLIED_PR20_INTEGRATION_OUTPUT",
+    "pr_run": 40706071437,
+    "main_run": 40708507519
+  }
+}
