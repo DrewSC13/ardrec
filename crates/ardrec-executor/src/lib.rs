@@ -32,3 +32,6 @@ pub mod magnitudes;
 
 /// Duración monotónica local independiente de UTC.
 pub mod timing;
+
+/// Identidad del par antes de intercambiar consultas.
+pub mod peer_identity;

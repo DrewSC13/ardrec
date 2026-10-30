@@ -1,9 +1,11 @@
 """Canales incompletos conservan la consulta y nunca publican efectos analíticos."""
+import os
 import socket
 import threading
 import time
 import unittest
 
+from ardrec.peer_identity import PeerIdentity
 from ardrec.reconciliation import inspect_recovery
 from ardrec.reconciliation_transport import ExchangeError, exchange_query
 from ardrec.transport import MAX_FRAME_BYTES, read_frame
@@ -52,7 +54,7 @@ class ReconciliationTransportTests(unittest.TestCase):
         worker = threading.Thread(target=server)
         worker.start()
         try:
-            return exchange_query(self.store, client, timeout=timeout)
+            return exchange_query(self.store, client, expected_peer=PeerIdentity(os.getpid(), os.geteuid(), os.getegid()), timeout=timeout)
         finally:
             client.close()
             worker.join(3)
@@ -142,7 +144,7 @@ class ReconciliationTransportTests(unittest.TestCase):
         self.channel(frame(response) + frame(result))
         client, peer = socket.socketpair()
         with peer, self.assertRaises(ExchangeError) as error:
-            exchange_query(self.store, client)
+            exchange_query(self.store, client, expected_peer=PeerIdentity(os.getpid(), os.geteuid(), os.getegid()))
         self.assertEqual(error.exception.code, "open_query_required")
         self.assertEqual(client.fileno(), -1)
 
@@ -171,7 +173,7 @@ class ReconciliationTransportTests(unittest.TestCase):
         start = time.monotonic()
         try:
             with self.assertRaises(ExchangeError):
-                exchange_query(self.store, client, timeout=0.05)
+                exchange_query(self.store, client, expected_peer=PeerIdentity(os.getpid(), os.geteuid(), os.getegid()), timeout=0.05)
             self.assertLess(time.monotonic() - start, 0.5)
         finally:
             client.close()
@@ -182,11 +184,11 @@ class ReconciliationTransportTests(unittest.TestCase):
         for timeout in (0, -1, True, "1", None, float("inf"), float("nan"), 61):
             client, peer = socket.socketpair()
             with peer, self.assertRaises(ExchangeError):
-                exchange_query(self.store, client, timeout=timeout)
+                exchange_query(self.store, client, expected_peer=PeerIdentity(os.getpid(), os.geteuid(), os.getegid()), timeout=timeout)
             self.assertEqual(client.fileno(), -1)
         connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         with self.assertRaises(ExchangeError):
-            exchange_query(self.store, connection)
+            exchange_query(self.store, connection, expected_peer=PeerIdentity(os.getpid(), os.geteuid(), os.getegid()))
         self.assertEqual(connection.fileno(), -1)
         self.pending()
 

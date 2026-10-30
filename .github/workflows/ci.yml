@@ -86,3 +86,6 @@ jobs:
 
       - name: Verificar política temporal / Verify temporal policy
         run: python3 scripts/verificar_tiempos.py
+
+      - name: Verificar identidad del par / Verify peer identity
+        run: python3 scripts/verificar_identidad_par.py

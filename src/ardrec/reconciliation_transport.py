@@ -4,6 +4,7 @@ import math
 import socket
 import time
 
+from ardrec.peer_identity import PeerError, authenticate_peer
 from ardrec.messages import MessageError, decode_message, encode_message
 from ardrec.reconciliation import ReconciliationError, complete_query, inspect_recovery
 from ardrec.transport import FrameError, read_frame, write_frame
@@ -48,10 +49,11 @@ def _message(stream):
     return raw, message
 
 
-def exchange_query(store, connection, *, timeout=10.0):
+def exchange_query(store, connection, *, expected_peer=None, timeout=10.0):
     """Consumir y cerrar el socket; confirmar únicamente una respuesta completa.
 
-    El llamador proporciona un socket Unix conectado, exclusivo y de confianza.
+    El llamador fija expected_peer desde su política y proporciona un socket exclusivo.
+    Se verifica la identidad antes de acceder al diario o enviar mensajes.
     La consulta debe estar abierta en el diario. No se crea ni reenvía un intento.
     """
     if not isinstance(connection, socket.socket):
@@ -63,6 +65,7 @@ def exchange_query(store, connection, *, timeout=10.0):
             raise ExchangeError("unix_stream_required")
         if type(timeout) not in (int, float) or not 0 < timeout <= 60 or not math.isfinite(timeout):
             raise ExchangeError("invalid_timeout")
+        authenticate_peer(connection, expected_peer)
         stream = _DeadlineStream(connection, time.monotonic() + timeout)
         decision = inspect_recovery(store)
         if decision.action != "QUERY_INCOMPLETE" or decision.open_query is None:
@@ -82,6 +85,8 @@ def exchange_query(store, connection, *, timeout=10.0):
         stream.remaining()
         # La correlación y la publicación durable se realizan juntas, después del EOF.
         return complete_query(store, query, response, result=result)
+    except PeerError as error:
+        raise ExchangeError(error.code) from error
     except TimeoutError as error:
         raise ExchangeError("timeout") from error
     except (OSError, EOFError) as error:
