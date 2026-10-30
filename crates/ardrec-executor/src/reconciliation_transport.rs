@@ -2,6 +2,7 @@
 use crate::{
     journal::TechnicalJournal,
     messages::{decode_message, encode_message},
+    peer_identity::{PeerIdentity, authenticate_peer},
     transport::{read_frame, write_frame},
 };
 use std::{
@@ -44,7 +45,8 @@ fn invalid(message: &'static str) -> io::Error {
 
 /// Atender una consulta 2.0 y cerrar el canal, incluso si falla el intercambio.
 ///
-/// El llamador autentica al par y entrega un socket exclusivo, sin otros lectores.
+/// El llamador fija la identidad esperada y entrega un socket exclusivo.
+/// Se verifica al par antes de leer mensajes o acceder al diario.
 /// El plazo cubre las operaciones del socket; no interrumpe un fsync del diario.
 /// El retorno no acredita recepción en Python. Un error puede seguir a un registro durable.
 /// La misma consulta se recupera con su identidad original en una conexión nueva.
@@ -54,6 +56,7 @@ pub fn serve_query(
     response_id: &str,
     created_at: &str,
     timeout: Duration,
+    expected_peer: PeerIdentity,
 ) -> io::Result<()> {
     if timeout.is_zero() || timeout > Duration::from_secs(60) {
         return Err(io::Error::new(
@@ -61,6 +64,7 @@ pub fn serve_query(
             "Plazo inválido",
         ));
     }
+    authenticate_peer(&connection, expected_peer)?;
     connection.set_nonblocking(false)?;
     let mut stream = DeadlineStream {
         stream: connection,
@@ -108,6 +112,39 @@ mod tests {
         sync::atomic::{AtomicU64, Ordering},
         thread,
     };
+    fn test_peer() -> PeerIdentity {
+        PeerIdentity::new(
+            std::process::id(),
+            rustix::process::geteuid().as_raw(),
+            rustix::process::getegid().as_raw(),
+        )
+        .unwrap()
+    }
+    #[test]
+    fn rejected_peer_preserves_journal_and_closes() {
+        let directory = TestDirectory::new();
+        let mut journal = TechnicalJournal::create(&directory.0).unwrap();
+        let before = fs::read(directory.0.join("HEAD")).unwrap();
+        let (server, mut client) = UnixStream::pair().unwrap();
+        let policy = PeerIdentity::new(
+            std::process::id() + 1,
+            rustix::process::geteuid().as_raw(),
+            rustix::process::getegid().as_raw(),
+        )
+        .unwrap();
+        let result = serve_query(
+            &mut journal,
+            server,
+            "A",
+            "2026-10-19T12:00:30Z",
+            Duration::from_secs(1),
+            policy,
+        );
+        assert_eq!(result.unwrap_err().kind(), io::ErrorKind::PermissionDenied);
+        assert_eq!(client.read(&mut [0]).unwrap(), 0);
+        assert_eq!(journal.sequence().unwrap(), 0);
+        assert_eq!(fs::read(directory.0.join("HEAD")).unwrap(), before);
+    }
     static NEXT: AtomicU64 = AtomicU64::new(0);
     struct TestDirectory(PathBuf);
     impl TestDirectory {
@@ -156,6 +193,7 @@ mod tests {
             "ANSWER-SOCKET",
             "2026-10-19T12:00:30Z",
             Duration::from_secs(1),
+            test_peer(),
         );
         (result, worker.join().unwrap())
     }
@@ -258,7 +296,8 @@ mod tests {
                 server,
                 "A",
                 "2026-10-19T12:00:30Z",
-                Duration::from_millis(20)
+                Duration::from_millis(20),
+                test_peer(),
             )
             .is_err()
         );
@@ -272,7 +311,15 @@ mod tests {
         for duration in [Duration::ZERO, Duration::from_secs(61)] {
             let (server, mut client) = UnixStream::pair().unwrap();
             assert!(
-                serve_query(&mut journal, server, "A", "2026-10-19T12:00:30Z", duration).is_err()
+                serve_query(
+                    &mut journal,
+                    server,
+                    "A",
+                    "2026-10-19T12:00:30Z",
+                    duration,
+                    test_peer()
+                )
+                .is_err()
             );
             assert_eq!(client.read(&mut [0]).unwrap(), 0);
         }
@@ -297,7 +344,8 @@ mod tests {
                 server,
                 "A",
                 "2026-10-19T12:00:30Z",
-                Duration::from_millis(50)
+                Duration::from_millis(50),
+                test_peer(),
             )
             .is_err()
         );

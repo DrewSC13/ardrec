@@ -1,0 +1,84 @@
+{
+  "format": "ardrec-peer-identity-1",
+  "finding": "AL-07",
+  "base_commit": "5306f15e0057dfa205168a23fd3b3b6196becc20",
+  "reviewed_thesis_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "thesis_sections": [
+    "3.7.5",
+    "3.9.2",
+    "3.9.8",
+    "3.9.9"
+  ],
+  "component_status": "IMPLEMENTED_PENDING_TARGET_VALIDATION_AND_INTEGRATION",
+  "scope": {
+    "es": "Comparar credenciales Linux del par antes de conciliar; conservar diarios ante rechazo.",
+    "en": "Compare Linux peer credentials before reconciliation; preserve journals on rejection."
+  },
+  "modules": [
+    "src/ardrec/peer_identity.py",
+    "src/ardrec/reconciliation_transport.py",
+    "crates/ardrec-executor/src/peer_identity.rs",
+    "crates/ardrec-executor/src/reconciliation_transport.rs"
+  ],
+  "tests": [
+    "tests/unit/test_peer_identity.py",
+    "tests/unit/test_reconciliation_transport.py",
+    "crates/ardrec-executor/src/peer_identity.rs",
+    "crates/ardrec-executor/src/reconciliation_transport.rs",
+    "scripts/verificar_identidad_par.py",
+    "scripts/verificar_conciliacion_transporte.py"
+  ],
+  "required_python_tests": 349,
+  "added_python_tests": 20,
+  "required_rust_library_tests": 73,
+  "added_rust_tests": 4,
+  "required_integration_scenarios": [
+    "accepted",
+    "python_pid",
+    "python_uid",
+    "python_gid",
+    "rust_pid",
+    "rust_uid",
+    "rust_gid"
+  ],
+  "preparation_environment": {
+    "unix_socket_creation": "RESTRICTED",
+    "blocked_python_tests": [
+      "test_connected_child_identity_not_parent",
+      "test_unconnected_socket",
+      "test_wrong_socket_type"
+    ],
+    "pathname_integration": "REQUIRES_TARGET_HOST",
+    "existing_pathname_transport": "REQUIRES_TARGET_HOST",
+    "skips_allowed": false
+  },
+  "documentation": [
+    "docs/adr/0014-identidad-par.md",
+    "docs/verification/peer-identity.md"
+  ],
+  "open_findings": [
+    "AL-06",
+    "AL-07"
+  ],
+  "point_1": "IN_PROGRESS",
+  "peer_policy_source": "CALLER_PROVIDED_TRUSTED_SOURCE_REQUIRED",
+  "credentials_scope": "CONNECTION_ESTABLISHMENT_NOT_TRANSFERRED_DESCRIPTOR_RECIPIENT",
+  "operational_profile_authorization": "NOT_IMPLEMENTED",
+  "full_analytical_state": "PENDING",
+  "analytical_global_publication": "NOT_CONNECTED",
+  "payload_semantics": "NOT_VALIDATED",
+  "durable_manifest_anchor": "NOT_CONNECTED",
+  "freshness_anchor": "NOT_IMPLEMENTED",
+  "guard_sources": "PENDING",
+  "al04_residual_obligations": [
+    "AL04-R01",
+    "AL04-R02",
+    "AL04-R03"
+  ],
+  "before_real_executor_gate": "BLOCKED_BY_RESIDUAL_OBLIGATIONS",
+  "historical_acceptance_matrix": "UNCHANGED",
+  "system_functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN",
+  "algorithm_implementation": "NOT_STARTED",
+  "operational_prototype": "NOT_STARTED"
+}

@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT / "src"), str(ROOT / "tests/unit"), str(ROOT / "scripts")]
 from ardrec.messages import decode_message, encode_message
 from ardrec.reconciliation import begin_query, inspect_recovery
+from ardrec.peer_identity import PeerIdentity
 from ardrec.reconciliation_transport import ExchangeError, exchange_query
 from ardrec.transport import read_frame, write_frame
 from test_persistence import INITIAL, DurableStore, prepare, reserve, reopen
@@ -41,7 +42,7 @@ def stop(child):
 def server(binary, journal, point="none"):
     client, peer = socket.socketpair()
     try:
-        child = subprocess.Popen([str(binary), str(journal), point], stdin=peer,
+        child = subprocess.Popen([str(binary), str(journal), point, str(os.getpid()), str(os.geteuid()), str(os.getegid())], stdin=peer,
                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     except BaseException:
         client.close()
@@ -60,13 +61,14 @@ def server(binary, journal, point="none"):
 CLIENT = '''
 import os, signal, socket, sys
 from test_persistence import reopen
+from ardrec.peer_identity import PeerIdentity
 from ardrec.reconciliation_transport import exchange_query
 path, point = sys.argv[1:]
 def crash(current):
     if current == point: os.kill(os.getpid(), signal.SIGKILL)
 with reopen(path, fault=crash) as store:
     connection = socket.socket(fileno=0)
-    exchange_query(store, connection)
+    exchange_query(store, connection, expected_peer=PeerIdentity(os.getppid(), os.geteuid(), os.getegid()))
 raise RuntimeError("No se alcanzó el punto de interrupción")
 '''
 
@@ -103,7 +105,7 @@ def verify(journal_binary, channel_binary, directory):
         child, connection = server(channel_binary, rust)
         try:
             with reopen(python) as store:
-                result = exchange_query(store, connection)
+                result = exchange_query(store, connection, expected_peer=PeerIdentity(os.getpid(), os.geteuid(), os.getegid()))
                 require(result.result == expected and result.queries_used == 1, "Resultado o presupuesto distinto")
                 require(not result.new_execution_authorized, "Ejecución autorizada")
                 require(store.state.confirmed.generation == 1 and store.state.incorporated_execution_count == 0,
@@ -163,7 +165,7 @@ def verify(journal_binary, channel_binary, directory):
             with reopen(python) as store:
                 with_error = False
                 try:
-                    exchange_query(store, connection)
+                    exchange_query(store, connection, expected_peer=PeerIdentity(os.getpid(), os.geteuid(), os.getegid()))
                 except ExchangeError:
                     with_error = True
                 require(with_error, "El canal interrumpido fue confirmado")
@@ -226,8 +228,8 @@ def main():
         tests = subprocess.run(["cargo", "test", "--locked", "--offline", "--workspace", "--lib", "reconciliation_transport::"],
                        cwd=ROOT, env=env, capture_output=True, text=True, timeout=300)
         print(tests.stdout + tests.stderr, flush=True)
-        require(tests.returncode == 0 and re.search(r"test result: ok\. 10 passed; 0 failed; 0 ignored;", tests.stdout),
-                "No se confirmaron las diez pruebas Rust del canal")
+        require(tests.returncode == 0 and re.search(r"test result: ok\. 11 passed; 0 failed; 0 ignored;", tests.stdout),
+                "No se confirmaron las once pruebas Rust del canal")
         subprocess.run(["cargo", "build", "--locked", "--offline", "--package", "ardrec-executor",
                         "--example", "journal_probe", "--example", "reconciliation_probe"],
                        cwd=ROOT, env=env, check=True, timeout=300)

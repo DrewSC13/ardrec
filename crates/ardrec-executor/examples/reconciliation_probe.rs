@@ -1,5 +1,7 @@
 //! Par sintético de prueba: una conexión, ninguna ejecución de herramientas.
-use ardrec_executor::{journal::TechnicalJournal, reconciliation_transport::serve_query};
+use ardrec_executor::{
+    journal::TechnicalJournal, peer_identity::PeerIdentity, reconciliation_transport::serve_query,
+};
 use std::{
     error::Error,
     io::{self, Write},
@@ -9,11 +11,10 @@ use std::{
 
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<String> = std::env::args().collect();
-    if args.len() != 3 {
-        return Err(
-            "Se requiere diario y punto de interrupción o none; stdin recibe el socket".into(),
-        );
+    if args.len() != 6 {
+        return Err("Se requiere diario, punto o none, PID/UID/GID; stdin recibe el socket".into());
     }
+    let expected = PeerIdentity::new(args[3].parse()?, args[4].parse()?, args[5].parse()?)?;
     let mut journal = TechnicalJournal::open(&args[1])?;
     let point = args[2].clone();
     if point != "none" {
@@ -38,6 +39,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         "SOCKET-ANSWER-1",
         "2026-10-19T12:00:30Z",
         Duration::from_secs(5),
+        expected,
     )?;
     println!("DONE");
     Ok(())
