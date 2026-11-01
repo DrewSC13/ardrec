@@ -96,7 +96,7 @@ class ResolvedReferences:
 
 
 def resolve_references(projections, manifest_bytes, *, expected_manifest_sha256, load_object):
-    """La huella esperada debe venir de una autoridad externa todavía no integrada.
+    """La huella esperada debe provenir del llamador o de la generación durable anclada.
 
     load_object(sha256) devuelve bytes o FileNotFoundError. Las cargas son opacas:
     su integridad no demuestra autorización, evidencia válida ni verdad de guardas.

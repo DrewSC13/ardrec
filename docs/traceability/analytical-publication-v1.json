@@ -1,0 +1,53 @@
+{
+  "format": "ardrec-analytical-publication-traceability-1",
+  "reviewed_base": "a4969622b6b1eb368a18810325dd122f9dcdce3e",
+  "thesis_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "thesis_sections": [
+    "3.9.10",
+    "3.10.1",
+    "3.10.2"
+  ],
+  "finding": "AL-06",
+  "status": "OPEN",
+  "component": "DURABLE_SNAPSHOT_BINDING_PREPARED",
+  "point_1": "IN_PROGRESS",
+  "implementation": [
+    "src/ardrec/persistence/__init__.py",
+    "src/ardrec/analytical_references.py"
+  ],
+  "tests": {
+    "file": "tests/unit/test_analytical_publication.py",
+    "expected_new_tests": 25,
+    "expected_python_suite": 374,
+    "sigkill_publication_boundaries": 20
+  },
+  "evidence": {
+    "local_acceptance": "REQUIRED_BEFORE_SIGNED_COMMIT",
+    "remote_ci": "PENDING_PUBLICATION",
+    "integration": "PENDING"
+  },
+  "bound_properties": [
+    "one_existing_HEAD",
+    "snapshot_hash_in_generation_and_journal",
+    "reference_integrity_and_operational_alignment",
+    "frozen_compatibility_between_anchored_generations",
+    "no_anchor_downgrade",
+    "historical_anchor_validation",
+    "atomic_incorporation_receipt"
+  ],
+  "limits": {
+    "payload_semantics": "NOT_VALIDATED",
+    "full_analytical_state": "PENDING",
+    "guard_sources": "PENDING",
+    "external_freshness_checkpoint_custody": "NOT_IMPLEMENTED",
+    "filesystem_power_loss_validation": "NOT_RUN",
+    "AL07": "OPEN",
+    "AL04_residual_obligations": [
+      "AL04-R01",
+      "AL04-R02",
+      "AL04-R03"
+    ],
+    "algorithm_implementation": "NOT_STARTED",
+    "system_functional_acceptance": "PENDING"
+  }
+}
