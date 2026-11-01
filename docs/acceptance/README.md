@@ -1,3 +1,9 @@
+# Vista vigente / Current view
+
+Español: la [revisión del punto 1](../traceability/point-1-closure-v1.md) y la [cobertura v2](current-coverage-v2.json) registran el estado vigente de los componentes. El contenido siguiente conserva la matriz histórica; sus estados no son resultados actuales del sistema.
+
+English: the [point 1 review](../traceability/point-1-closure-v1.md) and [v2 coverage](current-coverage-v2.json) record current component status. The following content preserves the historical matrix; its statuses are not current system results.
+
 # Criterios de aceptación del sistema
 
 Fuente: TESIS ARDREC. Las referencias usan secciones y la huella del documento

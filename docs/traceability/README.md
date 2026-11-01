@@ -2,15 +2,15 @@
 
 ## Español
 
-La [revisión vigente](alignment-current-v1.md) describe el alcance y los hallazgos abiertos.
-La [cobertura actual](../acceptance/current-coverage-v1.json) complementa la matriz histórica.
+La [revisión vigente](point-1-closure-v1.md) describe el alcance y los hallazgos abiertos.
+La [cobertura actual](../acceptance/current-coverage-v2.json) complementa la matriz histórica.
 Los estados de revisión, implementación, aceptación funcional y validación experimental son independientes.
 La trazabilidad detallada de los 44 requisitos registrados está enlazada abajo; la aceptación integral permanece pendiente.
 
 ## English
 
-The [current review](alignment-current-v1.md) defines scope and open findings.
-[Current coverage](../acceptance/current-coverage-v1.json) supplements the historical matrix.
+The [current review](point-1-closure-v1.md) defines scope and open findings.
+[Current coverage](../acceptance/current-coverage-v2.json) supplements the historical matrix.
 Review, implementation, functional acceptance and experimental validation have separate statuses.
 Detailed traceability for the 44 registered requirements is linked below; full acceptance remains pending.
 
