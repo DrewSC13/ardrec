@@ -23,6 +23,34 @@ from .codec import (
 
 FORMAT = "ardrec-store-1"
 MAX_RECORDS = 100_000
+INITIALIZATIONS = {"initialize", "initialize_analytical_v1"}
+PUBLICATIONS = {"publish", "publish_analytical_v1"}
+ANALYTICAL_OPERATIONS = {"initialize_analytical_v1", "publish_analytical_v1"}
+
+
+def _load_analytical(archive, sha, state, previous=None):
+    """Verificar bytes, alcance y valores congelados; las cargas siguen opacas."""
+    from ardrec.analytical import check_frozen_compatibility
+    from ardrec.analytical_references import check_operational_alignment
+    from .analytical_archive import AnalyticalArchive
+    _hash(sha)
+    require(type(archive) is AnalyticalArchive, "analytical_archive_required")
+    snapshot = archive.load(sha)
+    check_operational_alignment(snapshot.projections, state)
+    if previous is not None:
+        before = {p.service_scenario_id: p for p in previous.projections}
+        require(set(before) == {p.service_scenario_id for p in snapshot.projections},
+                "analytical_service_set_changed")
+        for projection in snapshot.projections:
+            check_frozen_compatibility(before[projection.service_scenario_id], projection)
+    return snapshot
+
+
+def _generation_value(operation, previous, state, args):
+    value = {"format": FORMAT, "previous": previous, "state": pack(state)}
+    if operation in ANALYTICAL_OPERATIONS:
+        value["analytical_snapshot_sha256"] = args["snapshot_sha256"]
+    return value
 
 
 def _hash(value):
@@ -81,8 +109,10 @@ def _publish(state, expected_generation, reference, event):
 
 def _reduce(state, operation, args):
     require(type(operation) is str and type(args) is dict, "operation_invalid")
-    if operation == "initialize":
-        exact_fields(args, ("state",))
+    if operation in INITIALIZATIONS:
+        exact_fields(args, ("state", "snapshot_sha256") if operation in ANALYTICAL_OPERATIONS else ("state",))
+        if operation in ANALYTICAL_OPERATIONS:
+            _hash(args["snapshot_sha256"])
         require(state is None, "duplicate_initialization")
         return _initial(args["state"])
     require(state is not None, "initialization_missing")
@@ -103,9 +133,12 @@ def _reduce(state, operation, args):
     if operation == "transition":
         exact_fields(args, ("service_id", "transition", "context"))
         return transition_service(state, **args)
-    if operation == "publish":
-        exact_fields(args, ("expected_generation", "reference", "event"))
-        return _publish(state, **args)
+    if operation in PUBLICATIONS:
+        names = ("expected_generation", "reference", "event")
+        exact_fields(args, (*names, "snapshot_sha256") if operation in ANALYTICAL_OPERATIONS else names)
+        if operation in ANALYTICAL_OPERATIONS:
+            _hash(args["snapshot_sha256"])
+        return _publish(state, **{name: args[name] for name in names})
     if operation == "finish":
         exact_fields(args, ("outcome", "reason_reference"))
         return finish_invocation(state, **args)
@@ -119,7 +152,7 @@ class DurableStore:
         raise TypeError("Usar DurableStore.create u open")
 
     @classmethod
-    def _session(cls, path, record_id, configuration_sha256, creating, fault):
+    def _session(cls, path, record_id, configuration_sha256, creating, fault, analytical_archive):
         _id(record_id)
         _hash(configuration_sha256)
         self = object.__new__(cls)
@@ -136,6 +169,8 @@ class DurableStore:
         self._head = None
         self._state = None
         self._queries = {}
+        self._analytical_archive = analytical_archive
+        self._analytical_snapshot_sha256 = None
         try:
             # Abrir cada componente sin seguir enlaces, conservando descriptores propios.
             parent = os.open("/", os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
@@ -189,20 +224,26 @@ class DurableStore:
             raise
 
     @classmethod
-    def create(cls, path, initial, *, fault=None):
+    def create(cls, path, initial, *, fault=None, analytical_archive=None, snapshot_sha256=None):
         initial = _initial(initial)
+        if snapshot_sha256 is not None:
+            _load_analytical(analytical_archive, snapshot_sha256, initial)
         self = cls._session(path, initial.confirmed.record_id,
-                            initial.confirmed.configuration_sha256, True, fault)
+                            initial.confirmed.configuration_sha256, True, fault, analytical_archive)
         try:
-            self._commit("initialize", {"state": initial})
+            operation, args = "initialize", {"state": initial}
+            if snapshot_sha256 is not None:
+                operation = "initialize_analytical_v1"
+                args["snapshot_sha256"] = snapshot_sha256
+            self._commit(operation, args)
             return self
         except BaseException:
             self.close()
             raise
 
     @classmethod
-    def open(cls, path, *, record_id, configuration_sha256, expected_head=None, fault=None):
-        self = cls._session(path, record_id, configuration_sha256, False, fault)
+    def open(cls, path, *, record_id, configuration_sha256, expected_head=None, fault=None, analytical_archive=None):
+        self = cls._session(path, record_id, configuration_sha256, False, fault, analytical_archive)
         try:
             self._recover(expected_head)
             return self
@@ -255,6 +296,8 @@ class DurableStore:
             require((actual.st_dev, actual.st_ino) == (opened.st_dev, opened.st_ino), "path_replaced")
             if self._head_raw is not None:
                 require(self._read(self._root, "HEAD") == self._head_raw, "head_changed")
+            if self._analytical_snapshot_sha256 is not None:
+                _load_analytical(self._analytical_archive, self._analytical_snapshot_sha256, self._state)
         except BaseException:
             self._poisoned = True
             raise
@@ -306,7 +349,13 @@ class DurableStore:
         if operation == REPLY and queries is self._queries:
             audit_current(self._state, queries)
             return self.state
+        require(not (self._analytical_snapshot_sha256 is not None and operation == "publish"),
+                "analytical_anchor_required")
         new_state = _reduce(self._state, operation, args)
+        if operation in ANALYTICAL_OPERATIONS:
+            previous = (None if self._analytical_snapshot_sha256 is None else
+                        _load_analytical(self._analytical_archive, self._analytical_snapshot_sha256, self._state))
+            _load_analytical(self._analytical_archive, args["snapshot_sha256"], new_state, previous)
         # Revalidar antes de escribir; mantener la reducción histórica congelada.
         if operation not in {"uncertain", "finish"}:
             audit_current(new_state, queries)
@@ -318,11 +367,11 @@ class DurableStore:
         require(seq < MAX_RECORDS, "journal_capacity")
         old_gen = None if self._head is None else self._head["generation_digest"]
         generation_value = None
-        if operation in {"initialize", "publish"}:
-            generation_value = {"format": FORMAT, "previous": old_gen, "state": pack(new_state)}
+        if operation in INITIALIZATIONS | PUBLICATIONS:
+            generation_value = _generation_value(operation, old_gen, new_state, args)
             canonical(generation_value)
         # Las referencias de generaciones son únicas en toda la observación.
-        if operation == "publish":
+        if operation in PUBLICATIONS:
             require(args["reference"] not in self._generation_refs, "generation_reference_reused")
         canonical(packed_args)
         try:
@@ -345,9 +394,11 @@ class DurableStore:
             # Solo después de sincronizar el directorio se devuelve confirmación.
             self._head, self._head_raw, self._state = head, raw, new_state
             self._queries = queries
-            if operation == "initialize":
+            if operation in ANALYTICAL_OPERATIONS:
+                self._analytical_snapshot_sha256 = args["snapshot_sha256"]
+            if operation in INITIALIZATIONS:
                 self._generation_refs = {new_state.confirmed.generation_reference}
-            elif operation == "publish":
+            elif operation in PUBLICATIONS:
                 self._generation_refs.add(new_state.confirmed.generation_reference)
             self._fault("commit:acknowledge")
             return self.state
@@ -388,14 +439,19 @@ class DurableStore:
         self._generation_refs = set()
         from ardrec.reconciliation import advance_index
         queries = {}
+        analytical = None
         for event in reversed(chain):
             args = unpack(event["args"])
             queries = advance_index(queries, state, event["operation"], args)
+            require(not (analytical is not None and event["operation"] == "publish"),
+                    "analytical_anchor_required")
             state = _reduce(state, event["operation"], args)
+            if event["operation"] in ANALYTICAL_OPERATIONS:
+                analytical = _load_analytical(self._analytical_archive, args["snapshot_sha256"], state, analytical)
             require(digest(canonical(pack(state))) == event["state_sha256"], "replay_mismatch")
-            if event["operation"] in {"initialize", "publish"}:
+            if event["operation"] in INITIALIZATIONS | PUBLICATIONS:
                 value = self._object("generations", event["generation_digest"])
-                require(canonical(value) == canonical({"format": FORMAT, "previous": gen, "state": pack(state)}),
+                require(canonical(value) == canonical(_generation_value(event["operation"], gen, state, args)),
                         "generation_mismatch")
                 ref = state.confirmed.generation_reference
                 require(ref not in self._generation_refs, "generation_reference_reused")
@@ -416,6 +472,7 @@ class DurableStore:
         require(self._read(self._root, "HEAD") == raw, "head_changed")
         self._head, self._head_raw, self._state = head, raw, state
         self._queries = queries
+        self._analytical_snapshot_sha256 = None if analytical is None else analytical.snapshot_sha256
         self._check()
 
     @property
@@ -427,6 +484,23 @@ class DurableStore:
     def head_sha256(self):
         self._check()
         return digest(self._head_raw)
+
+    @property
+    def analytical_snapshot_sha256(self):
+        self._check()
+        return self._analytical_snapshot_sha256
+
+    @property
+    def analytical_snapshot(self):
+        """Instantánea confirmada estructuralmente; no valida la semántica de payload."""
+        self._check()
+        if self._analytical_snapshot_sha256 is None:
+            return None
+        try:
+            return _load_analytical(self._analytical_archive, self._analytical_snapshot_sha256, self._state)
+        except BaseException:
+            self._poisoned = True
+            raise
 
     @property
     def temporal_status(self):
@@ -480,6 +554,12 @@ class DurableStore:
     def publish(self, *, expected_generation, reference, event):
         return self._commit("publish", {"expected_generation": expected_generation,
                                         "reference": reference, "event": event})
+
+    def publish_analytical(self, *, expected_generation, reference, event, snapshot_sha256):
+        """Anclar el archivo ya durable mediante la única publicación de HEAD."""
+        return self._commit("publish_analytical_v1", {
+            "expected_generation": expected_generation, "reference": reference,
+            "event": event, "snapshot_sha256": snapshot_sha256})
 
     def finish(self, outcome, reason_reference):
         return self._commit("finish", {"outcome": outcome, "reason_reference": reason_reference})
