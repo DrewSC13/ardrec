@@ -23,13 +23,14 @@ from .codec import (
 
 FORMAT = "ardrec-store-1"
 MAX_RECORDS = 100_000
-INITIALIZATIONS = {"initialize", "initialize_analytical_v1"}
-PUBLICATIONS = {"publish", "publish_analytical_v1"}
-ANALYTICAL_OPERATIONS = {"initialize_analytical_v1", "publish_analytical_v1"}
+INITIALIZATIONS = {"initialize", "initialize_analytical_v1", "initialize_analytical_counters_v1"}
+PUBLICATIONS = {"publish", "publish_analytical_v1", "publish_analytical_counters_v1"}
+COUNTER_OPERATIONS = {"initialize_analytical_counters_v1", "publish_analytical_counters_v1"}
+ANALYTICAL_OPERATIONS = {"initialize_analytical_v1", "publish_analytical_v1"} | COUNTER_OPERATIONS
 
 
-def _load_analytical(archive, sha, state, previous=None):
-    """Verificar bytes, alcance y valores congelados; las cargas siguen opacas."""
+def _load_analytical(archive, sha, state, previous=None, *, counters=False):
+    """Verificar archivo y, en el modo versionado, contadores contra recibos."""
     from ardrec.analytical import check_frozen_compatibility
     from ardrec.analytical_references import check_operational_alignment
     from .analytical_archive import AnalyticalArchive
@@ -37,6 +38,9 @@ def _load_analytical(archive, sha, state, previous=None):
     require(type(archive) is AnalyticalArchive, "analytical_archive_required")
     snapshot = archive.load(sha)
     check_operational_alignment(snapshot.projections, state)
+    if counters:
+        from ardrec.analytical_counters import check_execution_counters
+        check_execution_counters(snapshot, state)
     if previous is not None:
         before = {p.service_scenario_id: p for p in previous.projections}
         require(set(before) == {p.service_scenario_id for p in snapshot.projections},
@@ -50,6 +54,8 @@ def _generation_value(operation, previous, state, args):
     value = {"format": FORMAT, "previous": previous, "state": pack(state)}
     if operation in ANALYTICAL_OPERATIONS:
         value["analytical_snapshot_sha256"] = args["snapshot_sha256"]
+    if operation in COUNTER_OPERATIONS:
+        value["analytical_validation"] = "execution_counters_v1"
     return value
 
 
@@ -171,6 +177,7 @@ class DurableStore:
         self._queries = {}
         self._analytical_archive = analytical_archive
         self._analytical_snapshot_sha256 = None
+        self._counter_validation = False
         try:
             # Abrir cada componente sin seguir enlaces, conservando descriptores propios.
             parent = os.open("/", os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
@@ -224,16 +231,19 @@ class DurableStore:
             raise
 
     @classmethod
-    def create(cls, path, initial, *, fault=None, analytical_archive=None, snapshot_sha256=None):
+    def create(cls, path, initial, *, fault=None, analytical_archive=None, snapshot_sha256=None,
+               validate_counters=False):
         initial = _initial(initial)
+        require(type(validate_counters) is bool, "counter_mode_invalid")
+        require(not validate_counters or snapshot_sha256 is not None, "analytical_anchor_required")
         if snapshot_sha256 is not None:
-            _load_analytical(analytical_archive, snapshot_sha256, initial)
+            _load_analytical(analytical_archive, snapshot_sha256, initial, counters=validate_counters)
         self = cls._session(path, initial.confirmed.record_id,
                             initial.confirmed.configuration_sha256, True, fault, analytical_archive)
         try:
             operation, args = "initialize", {"state": initial}
             if snapshot_sha256 is not None:
-                operation = "initialize_analytical_v1"
+                operation = "initialize_analytical_counters_v1" if validate_counters else "initialize_analytical_v1"
                 args["snapshot_sha256"] = snapshot_sha256
             self._commit(operation, args)
             return self
@@ -297,7 +307,8 @@ class DurableStore:
             if self._head_raw is not None:
                 require(self._read(self._root, "HEAD") == self._head_raw, "head_changed")
             if self._analytical_snapshot_sha256 is not None:
-                _load_analytical(self._analytical_archive, self._analytical_snapshot_sha256, self._state)
+                _load_analytical(self._analytical_archive, self._analytical_snapshot_sha256, self._state,
+                                 counters=self._counter_validation)
         except BaseException:
             self._poisoned = True
             raise
@@ -351,11 +362,15 @@ class DurableStore:
             return self.state
         require(not (self._analytical_snapshot_sha256 is not None and operation == "publish"),
                 "analytical_anchor_required")
+        require(not (self._counter_validation and operation in PUBLICATIONS
+                     and operation not in COUNTER_OPERATIONS), "counter_validation_required")
         new_state = _reduce(self._state, operation, args)
         if operation in ANALYTICAL_OPERATIONS:
             previous = (None if self._analytical_snapshot_sha256 is None else
-                        _load_analytical(self._analytical_archive, self._analytical_snapshot_sha256, self._state))
-            _load_analytical(self._analytical_archive, args["snapshot_sha256"], new_state, previous)
+                        _load_analytical(self._analytical_archive, self._analytical_snapshot_sha256, self._state,
+                                 counters=self._counter_validation))
+            _load_analytical(self._analytical_archive, args["snapshot_sha256"], new_state, previous,
+                             counters=operation in COUNTER_OPERATIONS)
         # Revalidar antes de escribir; mantener la reducción histórica congelada.
         if operation not in {"uncertain", "finish"}:
             audit_current(new_state, queries)
@@ -396,6 +411,7 @@ class DurableStore:
             self._queries = queries
             if operation in ANALYTICAL_OPERATIONS:
                 self._analytical_snapshot_sha256 = args["snapshot_sha256"]
+                self._counter_validation = operation in COUNTER_OPERATIONS
             if operation in INITIALIZATIONS:
                 self._generation_refs = {new_state.confirmed.generation_reference}
             elif operation in PUBLICATIONS:
@@ -440,14 +456,19 @@ class DurableStore:
         from ardrec.reconciliation import advance_index
         queries = {}
         analytical = None
+        counter_validation = False
         for event in reversed(chain):
             args = unpack(event["args"])
             queries = advance_index(queries, state, event["operation"], args)
             require(not (analytical is not None and event["operation"] == "publish"),
                     "analytical_anchor_required")
+            require(not (counter_validation and event["operation"] in PUBLICATIONS
+                         and event["operation"] not in COUNTER_OPERATIONS), "counter_validation_required")
             state = _reduce(state, event["operation"], args)
             if event["operation"] in ANALYTICAL_OPERATIONS:
-                analytical = _load_analytical(self._analytical_archive, args["snapshot_sha256"], state, analytical)
+                counter_validation = event["operation"] in COUNTER_OPERATIONS
+                analytical = _load_analytical(self._analytical_archive, args["snapshot_sha256"], state, analytical,
+                                              counters=counter_validation)
             require(digest(canonical(pack(state))) == event["state_sha256"], "replay_mismatch")
             if event["operation"] in INITIALIZATIONS | PUBLICATIONS:
                 value = self._object("generations", event["generation_digest"])
@@ -473,6 +494,7 @@ class DurableStore:
         self._head, self._head_raw, self._state = head, raw, state
         self._queries = queries
         self._analytical_snapshot_sha256 = None if analytical is None else analytical.snapshot_sha256
+        self._counter_validation = counter_validation
         self._check()
 
     @property
@@ -492,12 +514,13 @@ class DurableStore:
 
     @property
     def analytical_snapshot(self):
-        """Instantánea confirmada estructuralmente; no valida la semántica de payload."""
+        """Instantánea anclada; el modo persistido determina la validación de contadores."""
         self._check()
         if self._analytical_snapshot_sha256 is None:
             return None
         try:
-            return _load_analytical(self._analytical_archive, self._analytical_snapshot_sha256, self._state)
+            return _load_analytical(self._analytical_archive, self._analytical_snapshot_sha256, self._state,
+                                 counters=self._counter_validation)
         except BaseException:
             self._poisoned = True
             raise
@@ -558,6 +581,18 @@ class DurableStore:
     def publish_analytical(self, *, expected_generation, reference, event, snapshot_sha256):
         """Anclar el archivo ya durable mediante la única publicación de HEAD."""
         return self._commit("publish_analytical_v1", {
+            "expected_generation": expected_generation, "reference": reference,
+            "event": event, "snapshot_sha256": snapshot_sha256})
+
+    @property
+    def analytical_validation(self):
+        """Alcance efectivo, conservado después de abrir y reproducir el diario."""
+        self._check()
+        return "execution_counters_v1" if self._counter_validation else "structural_only"
+
+    def publish_analytical_counters(self, *, expected_generation, reference, event, snapshot_sha256):
+        """Anclar y verificar contadores desde los recibos de la generación candidata."""
+        return self._commit("publish_analytical_counters_v1", {
             "expected_generation": expected_generation, "reference": reference,
             "event": event, "snapshot_sha256": snapshot_sha256})
 

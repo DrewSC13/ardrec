@@ -1,0 +1,63 @@
+{
+  "format": "ardrec-analytical-counters-1",
+  "base_commit": "415d758d813f46f975d5c9b72ef64ad6ff40ffb7",
+  "original_signed_commit": "9a0c138ef2b137552b5213e4bd5879014afa715d",
+  "source": {
+    "sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+    "sections": [
+      "3.3.1",
+      "3.4.4",
+      "3.9.10"
+    ]
+  },
+  "component_status": "IMPLEMENTED_PENDING_TARGET_VALIDATION_AND_INTEGRATION",
+  "requirements": {
+    "es": "Contar solo intentos de caso incorporados con inicio físico acreditado; conservar recibos y no reiniciar por sesión.",
+    "en": "Count only incorporated derived-case attempts with verified physical start; retain receipts without session resets."
+  },
+  "implementation": [
+    "src/ardrec/analytical_counters.py",
+    "src/ardrec/persistence/__init__.py"
+  ],
+  "tests": [
+    "tests/unit/test_analytical_counters.py"
+  ],
+  "verification": "docs/verification/analytical-counters.md",
+  "added_python_tests": 31,
+  "required_python_tests": 405,
+  "required_rust_tests": 73,
+  "sigkill_publication_boundaries": 20,
+  "counter_schema": "ardrec-execution-counters-1",
+  "journal_operations": [
+    "initialize_analytical_counters_v1",
+    "publish_analytical_counters_v1"
+  ],
+  "legacy_validation": "STRUCTURAL_ONLY_PRESERVED",
+  "semantic_scope": [
+    "execution_counters_against_incorporated_attempts"
+  ],
+  "pending": [
+    "other_six_payloads",
+    "case_catalog_and_budgets",
+    "source_backed_guards",
+    "freshness_custody",
+    "operational_peer_policy",
+    "operational_profile_authorization",
+    "full_analytical_state"
+  ],
+  "open_findings": [
+    "AL-06",
+    "AL-07"
+  ],
+  "point_1": "IN_PROGRESS",
+  "al04_residual_obligations": [
+    "AL04-R01",
+    "AL04-R02",
+    "AL04-R03"
+  ],
+  "before_real_executor_gate": "BLOCKED_BY_RESIDUAL_OBLIGATIONS",
+  "system_functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN",
+  "algorithm_implementation": "NOT_STARTED",
+  "operational_prototype": "NOT_STARTED"
+}
