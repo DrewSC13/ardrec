@@ -1,0 +1,420 @@
+{
+  "schema_version": "2.0",
+  "baseline_commit": "26f8506521f876d1b31b5908771de4297c81a213",
+  "source": {
+    "label": "TESIS ARDREC",
+    "sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72"
+  },
+  "historical_matrix": "docs/acceptance/system-v1.json",
+  "historical_matrix_sha256": "b7f476577c215050ecf85c64a795fcaddff6c974a3d8db32bdce8825272f53f6",
+  "review": "docs/traceability/point-1-closure-v1.json",
+  "status": "COMPONENT_COVERAGE_NOT_SYSTEM_ACCEPTANCE",
+  "criteria": [
+    {
+      "id": "AC-01",
+      "component_support_files": [
+        "src/ardrec/state.py"
+      ],
+      "implementation": "PARTIAL",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "Aislamiento y permisos efectivos de actores pendientes.",
+        "en": "Effective actor isolation and permissions pending."
+      }
+    },
+    {
+      "id": "AC-02",
+      "component_support_files": [
+        "crates/ardrec-executor/src/magnitudes.rs",
+        "scripts/verificar_magnitudes.py",
+        "src/ardrec/persistence/magnitudes.py",
+        "tests/unit/test_contracts.py",
+        "tests/unit/test_protocol_equivalence.py"
+      ],
+      "implementation": "PARTIAL",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "Paridad de magnitudes y archivo exacto verificados dentro del formato definido; integrar su uso en A1/A2/A7 y verificar el sistema completo.",
+        "en": "Magnitude parity and exact archive verified within the defined format; integrate use in A1/A2/A7 and verify the complete system."
+      }
+    },
+    {
+      "id": "AC-03",
+      "component_support_files": [
+        "crates/ardrec-executor/src/peer_identity.rs",
+        "scripts/verificar_identidad_par.py",
+        "scripts/verificar_transporte.py",
+        "src/ardrec/peer_identity.py",
+        "tests/unit/test_reconciliation_transport.py",
+        "tests/unit/test_transport.py"
+      ],
+      "implementation": "PARTIAL",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "Credenciales PID/UID/GID verificadas en conciliación; falta provisión confiable de política, ciclo de vida y permisos del ejecutor real.",
+        "en": "PID/UID/GID credentials verified in reconciliation; trusted policy provisioning, lifetime and real-executor permissions remain pending."
+      }
+    },
+    {
+      "id": "AC-04",
+      "component_support_files": [
+        "crates/ardrec-executor/src/timing.rs",
+        "scripts/verificar_protocolo.py",
+        "src/ardrec/analytical_references.py",
+        "src/ardrec/temporal.py",
+        "tests/unit/test_protocol_v2.py"
+      ],
+      "implementation": "PARTIAL",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "Política temporal y resolución estructural implementadas; quedan vínculo físico del reloj y semántica de soportes/perfiles externos.",
+        "en": "Temporal policy and structural resolution implemented; physical clock binding and external support/profile semantics remain pending."
+      }
+    },
+    {
+      "id": "AC-05",
+      "component_support_files": [
+        "tests/unit/test_reconciliation.py",
+        "crates/ardrec-executor/src/journal/tests.rs"
+      ],
+      "implementation": "PARTIAL",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "Verificar cero ejecuciones físicas extra con ejecutor real.",
+        "en": "Verify zero extra physical executions with the real executor."
+      }
+    },
+    {
+      "id": "AC-06",
+      "component_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "A1 no implementado.",
+        "en": "A1 not implemented."
+      }
+    },
+    {
+      "id": "AC-07",
+      "component_support_files": [
+        "src/ardrec/analytical.py",
+        "tests/unit/test_analytical_publication.py"
+      ],
+      "implementation": "NOT_IMPLEMENTED",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "El contrato preserva valores congelados entre instantáneas ancladas; A2 y la validación completa de configuración siguen pendientes.",
+        "en": "The contract preserves frozen values across anchored snapshots; A2 and complete configuration validation remain pending."
+      }
+    },
+    {
+      "id": "AC-08",
+      "component_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "A3 y controles verificados no implementados.",
+        "en": "A3 and verified controls not implemented."
+      }
+    },
+    {
+      "id": "AC-09",
+      "component_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "A4 no implementado; oráculos no son ejecución del motor.",
+        "en": "A4 not implemented; oracles are not engine execution."
+      }
+    },
+    {
+      "id": "AC-10",
+      "component_support_files": [
+        "src/ardrec/analytical_counters.py",
+        "tests/unit/test_analytical_counters.py",
+        "tests/unit/test_persistence.py",
+        "tests/unit/test_state.py"
+      ],
+      "implementation": "PARTIAL",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "Contadores contrastados con recibos incorporados; falta supervisión física, catálogo, presupuestos y autorización de repetición.",
+        "en": "Counters checked against incorporated receipts; physical supervision, catalog, budgets and repeat authorization remain pending."
+      }
+    },
+    {
+      "id": "AC-11",
+      "component_support_files": [
+        "tests/unit/test_reconciliation.py",
+        "scripts/verificar_conciliacion_transporte.py"
+      ],
+      "implementation": "PARTIAL",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "Conciliación física y limpieza real no integradas.",
+        "en": "Physical reconciliation and actual cleanup not integrated."
+      }
+    },
+    {
+      "id": "AC-12",
+      "component_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "Ejecutor real y perfiles autorizados no integrados.",
+        "en": "Real executor and authorized profiles not integrated."
+      }
+    },
+    {
+      "id": "AC-13",
+      "component_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "A6 y clasificación efectiva no implementados.",
+        "en": "A6 and effective classification not implemented."
+      }
+    },
+    {
+      "id": "AC-14",
+      "component_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "A6 y repositorio analítico de revisiones no implementados.",
+        "en": "A6 and analytical revision repository not implemented."
+      }
+    },
+    {
+      "id": "AC-15",
+      "component_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "A7 no implementado; cálculo de referencias no es cálculo de producción.",
+        "en": "A7 not implemented; reference calculation is not production calculation."
+      }
+    },
+    {
+      "id": "AC-16",
+      "component_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "A7 y validación de derivados no implementados.",
+        "en": "A7 and derived-value validation not implemented."
+      }
+    },
+    {
+      "id": "AC-17",
+      "component_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "A7/A8 y ventana analítica no implementados.",
+        "en": "A7/A8 and analytical window not implemented."
+      }
+    },
+    {
+      "id": "AC-18",
+      "component_support_files": [
+        "tests/unit/test_state.py"
+      ],
+      "implementation": "PARTIAL",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "Orden de criterios representado; cálculo y soporte de criterios A8 pendientes.",
+        "en": "Criterion ordering represented; A8 criterion calculation and support pending."
+      }
+    },
+    {
+      "id": "AC-19",
+      "component_support_files": [
+        "src/ardrec/analytical.py",
+        "src/ardrec/analytical_references.py",
+        "tests/unit/test_analytical_publication.py",
+        "tests/unit/test_persistence.py",
+        "tests/unit/test_state.py"
+      ],
+      "implementation": "PARTIAL",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "Transición operacional, identidad estructural y anclaje cubiertos; A9, fuentes de guardas e invariantes analíticos completos pendientes.",
+        "en": "Operational transition, structural identity and anchoring covered; A9, guard sources and complete analytical invariants pending."
+      }
+    },
+    {
+      "id": "AC-20",
+      "component_support_files": [
+        "scripts/verificar_diario_tecnico.py",
+        "src/ardrec/persistence/analytical_archive.py",
+        "tests/unit/test_analytical_counters.py",
+        "tests/unit/test_analytical_publication.py",
+        "tests/unit/test_persistence.py"
+      ],
+      "implementation": "PARTIAL",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "Archivo, instantánea, recibo y generación anclados y recuperables; otras seis cargas, custodia de frescura y garantías físicas del laboratorio pendientes.",
+        "en": "Archive, snapshot, receipt and generation bound and recoverable; other six payloads, freshness custody and physical laboratory guarantees pending."
+      }
+    },
+    {
+      "id": "AC-21",
+      "component_support_files": [
+        "scripts/verificar_conciliacion_transporte.py",
+        "tests/unit/test_analytical_counters.py",
+        "tests/unit/test_analytical_publication.py",
+        "tests/unit/test_persistence.py",
+        "tests/unit/test_reconciliation.py"
+      ],
+      "implementation": "PARTIAL",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "Recuperación de anclaje y contadores cubierta por SIGKILL; recuperación del ejecutor real y del motor A1-A10 pendientes.",
+        "en": "Anchor and counter recovery covered by SIGKILL; real-executor and A1-A10 recovery pending."
+      }
+    },
+    {
+      "id": "AC-22",
+      "component_support_files": [
+        "tests/unit/test_state.py"
+      ],
+      "implementation": "PARTIAL",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "Salidas de invocación modeladas; A10 e interfaz operativa pendientes.",
+        "en": "Invocation outcomes modeled; A10 and operational interface pending."
+      }
+    },
+    {
+      "id": "AC-23",
+      "component_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "A1-A10, terminación integral y medición de costes pendientes.",
+        "en": "A1-A10, integrated termination and cost measurement pending."
+      }
+    },
+    {
+      "id": "AC-24",
+      "component_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_APPLICABLE",
+      "remaining_work": {
+        "es": "Laboratorio controlado y verificación física de aislamiento pendientes.",
+        "en": "Controlled laboratory and physical isolation verification pending."
+      }
+    },
+    {
+      "id": "AC-25",
+      "component_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_RUN",
+      "remaining_work": {
+        "es": "Diseño desglosado en MET; instrumentos, muestra y evaluabilidad sin ejecución.",
+        "en": "Design detailed in MET; instruments, sample and evaluability not executed."
+      }
+    },
+    {
+      "id": "AC-26",
+      "component_support_files": [],
+      "implementation": "NOT_IMPLEMENTED",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_RUN",
+      "remaining_work": {
+        "es": "Contraste, potencia y análisis por ejecutar tras congelamiento.",
+        "en": "Test, power analysis and data analysis require execution under the prespecified protocol."
+      }
+    },
+    {
+      "id": "AC-27",
+      "component_support_files": [
+        "scripts/verificar_ci.py",
+        "tests/unit/test_persistence.py"
+      ],
+      "implementation": "PARTIAL",
+      "system_functional_verification": "PENDING",
+      "acceptance_status": "PENDING",
+      "experimental_validation": "NOT_RUN",
+      "remaining_work": {
+        "es": "Reproducción de componentes disponible; reproducción independiente del sistema y experimento pendiente.",
+        "en": "Component reproduction available; independent system and experiment reproduction pending."
+      }
+    }
+  ],
+  "supersedes_for_current_status": "docs/acceptance/current-coverage-v1.json",
+  "evidence": {
+    "counter_increment": {
+      "pr": 25,
+      "head": "b455bf5a6fc6310ba30319d29a488291ded8e3a0",
+      "base": "415d758d813f46f975d5c9b72ef64ad6ff40ffb7",
+      "merge": "26f8506521f876d1b31b5908771de4297c81a213",
+      "pr_ci": {
+        "id": 41355700883,
+        "attempt": 1,
+        "url": "https://github.com/DrewSC13/ardrec/actions/runs/41355700883"
+      },
+      "main_ci": {
+        "id": 41358064180,
+        "attempt": 1,
+        "url": "https://github.com/DrewSC13/ardrec/actions/runs/41358064180"
+      }
+    },
+    "python_tests": 405,
+    "rust_tests": 73,
+    "meaning": "COMPONENT_TESTS_NOT_ACCEPTANCE_OF_ALL_CRITERIA"
+  }
+}
