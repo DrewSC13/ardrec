@@ -1,0 +1,194 @@
+{
+  "schema_version": "1.0",
+  "status": "DESIGN_ONLY_NOT_DEPLOYED",
+  "networks": [
+    {
+      "id": "ardrec-dev-ssh",
+      "environment": "dev",
+      "protocol": "ssh",
+      "cidr": "10.203.30.0/28",
+      "runner": "10.203.30.1",
+      "target": "10.203.30.2",
+      "forward": null,
+      "host_ip": null,
+      "physical_uplink": null,
+      "dhcp": false,
+      "dns": false,
+      "ipv6": false,
+      "default_gateway": null,
+      "status": "RESERVED_DESIGN_RECHECK_BEFORE_DEPLOYMENT"
+    },
+    {
+      "id": "ardrec-dev-ftp",
+      "environment": "dev",
+      "protocol": "ftp",
+      "cidr": "10.203.31.0/28",
+      "runner": "10.203.31.1",
+      "target": "10.203.31.2",
+      "forward": null,
+      "host_ip": null,
+      "physical_uplink": null,
+      "dhcp": false,
+      "dns": false,
+      "ipv6": false,
+      "default_gateway": null,
+      "status": "RESERVED_DESIGN_RECHECK_BEFORE_DEPLOYMENT"
+    },
+    {
+      "id": "ardrec-dev-smb",
+      "environment": "dev",
+      "protocol": "smb",
+      "cidr": "10.203.32.0/28",
+      "runner": "10.203.32.1",
+      "target": "10.203.32.2",
+      "forward": null,
+      "host_ip": null,
+      "physical_uplink": null,
+      "dhcp": false,
+      "dns": false,
+      "ipv6": false,
+      "default_gateway": null,
+      "status": "RESERVED_DESIGN_RECHECK_BEFORE_DEPLOYMENT"
+    },
+    {
+      "id": "ardrec-pilot-ssh",
+      "environment": "pilot",
+      "protocol": "ssh",
+      "cidr": "10.203.40.0/28",
+      "runner": "10.203.40.1",
+      "target": "10.203.40.2",
+      "forward": null,
+      "host_ip": null,
+      "physical_uplink": null,
+      "dhcp": false,
+      "dns": false,
+      "ipv6": false,
+      "default_gateway": null,
+      "status": "RESERVED_DESIGN_RECHECK_BEFORE_DEPLOYMENT"
+    },
+    {
+      "id": "ardrec-pilot-ftp",
+      "environment": "pilot",
+      "protocol": "ftp",
+      "cidr": "10.203.41.0/28",
+      "runner": "10.203.41.1",
+      "target": "10.203.41.2",
+      "forward": null,
+      "host_ip": null,
+      "physical_uplink": null,
+      "dhcp": false,
+      "dns": false,
+      "ipv6": false,
+      "default_gateway": null,
+      "status": "RESERVED_DESIGN_RECHECK_BEFORE_DEPLOYMENT"
+    },
+    {
+      "id": "ardrec-pilot-smb",
+      "environment": "pilot",
+      "protocol": "smb",
+      "cidr": "10.203.42.0/28",
+      "runner": "10.203.42.1",
+      "target": "10.203.42.2",
+      "forward": null,
+      "host_ip": null,
+      "physical_uplink": null,
+      "dhcp": false,
+      "dns": false,
+      "ipv6": false,
+      "default_gateway": null,
+      "status": "RESERVED_DESIGN_RECHECK_BEFORE_DEPLOYMENT"
+    },
+    {
+      "id": "ardrec-exp-ssh",
+      "environment": "exp",
+      "protocol": "ssh",
+      "cidr": "10.203.50.0/28",
+      "runner": "10.203.50.1",
+      "target": "10.203.50.2",
+      "forward": null,
+      "host_ip": null,
+      "physical_uplink": null,
+      "dhcp": false,
+      "dns": false,
+      "ipv6": false,
+      "default_gateway": null,
+      "status": "RESERVED_DESIGN_RECHECK_BEFORE_DEPLOYMENT"
+    },
+    {
+      "id": "ardrec-exp-ftp",
+      "environment": "exp",
+      "protocol": "ftp",
+      "cidr": "10.203.51.0/28",
+      "runner": "10.203.51.1",
+      "target": "10.203.51.2",
+      "forward": null,
+      "host_ip": null,
+      "physical_uplink": null,
+      "dhcp": false,
+      "dns": false,
+      "ipv6": false,
+      "default_gateway": null,
+      "status": "RESERVED_DESIGN_RECHECK_BEFORE_DEPLOYMENT"
+    },
+    {
+      "id": "ardrec-exp-smb",
+      "environment": "exp",
+      "protocol": "smb",
+      "cidr": "10.203.52.0/28",
+      "runner": "10.203.52.1",
+      "target": "10.203.52.2",
+      "forward": null,
+      "host_ip": null,
+      "physical_uplink": null,
+      "dhcp": false,
+      "dns": false,
+      "ipv6": false,
+      "default_gateway": null,
+      "status": "RESERVED_DESIGN_RECHECK_BEFORE_DEPLOYMENT"
+    }
+  ],
+  "default_policy": "DENY",
+  "runner_forwarding": false,
+  "target_to_target": false,
+  "internet_during_measurement": false,
+  "management_nic_during_measurement": false,
+  "max_active_environments": 1,
+  "allowed_new_connections": [
+    {
+      "source": "runner",
+      "destination": "ssh_target",
+      "transport": "tcp",
+      "ports": [
+        22
+      ]
+    },
+    {
+      "source": "runner",
+      "destination": "ftp_target",
+      "transport": "tcp",
+      "ports": [
+        21
+      ],
+      "port_ranges": [
+        [
+          50000,
+          50009
+        ]
+      ]
+    },
+    {
+      "source": "runner",
+      "destination": "smb_target",
+      "transport": "tcp",
+      "ports": [
+        445
+      ]
+    }
+  ],
+  "l2_policy": "Allow only assigned MAC/IP pairs and required ARP; deny other guest/host traffic. Enforce on host bridge and guest.",
+  "return_traffic": "Established responses for authorized connections only; narrow diagnostic ICMP errors if explicitly configured.",
+  "active_ftp": "NOT_AUTHORIZED_IN_BASELINE",
+  "netbios": "NOT_AUTHORIZED_IN_BASELINE",
+  "management": "Host libvirt console; provisioning networking removed before measurement.",
+  "coexistence": "Preserve Docker and default libvirt networks; dedicated tables/chains/interfaces only. Never flush global rules."
+}
