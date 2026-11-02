@@ -43,6 +43,9 @@ jobs:
 
       - name: Verificar empaquetado / Verify packaging
         run: python scripts/verificar_ci.py python
+      - name: Verificar trazabilidad vigente / Verify current traceability
+        run: python3 scripts/verificar_trazabilidad_actual.py
+
       - name: Probar contratos y transporte / Test contracts and transport
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 
