@@ -1,0 +1,180 @@
+{
+  "schema_version": "1.0",
+  "status": "PLANNED_NOT_EXECUTED",
+  "checks": [
+    {
+      "id": "LAB-V01",
+      "roadmap_step": 4,
+      "requirements": [
+        "AC-24"
+      ],
+      "obligations": [
+        "AL-07"
+      ],
+      "es": "Inventariar versiones, permisos KVM/libvirt y rutas de todas las tablas. Confirmar ausencia de conflicto de las nueve redes.",
+      "en": "Inventory versions, KVM/libvirt access and all route tables; verify all nine subnet reservations.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "LAB-V02",
+      "roadmap_step": 5,
+      "requirements": [
+        "AC-24"
+      ],
+      "obligations": [
+        "AL-07"
+      ],
+      "es": "Comprobar reglas, interfaces y contadores: tráfico permitido funciona; LAN, anfitrión, Internet, IPv6, otros objetivos y otros entornos no tienen salida. Usar destinos testigo propios, sin sondear terceros.",
+      "en": "Verify allowed traffic and denied host/LAN/Internet/IPv6/other-target/environment paths using owned witnesses, not third-party probes.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "LAB-V03",
+      "roadmap_step": 5,
+      "requirements": [
+        "AC-24"
+      ],
+      "obligations": [
+        "AL-07"
+      ],
+      "es": "Confirmar que reinicio, reconexión o apertura de virt-manager no agrega NAT ni interfaces de gestión.",
+      "en": "Verify restart, reconnection and management UI cannot silently add NAT or management interfaces.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "LAB-V04",
+      "roadmap_step": 5,
+      "requirements": [
+        "AC-24",
+        "AC-27"
+      ],
+      "obligations": [],
+      "es": "Restaurar objetivos detenidos y contrastar identidades, cuentas, permisos, servicios y hashes sintéticos. Verificar que evidencia y contadores no retroceden.",
+      "en": "Restore powered-off targets and verify identities, accounts, permissions, services and fixture hashes; evidence and counters must not roll back.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "LAB-V05",
+      "roadmap_step": 9,
+      "requirements": [
+        "AC-03",
+        "AC-24"
+      ],
+      "obligations": [
+        "AL-07"
+      ],
+      "es": "Rechazar par ajeno, política modificada, PID reutilizado, descriptor heredado y acceso al socket sin permiso; verificar limpieza del cgroup completo.",
+      "en": "Reject foreign peer, modified policy, reused PID, inherited descriptor and unauthorized socket access; verify whole-cgroup cleanup.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "LAB-V06",
+      "roadmap_step": 9,
+      "requirements": [
+        "AC-04",
+        "AC-24"
+      ],
+      "obligations": [
+        "AL04-R01",
+        "AL04-R02"
+      ],
+      "es": "Medir inicio/final reales; provocar suspensión únicamente en entorno dev desechable y comprobar interrupción y conciliación.",
+      "en": "Measure actual start/end; induce suspension only in disposable dev and verify interruption/reconciliation.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "LAB-V07",
+      "roadmap_step": 12,
+      "requirements": [
+        "AC-21",
+        "AC-27"
+      ],
+      "obligations": [
+        "FRESHNESS-CUSTODY",
+        "AL04-R03"
+      ],
+      "es": "Rechazar estado anterior íntegro frente a expected_head externo; conservar informes rechazados y probar ajuste UTC sin repetición automática.",
+      "en": "Reject intact stale state against externally held expected_head; preserve rejected reports and test UTC adjustment without automatic re-execution.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "LAB-V08",
+      "roadmap_step": 12,
+      "requirements": [
+        "AC-20",
+        "AC-21",
+        "AC-27"
+      ],
+      "obligations": [
+        "FILESYSTEM-POWER-LOSS"
+      ],
+      "es": "Separar muerte de proceso, caída VM y pérdida física de energía. Documentar modo de caché, flush, almacenamiento y dominio de fallo; no cortar energía del equipo personal como parte de este instalador.",
+      "en": "Separate process death, VM crash and physical power loss; document cache, flush, storage and failure domain. This installer never powers off the personal host.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "LAB-V09",
+      "roadmap_step": 6,
+      "requirements": [
+        "AC-24",
+        "AC-25"
+      ],
+      "obligations": [],
+      "es": "Acreditar separación dev/pilot/exp de discos, credenciales, estados y registros; repetir no aumenta n.",
+      "en": "Verify dev/pilot/exp separation of writable disks, credentials, states and records; repeats do not increase n.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "LAB-V10",
+      "roadmap_step": 8,
+      "requirements": [
+        "AC-24"
+      ],
+      "obligations": [
+        "AL-07"
+      ],
+      "es": "Validar ejecutable y argumentos congelados, destinos, referencias protegidas, presupuestos y ausencia de reintentos ocultos.",
+      "en": "Validate pinned executable/arguments, targets, protected references, budgets and absence of hidden retries.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "LAB-V11",
+      "roadmap_step": 11,
+      "requirements": [
+        "AC-24",
+        "AC-27"
+      ],
+      "obligations": [
+        "AL-07"
+      ],
+      "es": "Verificar límite de salidas, integridad y extracción acotada de artefactos; escritura y limpieza se acreditan por separado.",
+      "en": "Verify bounded output, integrity and bounded artifact extraction; prove writing and cleanup separately.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "LAB-V12",
+      "roadmap_step": 33,
+      "requirements": [
+        "AC-24",
+        "AC-25",
+        "AC-27"
+      ],
+      "obligations": [],
+      "es": "Pilotear carga, memoria, almacenamiento y tiempos; fijar presupuestos antes del congelamiento y registrar incidencias sin exclusiones oportunistas.",
+      "en": "Pilot load, RAM, disk and timing; freeze budgets before final collection and record incidents without outcome-driven exclusions.",
+      "status": "NOT_RUN",
+      "evidence": []
+    }
+  ]
+}

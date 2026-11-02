@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "status": "USER_REPORTED_READ_ONLY_NOT_INDEPENDENTLY_MEASURED",
+  "reported_date": "2026-11-02",
+  "host": "Prometheus",
+  "os": "Kali GNU/Linux Rolling 2026.3",
+  "kernel": "7.1.5+kali-amd64",
+  "architecture": "x86_64",
+  "logical_cpus": 16,
+  "cpu_model": "AMD Ryzen 7 5700U with Radeon Graphics",
+  "virtualization_flag": "AMD-V",
+  "running_inside_virtual_machine": false,
+  "kvm_device_present": true,
+  "kvm_usable_by_operator": "NOT_TESTED",
+  "memory_reported": {
+    "total": "13Gi",
+    "available": "9.4Gi",
+    "swap_total": "13Gi",
+    "swap_used": "0B"
+  },
+  "storage_reported": {
+    "filesystem": "ext4",
+    "total": "453G",
+    "available": "135G",
+    "used_percent": 69,
+    "same_filesystem_for_root_and_project": true,
+    "physical_media": "NOT_IDENTIFIED"
+  },
+  "tools_present": [
+    "virsh",
+    "qemu-system-x86_64",
+    "qemu-img",
+    "virt-install",
+    "virt-manager",
+    "nft"
+  ],
+  "tools_not_found": [
+    "ansible-playbook"
+  ],
+  "tool_versions": "NOT_REPORTED",
+  "existing_ipv4_networks": [
+    "192.168.0.0/24",
+    "172.17.0.0/16",
+    "172.18.0.0/16",
+    "172.20.0.0/16",
+    "192.168.122.0/24"
+  ],
+  "ipv6_default_route_present": true,
+  "public_addresses_omitted": true,
+  "limitations": [
+    "Rounded display values are not exact capacity measurements.",
+    "Device presence does not verify KVM access, libvirt connection, cgroups, ACLs or firewall isolation.",
+    "Only reported route tables were inspected; all policy routes, VPN and inactive networks require deployment preflight.",
+    "No independent backup medium or UPS has been identified."
+  ]
+}

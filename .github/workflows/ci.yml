@@ -46,6 +46,9 @@ jobs:
       - name: Verificar trazabilidad vigente / Verify current traceability
         run: python3 scripts/verificar_trazabilidad_actual.py
 
+      - name: Verificar diseño del laboratorio / Verify laboratory design
+        run: python3 lab/verify_design.py
+
       - name: Probar contratos y transporte / Test contracts and transport
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 
