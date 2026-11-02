@@ -1,0 +1,44 @@
+{
+  "schema_version": "2.0",
+  "baseline_commit": "228bdedf09d06906ddfa184525e9a7c60f4e2dc6",
+  "source": {
+    "label": "TESIS ARDREC",
+    "sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72"
+  },
+  "items": [
+    {
+      "id": "EV-MAIN26-CI",
+      "kind": "USER_SUPPLIED_INTEGRATION_OUTPUT",
+      "commit": "228bdedf09d06906ddfa184525e9a7c60f4e2dc6",
+      "run_id": 41358531943,
+      "event": "push",
+      "branch": "main",
+      "workflow": ".github/workflows/ci.yml",
+      "url": "https://github.com/DrewSC13/ardrec/actions/runs/41358531943",
+      "reported_conclusion": "success",
+      "python_tests": 405,
+      "rust_tests": 73,
+      "peer_scenarios": 7,
+      "independently_queried": false,
+      "per_test_results_available": false,
+      "raw_logs_archived_in_repository": false,
+      "proves_system_acceptance": false,
+      "proves_experimental_validation": false,
+      "reported_log_hashes": [
+        {
+          "job_id": 125003719173,
+          "sha256": "06c2e412f622652c71d3959d467eddd04254f31bd8e719010593f56f7dcdad07"
+        },
+        {
+          "job_id": 125003719260,
+          "sha256": "985fdaeaee6bacbaa45fadc0b2be2508262202342a0361f8a8f990dd8446f0dd"
+        }
+      ],
+      "provenance": {
+        "es": "Salida de ARDREC_CIERRE_PUNTO1_R2.py compartida por el usuario. El integrador informó comprobaciones de logs y árbol; este incremento no descargó los logs ni pudo consultar el repositorio mediante el conector. Las huellas son comunicadas, no un archivo de logs.",
+        "en": "User-supplied ARDREC_CIERRE_PUNTO1_R2.py output. The integrator reported log and tree checks; this increment did not download logs and could not query the repository through the connector. Hashes are reported, not archived logs."
+      }
+    }
+  ],
+  "new_increment_execution": "PENDING_LOCAL_AND_REMOTE_VERIFICATION"
+}
