@@ -49,6 +49,12 @@ jobs:
       - name: Verificar diseño del laboratorio / Verify laboratory design
         run: python3 lab/verify_design.py
 
+      - name: Verificar registro de servicios / Verify service record
+        run: python3 lab/verify_services.py
+
+      - name: Probar registro de laboratorio / Test laboratory record
+        run: python3 -m unittest discover -s lab/tests -p test_service_record.py -v
+
       - name: Probar contratos y transporte / Test contracts and transport
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 
@@ -95,3 +101,4 @@ jobs:
 
       - name: Verificar identidad del par / Verify peer identity
         run: python3 scripts/verificar_identidad_par.py
+

@@ -1,0 +1,130 @@
+{
+  "schema_version": "1.0",
+  "environment": "dev",
+  "targets": [
+    {
+      "role": "ssh",
+      "username": "ardrec_ssh",
+      "shell": "/bin/bash",
+      "credential": "PRIVATE_SYNTHETIC_UNIQUE_PER_ROLE",
+      "temporary_owner": "ardrec_ssh",
+      "temporary_mode": "0700",
+      "root_owner": "root:root",
+      "root_mode": "0755",
+      "reference_mode": "0644",
+      "restricted_directory_mode": "0700",
+      "restricted_file_mode": "0600",
+      "fixtures": [
+        {
+          "gid": 0,
+          "mode": "0o644",
+          "path": "/srv/ardrec/ssh/read-only/reference.txt",
+          "sha256": "01167858efee8ea30d5e0f5c1a7a102a0756f973a3bda907ed8d8d1947b428f4",
+          "uid": 0
+        },
+        {
+          "gid": 0,
+          "mode": "0o600",
+          "path": "/srv/ardrec/ssh/restricted/denied.txt",
+          "sha256": "7e3703ffb54b10ebf4710beee5fed76e032db3a328eb1e60fc91c8ce9b7e9be4",
+          "uid": 0
+        }
+      ]
+    },
+    {
+      "role": "ftp",
+      "username": "ardrec_ftp",
+      "shell": "/bin/bash",
+      "credential": "PRIVATE_SYNTHETIC_UNIQUE_PER_ROLE",
+      "temporary_owner": "ardrec_ftp",
+      "temporary_mode": "0700",
+      "root_owner": "root:root",
+      "root_mode": "0755",
+      "reference_mode": "0644",
+      "restricted_directory_mode": "0700",
+      "restricted_file_mode": "0600",
+      "fixtures": [
+        {
+          "gid": 0,
+          "mode": "0o644",
+          "path": "/srv/ardrec/ftp/read-only/reference.txt",
+          "sha256": "0ae593aafff2e53fa2b146b8548a9fd0e4072dcb45e326e78d557d5b63486707",
+          "uid": 0
+        },
+        {
+          "gid": 0,
+          "mode": "0o600",
+          "path": "/srv/ardrec/ftp/restricted/denied.txt",
+          "sha256": "7e3703ffb54b10ebf4710beee5fed76e032db3a328eb1e60fc91c8ce9b7e9be4",
+          "uid": 0
+        }
+      ]
+    },
+    {
+      "role": "smb",
+      "username": "ardrec_smb",
+      "shell": "/usr/sbin/nologin",
+      "credential": "PRIVATE_SYNTHETIC_UNIQUE_PER_ROLE",
+      "temporary_owner": "ardrec_smb",
+      "temporary_mode": "0700",
+      "root_owner": "root:root",
+      "root_mode": "0755",
+      "reference_mode": "0644",
+      "restricted_directory_mode": "0700",
+      "restricted_file_mode": "0600",
+      "fixtures": [
+        {
+          "gid": 0,
+          "mode": "0o644",
+          "path": "/srv/ardrec/smb/read-only/reference.txt",
+          "sha256": "83267c04259afa11b02766774c31efa435180f4e204ee48e6bc7b9c49b0511af",
+          "uid": 0
+        },
+        {
+          "gid": 0,
+          "mode": "0o600",
+          "path": "/srv/ardrec/smb/restricted/denied.txt",
+          "sha256": "7e3703ffb54b10ebf4710beee5fed76e032db3a328eb1e60fc91c8ce9b7e9be4",
+          "uid": 0
+        }
+      ]
+    }
+  ],
+  "runner_accounts": [
+    {
+      "name": "ardrec-operator",
+      "purpose": "SYNTHETIC_SERVICE_CLIENT"
+    },
+    {
+      "name": "ardrec-controller",
+      "purpose": "RESERVED_NOT_RUNNING"
+    },
+    {
+      "name": "ardrec-executor",
+      "purpose": "RESERVED_NOT_RUNNING"
+    }
+  ],
+  "ssh_helper": {
+    "path": "/usr/local/libexec/ardrec-identidad",
+    "action": "id --user",
+    "arguments": "NONE",
+    "sudo": "ONLY_THIS_HELPER_WITH_NO_ARGUMENTS",
+    "mode": "0755",
+    "sudoers_mode": "0440"
+  },
+  "ftp_tls": {
+    "ca": "LAB_ONLY_RSA_3072",
+    "server_san": [
+      "IP:10.203.31.2",
+      "DNS:ardrec-dev-ftp"
+    ],
+    "private_key_mode": "0600",
+    "certificate_mode": "0644",
+    "certificate_lifetime_days": 365,
+    "certificate_sha256": "acf426515d87a214b0b1bf9dbea6210e1740f4d6c3024302498da9c92a82ba98",
+    "ca_sha256": "bfe29aa66015453eddc199db67c3d6a8bbd75d79fecff1c4e9e38ab733deb657"
+  },
+  "credential_custody": "PRIVATE_HOST_BUILD_DIRECTORY_AND_RUNNER_ROOT_ONLY_NO_SECRET_IN_GIT",
+  "provenance": "ROLE_BUILD_RECEIPT_AND_REVIEWED_PROVISIONING_SOURCE",
+  "permission_checks_scope": "PROVISIONING_RECORDED_AND_SELECTED_ACCESS_TESTS_NOT_EXHAUSTIVE_ACL_AUDIT"
+}

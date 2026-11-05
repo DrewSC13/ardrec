@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "guest_distribution": "Debian 13",
+  "guest_kernel": "6.12.113+deb13-amd64",
+  "guest_packages": {
+    "acl": "2.3.2-2+b1",
+    "ca-certificates": "20250419+deb13u1",
+    "cloud-init": "25.1.4-1+deb13u1",
+    "curl": "8.14.1-2+deb13u7",
+    "nftables": "1.1.3-1",
+    "openssh-client": "1:10.0p1-7+deb13u4",
+    "openssh-server": "1:10.0p1-7+deb13u4",
+    "openssl": "3.5.7-1~deb13u3",
+    "python3": "3.13.5-1",
+    "qemu-guest-agent": "1:10.0.13+ds-0+deb13u1",
+    "samba": "2:4.22.11+dfsg-0+deb13u1",
+    "smbclient": "2:4.22.11+dfsg-0+deb13u1",
+    "sudo": "1.9.16p2-3+deb13u2",
+    "vsftpd": "3.0.5-0.2"
+  },
+  "host_versions_basis": "OPERATOR_INVENTORY_2026_11_02",
+  "host": {
+    "os": "Kali Rolling 2026.3",
+    "kernel": "7.1.5+kali-amd64",
+    "qemu": "11.1.2",
+    "libvirt": "12.8.0",
+    "libguestfs": "1.56.1",
+    "nftables": "1.1.7"
+  },
+  "provisioning": {
+    "actual_method": "OFFLINE_VIRT_CUSTOMIZE_EXPLICIT_PYTHON",
+    "ansible_core": "2.21.6",
+    "ansible_service_application": "NOT_RUN",
+    "cloud_init": "DISABLED_IN_ROLES",
+    "image": "debian-13-generic-amd64-20261026-2643.qcow2",
+    "image_verification": "INPUTS_RECEIPT_SHA512_AND_QCOW2_CHECK",
+    "inputs_receipt_sha256": "a6807ccb97a5909baf5b9f33aa14f000c727eca74f036224fe192e28a85b11c3"
+  },
+  "prototype_in_guests": "NOT_INSTALLED",
+  "experimental_freeze": "NOT_PERFORMED"
+}
