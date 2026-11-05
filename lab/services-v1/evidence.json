@@ -1,0 +1,183 @@
+{
+  "schema_version": "1.0",
+  "status": "RECORDED_HOST_SERVICE_SMOKE_PASS",
+  "source_receipt_sha256": "1af109e8d62277b5609c5b8db4535e2b8021b97381b50045b1cda27292787c86",
+  "procedure_sha256": "1d43a43af92d1c1b3176b22657cabeda9ede32c42faead5a29cacc9e8a1ca6f3",
+  "role_receipt_sha256": "46f4ceb8adffd5010714d0b365f46f96fc15fc8b8e7cb9585b15c13161890f3b",
+  "baseline_commit": "93e1f4cdaff1bca621214d3a27798889baf03a86",
+  "observed_started_utc": "2026-11-04T13:14:36.766448+00:00",
+  "environment": "dev",
+  "checks": [
+    {
+      "check": "ssh-identity",
+      "exit_code": 0,
+      "output_sha256": "37756f17420fb18a4a2ebd811995df180cd56955695170c7bc371451979f6d39",
+      "result": "PASS"
+    },
+    {
+      "check": "ssh-reference",
+      "exit_code": 0,
+      "output_sha256": "01167858efee8ea30d5e0f5c1a7a102a0756f973a3bda907ed8d8d1947b428f4",
+      "result": "PASS"
+    },
+    {
+      "check": "ssh-limited-helper",
+      "exit_code": 0,
+      "output_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "result": "PASS"
+    },
+    {
+      "check": "ssh-restricted-denied",
+      "exit_code": 1,
+      "output_sha256": "ab45dcea920d0c09f5e30642f6ca39d1e146f194a3453eff37111123d8caebaf",
+      "result": "PASS"
+    },
+    {
+      "check": "ssh-write",
+      "exit_code": 0,
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": "PASS"
+    },
+    {
+      "check": "ssh-read-marker",
+      "exit_code": 0,
+      "output_sha256": "5f5ca407a2250c7a0ff282b438cdb6133991eb283bef0d2f16207411938504c4",
+      "result": "PASS"
+    },
+    {
+      "check": "ssh-cleanup",
+      "exit_code": 0,
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": "PASS"
+    },
+    {
+      "check": "ftp-cleartext-login-denied",
+      "result": "PASS"
+    },
+    {
+      "check": "ftps-reference",
+      "exit_code": 0,
+      "output_sha256": "0ae593aafff2e53fa2b146b8548a9fd0e4072dcb45e326e78d557d5b63486707",
+      "result": "PASS"
+    },
+    {
+      "check": "ftps-write",
+      "exit_code": 0,
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": "PASS"
+    },
+    {
+      "check": "ftps-read-marker",
+      "exit_code": 0,
+      "output_sha256": "5f5ca407a2250c7a0ff282b438cdb6133991eb283bef0d2f16207411938504c4",
+      "result": "PASS"
+    },
+    {
+      "check": "ftps-cleanup",
+      "exit_code": 0,
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": "PASS"
+    },
+    {
+      "check": "smb-reference",
+      "exit_code": 0,
+      "output_sha256": "bb36f0835b3db83bae7c437e239b4e55b72ff35d32fc8c459416fe930b0b538e",
+      "result": "PASS"
+    },
+    {
+      "check": "smb-restricted-denied",
+      "exit_code": 1,
+      "output_sha256": "0fa72b5746bf5afab2ca51ce3da2ae641e1ccb6db49370c4c0d95a5af9d94e27",
+      "result": "PASS"
+    },
+    {
+      "check": "smb-encrypted-write",
+      "exit_code": 0,
+      "output_sha256": "c8850845fd33c78e6f8e158996e1f60e7bf942ee78a0ea619a872087ec519fc0",
+      "result": "PASS"
+    },
+    {
+      "check": "smb-encrypted-read",
+      "exit_code": 0,
+      "output_sha256": "00a7bd3573fcf9c842c5e335b5327fab8f04079789b6ba2e9f5157229d6c31f3",
+      "result": "PASS"
+    },
+    {
+      "check": "smb-cleanup",
+      "exit_code": 0,
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": "PASS"
+    }
+  ],
+  "guest_checks": {
+    "ftp": {
+      "identity": "PASS",
+      "config_hashes": "PASS",
+      "addresses": [
+        "10.203.31.2"
+      ],
+      "default_routes": "ABSENT",
+      "forwarding": "DISABLED",
+      "guest_firewall": "ACTIVE_DEFAULT_DROP",
+      "boot_files": "VERIFIED_AFTER_BOOT",
+      "listener_status": "READY_STABLE_LISTENER",
+      "endpoint": "10.203.31.2:21",
+      "stable_samples": 3,
+      "temporary_directory": "EMPTY"
+    },
+    "runner": {
+      "identity": "PASS",
+      "config_hashes": "PASS",
+      "addresses": [
+        "10.203.30.1",
+        "10.203.31.1",
+        "10.203.32.1"
+      ],
+      "default_routes": "ABSENT",
+      "forwarding": "DISABLED",
+      "guest_firewall": "ACTIVE_DEFAULT_DROP",
+      "boot_files": "VERIFIED_AFTER_BOOT"
+    },
+    "smb": {
+      "identity": "PASS",
+      "config_hashes": "PASS",
+      "addresses": [
+        "10.203.32.2"
+      ],
+      "default_routes": "ABSENT",
+      "forwarding": "DISABLED",
+      "guest_firewall": "ACTIVE_DEFAULT_DROP",
+      "boot_files": "VERIFIED_AFTER_BOOT",
+      "listener_status": "READY_STABLE_LISTENER",
+      "endpoint": "10.203.32.2:445",
+      "stable_samples": 3,
+      "temporary_directory": "EMPTY"
+    },
+    "ssh": {
+      "identity": "PASS",
+      "config_hashes": "PASS",
+      "addresses": [
+        "10.203.30.2"
+      ],
+      "default_routes": "ABSENT",
+      "forwarding": "DISABLED",
+      "guest_firewall": "ACTIVE_DEFAULT_DROP",
+      "boot_files": "VERIFIED_AFTER_BOOT",
+      "listener_status": "READY_STABLE_LISTENER",
+      "endpoint": "0.0.0.0:22",
+      "stable_samples": 3,
+      "temporary_directory": "EMPTY"
+    }
+  },
+  "cleanup": {
+    "all_created_domains_stopped": true,
+    "created_networks_removed": true,
+    "dedicated_firewall_removed": true,
+    "reused_bases_unchanged": true,
+    "previous_ftp_runtime_unchanged": true
+  },
+  "forced_stop": false,
+  "experimental_data": false,
+  "public_record": "ALLOWLIST_PROJECTION_PRIVATE_LOGS_NOT_PUBLISHED",
+  "ftp_config_sha256": "299faa64aaf4181053441d2de69999a8ef9f07e28c504cfcbaf36a7070cf1ac8"
+}

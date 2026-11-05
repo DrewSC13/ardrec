@@ -1,0 +1,209 @@
+{
+  "schema_version": "1.0",
+  "roadmap_step": 4,
+  "status": "DEV_SERVICES_VERIFIED_PENDING_REPOSITORY_INTEGRATION",
+  "baseline_commit": "93e1f4cdaff1bca621214d3a27798889baf03a86",
+  "source_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "scope": "THREE_DEVELOPMENT_SERVICE_BASELINES_NOT_25_OPERATIONAL_CASES",
+  "requirements": [
+    "AC-03",
+    "AC-04",
+    "AC-20",
+    "AC-21",
+    "AC-24",
+    "AC-25",
+    "AC-27",
+    "MET-01",
+    "MET-09",
+    "MET-10",
+    "MET-12",
+    "MET-13"
+  ],
+  "requirement_claim": "SUPPORTING_COMPONENT_EVIDENCE_NOT_FULL_REQUIREMENT_ACCEPTANCE",
+  "open_findings": [
+    "AL-06",
+    "AL-07"
+  ],
+  "development_obligations": [
+    {
+      "id": "AL-06",
+      "status": "OPEN",
+      "gate": "BEFORE_ALGORITHMS",
+      "roadmap": [
+        13,
+        14,
+        15,
+        16,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "es": "Completar contratos y semántica de caracterización, evidencia/revisiones, objetivos, historia, ventana y controles; integrar fuentes de guardas y verificación analítica. El contrato requerido debe existir antes de implementar el algoritmo consumidor; no publicar resultados analíticos completos hasta cerrar sus invariantes.",
+      "en": "Complete characterization, evidence/revisions, objectives, history, window and control contracts/semantics; integrate guard sources and analytical verification. Required contracts must precede consumer algorithms; no full analytical results before their invariants are closed."
+    },
+    {
+      "id": "AL-07",
+      "status": "OPEN",
+      "gate": "BEFORE_REAL_EXECUTOR",
+      "roadmap": [
+        3,
+        5,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        27
+      ],
+      "es": "Proveer política confiable de identidad; controlar ciclo de vida, descriptores, permisos, namespaces, artefactos y perfiles congelados. Rechazar referencias ajenas, ausentes o alteradas antes de cualquier despacho real.",
+      "en": "Provide trusted identity policy; control process lifetime, descriptors, permissions, namespaces, artifacts and frozen profiles. Reject foreign, missing or altered references before real dispatch."
+    },
+    {
+      "id": "FRESHNESS-CUSTODY",
+      "status": "OPEN",
+      "gate": "BEFORE_TRUSTED_OPERATIONAL_RECOVERY",
+      "roadmap": [
+        5,
+        12,
+        13,
+        22,
+        27,
+        29
+      ],
+      "es": "Definir y verificar custodia externa de expected_head; un archivo íntegro restaurado no demuestra frescura por sí solo.",
+      "en": "Define and verify external expected_head custody; an intact restored archive alone does not establish freshness."
+    },
+    {
+      "id": "FILESYSTEM-POWER-LOSS",
+      "status": "OPEN",
+      "gate": "BEFORE_OPERATIONAL_ACCEPTANCE",
+      "roadmap": [
+        3,
+        5,
+        12,
+        27,
+        29
+      ],
+      "es": "Validar durabilidad del sistema de archivos del laboratorio y pérdida de energía; SIGKILL solo acredita muerte de proceso.",
+      "en": "Validate laboratory filesystem durability and power loss; SIGKILL only establishes process-death behavior."
+    },
+    {
+      "id": "AL04-R01",
+      "status": "OPEN",
+      "roadmap": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "es": "Vincular temporizador con inicio y final efectivos del ejecutor.",
+      "en": "Bind timers to actual executor start and completion.",
+      "gate": "BEFORE_REAL_EXECUTOR"
+    },
+    {
+      "id": "AL04-R02",
+      "status": "OPEN",
+      "roadmap": [
+        3,
+        4,
+        5,
+        9
+      ],
+      "es": "Excluir o tratar suspensión del host y validar en laboratorio.",
+      "en": "Exclude or handle host suspension and validate in the lab.",
+      "gate": "BEFORE_REAL_EXECUTOR"
+    },
+    {
+      "id": "AL04-R03",
+      "status": "OPEN",
+      "roadmap": [
+        10,
+        11,
+        12
+      ],
+      "es": "Conservar informes rechazados y conciliar ante ajustes UTC.",
+      "en": "Preserve rejected reports and reconcile after UTC adjustments.",
+      "gate": "BEFORE_REAL_EXECUTOR"
+    }
+  ],
+  "experimental_validation": "NOT_RUN",
+  "system_functional_acceptance": "PENDING",
+  "real_executor_gate": "BLOCKED_BY_RESIDUAL_OBLIGATIONS",
+  "point5": "RESTORATION_AND_PHYSICAL_ISOLATION_VERIFICATION_PENDING",
+  "physical_verification_plan": "HISTORICAL_PLAN_PRESERVED_NO_BLANKET_PASS",
+  "lab_v01": "PARTIAL_DEV_THREE_NETWORKS_OBSERVED_NOT_ALL_NINE_OR_DYNAMIC_VPN_POOLS",
+  "provisioning_deviation": {
+    "es": "Se aplicaron configuraciones fuera de línea con libguestfs y Python explícito; Ansible quedó instalado, sin aplicar roles. Evita una red temporal de aprovisionamiento.",
+    "en": "Configuration used offline libguestfs with explicit Python; Ansible is installed but did not apply roles. This avoids a provisioning network."
+  },
+  "configurations": {
+    "ssh": {
+      "guest_path": "/etc/ssh/sshd_config",
+      "repository_path": "lab/services-v1/config/ssh.conf",
+      "sha256": "1b65472bfc96892fbb87a9d0496f92b751930f521a23a9a321d5e5fe410e6cae"
+    },
+    "ftp": {
+      "guest_path": "/etc/vsftpd.conf",
+      "repository_path": "lab/services-v1/config/ftp.conf",
+      "sha256": "299faa64aaf4181053441d2de69999a8ef9f07e28c504cfcbaf36a7070cf1ac8"
+    },
+    "smb": {
+      "guest_path": "/etc/samba/smb.conf",
+      "repository_path": "lab/services-v1/config/smb.conf",
+      "sha256": "7e6b14afc0b3cd01cfe8a4a0e48a2ed32b830f610f9e1144e43056dd96b87ee3"
+    }
+  },
+  "recovery_notes": {
+    "video": "VGA_16_MIB_NO_GRAPHICS_LISTENER",
+    "guest_root": "/dev/sda3",
+    "boot_repair": "BIOS_GRUB_REPAIRED_IN_V4_BASES",
+    "ftp_correction": "THREE_TLS_OPTION_NAMES_IN_V6_OVERLAY_ONLY",
+    "ftp_original_base": "PRESERVED_WITH_ORIGINAL_CONFIG_DO_NOT_REUSE_WITHOUT_CORRECTION",
+    "retry_policy": "NO_AUTOMATIC_REPLAY"
+  },
+  "artifact_state": "V4_READ_ONLY_BASES_PLUS_STOPPED_V6_RUNTIME_OVERLAYS_NOT_RESTORATION_SEALED_TEMPLATES",
+  "documents": [
+    "lab/services-v1/README.md",
+    "lab/services-v1/versions.json",
+    "lab/services-v1/resources.json",
+    "lab/services-v1/evidence.json",
+    "docs/verification/laboratory-services-v1.md",
+    "lab/verify_services.py",
+    "lab/tests/test_service_record.py"
+  ],
+  "artifact_sha256": {
+    "docs/verification/laboratory-services-v1.md": "c073f140eb0ed65295325356bba6c8d729ec9f36a708b36d9c77df0f14d8cc0e",
+    "lab/services-v1/README.md": "c8b19e7321d3d400e19e819c8c13bd87ee22a7650e515acb189ee94e004c0411",
+    "lab/services-v1/config/ftp.conf": "299faa64aaf4181053441d2de69999a8ef9f07e28c504cfcbaf36a7070cf1ac8",
+    "lab/services-v1/config/smb.conf": "7e6b14afc0b3cd01cfe8a4a0e48a2ed32b830f610f9e1144e43056dd96b87ee3",
+    "lab/services-v1/config/ssh.conf": "1b65472bfc96892fbb87a9d0496f92b751930f521a23a9a321d5e5fe410e6cae",
+    "lab/services-v1/evidence.json": "7ebbb654d7df59189d8157edf3ea8677eeefb389bb4b3b5998624db6a2ceedb5",
+    "lab/services-v1/procedures/activation-r8.py": "1d43a43af92d1c1b3176b22657cabeda9ede32c42faead5a29cacc9e8a1ca6f3",
+    "lab/services-v1/resources.json": "c5fc868fdaa0531cd8ae933ec511ac645b5ecd969d363aef8e51f07e277bfeb0",
+    "lab/services-v1/versions.json": "c9ff64eb9760e4d5fa32c200dca5fb993cd1565f5fef4e6b8fa2710a48362c4d",
+    "lab/tests/test_service_record.py": "5f55b7ad3ca11689fcdeb8437fb0e2815d6c817cc48af49d7490365d57f5cc0d",
+    "lab/verify_services.py": "d5b38b73a799d23baa6a614f9219627baf4f7fc0fb40ed5d0a0f04b930ef7c5d"
+  },
+  "record_test_suite": {
+    "path": "lab/tests/test_service_record.py",
+    "command": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "lab/tests",
+      "-p",
+      "test_service_record.py",
+      "-v"
+    ],
+    "tests": 9,
+    "scope": "LABORATORY_PUBLIC_RECORD_ONLY",
+    "historical_python_inventory": "405_BASELINE_PLUS_20_TRACEABILITY_UNCHANGED"
+  }
+}

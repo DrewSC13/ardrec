@@ -23,3 +23,13 @@ Los pasos 4 y 5 implementarán servicios y comprobarán restauración/aislamient
 inventory. It establishes neither deployed isolation nor execution authorization.
 Run `python3 lab/verify_design.py` for document consistency only. Complete a separate
 private authorization before execution. Steps 4 and 5 implement and verify the lab.
+
+## Implementación de desarrollo / Development implementation
+
+[Servicios v1](services-v1/README.md): tres servicios probados localmente y detenidos,
+con versiones, cuentas sintéticas, configuraciones y evidencia documentadas. El
+registro público se comprueba con `python3 lab/verify_services.py`. El diseño y el
+plan anteriores conservan su condición histórica; restauración/aislamiento completos
+siguen en el punto 5. / Three development services were tested and stopped. The
+new record complements the historical design without asserting full restoration,
+isolation, system acceptance or experimental validation.
