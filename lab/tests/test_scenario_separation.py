@@ -114,7 +114,50 @@ class SeparationTests(unittest.TestCase):
           'id':'exp-unit-a','scenario_id':'exp-scn-a','protocol':'ssh','status':'PLANNED_NOT_FROZEN'}))
         self._assert_bad()
     def test_identical_technical_condition_dev_exp_rejected(self):
-        self._scenario('dev');self._scenario('exp');self._assert_bad()
+        self._scenario('dev')
+        path = self._scenario('exp')
+        manifest = self._load(path)
+        # Distinct physical instances: only the technical fingerprint is duplicated.
+        manifest['services'][0]['instance_ref'] = 'exp-independent-fixture'
+        self._json(path, manifest)
+        with self.assertRaisesRegex(ValueError, 'Huella técnica reutilizada'):
+            V.validate(self.root)
+
+    def test_distinct_technical_condition_dev_exp_accepted(self):
+        self._scenario('dev')
+        path = self._scenario('exp')
+        manifest = self._load(path)
+        manifest['services'][0]['instance_ref'] = 'exp-independent-fixture'
+        profile = manifest['scenarios'][0]['profile']
+        profile['configuration_sha256'] = '5' * 64
+        manifest['scenarios'][0]['technical_fingerprint'] = V.canonical_sha(
+            {'protocol': 'ssh', 'profile': profile})
+        self._json(path, manifest)
+        self.assertEqual(V.validate(self.root)['status'], 'PASS_LOGICAL_SEPARATION_ONLY')
+
+    def test_duplicate_fingerprint_inside_exp_rejected(self):
+        path = self._scenario('exp')
+        manifest = self._load(path)
+        manifest['services'].append({
+            'id': 'exp-svc-b', 'protocol': 'ssh', 'network_id': 'ardrec-exp-ssh',
+            'instance_ref': 'exp-independent-fixture-b'})
+        extra = copy.deepcopy(manifest['scenarios'][0])
+        extra['id'] = 'exp-scn-b'
+        extra['service_id'] = 'exp-svc-b'
+        manifest['scenarios'].append(extra)
+        self._json(path, manifest)
+        with self.assertRaisesRegex(ValueError, 'Duplicación técnica dentro de la muestra experimental'):
+            V.validate(self.root)
+
+    def test_shared_generic_base_with_clean_provenance_allowed(self):
+        base = {'id': 'generic-debian-tool-base', 'sha256': 'f' * 64,
+                'provenance': 'pinned-synthetic-base',
+                'purpose': 'GENERIC_TOOL_OR_OS_BASE',
+                'contains_prior_observations': False}
+        for stage in ('dev', 'exp'):
+            path = f'lab/scenario-separation-v1/{stage}.json'
+            self._alter(path, lambda m: m['shared_bases'].append(copy.deepcopy(base)))
+        self.assertEqual(V.validate(self.root)['status'], 'PASS_LOGICAL_SEPARATION_ONLY')
     def test_cross_stage_service_reference_rejected(self):
         p=self._scenario('dev');self._alter(p,lambda m:m['scenarios'][0].update(service_id='pilot-svc-a'));self._assert_bad()
     def test_wrong_namespace_rejected(self):
