@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "scope": "DEV_SSH_FTP_SMB_RESTORATION_ISOLATION_AND_GUI",
+  "base": "37d4ce27c565fc8fce8a963d090e4325799797a2",
+  "status": "SCOPED_PHYSICAL_EVIDENCE_REVIEWED",
+  "requirements": [
+    "AC-24",
+    "AC-27"
+  ],
+  "checks": {
+    "LAB-V02": "PASS_SCOPED_OWNED_WITNESSES",
+    "LAB-V03": "PASS_RESTART_AND_OPERATOR_ASSISTED_GUI",
+    "LAB-V04": "PASS_THREE_TARGETS_EXTERNAL_EVIDENCE_PRESERVED"
+  },
+  "restoration": {
+    "targets": [
+      "ssh",
+      "ftp",
+      "smb"
+    ],
+    "controlled_mutations": 18,
+    "boots": 9,
+    "runner_restored": false,
+    "analytical_counter_rollback_tested": false
+  },
+  "isolation": {
+    "allowed_service_checks": 17,
+    "guest_output_denials": 6,
+    "raw_frame_drop_checks": 63,
+    "witness_interfaces": 3,
+    "prohibited_witness_frames": 0,
+    "cold_restart_domains": 4,
+    "third_party_probes": false
+  },
+  "gui": {
+    "phases": [
+      "open",
+      "close",
+      "reconnect",
+      "final-close"
+    ],
+    "operator_observed": true,
+    "automatic_ui_verification": false,
+    "topology_and_processes_recorded": true,
+    "new_process_on_reconnect": true,
+    "graceful_stops": 4,
+    "forced_stops": 0
+  },
+  "evidence": {
+    "bases": {
+      "receipt": "point5-bases-receipt-v3.json",
+      "sha256": "f1cbb3dfc74452a1a578b9e93b3cc00353946cb8ee2036520309fcf511e64d7b"
+    },
+    "restoration": {
+      "receipt": "point5-restoration-receipt-v1.json",
+      "sha256": "7afa7d94b8c11284fe2245faae271705eaf5f3ab61a9d70d0dc85a54b938054f"
+    },
+    "isolation": {
+      "receipt": "point5-isolation-receipt-v2.json",
+      "sha256": "4393df2d71340ae8ff98032a2e93d83c9c8ac0e1100979894b132046734d60ba",
+      "archive": "point5-isolation-evidence-v2.zip",
+      "archive_sha256": "95d1a800fbaa8d35213514e7715996a1ecb0d972a5386fe7ecf6081ec6133c77"
+    },
+    "gui": {
+      "receipt": "point5-gui-receipt-v2.json",
+      "sha256": "4c30c791b5eec93322917f732b556ee18d7244c6b4e54cb800314402a014ae3f",
+      "archive": "point5-gui-evidence-v2.zip",
+      "archive_sha256": "b61277aacd21bb8de11e1abbad030690a4c422464a6de3b3f4299abd4804dd0e"
+    }
+  },
+  "historical_failures_preserved": [
+    "BASES_R1_RECEIPT_PERMISSIONS",
+    "BASES_R2_GUESTFISH_VERSION",
+    "ISOLATION_R1_POOL_PERMISSIONS",
+    "GUI_R1_CONFIRMATION_TIMEOUT"
+  ],
+  "limits": {
+    "environment": "development_only",
+    "pilot_and_experiment_deployed": false,
+    "physical_power_loss_tested": false,
+    "system_functional_acceptance": "PENDING",
+    "experimental_validation": "NOT_RUN",
+    "algorithms_A1_A10": "NOT_IMPLEMENTED",
+    "open_findings": [
+      "AL-06",
+      "AL-07"
+    ],
+    "development_obligations_preserved": 7,
+    "real_executor_gate": "BLOCKED_BY_RESIDUAL_OBLIGATIONS"
+  },
+  "historical_design_and_acceptance": "UNCHANGED",
+  "evidence_custody": "PRIVATE_ORIGINALS_PUBLIC_HASHES_ONLY",
+  "ci_meaning": "DOCUMENT_CONSISTENCY_ONLY_NOT_PHYSICAL_REEXECUTION"
+}

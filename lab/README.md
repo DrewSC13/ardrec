@@ -33,3 +33,9 @@ plan anteriores conservan su condición histórica; restauración/aislamiento co
 siguen en el punto 5. / Three development services were tested and stopped. The
 new record complements the historical design without asserting full restoration,
 isolation, system acceptance or experimental validation.
+
+## Restauración y aislamiento / Restoration and isolation
+
+[Registro de desarrollo del punto 5](restoration-isolation-v1/README.md): resultados
+físicos revisados, límites y condiciones de parada. / Reviewed scoped physical
+evidence, limitations and stop conditions.
