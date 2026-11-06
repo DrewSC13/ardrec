@@ -1,0 +1,1124 @@
+{
+  "schema_version": "1.0",
+  "status": "P7_DRAFT_UNCALIBRATED_NOT_EXECUTABLE",
+  "baseline_commit": "f803ba28af310f3c08dc33dddbd0c22522d2377f",
+  "thesis_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "source_sections": [
+    "3.7",
+    "3.7.1",
+    "3.7.2",
+    "3.7.3",
+    "3.7.4",
+    "3.7.5"
+  ],
+  "source_tables": [
+    "3.7",
+    "3.8",
+    "3.9",
+    "3.10",
+    "3.11",
+    "3.12"
+  ],
+  "stage_registry": "lab/scenario-separation-v1/registry.json",
+  "counts": {
+    "ssh": 8,
+    "ftp": 8,
+    "smb": 9,
+    "total": 25
+  },
+  "execution_enabled": false,
+  "catalog_frozen": false,
+  "pilot_completed": false,
+  "derived_real_cases": 0,
+  "type_vocabulary": {
+    "preconditions": [
+      "BENIGN_OPERATION_PREDEFINED",
+      "CLEANUP_VERIFIABLE",
+      "CLIENT_COMPATIBLE",
+      "CONTROL_CHANNEL_VERIFIED",
+      "DESTINATION_AUTHORIZED",
+      "GUEST_POLICY_PREDEFINED",
+      "HOST_KEY_PREDEFINED",
+      "LAB_ISOLATION_CONFIRMED",
+      "PRIVILEGE_SCOPE_EXPLICITLY_APPROVED",
+      "PROTECTED_CREDENTIAL_REF",
+      "READ_FIXTURE_PREPARED",
+      "REFERENCE_BASELINE_PREPARED",
+      "RESTRICTED_RESOURCE_PREDEFINED",
+      "SCOPE_APPROVED",
+      "SERVICE_READY",
+      "SESSION_AUTHENTICATED",
+      "SMBV1_CHECK_PREDEFINED",
+      "SMB_PROTECTION_PREDEFINED",
+      "SYNTHETIC_IDENTITY_PREPARED",
+      "SYNTHETIC_RESOURCE_PREPARED",
+      "TLS_CHANNEL_PREDEFINED",
+      "TRANSPORT_VERIFIED",
+      "WRITE_FIXTURE_PREPARED"
+    ],
+    "parameter_slots": [
+      "authorization_ref",
+      "channel_ref",
+      "cleanup_ref",
+      "compatible_client_ref",
+      "control_channel_ref",
+      "control_resource_ref",
+      "credential_ref",
+      "data_channel_ref",
+      "dialect_policy_ref",
+      "directory_ref",
+      "fixture_digest_ref",
+      "guest_identity_ref",
+      "host_key_ref",
+      "identity_ref",
+      "key_reference_ref",
+      "marker_ref",
+      "operation_ref",
+      "port_ref",
+      "privilege_scope_ref",
+      "protection_policy_ref",
+      "resource_ref",
+      "restricted_resource_ref",
+      "session_ref",
+      "share_ref",
+      "target_ref",
+      "tls_policy_ref",
+      "transport_policy_ref",
+      "transport_session_ref"
+    ],
+    "supports": [
+      "ACCESS_COMPARISON",
+      "AUTH_COMPLETION",
+      "AUTH_METHODS_LIST",
+      "CHANNEL_OPEN",
+      "CLEANUP_CONFIRMED",
+      "CONTROL_CHANNEL_RESPONSE",
+      "CONTROL_DATA_CORRELATION",
+      "DIRECTORY_LISTING",
+      "EFFECTIVE_IDENTITY",
+      "GUEST_SESSION_TYPE",
+      "HOST_KEY_MATCH",
+      "INTEGRITY_PROVENANCE",
+      "KNOWN_CONTENT_DIGEST",
+      "MARKER_CREATED",
+      "MARKER_VERIFIED",
+      "OPERATION_RESPONSE",
+      "PRIVILEGE_SCOPE",
+      "RESOURCE_READ",
+      "SESSION_CORRELATION",
+      "SHARE_ACCESS",
+      "SMBV1_RESPONSE",
+      "SMB_DIALECT",
+      "SMB_ENCRYPTION",
+      "SMB_SIGNATURE",
+      "TARGET_ATTESTATION",
+      "TLS_CHANNEL_PROTECTION",
+      "TLS_NEGOTIATION",
+      "TRANSPORT_NEGOTIATION"
+    ]
+  },
+  "interpretation": {
+    "logic_values": [
+      "VERDADERO",
+      "FALSO",
+      "ND"
+    ],
+    "technical_result_classes": [
+      "POSITIVO_VALIDO",
+      "NEGATIVO_VALIDO",
+      "INCONCLUSO",
+      "INCIDENCIA",
+      "INVALIDO",
+      "NO_ADMITIDO"
+    ],
+    "technical_result_is_evidence": false,
+    "negative_is_not_unobserved": true,
+    "admissibility_requires_independent_A6": true
+  },
+  "budget": {
+    "ordinary_attempts": 1,
+    "additional_attempts": "PREAUTHORIZED_ONLY_NO_HIDDEN_RETRY",
+    "timeout_seconds": null,
+    "operation_count": null,
+    "transfer_bytes": null,
+    "output_bytes": null,
+    "memory_mib": null,
+    "request_count": null,
+    "limits_status": "PILOT_REQUIRED_BEFORE_FREEZE"
+  },
+  "prohibitions": [
+    "FORCE_BRUTE",
+    "PASSWORD_SPRAYING",
+    "UNBOUNDED_ENUMERATION",
+    "EXTERNAL_TARGETS",
+    "DESTRUCTIVE_ACTIONS",
+    "MALWARE",
+    "PERSISTENCE",
+    "ALTER_EXISTING_USERS_PERMISSIONS_KEYS_OR_FILES",
+    "AUTOMATIC_MATERIAL_CHANGE",
+    "HIDDEN_RETRIES",
+    "UNAUTHORIZED_FALLBACK",
+    "RUN_WITHOUT_CLEANUP_OR_TRACE"
+  ],
+  "execution_profile": "P8_NOT_DEFINED",
+  "families": [
+    {
+      "id": "SSH-T01",
+      "protocol": "ssh",
+      "source_table": "3.9",
+      "condition_es": "Transporte SSH y identidad del servidor concreto",
+      "minimum_action_es": "Negociar transporte y contrastar clave de host previamente fijada",
+      "precedence": 1,
+      "variants": null,
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "SERVICE_READY",
+        "HOST_KEY_PREDEFINED"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "port_ref",
+        "host_key_ref",
+        "transport_policy_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "TRANSPORT_NEGOTIATION",
+        "HOST_KEY_MATCH"
+      ],
+      "acceptance_supports": [
+        "TRANSPORT_NEGOTIATION",
+        "HOST_KEY_MATCH"
+      ],
+      "cleanup": "NO_MUTATION",
+      "interpretation_boundary_es": "Solo identidad y negociación; no acredita autenticación ni acceso a recursos"
+    },
+    {
+      "id": "SSH-T02",
+      "protocol": "ssh",
+      "source_table": "3.9",
+      "condition_es": "Métodos de autenticación anunciados para una identidad y estado determinados",
+      "minimum_action_es": "Consultar métodos de autenticación sin iniciar búsqueda de identidades",
+      "precedence": 1,
+      "variants": null,
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "TRANSPORT_VERIFIED",
+        "SYNTHETIC_IDENTITY_PREPARED"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "identity_ref",
+        "transport_session_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "AUTH_METHODS_LIST",
+        "SESSION_CORRELATION"
+      ],
+      "acceptance_supports": [
+        "AUTH_METHODS_LIST",
+        "SESSION_CORRELATION"
+      ],
+      "cleanup": "NO_MUTATION",
+      "interpretation_boundary_es": "La lista de métodos no acredita autenticación ni validez de credenciales"
+    },
+    {
+      "id": "SSH-T03",
+      "protocol": "ssh",
+      "source_table": "3.9",
+      "condition_es": "Autenticación SSH completa mediante contraseña sintética predefinida",
+      "minimum_action_es": "Realizar una autenticación predefinida sin adivinación ni repetición oculta",
+      "precedence": 2,
+      "variants": null,
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "TRANSPORT_VERIFIED",
+        "SYNTHETIC_IDENTITY_PREPARED",
+        "PROTECTED_CREDENTIAL_REF"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "identity_ref",
+        "credential_ref",
+        "transport_session_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "AUTH_COMPLETION",
+        "EFFECTIVE_IDENTITY",
+        "SESSION_CORRELATION"
+      ],
+      "acceptance_supports": [
+        "AUTH_COMPLETION",
+        "EFFECTIVE_IDENTITY"
+      ],
+      "cleanup": "NO_MUTATION",
+      "interpretation_boundary_es": "Una respuesta intermedia no acredita autenticación completa"
+    },
+    {
+      "id": "SSH-T04",
+      "protocol": "ssh",
+      "source_table": "3.9",
+      "condition_es": "Autenticación SSH completa mediante clave pública controlada",
+      "minimum_action_es": "Autenticar mediante clave sintética predefinida y confirmar la sesión",
+      "precedence": 2,
+      "variants": null,
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "TRANSPORT_VERIFIED",
+        "SYNTHETIC_IDENTITY_PREPARED",
+        "PROTECTED_CREDENTIAL_REF"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "identity_ref",
+        "key_reference_ref",
+        "transport_session_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "AUTH_COMPLETION",
+        "EFFECTIVE_IDENTITY",
+        "SESSION_CORRELATION"
+      ],
+      "acceptance_supports": [
+        "AUTH_COMPLETION",
+        "EFFECTIVE_IDENTITY"
+      ],
+      "cleanup": "NO_MUTATION",
+      "interpretation_boundary_es": "La aceptación preliminar de clave no constituye autenticación completa"
+    },
+    {
+      "id": "SSH-T05",
+      "protocol": "ssh",
+      "source_table": "3.9",
+      "condition_es": "Apertura del canal autorizado e identidad efectiva",
+      "minimum_action_es": "Abrir canal permitido y verificar identidad con una operación inocua predefinida",
+      "precedence": 3,
+      "variants": null,
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "SESSION_AUTHENTICATED",
+        "BENIGN_OPERATION_PREDEFINED"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "session_ref",
+        "operation_ref",
+        "identity_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "CHANNEL_OPEN",
+        "EFFECTIVE_IDENTITY",
+        "OPERATION_RESPONSE"
+      ],
+      "acceptance_supports": [
+        "CHANNEL_OPEN",
+        "EFFECTIVE_IDENTITY",
+        "OPERATION_RESPONSE"
+      ],
+      "cleanup": "NO_MUTATION",
+      "interpretation_boundary_es": "La identidad observada solo corresponde al canal y la operación examinados"
+    },
+    {
+      "id": "SSH-T06",
+      "protocol": "ssh",
+      "source_table": "3.9",
+      "condition_es": "Lectura y contenido de un recurso sintético preparado",
+      "minimum_action_es": "Leer un recurso conocido dentro del alcance y comparar su contenido",
+      "precedence": 3,
+      "variants": null,
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "SESSION_AUTHENTICATED",
+        "READ_FIXTURE_PREPARED"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "session_ref",
+        "resource_ref",
+        "fixture_digest_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "RESOURCE_READ",
+        "KNOWN_CONTENT_DIGEST"
+      ],
+      "acceptance_supports": [
+        "RESOURCE_READ",
+        "KNOWN_CONTENT_DIGEST"
+      ],
+      "cleanup": "NO_MUTATION",
+      "interpretation_boundary_es": "La prueba acredita solo el recurso concreto, no lectura general"
+    },
+    {
+      "id": "SSH-T07",
+      "protocol": "ssh",
+      "source_table": "3.9",
+      "condition_es": "Capacidad de escritura y eliminación de marcador sintético",
+      "minimum_action_es": "Crear un marcador preparado, comprobarlo, retirarlo y acreditar la limpieza por separado",
+      "precedence": 4,
+      "variants": null,
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "SESSION_AUTHENTICATED",
+        "WRITE_FIXTURE_PREPARED",
+        "CLEANUP_VERIFIABLE"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "session_ref",
+        "marker_ref",
+        "cleanup_ref",
+        "fixture_digest_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "MARKER_CREATED",
+        "MARKER_VERIFIED",
+        "CLEANUP_CONFIRMED"
+      ],
+      "acceptance_supports": [
+        "MARKER_CREATED",
+        "MARKER_VERIFIED",
+        "CLEANUP_CONFIRMED"
+      ],
+      "cleanup": "VERIFY_THEN_REMOVE_MARKER",
+      "interpretation_boundary_es": "No puede modificarse un archivo preexistente; escribir no demuestra limpieza"
+    },
+    {
+      "id": "SSH-T08",
+      "protocol": "ssh",
+      "source_table": "3.9",
+      "condition_es": "Facultad privilegiada específica explícitamente autorizada",
+      "minimum_action_es": "Verificar solo una facultad privilegiada mínima autorizada, sin alterar estado existente",
+      "precedence": 4,
+      "variants": null,
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "SESSION_AUTHENTICATED",
+        "PRIVILEGE_SCOPE_EXPLICITLY_APPROVED",
+        "BENIGN_OPERATION_PREDEFINED"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "session_ref",
+        "privilege_scope_ref",
+        "operation_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "PRIVILEGE_SCOPE",
+        "OPERATION_RESPONSE",
+        "EFFECTIVE_IDENTITY"
+      ],
+      "acceptance_supports": [
+        "PRIVILEGE_SCOPE",
+        "OPERATION_RESPONSE"
+      ],
+      "cleanup": "NO_MUTATION",
+      "interpretation_boundary_es": "La conclusión se limita a la facultad efectivamente comprobada"
+    },
+    {
+      "id": "FTP-T01",
+      "protocol": "ftp",
+      "source_table": "3.10",
+      "condition_es": "Conexión de control FTP/FTPS a destino autorizado",
+      "minimum_action_es": "Establecer la conexión de control con el servicio fijado",
+      "precedence": 1,
+      "variants": null,
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "SERVICE_READY"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "port_ref",
+        "control_channel_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "CONTROL_CHANNEL_RESPONSE"
+      ],
+      "acceptance_supports": [
+        "CONTROL_CHANNEL_RESPONSE"
+      ],
+      "cleanup": "NO_MUTATION",
+      "interpretation_boundary_es": "Una conexión de control no demuestra autenticación ni acceso a archivos"
+    },
+    {
+      "id": "FTP-T02",
+      "protocol": "ftp",
+      "source_table": "3.10",
+      "condition_es": "Protección TLS de canal de control o canal de datos por separado",
+      "minimum_action_es": "Confirmar protección TLS efectiva en el canal expresamente seleccionado",
+      "precedence": [
+        1,
+        3
+      ],
+      "variants": {
+        "dimension": "channel",
+        "precedence_by_option": {
+          "CONTROL": 1,
+          "DATA": 3
+        }
+      },
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "SERVICE_READY",
+        "TLS_CHANNEL_PREDEFINED"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "channel_ref",
+        "tls_policy_ref",
+        "session_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "TLS_NEGOTIATION",
+        "TLS_CHANNEL_PROTECTION",
+        "CONTROL_DATA_CORRELATION"
+      ],
+      "acceptance_supports": [
+        "TLS_NEGOTIATION",
+        "TLS_CHANNEL_PROTECTION"
+      ],
+      "cleanup": "NO_MUTATION",
+      "interpretation_boundary_es": "La protección de control no demuestra protección del canal de datos; registrar casos independientes"
+    },
+    {
+      "id": "FTP-T03",
+      "protocol": "ftp",
+      "source_table": "3.10",
+      "condition_es": "Sesión FTP anónima con condiciones sintéticas predefinidas",
+      "minimum_action_es": "Establecer o constatar rechazo de sesión anónima prevista por configuración",
+      "precedence": 2,
+      "variants": null,
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "CONTROL_CHANNEL_VERIFIED",
+        "GUEST_POLICY_PREDEFINED"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "session_ref",
+        "guest_identity_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "AUTH_COMPLETION",
+        "SESSION_CORRELATION"
+      ],
+      "acceptance_supports": [
+        "AUTH_COMPLETION",
+        "SESSION_CORRELATION"
+      ],
+      "cleanup": "NO_MUTATION",
+      "interpretation_boundary_es": "Sesión anónima, si es admitida, no prueba acceso a directorios ni archivos"
+    },
+    {
+      "id": "FTP-T04",
+      "protocol": "ftp",
+      "source_table": "3.10",
+      "condition_es": "Autenticación FTP de cuenta sintética",
+      "minimum_action_es": "Completar autenticación de cuenta sintética previamente aprobada",
+      "precedence": 2,
+      "variants": null,
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "CONTROL_CHANNEL_VERIFIED",
+        "SYNTHETIC_IDENTITY_PREPARED",
+        "PROTECTED_CREDENTIAL_REF"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "session_ref",
+        "identity_ref",
+        "credential_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "AUTH_COMPLETION",
+        "EFFECTIVE_IDENTITY"
+      ],
+      "acceptance_supports": [
+        "AUTH_COMPLETION",
+        "EFFECTIVE_IDENTITY"
+      ],
+      "cleanup": "NO_MUTATION",
+      "interpretation_boundary_es": "La aceptación de credenciales se atribuye solo a la identidad probada"
+    },
+    {
+      "id": "FTP-T05",
+      "protocol": "ftp",
+      "source_table": "3.10",
+      "condition_es": "Listado de directorio sintético autorizado",
+      "minimum_action_es": "Listar únicamente el directorio preparado y correlacionar sesión y datos",
+      "precedence": 3,
+      "variants": null,
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "SESSION_AUTHENTICATED",
+        "SYNTHETIC_RESOURCE_PREPARED"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "session_ref",
+        "directory_ref",
+        "data_channel_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "DIRECTORY_LISTING",
+        "CONTROL_DATA_CORRELATION"
+      ],
+      "acceptance_supports": [
+        "DIRECTORY_LISTING",
+        "CONTROL_DATA_CORRELATION"
+      ],
+      "cleanup": "NO_MUTATION",
+      "interpretation_boundary_es": "El listado solo acredita acceso a la ruta examinada"
+    },
+    {
+      "id": "FTP-T06",
+      "protocol": "ftp",
+      "source_table": "3.10",
+      "condition_es": "Recuperación íntegra de archivo sintético conocido",
+      "minimum_action_es": "Transferir archivo permitido y contrastar su contenido e integridad",
+      "precedence": 3,
+      "variants": null,
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "SESSION_AUTHENTICATED",
+        "READ_FIXTURE_PREPARED"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "session_ref",
+        "resource_ref",
+        "fixture_digest_ref",
+        "data_channel_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "RESOURCE_READ",
+        "KNOWN_CONTENT_DIGEST",
+        "CONTROL_DATA_CORRELATION"
+      ],
+      "acceptance_supports": [
+        "RESOURCE_READ",
+        "KNOWN_CONTENT_DIGEST"
+      ],
+      "cleanup": "NO_MUTATION",
+      "interpretation_boundary_es": "El código de respuesta aislado no demuestra transferencia completa"
+    },
+    {
+      "id": "FTP-T07",
+      "protocol": "ftp",
+      "source_table": "3.10",
+      "condition_es": "Escritura y limpieza de marcador FTP sintético",
+      "minimum_action_es": "Transferir marcador preparado, verificarlo y eliminarlo con verificación independiente",
+      "precedence": 4,
+      "variants": null,
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "SESSION_AUTHENTICATED",
+        "WRITE_FIXTURE_PREPARED",
+        "CLEANUP_VERIFIABLE"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "session_ref",
+        "marker_ref",
+        "fixture_digest_ref",
+        "cleanup_ref",
+        "data_channel_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "MARKER_CREATED",
+        "MARKER_VERIFIED",
+        "CLEANUP_CONFIRMED"
+      ],
+      "acceptance_supports": [
+        "MARKER_CREATED",
+        "MARKER_VERIFIED",
+        "CLEANUP_CONFIRMED"
+      ],
+      "cleanup": "VERIFY_THEN_REMOVE_MARKER",
+      "interpretation_boundary_es": "No modificar otros archivos; operación y limpieza tienen soportes separados"
+    },
+    {
+      "id": "FTP-T08",
+      "protocol": "ftp",
+      "source_table": "3.10",
+      "condition_es": "Límite de autorización entre recurso de control y restringido",
+      "minimum_action_es": "Repetir la misma operación acotada sobre ambos recursos fijados y comparar resultados",
+      "precedence": [
+        3,
+        4
+      ],
+      "variants": {
+        "dimension": "operation_class",
+        "precedence_by_option": {
+          "READ": 3,
+          "WRITE": 4
+        }
+      },
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "SESSION_AUTHENTICATED",
+        "REFERENCE_BASELINE_PREPARED",
+        "RESTRICTED_RESOURCE_PREDEFINED"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "session_ref",
+        "control_resource_ref",
+        "restricted_resource_ref",
+        "operation_ref",
+        "cleanup_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "ACCESS_COMPARISON",
+        "OPERATION_RESPONSE"
+      ],
+      "acceptance_supports": [
+        "ACCESS_COMPARISON",
+        "OPERATION_RESPONSE"
+      ],
+      "cleanup": "CONDITIONAL_WRITE_MARKER_CLEANUP",
+      "interpretation_boundary_es": "Concluir solo sobre recurso y operación equivalentes; escritura requiere limpieza en ambos"
+    },
+    {
+      "id": "SMB-T01",
+      "protocol": "smb",
+      "source_table": "3.11",
+      "condition_es": "Comunicación SMB y dialecto negociado",
+      "minimum_action_es": "Negociar SMB con destino fijado y registrar el dialecto real",
+      "precedence": 1,
+      "variants": null,
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "SERVICE_READY"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "port_ref",
+        "dialect_policy_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "SMB_DIALECT",
+        "TRANSPORT_NEGOTIATION"
+      ],
+      "acceptance_supports": [
+        "SMB_DIALECT",
+        "TRANSPORT_NEGOTIATION"
+      ],
+      "cleanup": "NO_MUTATION",
+      "interpretation_boundary_es": "Negociación no implica autenticación ni capacidad de acceso"
+    },
+    {
+      "id": "SMB-T02",
+      "protocol": "smb",
+      "source_table": "3.11",
+      "condition_es": "Aceptación o rechazo específico de SMBv1",
+      "minimum_action_es": "Comprobar una negociación compatible predefinida y atribuir la respuesta al dialecto",
+      "precedence": 1,
+      "variants": null,
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "SERVICE_READY",
+        "SMBV1_CHECK_PREDEFINED"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "dialect_policy_ref",
+        "compatible_client_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "SMBV1_RESPONSE",
+        "SMB_DIALECT"
+      ],
+      "acceptance_supports": [
+        "SMBV1_RESPONSE",
+        "SMB_DIALECT"
+      ],
+      "cleanup": "NO_MUTATION",
+      "interpretation_boundary_es": "La negativa requiere cliente compatible; no hacer fallback o expansión automática"
+    },
+    {
+      "id": "SMB-T03",
+      "protocol": "smb",
+      "source_table": "3.11",
+      "condition_es": "Operación mínima bajo condición específica de firma o cifrado SMB",
+      "minimum_action_es": "Verificar por separado la condición de firma o cifrado y una sesión utilizable",
+      "precedence": 3,
+      "variants": {
+        "dimension": "protection",
+        "precedence_by_option": {
+          "SIGNING": 3,
+          "ENCRYPTION": 3
+        }
+      },
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "SESSION_AUTHENTICATED",
+        "SMB_PROTECTION_PREDEFINED",
+        "BENIGN_OPERATION_PREDEFINED"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "session_ref",
+        "protection_policy_ref",
+        "operation_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "SMB_SIGNATURE",
+        "SMB_ENCRYPTION",
+        "OPERATION_RESPONSE"
+      ],
+      "acceptance_supports": [
+        "OPERATION_RESPONSE"
+      ],
+      "cleanup": "NO_MUTATION",
+      "interpretation_boundary_es": "La firma y el cifrado son condiciones distintas; observar la seleccionada en cada caso"
+    },
+    {
+      "id": "SMB-T04",
+      "protocol": "smb",
+      "source_table": "3.11",
+      "condition_es": "Sesión SMB invitada o anónima identificada",
+      "minimum_action_es": "Establecer sesión prevista y determinar identidad/tipo efectivo de sesión",
+      "precedence": 2,
+      "variants": null,
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "SERVICE_READY",
+        "GUEST_POLICY_PREDEFINED"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "session_ref",
+        "guest_identity_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "GUEST_SESSION_TYPE",
+        "AUTH_COMPLETION"
+      ],
+      "acceptance_supports": [
+        "GUEST_SESSION_TYPE",
+        "AUTH_COMPLETION"
+      ],
+      "cleanup": "NO_MUTATION",
+      "interpretation_boundary_es": "La sesión invitada/anónima no prueba acceso a un recurso compartido"
+    },
+    {
+      "id": "SMB-T05",
+      "protocol": "smb",
+      "source_table": "3.11",
+      "condition_es": "Autenticación SMB con cuenta sintética",
+      "minimum_action_es": "Completar autenticación de cuenta sintética y comprobar identidad efectiva",
+      "precedence": 2,
+      "variants": null,
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "SERVICE_READY",
+        "SYNTHETIC_IDENTITY_PREPARED",
+        "PROTECTED_CREDENTIAL_REF"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "session_ref",
+        "identity_ref",
+        "credential_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "AUTH_COMPLETION",
+        "EFFECTIVE_IDENTITY"
+      ],
+      "acceptance_supports": [
+        "AUTH_COMPLETION",
+        "EFFECTIVE_IDENTITY"
+      ],
+      "cleanup": "NO_MUTATION",
+      "interpretation_boundary_es": "Solo la identidad probada y el contexto de seguridad se consideran"
+    },
+    {
+      "id": "SMB-T06",
+      "protocol": "smb",
+      "source_table": "3.11",
+      "condition_es": "Acceso y listado de ruta autorizada de recurso SMB",
+      "minimum_action_es": "Conectar al recurso autorizado y listar la ruta sintética fijada",
+      "precedence": 3,
+      "variants": null,
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "SESSION_AUTHENTICATED",
+        "SYNTHETIC_RESOURCE_PREPARED"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "session_ref",
+        "share_ref",
+        "directory_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "SHARE_ACCESS",
+        "DIRECTORY_LISTING"
+      ],
+      "acceptance_supports": [
+        "SHARE_ACCESS",
+        "DIRECTORY_LISTING"
+      ],
+      "cleanup": "NO_MUTATION",
+      "interpretation_boundary_es": "La conexión y listado deben acreditarse por separado"
+    },
+    {
+      "id": "SMB-T07",
+      "protocol": "smb",
+      "source_table": "3.11",
+      "condition_es": "Lectura íntegra de archivo SMB sintético conocido",
+      "minimum_action_es": "Abrir, leer y comparar contenido del archivo predefinido",
+      "precedence": 3,
+      "variants": null,
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "SESSION_AUTHENTICATED",
+        "READ_FIXTURE_PREPARED"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "session_ref",
+        "share_ref",
+        "resource_ref",
+        "fixture_digest_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "RESOURCE_READ",
+        "KNOWN_CONTENT_DIGEST"
+      ],
+      "acceptance_supports": [
+        "RESOURCE_READ",
+        "KNOWN_CONTENT_DIGEST"
+      ],
+      "cleanup": "NO_MUTATION",
+      "interpretation_boundary_es": "Conclusión limitada al recurso sintético concreto"
+    },
+    {
+      "id": "SMB-T08",
+      "protocol": "smb",
+      "source_table": "3.11",
+      "condition_es": "Escritura, verificación y eliminación de marcador SMB sintético",
+      "minimum_action_es": "Crear marcador previsto, verificar contenido, retirarlo y verificar limpieza",
+      "precedence": 4,
+      "variants": null,
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "SESSION_AUTHENTICATED",
+        "WRITE_FIXTURE_PREPARED",
+        "CLEANUP_VERIFIABLE"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "session_ref",
+        "share_ref",
+        "marker_ref",
+        "fixture_digest_ref",
+        "cleanup_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "MARKER_CREATED",
+        "MARKER_VERIFIED",
+        "CLEANUP_CONFIRMED"
+      ],
+      "acceptance_supports": [
+        "MARKER_CREATED",
+        "MARKER_VERIFIED",
+        "CLEANUP_CONFIRMED"
+      ],
+      "cleanup": "VERIFY_THEN_REMOVE_MARKER",
+      "interpretation_boundary_es": "No tocar archivos preexistentes; limpieza acreditada independientemente"
+    },
+    {
+      "id": "SMB-T09",
+      "protocol": "smb",
+      "source_table": "3.11",
+      "condition_es": "Comparación de autorización SMB entre recurso de control y restringido",
+      "minimum_action_es": "Ejecutar operación equivalente y acotada en recursos predefinidos y registrar resultados",
+      "precedence": [
+        3,
+        4
+      ],
+      "variants": {
+        "dimension": "operation_class",
+        "precedence_by_option": {
+          "READ": 3,
+          "WRITE": 4
+        }
+      },
+      "preconditions": [
+        "SCOPE_APPROVED",
+        "LAB_ISOLATION_CONFIRMED",
+        "DESTINATION_AUTHORIZED",
+        "CLIENT_COMPATIBLE",
+        "SESSION_AUTHENTICATED",
+        "REFERENCE_BASELINE_PREPARED",
+        "RESTRICTED_RESOURCE_PREDEFINED"
+      ],
+      "parameter_slots": [
+        "authorization_ref",
+        "target_ref",
+        "session_ref",
+        "control_resource_ref",
+        "restricted_resource_ref",
+        "operation_ref",
+        "cleanup_ref"
+      ],
+      "required_supports": [
+        "TARGET_ATTESTATION",
+        "INTEGRITY_PROVENANCE",
+        "ACCESS_COMPARISON",
+        "OPERATION_RESPONSE"
+      ],
+      "acceptance_supports": [
+        "ACCESS_COMPARISON",
+        "OPERATION_RESPONSE"
+      ],
+      "cleanup": "CONDITIONAL_WRITE_MARKER_CLEANUP",
+      "interpretation_boundary_es": "Solo operación/recurso examinado; si implica escritura exige marcadores y limpieza separados"
+    }
+  ]
+}
