@@ -39,3 +39,11 @@ isolation, system acceptance or experimental validation.
 [Registro de desarrollo del punto 5](restoration-isolation-v1/README.md): resultados
 físicos revisados, límites y condiciones de parada. / Reviewed scoped physical
 evidence, limitations and stop conditions.
+
+## Separación lógica de escenarios / Logical scenario separation
+
+[Punto 6 / Step 6](scenario-separation-v1/README.md): tres manifiestos vacíos,
+referencias y validadores para desarrollo, piloto y experimento. Las redes no
+están desplegadas; la muestra no está congelada y no existe aceptación física
+o experimental por este cambio. / Reserved manifests and document guards;
+no network deployment, sample freeze, physical isolation or experiment.

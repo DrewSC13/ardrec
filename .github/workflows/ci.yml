@@ -61,6 +61,12 @@ jobs:
       - name: Probar registro del punto 5 / Test point 5 record
         run: python3 -m unittest discover -s lab/tests -p test_restoration_isolation_record.py -v
 
+      - name: Verificar separación lógica de escenarios / Verify logical scenario separation
+        run: python3 lab/verify_scenario_separation.py
+
+      - name: Probar separación y procedencia / Test scenario separation and provenance
+        run: python3 -m unittest discover -s lab/tests -p test_scenario_separation.py -v
+
       - name: Probar contratos y transporte / Test contracts and transport
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 
