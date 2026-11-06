@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "stage": "dev",
+  "purpose": "DEVELOPMENT",
+  "status": "RESERVED_NOT_DEPLOYED",
+  "network_ids": [
+    "ardrec-dev-ssh",
+    "ardrec-dev-ftp",
+    "ardrec-dev-smb"
+  ],
+  "shared_bases": [],
+  "services": [],
+  "scenarios": [],
+  "cases": [],
+  "executions": [],
+  "attempts": [],
+  "artifacts": [],
+  "units": []
+}

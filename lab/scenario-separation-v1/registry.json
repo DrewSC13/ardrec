@@ -1,0 +1,122 @@
+{
+  "schema_version": "1.0",
+  "status": "LOGICAL_SEPARATION_PREPARED_NOT_DEPLOYED",
+  "baseline_commit": "cc0d7486b0bcf06ef7dd68e8f9511c1e8ddc1b4d",
+  "thesis_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "roadmap_step": 6,
+  "source_sections": [
+    "1.9.3",
+    "1.9.4",
+    "3.1",
+    "3.2.1",
+    "3.3.1",
+    "3.7.5",
+    "3.9.11"
+  ],
+  "requirements": [
+    "AC-24",
+    "AC-25",
+    "AC-27",
+    "MET-09",
+    "MET-10",
+    "MET-12",
+    "MET-13"
+  ],
+  "open_findings": [
+    "AL-06",
+    "AL-07"
+  ],
+  "open_obligations": 7,
+  "experimental_design": {
+    "planned_units": 54,
+    "by_protocol": {
+      "ssh": 18,
+      "ftp": 18,
+      "smb": 18
+    },
+    "sample_frozen": false,
+    "pilot_completed": false,
+    "functional_acceptance": "PENDING",
+    "experimental_validation": "NOT_RUN"
+  },
+  "stages": {
+    "dev": {
+      "purpose": "DEVELOPMENT",
+      "status": "RESERVED_NOT_DEPLOYED",
+      "private_root": "private/dev",
+      "data_paths": {
+        "configurations": "private/dev/configurations",
+        "inventories": "private/dev/inventories",
+        "credential_refs": "private/dev/credential_refs",
+        "mutable_resources": "private/dev/mutable_resources",
+        "logs": "private/dev/logs",
+        "evidence": "private/dev/evidence",
+        "results": "private/dev/results"
+      },
+      "network_ids": [
+        "ardrec-dev-ssh",
+        "ardrec-dev-ftp",
+        "ardrec-dev-smb"
+      ],
+      "public_manifest": "dev.json"
+    },
+    "pilot": {
+      "purpose": "PILOT",
+      "status": "RESERVED_NOT_DEPLOYED",
+      "private_root": "private/pilot",
+      "data_paths": {
+        "configurations": "private/pilot/configurations",
+        "inventories": "private/pilot/inventories",
+        "credential_refs": "private/pilot/credential_refs",
+        "mutable_resources": "private/pilot/mutable_resources",
+        "logs": "private/pilot/logs",
+        "evidence": "private/pilot/evidence",
+        "results": "private/pilot/results"
+      },
+      "network_ids": [
+        "ardrec-pilot-ssh",
+        "ardrec-pilot-ftp",
+        "ardrec-pilot-smb"
+      ],
+      "public_manifest": "pilot.json"
+    },
+    "exp": {
+      "purpose": "EXPERIMENT",
+      "status": "RESERVED_NOT_DEPLOYED",
+      "private_root": "private/exp",
+      "data_paths": {
+        "configurations": "private/exp/configurations",
+        "inventories": "private/exp/inventories",
+        "credential_refs": "private/exp/credential_refs",
+        "mutable_resources": "private/exp/mutable_resources",
+        "logs": "private/exp/logs",
+        "evidence": "private/exp/evidence",
+        "results": "private/exp/results"
+      },
+      "network_ids": [
+        "ardrec-exp-ssh",
+        "ardrec-exp-ftp",
+        "ardrec-exp-smb"
+      ],
+      "public_manifest": "exp.json"
+    }
+  },
+  "separation_policies": {
+    "cross_stage_references": "REJECT",
+    "shared_generic_bases": "ALLOW_ONLY_WITH_PROVENANCE_NO_PRIOR_OBSERVATIONS",
+    "record_promotion": "REJECT",
+    "pilot_in_experiment": "REJECT",
+    "repeat_is_new_unit": "REJECT",
+    "physical_isolation": "NOT_VERIFIED",
+    "real_execution": "NOT_AUTHORIZED_BY_P6"
+  },
+  "limitations": [
+    "Solo separación lógica de registros, no aislamiento de VM o almacenamiento",
+    "Las nueve redes permanecen reservas de diseño",
+    "No se ha implementado el catálogo ni los perfiles de ejecución",
+    "No se ejecutó el piloto y las 54 unidades no están seleccionadas ni congeladas",
+    "Los manifiestos públicos no contienen credenciales, resultados ni evidencia privada",
+    "La custodia de frescura, los controles del ejecutor y el estado analítico completo siguen pendientes",
+    "Los controles documentales no impiden copias físicas no registradas; debe comprobarse separación física antes del pilotaje/experimento"
+  ]
+}

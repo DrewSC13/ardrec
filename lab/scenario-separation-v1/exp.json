@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "stage": "exp",
+  "purpose": "EXPERIMENT",
+  "status": "RESERVED_NOT_DEPLOYED",
+  "network_ids": [
+    "ardrec-exp-ssh",
+    "ardrec-exp-ftp",
+    "ardrec-exp-smb"
+  ],
+  "shared_bases": [],
+  "services": [],
+  "scenarios": [],
+  "cases": [],
+  "executions": [],
+  "attempts": [],
+  "artifacts": [],
+  "units": []
+}

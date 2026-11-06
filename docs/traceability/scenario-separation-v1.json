@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "status": "P6_LOGICAL_SEPARATION_PREPARED_LOCAL_REVIEW_PENDING",
+  "roadmap_step": 6,
+  "source_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "source_sections": [
+    "1.9.3",
+    "1.9.4",
+    "3.1",
+    "3.2.1",
+    "3.3.1",
+    "3.7.5",
+    "3.9.11"
+  ],
+  "requirements": [
+    "AC-24",
+    "AC-25",
+    "AC-27",
+    "MET-09",
+    "MET-10",
+    "MET-12",
+    "MET-13"
+  ],
+  "open_findings": [
+    "AL-06",
+    "AL-07"
+  ],
+  "open_obligations": 7,
+  "artifacts": [
+    "lab/scenario-separation-v1/registry.json",
+    "lab/scenario-separation-v1/dev.json",
+    "lab/scenario-separation-v1/pilot.json",
+    "lab/scenario-separation-v1/exp.json",
+    "lab/scenario-separation-v1/README.md",
+    "lab/verify_scenario_separation.py",
+    "lab/tests/test_scenario_separation.py"
+  ],
+  "verification": {
+    "document_and_reference_guards": "LOCAL_TEST_PENDING",
+    "ci": "NOT_RUN",
+    "physical_stage_isolation": "NOT_VERIFIED",
+    "pilot": "NOT_RUN",
+    "experiment": "NOT_RUN"
+  },
+  "safety_gates": {
+    "AL-06": "OPEN",
+    "AL-07": "OPEN",
+    "real_executor": "BLOCKED_BY_RESIDUAL_OBLIGATIONS"
+  },
+  "unit_count_plan": 54,
+  "unit_count_frozen": 0,
+  "pilot_units_reused_in_experiment": false,
+  "historical_records_preserved": [
+    "lab/topology-v1.json",
+    "lab/services-v1/evidence.json",
+    "lab/restoration-isolation-v1/record.json",
+    "docs/traceability/development-v2.json"
+  ]
+}

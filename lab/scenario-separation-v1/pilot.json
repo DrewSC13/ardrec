@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "stage": "pilot",
+  "purpose": "PILOT",
+  "status": "RESERVED_NOT_DEPLOYED",
+  "network_ids": [
+    "ardrec-pilot-ssh",
+    "ardrec-pilot-ftp",
+    "ardrec-pilot-smb"
+  ],
+  "shared_bases": [],
+  "services": [],
+  "scenarios": [],
+  "cases": [],
+  "executions": [],
+  "attempts": [],
+  "artifacts": [],
+  "units": []
+}
