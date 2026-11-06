@@ -55,3 +55,10 @@ familias SSH/FTP/SMB con guardas, parámetros de referencia, soportes, límites
 pendientes de pilotaje y limpieza. No existen casos derivados reales ni perfiles
 de ejecución definidos; ninguna prueba se habilita. / 25 non-executable family
 specifications with evidence and cleanup contracts; no live cases or profiles.
+
+## Perfiles P8 / P8 profile-binding slots
+
+[Punto 8, R1 / Step 8, R1](execution-profiles-v1/README.md): 29 vínculos
+pendientes derivados de 25 familias; no hay binarios, argumentos, entornos ni
+auxiliares fijados. Perfiles bloqueados, sin ejecución ni autorización real. /
+Unbound profile slots with explicit fail-closed guards; no executable invocations.

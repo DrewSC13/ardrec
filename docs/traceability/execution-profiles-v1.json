@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "roadmap_step": 8,
+  "status": "P8_R1_PROFILE_SLOTS_ONLY_NOT_EXECUTABLE",
+  "baseline_commit": "009393f34cd548bb79de122de90e992ff285bb5a",
+  "source_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "source_sections": [
+    "3.7.5",
+    "3.9.2"
+  ],
+  "p7_catalog_sha256": "5161cdfc3c88281adbf21b839b40b12f92298d5a58f650ad761c0c6dbe16f88e",
+  "profile_path": "lab/execution-profiles-v1/profiles.json",
+  "profile_sha256": "fe0fae200ac031622d27020b77d38bd18a22e3ffaa0dd0f57ec4e9f01f284ce3",
+  "families": 25,
+  "profile_slots": 29,
+  "real_cases": 0,
+  "executables_pinned": 0,
+  "argv_vectors_pinned": 0,
+  "authorized_profiles": 0,
+  "pilot_limits": "PENDING",
+  "physical_isolation": "NOT_VERIFIED",
+  "functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN",
+  "unresolved_obligations": 7,
+  "open_findings": [
+    "AL-06",
+    "AL-07"
+  ],
+  "artifacts": [
+    "lab/execution-profiles-v1/profiles.json",
+    "lab/execution-profiles-v1/README.md",
+    "lab/verify_execution_profiles.py",
+    "lab/tests/test_execution_profiles.py"
+  ]
+}
