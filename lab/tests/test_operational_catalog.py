@@ -1,6 +1,8 @@
 """P7 synthetic mutation tests: no networking, process execution or credentials."""
 from __future__ import annotations
 import importlib.util
+import hashlib
+from contextlib import contextmanager
 import json
 import shutil
 import tempfile
@@ -56,6 +58,28 @@ class CatalogTests(unittest.TestCase):
         cat=self.load(CAT); f=next(x for x in cat['families'] if x['id']==family)
         return {'stage':stage,'scenario_id':scn,'family_id':family,'scenario_code':'S01',
                 'ordinal':1,'variant':variant,'parameter_refs':{p:'ref:synthetic-'+p for p in f['parameter_slots']}}
+
+    @contextmanager
+    def rebased_catalog_integrity(self):
+        """Synthetic-only semantic oracle: refresh both digest anchors, then restore.
+
+        No production catalogue, trace or verifier is modified. A failed test
+        must identify the actual violated rule rather than the stale checksum.
+        """
+        old=V.CATALOG_SHA256
+        digest=hashlib.sha256((self.root/CAT).read_bytes()).hexdigest()
+        self.alter(TRACE,lambda r:r.update(catalog_sha256=digest))
+        V.CATALOG_SHA256=digest
+        try:
+            yield
+        finally:
+            V.CATALOG_SHA256=old
+
+    def assert_semantic_rejection(self, mutation, expected_reason):
+        self.alter(CAT,mutation)
+        with self.rebased_catalog_integrity():
+            with self.assertRaisesRegex(ValueError,expected_reason):
+                V.validate(self.root)
 
     def test_valid_catalog_has_exactly_25_families(self):
         a=V.validate(self.root);self.assertEqual((a['ssh'],a['ftp'],a['smb'],a['families']),(8,8,9,25))
@@ -137,6 +161,58 @@ class CatalogTests(unittest.TestCase):
     def test_symlink_catalog_rejected(self):
         p=self.root/CAT; target=self.root/'real-catalog.json';p.rename(target);p.symlink_to(target)
         self.bad()
+
+    # These oracles intentionally make the SHA-256 and public trace consistent
+    # with the mutated synthetic catalogue. Passing only a hash gate is not proof
+    # that an independent semantic guard was exercised.
+    def test_semantic_rebased_integrity_positive_control(self):
+        with self.rebased_catalog_integrity():
+            self.assertEqual(V.validate(self.root)['families'],25)
+
+    def test_semantic_rehashed_execution_block(self):
+        self.assert_semantic_rejection(
+            lambda c:c.update(execution_enabled=True),
+            'Se pretende autorizar o congelar antes de tiempo')
+
+    def test_semantic_rehashed_budget_block(self):
+        self.assert_semantic_rejection(
+            lambda c:c['budget'].update(timeout_seconds=60),
+            'Presupuesto inferido antes del piloto')
+
+    def test_semantic_rehashed_authorization_gate(self):
+        self.assert_semantic_rejection(
+            lambda c:c['families'][0]['preconditions'].remove('SCOPE_APPROVED'),
+            'Guardas comunes ausentes')
+
+    def test_semantic_rehashed_precedence(self):
+        self.assert_semantic_rejection(
+            lambda c:c['families'][7].update(precedence=1),
+            'Precedencia/variantes alteradas')
+
+    def test_semantic_rehashed_critical_acceptance(self):
+        self.assert_semantic_rejection(
+            lambda c:c['families'][0]['acceptance_supports'].remove('HOST_KEY_MATCH'),
+            'Aceptación sin soporte crítico')
+
+    def test_semantic_rehashed_cleanup(self):
+        self.assert_semantic_rejection(
+            lambda c:c['families'][6].update(cleanup='NO_MUTATION'),
+            'Política de limpieza incompatible')
+
+    def test_semantic_rehashed_result_evidence_separation(self):
+        self.assert_semantic_rejection(
+            lambda c:c['interpretation'].update(technical_result_is_evidence=True),
+            'Resultados/evidencia confundidos')
+
+    def test_semantic_rehashed_prohibitions(self):
+        self.assert_semantic_rejection(
+            lambda c:c['prohibitions'].remove('EXTERNAL_TARGETS'),
+            'Prohibiciones ausentes')
+
+    def test_semantic_rehashed_unapproved_family(self):
+        self.assert_semantic_rejection(
+            lambda c:c['families'][0].update(id='SSH-VUL-01'),
+            'Familias duplicadas/ajenas/ausentes')
 
     def test_no_real_scenario_prevents_derivation(self):
         binding={'stage':'dev','scenario_id':'dev-scn-missing','family_id':'SSH-T01',
