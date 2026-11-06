@@ -47,3 +47,11 @@ referencias y validadores para desarrollo, piloto y experimento. Las redes no
 están desplegadas; la muestra no está congelada y no existe aceptación física
 o experimental por este cambio. / Reserved manifests and document guards;
 no network deployment, sample freeze, physical isolation or experiment.
+
+## Catálogo operacional / Operational catalogue
+
+[Punto 7 / Step 7](operational-catalog-v1/README.md): 25 especificaciones de
+familias SSH/FTP/SMB con guardas, parámetros de referencia, soportes, límites
+pendientes de pilotaje y limpieza. No existen casos derivados reales ni perfiles
+de ejecución definidos; ninguna prueba se habilita. / 25 non-executable family
+specifications with evidence and cleanup contracts; no live cases or profiles.

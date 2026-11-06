@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "status": "P7_SPECIFICATIONS_PREPARED_NOT_EXECUTABLE",
+  "roadmap_step": 7,
+  "source_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "baseline_commit": "f803ba28af310f3c08dc33dddbd0c22522d2377f",
+  "catalog_path": "lab/operational-catalog-v1/catalog.json",
+  "catalog_sha256": "5161cdfc3c88281adbf21b839b40b12f92298d5a58f650ad761c0c6dbe16f88e",
+  "count_by_protocol": {
+    "ssh": 8,
+    "ftp": 8,
+    "smb": 9,
+    "total": 25
+  },
+  "declared_case_count": 0,
+  "implemented_executor": false,
+  "pilot_limits": "PENDING",
+  "physical_isolation": "NOT_VERIFIED",
+  "functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN",
+  "open_findings": [
+    "AL-06",
+    "AL-07"
+  ],
+  "open_obligations": 7,
+  "requirements": [
+    "AC-24",
+    "AC-25",
+    "AC-27",
+    "MET-09",
+    "MET-10",
+    "MET-12",
+    "MET-13"
+  ],
+  "source_sections": [
+    "3.7",
+    "3.7.1",
+    "3.7.2",
+    "3.7.3",
+    "3.7.4",
+    "3.7.5"
+  ],
+  "artifacts": [
+    "lab/operational-catalog-v1/catalog.json",
+    "lab/operational-catalog-v1/README.md",
+    "lab/verify_operational_catalog.py",
+    "lab/tests/test_operational_catalog.py"
+  ]
+}
