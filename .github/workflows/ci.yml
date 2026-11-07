@@ -105,6 +105,8 @@ jobs:
 
       - name: Verificar compilación / Verify build
         run: python3 scripts/verificar_ci.py rust
+      - name: Ejecutar pruebas Rust / Run Rust tests
+        run: cargo test --workspace --all-targets --locked --offline
       - name: Probar transporte Python-Rust / Test Python-Rust transport
         run: python3 scripts/verificar_transporte.py
 
