@@ -35,3 +35,6 @@ pub mod timing;
 
 /// Identidad del par antes de intercambiar consultas.
 pub mod peer_identity;
+
+/// Contratos tipados no ejecutables / Non-executable typed contract review.
+pub mod contract_gate;
