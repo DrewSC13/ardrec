@@ -1,5 +1,7 @@
 # ARDREC
 
+> **P8-R8 — propuesta source-only no integrada:** [`docs/estado-vigente-p8-r8.md`](docs/estado-vigente-p8-r8.md). Puente sintético de estado y diagnóstico P8, siempre `DENY_ALL`; no hay transiciones ni publicación operacional.
+
 > **Propuesta P8-R7 sin integrar:** [`docs/estado-vigente-p8-r7.md`](docs/estado-vigente-p8-r7.md). Diagnóstico sintético compatible Python/Rust, `DENY_ALL`; ninguna autoridad ni ejecución.
 
 > **Propuesta P8-R6 pendiente de integración:** [`docs/estado-vigente-p8-r6.md`](docs/estado-vigente-p8-r6.md) y [`lab/p8-lifecycle-v1/README.md`](lab/p8-lifecycle-v1/README.md). Contrato sintético de invalidación y caducidad, siempre DENY_ALL, sin reloj ni autoridad confiables.

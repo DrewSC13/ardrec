@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "roadmap_step": 8,
+  "increment": "P8-R8-SYNTHETIC-STATE-DIAGNOSTIC-BOUNDARY",
+  "status": "SOURCE_ONLY_UNMERGED",
+  "base_commit": "517aa57183ca6a406c890fc92ccd00211eb79c3c",
+  "source_sections": ["3.5.2", "3.5.3", "3.5.4", "3.7.5", "3.9.2"],
+  "implementation": ["src/ardrec/p8_state_bridge.py"],
+  "upstream_modules": ["src/ardrec/state.py", "src/ardrec/p8_diagnostic.py"],
+  "verification": {
+    "synthetic_state_unit": "PENDING_USER_LOCAL_CI",
+    "r7_fixture_conservation": "PENDING_USER_LOCAL_CI",
+    "current_traceability": "PENDING_USER_LOCAL_CI",
+    "remote_pr_ci": "NOT_RUN",
+    "postmerge_ci": "NOT_RUN"
+  },
+  "historical_merged_prs": [36, 37, 38, 39],
+  "tests": ["tests/unit/test_p8_state_bridge.py", "scripts/verificar_p8_state_bridge.py"],
+  "operational_authorization": false,
+  "state_transition_applied": false,
+  "publication_allowed": false,
+  "system_acceptance": false,
+  "experimental_validation": false,
+  "dispatch_allowed": false,
+  "real_cases": 0,
+  "physical_laboratory": "NOT_TOUCHED",
+  "open_findings": ["AL-06", "AL-07"],
+  "open_development_obligations": 7
+}

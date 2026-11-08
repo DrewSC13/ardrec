@@ -82,6 +82,21 @@ class CurrentTraceabilityTests(unittest.TestCase):
         ]
         self.reject()
 
+    def test_r8_inventory_is_exact(self):
+        observed = sorted(x for x in self.inventory
+                          if x.startswith(checker.R8_TEST_MODULE + '.'))
+        self.assertEqual(observed, sorted(checker.R8_TEST_IDS))
+
+    def test_missing_r8_method_rejected(self):
+        missing = next(iter(checker.R8_TEST_IDS))
+        self.inventory = [x for x in self.inventory if x != missing]
+        self.reject()
+
+    def test_unregistered_r8_method_rejected(self):
+        self.inventory = [*self.inventory,
+                          'test_p8_state_bridge.P8StateBridgeTests.test_fake']
+        self.reject()
+
     def test_rendered_document_matches_registry(self):
         self.assertEqual((ROOT/checker.NOTE).read_text(),checker.render(self.registry))
 

@@ -29,6 +29,26 @@ R7_TEST_IDS = frozenset({
 COMPONENT_REQUIREMENTS = {'NUMERIC': ['AC-02', 'AC-15'], 'PROTOCOL': ['AC-02', 'AC-04'], 'TRANSPORT': ['AC-03'], 'STATE': ['AC-01', 'AC-10', 'AC-11', 'AC-18', 'AC-19', 'AC-22', 'AC-24'], 'RECONCILIATION': ['AC-05', 'AC-10', 'AC-11', 'AC-21', 'AC-27'], 'PERSISTENCE': ['AC-20', 'AC-21', 'AC-27'], 'JOURNAL': ['AC-05', 'AC-10', 'AC-11', 'AC-21'], 'SOCKET_RECONCILIATION': ['AC-03', 'AC-05', 'AC-11', 'AC-21'], 'MAGNITUDES': ['AC-02', 'AC-15', 'AC-16', 'AC-20'], 'TEMPORAL': ['AC-04', 'AC-10', 'AC-11', 'AC-21'], 'PROJECTION': ['AC-02', 'AC-07', 'AC-15', 'AC-16', 'AC-17', 'AC-19'], 'REFERENCES': ['AC-04', 'AC-14', 'AC-19'], 'ARCHIVE': ['AC-14', 'AC-20', 'AC-21', 'AC-27'], 'ANCHOR': ['AC-07', 'AC-19', 'AC-20', 'AC-21', 'AC-27'], 'COUNTERS': ['AC-10', 'AC-19', 'AC-20', 'AC-21'], 'PEER': ['AC-01', 'AC-03'], 'REFERENCE_AUDIT': ['AC-06', 'AC-07', 'AC-09', 'AC-13', 'AC-14', 'AC-15', 'AC-16'], 'TRACEABILITY_AUDIT': ['AC-27']}
 
 
+R8_TEST_MODULE = 'test_p8_state_bridge'
+R8_TEST_IDS = frozenset({
+    'test_p8_state_bridge.P8StateBridgeTests.test_graph_exact_t1_to_t10_with_t5_variants',
+    'test_p8_state_bridge.P8StateBridgeTests.test_all_eight_origins_and_eleven_transitions',
+    'test_p8_state_bridge.P8StateBridgeTests.test_true_guards_are_structural_not_authority',
+    'test_p8_state_bridge.P8StateBridgeTests.test_unknown_and_false_guards_block',
+    'test_p8_state_bridge.P8StateBridgeTests.test_unexpected_or_duplicate_guard_rejected',
+    'test_p8_state_bridge.P8StateBridgeTests.test_identity_mismatch_cannot_authorize',
+    'test_p8_state_bridge.P8StateBridgeTests.test_generation_and_configuration_stale',
+    'test_p8_state_bridge.P8StateBridgeTests.test_no_service_scope_and_terminal_states',
+    'test_p8_state_bridge.P8StateBridgeTests.test_malformed_and_duplicate_json_rejected',
+    'test_p8_state_bridge.P8StateBridgeTests.test_all_shared_p8_vectors_still_denied',
+    'test_p8_state_bridge.P8StateBridgeTests.test_all_29_profiles_still_blocked',
+    'test_p8_state_bridge.P8StateBridgeTests.test_invalid_types_are_fail_closed',
+    'test_p8_state_bridge.P8StateBridgeTests.test_result_immutable_and_input_state_not_changed',
+    'test_p8_state_bridge.P8StateBridgeTests.test_cannot_publish_or_reserve_attempt',
+    'test_p8_state_bridge.P8StateBridgeTests.test_contract_and_historical_baseline_unchanged',
+})
+
+
 def require(ok, message):
     if not ok:
         raise ValueError(message)
@@ -172,9 +192,15 @@ def validate(root=ROOT, registry=None, evidence=None, *, discovered=None, check_
         r7_observed == sorted(R7_TEST_IDS),
         'Metodos P8-R7 ausentes, nuevos o renombrados'
     )
+    r8_observed = sorted(
+        x for x in observed if x.startswith(R8_TEST_MODULE + '.')
+    )
+    require(r8_observed == sorted(R8_TEST_IDS),
+            'Metodos P8-R8 ausentes, nuevos o renombrados')
     baseline = sorted(
         x for x in observed
-        if not x.startswith((TOOL_TEST + '.', R7_TEST_MODULE + '.'))
+        if not x.startswith((TOOL_TEST + '.', R7_TEST_MODULE + '.',
+                             R8_TEST_MODULE + '.'))
     )
     declared = sorted(c['unittest_id'] for c in checks.values() if c['kind'] == 'PYTHON_UNIT')
     require(baseline == declared and len(baseline) == 405, 'Métodos Python ausentes, nuevos o renombrados')

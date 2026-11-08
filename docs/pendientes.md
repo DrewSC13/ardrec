@@ -59,3 +59,9 @@
 **ES:** Se compara un contrato sintético de diagnóstico con campos estrictos entre Python y Rust sobre los mismos vectores JSON. Sin vinculación real de emisores, registros privados, reloj o materiales; ningún resultado autoriza despacho. P8, AL-06, AL-07 y siete obligaciones permanecen abiertos.
 
 **EN:** Cross-language diagnostic denial fixtures only. No trusted case authority, actual tool execution, laboratory result or permission is granted.
+
+## Propuesta P8-R8 — frontera de estado sintética / Synthetic state boundary
+
+**ES:** T1–T10 y guardas trivalentes se inspeccionan junto con el diagnóstico R7 sin producir transición, despacho o generación publicada. R4–R7 constan como integrados en el nuevo corte `docs/estado-vigente-p8-r8.md`; los cortes históricos no se alteran. P8, AL-06, AL-07 y siete obligaciones siguen abiertos.
+
+**EN:** A pure source-only T1–T10/state diagnostic review, with no execution, publication, acceptance or laboratory testing.
