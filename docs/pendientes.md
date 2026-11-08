@@ -35,3 +35,9 @@
 **ES:** La lista precedente registra pendientes de la línea base original, no el inventario actual. Consultar `docs/estado-vigente-p8-r3.md` y `lab/p8-readiness-v1/README.md`. P8 continúa bloqueado; AL-06, AL-07 y siete obligaciones de desarrollo siguen abiertos. El incremento R3 no acredita herramientas ni permisos.
 
 **EN:** The preceding bootstrap list is historical. See the current-status and deny-only readiness documents. No operational authorization or dispatch is granted by P8 R3.
+
+## Contrato adicional propuesto P8-R4 / Proposed additional P8-R4 contract
+
+**ES:** `lab/p8-binding-contract-v1` verifica el contrato documentado para futuras propuestas por caso sin modificar registros P6/P7/P8. Ninguna propuesta real está aceptada y el alcance no acredita herramienta, presupuesto piloto ni autorización. P8, AL-06, AL-07 y siete obligaciones permanecen abiertos.
+
+**EN:** Synthetic P8-R4 per-case semantic contract only; no approval, execution, private artifact verification or experiment.
