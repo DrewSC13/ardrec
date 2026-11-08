@@ -53,3 +53,9 @@
 **ES:** Contrato puramente sintético de huella vinculada a caso y época, caducidad declarada, invalidación irreversible por eventos y rechazo de revocación no comprobada. Ninguna declaración pública prueba autoridad o reloj confiable. P8, AL-06, AL-07 y siete obligaciones de desarrollo siguen abiertos.
 
 **EN:** Deny-only synthetic temporal/revocation oracle; no trusted clock, issuer, revocation register, executable dispatch, physical tests or experiment.
+
+## Propuesta P8-R7 — diagnóstico interoperable denegado / Deny-only diagnostic interoperability
+
+**ES:** Se compara un contrato sintético de diagnóstico con campos estrictos entre Python y Rust sobre los mismos vectores JSON. Sin vinculación real de emisores, registros privados, reloj o materiales; ningún resultado autoriza despacho. P8, AL-06, AL-07 y siete obligaciones permanecen abiertos.
+
+**EN:** Cross-language diagnostic denial fixtures only. No trusted case authority, actual tool execution, laboratory result or permission is granted.

@@ -38,3 +38,6 @@ pub mod peer_identity;
 
 /// Contratos tipados no ejecutables / Non-executable typed contract review.
 pub mod contract_gate;
+
+/// Diagnóstico sintético P8-R7; solo denegación / deny-only synthetic diagnostics.
+pub mod p8_diagnostic;

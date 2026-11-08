@@ -1,5 +1,7 @@
 # ARDREC
 
+> **Propuesta P8-R7 sin integrar:** [`docs/estado-vigente-p8-r7.md`](docs/estado-vigente-p8-r7.md). Diagnóstico sintético compatible Python/Rust, `DENY_ALL`; ninguna autoridad ni ejecución.
+
 > **Propuesta P8-R6 pendiente de integración:** [`docs/estado-vigente-p8-r6.md`](docs/estado-vigente-p8-r6.md) y [`lab/p8-lifecycle-v1/README.md`](lab/p8-lifecycle-v1/README.md). Contrato sintético de invalidación y caducidad, siempre DENY_ALL, sin reloj ni autoridad confiables.
 
 > **Propuesta P8-R5 pendiente de integración:** [`docs/estado-vigente-p8-r5.md`](docs/estado-vigente-p8-r5.md) y [`lab/p8-material-attestation-v1/README.md`](lab/p8-material-attestation-v1/README.md). Solo observa bytes de fixtures sintéticos; no comprueba binarios reales ni autoriza despacho.

@@ -1,0 +1,536 @@
+{
+  "schema_version": "1.0",
+  "contract": "P8-R7",
+  "cases": [
+    {
+      "name": "valid_synthetic_denied",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "invalidated_lifecycle",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_EXPIRED_OR_INVALIDATED_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALIDATED"
+    },
+    {
+      "name": "different_stage",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"test\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "upper_stage",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"DEV\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "unknown_kind",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"p8_execute\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "unknown_version",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"2.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "unknown_profile",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T99-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNKNOWN_PROFILE"
+    },
+    {
+      "name": "wrong_case_family",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"FTP-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_IDENTITY_MISMATCH"
+    },
+    {
+      "name": "wrong_case_t",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T02-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_IDENTITY_MISMATCH"
+    },
+    {
+      "name": "invalid_case",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_IDENTITY_MISMATCH"
+    },
+    {
+      "name": "invalid_case_long_s",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S12345-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_IDENTITY_MISMATCH"
+    },
+    {
+      "name": "case_dot_dot",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-../01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_IDENTITY_MISMATCH"
+    },
+    {
+      "name": "case_unicode",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-\\u00e9\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_IDENTITY_MISMATCH"
+    },
+    {
+      "name": "uppercase_digest",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_DIGEST_INVALID"
+    },
+    {
+      "name": "short_digest",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_DIGEST_INVALID"
+    },
+    {
+      "name": "digest_nonhex",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_DIGEST_INVALID"
+    },
+    {
+      "name": "r6_short_digest",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"000000000000000000000000000000000000000000000000000000000000000\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_DIGEST_INVALID"
+    },
+    {
+      "name": "snapshot_mismatch",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_IDENTITY_MISMATCH"
+    },
+    {
+      "name": "zero_epoch",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":0,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_REVISION_MISMATCH"
+    },
+    {
+      "name": "negative_epoch",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":-1,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "epoch_too_high",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":2147483648,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_REVISION_MISMATCH"
+    },
+    {
+      "name": "epoch_stale",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":3,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_REVISION_MISMATCH"
+    },
+    {
+      "name": "zero_revision",
+      "payload": "{\"authorization_revision\":0,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_REVISION_MISMATCH"
+    },
+    {
+      "name": "revision_too_high",
+      "payload": "{\"authorization_revision\":2147483648,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_REVISION_MISMATCH"
+    },
+    {
+      "name": "revision_stale",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":1,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_REVISION_MISMATCH"
+    },
+    {
+      "name": "material_status_wrong",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"R5_VERIFIED\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_CLAIM"
+    },
+    {
+      "name": "lifecycle_status_wrong",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"APPROVED\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_CLAIM"
+    },
+    {
+      "name": "r5_claim_dispatch",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":true,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_AUTHORITY_CLAIM"
+    },
+    {
+      "name": "r5_claim_authority",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":true,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_AUTHORITY_CLAIM"
+    },
+    {
+      "name": "r6_claim_dispatch",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":true,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_AUTHORITY_CLAIM"
+    },
+    {
+      "name": "r6_claim_authority",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":true,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_AUTHORITY_CLAIM"
+    },
+    {
+      "name": "claim_issuer_verified",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":true,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_AUTHORITY_CLAIM"
+    },
+    {
+      "name": "claim_revocation_verified",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":true,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_AUTHORITY_CLAIM"
+    },
+    {
+      "name": "request_dispatch",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":true,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_DISPATCH_REQUESTED"
+    },
+    {
+      "name": "request_dispatch_numeric",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":1,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "case_null",
+      "payload": "{\"authorization_revision\":2,\"case_id\":null,\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "epoch_bool",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":true,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "epoch_float",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":1.0,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "revision_text",
+      "payload": "{\"authorization_revision\":\"4\",\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "digest_array",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":[],\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "profile_object",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":{},\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "material_status_bool",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":false,\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "r6_status_null",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":null,\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "missing_schema_version",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "missing_message_type",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "missing_stage",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "missing_case_id",
+      "payload": "{\"authorization_revision\":2,\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "missing_profile_id",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "missing_snapshot_sha256",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "missing_r6_snapshot_sha256",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "missing_material_epoch",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "missing_r6_material_epoch",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "missing_authorization_revision",
+      "payload": "{\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "missing_r6_authorization_revision",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "missing_r5_status",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "missing_r6_status",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "missing_r5_dispatch_allowed",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "missing_r5_case_authorized",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "missing_r6_dispatch_allowed",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "missing_r6_operational_authorization",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "missing_private_issuer_verified",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "missing_revocation_verified",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "missing_dispatch_requested",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "extra_field",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"extra\":\"value\",\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "array_root",
+      "payload": "[]",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "null_root",
+      "payload": "null",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "empty_object",
+      "payload": "{}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "empty_bytes",
+      "payload": "",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "trailing_junk",
+      "payload": "{} trailing",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "broken_json",
+      "payload": "{\"x\":",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "nan_json",
+      "payload": "{\"schema_version\": \"1.0\", \"message_type\": \"P8_R7_DIAGNOSTIC_PROPOSAL\", \"stage\": \"dev\", \"case_id\": \"SSH-T01-S01-01\", \"profile_id\": \"SSH-T01-BASE\", \"snapshot_sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\", \"r6_snapshot_sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\", \"material_epoch\": NaN, \"r6_material_epoch\": 4, \"authorization_revision\": 2, \"r6_authorization_revision\": 2, \"r5_status\": \"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\", \"r6_status\": \"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\", \"r5_dispatch_allowed\": false, \"r5_case_authorized\": false, \"r6_dispatch_allowed\": false, \"r6_operational_authorization\": false, \"private_issuer_verified\": false, \"revocation_verified\": false, \"dispatch_requested\": false}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "infinity_json",
+      "payload": "{\"schema_version\": \"1.0\", \"message_type\": \"P8_R7_DIAGNOSTIC_PROPOSAL\", \"stage\": \"dev\", \"case_id\": \"SSH-T01-S01-01\", \"profile_id\": \"SSH-T01-BASE\", \"snapshot_sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\", \"r6_snapshot_sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\", \"material_epoch\": Infinity, \"r6_material_epoch\": 4, \"authorization_revision\": 2, \"r6_authorization_revision\": 2, \"r5_status\": \"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\", \"r6_status\": \"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\", \"r5_dispatch_allowed\": false, \"r5_case_authorized\": false, \"r6_dispatch_allowed\": false, \"r6_operational_authorization\": false, \"private_issuer_verified\": false, \"revocation_verified\": false, \"dispatch_requested\": false}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "duplicate_known_field",
+      "payload": "{\"schema_version\":\"1.0\",\"schema_version\":\"2.0\"}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "duplicate_nested_field",
+      "payload": "{\"extra\":{\"x\":1,\"x\":2}}",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "very_large",
+      "payload": "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ",
+      "reason_code": "P8_R7_INVALID_SCHEMA"
+    },
+    {
+      "name": "profile_FTP-T01-BASE",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"FTP-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"FTP-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_FTP-T02-CONTROL",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"FTP-T02-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"FTP-T02-CONTROL\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_FTP-T02-DATA",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"FTP-T02-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"FTP-T02-DATA\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_FTP-T03-BASE",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"FTP-T03-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"FTP-T03-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_FTP-T04-BASE",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"FTP-T04-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"FTP-T04-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_FTP-T05-BASE",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"FTP-T05-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"FTP-T05-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_FTP-T06-BASE",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"FTP-T06-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"FTP-T06-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_FTP-T07-BASE",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"FTP-T07-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"FTP-T07-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_FTP-T08-READ",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"FTP-T08-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"FTP-T08-READ\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_FTP-T08-WRITE",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"FTP-T08-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"FTP-T08-WRITE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_SMB-T01-BASE",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SMB-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SMB-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_SMB-T02-BASE",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SMB-T02-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SMB-T02-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_SMB-T03-ENCRYPTION",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SMB-T03-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SMB-T03-ENCRYPTION\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_SMB-T03-SIGNING",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SMB-T03-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SMB-T03-SIGNING\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_SMB-T04-BASE",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SMB-T04-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SMB-T04-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_SMB-T05-BASE",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SMB-T05-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SMB-T05-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_SMB-T06-BASE",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SMB-T06-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SMB-T06-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_SMB-T07-BASE",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SMB-T07-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SMB-T07-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_SMB-T08-BASE",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SMB-T08-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SMB-T08-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_SMB-T09-READ",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SMB-T09-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SMB-T09-READ\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_SMB-T09-WRITE",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SMB-T09-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SMB-T09-WRITE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_SSH-T01-BASE",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_SSH-T02-BASE",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T02-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T02-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_SSH-T03-BASE",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T03-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T03-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_SSH-T04-BASE",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T04-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T04-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_SSH-T05-BASE",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T05-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T05-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_SSH-T06-BASE",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T06-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T06-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_SSH-T07-BASE",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T07-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T07-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "profile_SSH-T08-BASE",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T08-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T08-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"dev\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "stage_pilot",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"pilot\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    },
+    {
+      "name": "stage_exp",
+      "payload": "{\"authorization_revision\":2,\"case_id\":\"SSH-T01-S01-01\",\"dispatch_requested\":false,\"material_epoch\":4,\"message_type\":\"P8_R7_DIAGNOSTIC_PROPOSAL\",\"private_issuer_verified\":false,\"profile_id\":\"SSH-T01-BASE\",\"r5_case_authorized\":false,\"r5_dispatch_allowed\":false,\"r5_status\":\"SYNTHETIC_MATERIAL_OBSERVATIONS_ONLY_DENY_ALL\",\"r6_authorization_revision\":2,\"r6_dispatch_allowed\":false,\"r6_material_epoch\":4,\"r6_operational_authorization\":false,\"r6_snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"r6_status\":\"SYNTHETIC_PRECONDITIONS_CONSISTENT_DENY_ALL\",\"revocation_verified\":false,\"schema_version\":\"1.0\",\"snapshot_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"stage\":\"exp\"}",
+      "reason_code": "P8_R7_UNVERIFIED_AUTHORITY"
+    }
+  ]
+}

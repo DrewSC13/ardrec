@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "increment": "P8-R7-SYNTHETIC-PYTHON-RUST-DENIAL-DIAGNOSTIC",
+  "roadmap_step": 8,
+  "base_commit": "bd3500bfc7310abdbaf9bb1e57042e1c526f25d7",
+  "thesis_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "source_sections": ["3.7.5", "3.9.2"],
+  "upstream_r6_validator_git_blob": "0a69de85516da5d2f3b9d21db8553cd8d9729a40",
+  "upstream_r6_contract_git_blob": "9e9c02fc6e53d2f9045f7d28ea39ebcf67aca448",
+  "status": "DENY_ONLY_SYNTHETIC_DIAGNOSTIC_INTEROPERABILITY",
+  "input_kind": "P8_R7_DIAGNOSTIC_PROPOSAL",
+  "output_kind": "P8_R7_DENIAL_RESULT",
+  "max_diagnostic_bytes": 4096,
+  "frozen_profile_slots": 29,
+  "shared_fixture_cases": 106,
+  "deny_reason_codes": [
+    "P8_R7_INVALID_SCHEMA", "P8_R7_UNKNOWN_PROFILE",
+    "P8_R7_IDENTITY_MISMATCH", "P8_R7_DIGEST_INVALID",
+    "P8_R7_REVISION_MISMATCH", "P8_R7_INVALID_CLAIM",
+    "P8_R7_AUTHORITY_CLAIM", "P8_R7_DISPATCH_REQUESTED",
+    "P8_R7_INVALIDATED", "P8_R7_UNVERIFIED_AUTHORITY"
+  ],
+  "trust_boundaries": [
+    "SYNTHETIC_R5_R6_CLAIMS_NOT_AUTHENTICATED",
+    "PUBLIC_CONTEXT_DIGEST_NOT_TRUSTED_PROVENANCE",
+    "NO_PRIVATE_ISSUER_OR_REVOCATION_AUTHORITY",
+    "NO_TRUSTED_CLOCK_OR_RUNTIME_REVOCATION_CHECK",
+    "NO_REAL_EXECUTABLE_PIN_OR_FD_HANDOFF",
+    "NO_SOCKET_DISPATCH_OR_OPERATIONAL_MESSAGE_EXTENSION",
+    "RUST_PROBE_CONSUMES_STDIN_TEST_BYTES_ONLY",
+    "ALL_OUTCOMES_DENY_WITH_ZERO_CAPABILITY"
+  ],
+  "real_cases": 0,
+  "approved_profiles": 0,
+  "operational_authorization": false,
+  "dispatch_allowed": false,
+  "physical_laboratory": "NOT_TOUCHED",
+  "open_findings": ["AL-06", "AL-07"],
+  "open_development_obligations": 7
+}
