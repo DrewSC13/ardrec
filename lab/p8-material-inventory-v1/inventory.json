@@ -1,0 +1,150 @@
+{
+  "schema_version": "1.0",
+  "roadmap_step": 8,
+  "increment": "P8-R9",
+  "base_commit": "9bb8e06c5d007cac82a102a97a87ab909bb35d7b",
+  "thesis_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0e744c46c72",
+  "record_kind": "OPERATOR_REPORTED_OFFLINE_IMAGE_OBSERVATION_NOT_AUTHORITY",
+  "image": {
+    "path": "/var/lib/libvirt/images/ardrec-dev-point4-v4/runner-base.qcow2",
+    "sha256": "fc9244fe29917f9bbeab09604a5845506dc3ab222b5c53648b5b90b2b1bf2103",
+    "format": "qcow2",
+    "virtual_size_bytes": 25769803776,
+    "backing_file": null,
+    "observed_mode": "0444",
+    "observed_link_count": 1,
+    "observed_file_bytes": 1345847296
+  },
+  "guest_package_matches": {
+    "openssh-client": "1:10.0p1-7+deb13u4",
+    "curl": "8.14.1-2+deb13u7",
+    "smbclient": "2:4.22.11+dfsg-0+deb13u1",
+    "python3": "3.13.5-1"
+  },
+  "binary_observations": [
+    {
+      "absolute_path": "/usr/bin/ssh",
+      "file_type": "REGULAR",
+      "sha256": "af3b04ec5653755032fc18ad02445e4e51170e75d8bac4265647d423caa9a83e",
+      "observed_file_bytes": 1047584,
+      "status": "IMAGE_BYTES_OBSERVED_NOT_LIVE_PIN"
+    },
+    {
+      "absolute_path": "/usr/bin/curl",
+      "file_type": "REGULAR",
+      "sha256": "52e9ceef96bd7c7dd4c2c9d8ac4c5f466c563dc0d16817720518b430da7a94b7",
+      "observed_file_bytes": 321880,
+      "status": "IMAGE_BYTES_OBSERVED_NOT_LIVE_PIN"
+    },
+    {
+      "absolute_path": "/usr/bin/smbclient",
+      "file_type": "REGULAR",
+      "sha256": "f7f2e53588c472c91fb7da57431aa76e014f746587a51dc4012ac93caaea14d6",
+      "observed_file_bytes": 154016,
+      "status": "IMAGE_BYTES_OBSERVED_NOT_LIVE_PIN"
+    },
+    {
+      "absolute_path": "/usr/bin/python3.13",
+      "file_type": "REGULAR",
+      "sha256": "889c603f0d17cb54060951bcf4c4f9b8c9ebd9e52b392c70209bbb9755d797d9",
+      "observed_file_bytes": 6832784,
+      "status": "IMAGE_BYTES_OBSERVED_NOT_LIVE_PIN"
+    },
+    {
+      "absolute_path": "/usr/bin/ssh-keyscan",
+      "file_type": "REGULAR",
+      "sha256": "0a17e9f79c816a13c174747c8a7a89bf0f0c04ca9977181be59932762db596dc",
+      "observed_file_bytes": null,
+      "status": "IMAGE_BYTES_OBSERVED_NOT_LIVE_PIN"
+    },
+    {
+      "absolute_path": "/usr/bin/ssh-keygen",
+      "file_type": "REGULAR",
+      "sha256": "4a16f170f7c80d6643d3ffada36d396c9d7b1d63238a218628e37af38d6107c0",
+      "observed_file_bytes": null,
+      "status": "IMAGE_BYTES_OBSERVED_NOT_LIVE_PIN"
+    },
+    {
+      "absolute_path": "/usr/bin/ssh-add",
+      "file_type": "REGULAR",
+      "sha256": "64ae57eb0787b1c39af387edefb42456a8261830f1612fe77549a679067edfa0",
+      "observed_file_bytes": null,
+      "status": "IMAGE_BYTES_OBSERVED_NOT_LIVE_PIN"
+    },
+    {
+      "absolute_path": "/usr/bin/ssh-agent",
+      "file_type": "REGULAR",
+      "sha256": "2e5cdfc7a49f257608fcca315671f419878e26f719c88b7305710f314bfc8937",
+      "observed_file_bytes": null,
+      "status": "IMAGE_BYTES_OBSERVED_NOT_LIVE_PIN"
+    },
+    {
+      "absolute_path": "/usr/bin/sftp",
+      "file_type": "REGULAR",
+      "sha256": "82db87c4c00f6c817eb771b8a273bf81d35107f70c2bdb6c6af75a5f85c81e29",
+      "observed_file_bytes": null,
+      "status": "IMAGE_BYTES_OBSERVED_NOT_LIVE_PIN"
+    },
+    {
+      "absolute_path": "/usr/bin/scp",
+      "file_type": "REGULAR",
+      "sha256": "bde7f8e3badea00a86faa4522efcac312dafe6fae5bf3d9dcd6d5beb4de036e9",
+      "observed_file_bytes": null,
+      "status": "IMAGE_BYTES_OBSERVED_NOT_LIVE_PIN"
+    },
+    {
+      "absolute_path": "/usr/bin/openssl",
+      "file_type": "REGULAR",
+      "sha256": "acc10176d038aeb7b2a77d9ec972ac2985857a7191f7aecb7c54ef0e2c7e9549",
+      "observed_file_bytes": null,
+      "status": "IMAGE_BYTES_OBSERVED_NOT_LIVE_PIN"
+    },
+    {
+      "absolute_path": "/usr/bin/rpcclient",
+      "file_type": "REGULAR",
+      "sha256": "e6d9d49c3f75b7081e324ff22cc715718803a276cc78bb6d4126473257f703d8",
+      "observed_file_bytes": null,
+      "status": "IMAGE_BYTES_OBSERVED_NOT_LIVE_PIN"
+    },
+    {
+      "absolute_path": "/usr/bin/smbcacls",
+      "file_type": "REGULAR",
+      "sha256": "8e40dcdbbfff5e183ea5eb59f616dd458128fdad13ff8df37780edd6e5ca289e",
+      "observed_file_bytes": null,
+      "status": "IMAGE_BYTES_OBSERVED_NOT_LIVE_PIN"
+    },
+    {
+      "absolute_path": "/usr/bin/smbget",
+      "file_type": "REGULAR",
+      "sha256": "149c17357d8c5e949d4dfc21ed73d3eec8e24d8c04d34b1ca8627608705b01f9",
+      "observed_file_bytes": null,
+      "status": "IMAGE_BYTES_OBSERVED_NOT_LIVE_PIN"
+    },
+    {
+      "absolute_path": "/usr/bin/smbtar",
+      "file_type": "REGULAR",
+      "sha256": "8a875756574997f884bd8dbf25db1b4e005af23371441ffc864dfcf830253f0b",
+      "observed_file_bytes": null,
+      "status": "IMAGE_BYTES_OBSERVED_NOT_LIVE_PIN"
+    }
+  ],
+  "absent_paths": [
+    "/usr/bin/sshpass"
+  ],
+  "trusted_issuer_verified": false,
+  "private_authorization_verified": false,
+  "future_runtime_material_identity_verified": false,
+  "selected_profile_count": 0,
+  "authorized_case_count": 0,
+  "dispatch_allowed": false,
+  "experiments_performed": false,
+  "limitations": [
+    "PACKAGE_VERSION_MATCH_NOT_PER_BINARY_PROVENANCE",
+    "BASE_IMAGE_PIN_NOT_FUTURE_RUNTIME_PIN",
+    "GUESTFS_READ_ONLY_OBSERVATION_NOT_ATTESTED_RUNTIME",
+    "NO_PRIVATE_CASE_AUTHORITY",
+    "NO_PILOT_FROZEN_BUDGETS",
+    "NO_TYPED_ARGV_FROZEN",
+    "NO_TRUSTED_REVOCATION_REGISTER"
+  ]
+}
