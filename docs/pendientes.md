@@ -65,3 +65,9 @@
 **ES:** T1–T10 y guardas trivalentes se inspeccionan junto con el diagnóstico R7 sin producir transición, despacho o generación publicada. R4–R7 constan como integrados en el nuevo corte `docs/estado-vigente-p8-r8.md`; los cortes históricos no se alteran. P8, AL-06, AL-07 y siete obligaciones siguen abiertos.
 
 **EN:** A pure source-only T1–T10/state diagnostic review, with no execution, publication, acceptance or laboratory testing.
+
+## A1-R9 — núcleo de reglas deterministas / Pure deterministic rules
+
+**ES:** Se implementa un núcleo puro y parcial de expresiones tipadas, lógica trivalente y tablas de decisión. Validar la configuración A2, conectar fuentes reales y demostrar A1 completo continúa pendiente. P8 sigue abierto con 29 perfiles bloqueados, AL-06/AL-07 y siete obligaciones de desarrollo. No existe ejecución real ni experimento.
+
+**EN:** Partial A1 typed-rule primitives, not operational authority, full algorithm acceptance, physical test or experiment.

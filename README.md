@@ -1,5 +1,7 @@
 # ARDREC
 
+> **A1-R9 — núcleo propuesto, parcial y sin efectos:** [`docs/estado-vigente-p8-r9-a1.md`](docs/estado-vigente-p8-r9-a1.md). Reglas tipadas trivalentes y selección sintética; no implica A1 completo, autorización, despacho ni validación experimental.
+
 > **P8-R8 — propuesta source-only no integrada:** [`docs/estado-vigente-p8-r8.md`](docs/estado-vigente-p8-r8.md). Puente sintético de estado y diagnóstico P8, siempre `DENY_ALL`; no hay transiciones ni publicación operacional.
 
 > **Propuesta P8-R7 sin integrar:** [`docs/estado-vigente-p8-r7.md`](docs/estado-vigente-p8-r7.md). Diagnóstico sintético compatible Python/Rust, `DENY_ALL`; ninguna autoridad ni ejecución.

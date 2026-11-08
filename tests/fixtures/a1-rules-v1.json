@@ -1,0 +1,220 @@
+{
+  "schema_version": "1.0",
+  "contract": "A1-R9-PURE-RULES",
+  "base": {
+    "schema": {
+      "field_types": {
+        "allowed": "boolean",
+        "score": "integer",
+        "service": "string",
+        "tags": "string_set",
+        "optional": "boolean"
+      },
+      "optional_fields": [
+        "optional"
+      ]
+    },
+    "env": {
+      "allowed": true,
+      "score": 5,
+      "service": "SSH",
+      "tags": [
+        "SSH",
+        "FTP"
+      ]
+    },
+    "context": {
+      "record_id": "REG-1",
+      "service_id": "S01",
+      "case_id": "SSH-T01-S01-01",
+      "generation": 1,
+      "configuration_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "table": [
+      {
+        "rule_id": "R-ALLOW",
+        "condition": {
+          "op": "Y",
+          "args": [
+            {
+              "op": "FIELD",
+              "path": "allowed"
+            },
+            {
+              "op": "MAYOR_IGUAL",
+              "left": {
+                "op": "FIELD",
+                "path": "score"
+              },
+              "right": {
+                "op": "CONST",
+                "type": "integer",
+                "value": 5
+              }
+            }
+          ]
+        },
+        "outcome": "ELEGIBLE_SINTETICO",
+        "provenance": "SRC-ALLOW"
+      },
+      {
+        "rule_id": "R-REJECT",
+        "condition": {
+          "op": "NO",
+          "arg": {
+            "op": "FIELD",
+            "path": "allowed"
+          }
+        },
+        "outcome": "INELEGIBLE_SINTETICO",
+        "provenance": "SRC-REJECT"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "allow_equal_threshold",
+      "status": "DETERMINADO",
+      "rule_id": "R-ALLOW"
+    },
+    {
+      "name": "allow_above_threshold",
+      "env_overrides": {
+        "score": 99
+      },
+      "status": "DETERMINADO",
+      "rule_id": "R-ALLOW"
+    },
+    {
+      "name": "reject_disallowed",
+      "env_overrides": {
+        "allowed": false
+      },
+      "status": "DETERMINADO",
+      "rule_id": "R-REJECT"
+    },
+    {
+      "name": "reject_disallowed_zero_score",
+      "env_overrides": {
+        "allowed": false,
+        "score": 0
+      },
+      "status": "DETERMINADO",
+      "rule_id": "R-REJECT"
+    },
+    {
+      "name": "allow_no_match_low_score",
+      "env_overrides": {
+        "score": 4
+      },
+      "status": "ND",
+      "rule_id": null
+    },
+    {
+      "name": "allow_no_match_negative_score",
+      "env_overrides": {
+        "score": -10
+      },
+      "status": "ND",
+      "rule_id": null
+    },
+    {
+      "name": "nd_optional_and_match",
+      "additional_rule": {
+        "rule_id": "R-OPTIONAL",
+        "condition": {
+          "op": "FIELD",
+          "path": "optional"
+        },
+        "outcome": "OPT",
+        "provenance": "SRC-OPT"
+      },
+      "status": "ND",
+      "rule_id": null
+    },
+    {
+      "name": "nd_optional_and_zero",
+      "env_overrides": {
+        "score": 1
+      },
+      "additional_rule": {
+        "rule_id": "R-OPTIONAL",
+        "condition": {
+          "op": "FIELD",
+          "path": "optional"
+        },
+        "outcome": "OPT",
+        "provenance": "SRC-OPT"
+      },
+      "status": "ND",
+      "rule_id": null
+    },
+    {
+      "name": "optional_false_no_disturb",
+      "env_overrides": {
+        "optional": false
+      },
+      "additional_rule": {
+        "rule_id": "R-OPTIONAL",
+        "condition": {
+          "op": "FIELD",
+          "path": "optional"
+        },
+        "outcome": "OPT",
+        "provenance": "SRC-OPT"
+      },
+      "status": "DETERMINADO",
+      "rule_id": "R-ALLOW"
+    },
+    {
+      "name": "optional_true_ambiguous",
+      "env_overrides": {
+        "optional": true
+      },
+      "additional_rule": {
+        "rule_id": "R-OPTIONAL",
+        "condition": {
+          "op": "FIELD",
+          "path": "optional"
+        },
+        "outcome": "OPT",
+        "provenance": "SRC-OPT"
+      },
+      "error": "RULES_AMBIGUOUS"
+    },
+    {
+      "name": "duplicate_true_row",
+      "additional_rule": {
+        "rule_id": "R-ALSO",
+        "condition": {
+          "op": "FIELD",
+          "path": "allowed"
+        },
+        "outcome": "OTHER",
+        "provenance": "SRC-ALSO"
+      },
+      "error": "RULES_AMBIGUOUS"
+    },
+    {
+      "name": "extra_unknown_environment",
+      "env_overrides": {
+        "shell": "ls"
+      },
+      "error": "ENVIRONMENT_INVALID"
+    },
+    {
+      "name": "bool_score_invalid",
+      "env_overrides": {
+        "score": true
+      },
+      "error": "VALUE_TYPE_INVALID"
+    },
+    {
+      "name": "missing_required",
+      "missing_fields": [
+        "allowed"
+      ],
+      "error": "FIELD_REQUIRED_ABSENT"
+    }
+  ]
+}

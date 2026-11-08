@@ -49,6 +49,41 @@ R8_TEST_IDS = frozenset({
 })
 
 
+R9_TEST_MODULE = 'test_rules_core'
+R9_TEST_IDS = frozenset({
+    'test_rules_core.A1RulesCoreTests.test_all_fixture_scenarios_expected',
+    'test_rules_core.A1RulesCoreTests.test_ambiguous_rows_explicit_error',
+    'test_rules_core.A1RulesCoreTests.test_boolean_constants_exact_and_truth_enum',
+    'test_rules_core.A1RulesCoreTests.test_comparison_nd_propagation',
+    'test_rules_core.A1RulesCoreTests.test_comparison_type_mismatch_rejected',
+    'test_rules_core.A1RulesCoreTests.test_context_generation_exact_and_frozen',
+    'test_rules_core.A1RulesCoreTests.test_decide_indeterminate_overrides_one_true',
+    'test_rules_core.A1RulesCoreTests.test_decide_unique_row_and_provenance',
+    'test_rules_core.A1RulesCoreTests.test_decide_zero_matches_is_nd',
+    'test_rules_core.A1RulesCoreTests.test_duplicate_rule_id_rejected',
+    'test_rules_core.A1RulesCoreTests.test_environment_unknown_field_rejected',
+    'test_rules_core.A1RulesCoreTests.test_expression_cycle_rejected',
+    'test_rules_core.A1RulesCoreTests.test_expression_depth_and_size_bounded',
+    'test_rules_core.A1RulesCoreTests.test_field_allowlist_no_object_traversal',
+    'test_rules_core.A1RulesCoreTests.test_input_unchanged_and_result_immutable',
+    'test_rules_core.A1RulesCoreTests.test_integer_and_string_boundaries',
+    'test_rules_core.A1RulesCoreTests.test_integer_comparisons_exact',
+    'test_rules_core.A1RulesCoreTests.test_invalid_row_after_match_is_not_ignored',
+    'test_rules_core.A1RulesCoreTests.test_kleene_and_full_truth_table',
+    'test_rules_core.A1RulesCoreTests.test_kleene_or_full_truth_table',
+    'test_rules_core.A1RulesCoreTests.test_mandatory_missing_fails',
+    'test_rules_core.A1RulesCoreTests.test_membership_and_subset',
+    'test_rules_core.A1RulesCoreTests.test_no_operational_import_or_eval',
+    'test_rules_core.A1RulesCoreTests.test_no_truthiness_or_implicit_int_bool',
+    'test_rules_core.A1RulesCoreTests.test_not_complete_truth_table',
+    'test_rules_core.A1RulesCoreTests.test_optional_missing_is_nd_not_false',
+    'test_rules_core.A1RulesCoreTests.test_schema_strict_optional_list',
+    'test_rules_core.A1RulesCoreTests.test_schema_unexpected_and_bad_fields',
+    'test_rules_core.A1RulesCoreTests.test_set_duplicate_and_wrong_type',
+    'test_rules_core.A1RulesCoreTests.test_unknown_operator_and_extra_key_rejected',
+})
+
+
 def require(ok, message):
     if not ok:
         raise ValueError(message)
@@ -197,10 +232,15 @@ def validate(root=ROOT, registry=None, evidence=None, *, discovered=None, check_
     )
     require(r8_observed == sorted(R8_TEST_IDS),
             'Metodos P8-R8 ausentes, nuevos o renombrados')
+    r9_observed = sorted(
+        x for x in observed if x.startswith(R9_TEST_MODULE + '.')
+    )
+    require(r9_observed == sorted(R9_TEST_IDS),
+            'Metodos A1-R9 ausentes, nuevos o renombrados')
     baseline = sorted(
         x for x in observed
         if not x.startswith((TOOL_TEST + '.', R7_TEST_MODULE + '.',
-                             R8_TEST_MODULE + '.'))
+                             R8_TEST_MODULE + '.', R9_TEST_MODULE + '.'))
     )
     declared = sorted(c['unittest_id'] for c in checks.values() if c['kind'] == 'PYTHON_UNIT')
     require(baseline == declared and len(baseline) == 405, 'Métodos Python ausentes, nuevos o renombrados')

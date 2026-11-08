@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "increment": "P8-R9-A1-PURE-TYPED-RULE-EVALUATOR",
+  "base_commit": "9bb8e06c5d007cac82a102a97a87ab909bb35d7b",
+  "thesis_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "source_sections": ["3.3.2", "3.6.1"],
+  "source_figures": ["3.4", "3.5"],
+  "algorithm": "A1",
+  "implemented_scope": "PARTIAL_PURE_RULES_ONLY",
+  "algorithm_A1_complete": false,
+  "algorithm_A2_complete": false,
+  "full_system_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN",
+  "verification": "PROPOSED_SOURCE_ONLY_PENDING_LOCAL_AND_CI",
+  "implementation": ["src/ardrec/rules/core.py", "src/ardrec/rules/__init__.py"],
+  "test_sources": ["tests/unit/test_rules_core.py", "tests/fixtures/a1-rules-v1.json", "scripts/verificar_a1_rules_core.py"],
+  "operational_authority": false,
+  "dispatch_allowed": false,
+  "real_cases": 0,
+  "p8_frozen_profiles": 29,
+  "findings_open": ["AL-06", "AL-07"],
+  "development_obligations_open": 7
+}
