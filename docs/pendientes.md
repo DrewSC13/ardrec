@@ -29,3 +29,9 @@
   attempt_status_response versus attempt_status_result.
 - Implement and test A1–A10.
 - Prepare and verify the laboratory and experimental protocol.
+
+## Estado posterior comprobado / Later verified status
+
+**ES:** La lista precedente registra pendientes de la línea base original, no el inventario actual. Consultar `docs/estado-vigente-p8-r3.md` y `lab/p8-readiness-v1/README.md`. P8 continúa bloqueado; AL-06, AL-07 y siete obligaciones de desarrollo siguen abiertos. El incremento R3 no acredita herramientas ni permisos.
+
+**EN:** The preceding bootstrap list is historical. See the current-status and deny-only readiness documents. No operational authorization or dispatch is granted by P8 R3.

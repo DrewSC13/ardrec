@@ -1,5 +1,7 @@
 # ARDREC
 
+> **Estado vigente (8 de noviembre de 2026):** consultar [`docs/estado-vigente-p8-r3.md`](docs/estado-vigente-p8-r3.md). La descripción de arranque que sigue se conserva como histórica. P8 tiene 29 perfiles no vinculados y no autoriza despacho.
+
 ## Español
 
 Algoritmo de Recalibración Dinámica del Riesgo de Exposición y Compromiso.
