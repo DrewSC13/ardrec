@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "roadmap_step": 8,
+  "increment": "P8-R4-SYNTHETIC-PER-CASE-BINDING-CONTRACT",
+  "status": "SOURCE_PROPOSAL_NOT_INTEGRATED",
+  "base_commit": "5855ac8956b1672c698919e3c8c87b2cfa1c1823",
+  "thesis_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "source_sections": ["3.7.5", "3.9.2"],
+  "p7_sha256": "5161cdfc3c88281adbf21b839b40b12f92298d5a58f650ad761c0c6dbe16f88e",
+  "p8_sha256": "fe0fae200ac031622d27020b77d38bd18a22e3ffaa0dd0f57ec4e9f01f284ce3",
+  "scope": {
+    "family_definitions": 25,
+    "profile_slots": 29,
+    "real_registered_scenarios": 0,
+    "real_derived_cases": 0,
+    "approved_execution_profiles": 0,
+    "dispatch_enabled": false,
+    "physical_laboratory": "NOT_TOUCHED"
+  },
+  "verification": {
+    "candidate_oracles": "PASS_68_SYNTHETIC_PACKAGING_CONTAINER_ONLY",
+    "original_contract_baseline": "NOT_REEXECUTED_IN_USER_REPO_YET",
+    "new_pr_ci": "NOT_RUN",
+    "new_main_ci": "NOT_APPLICABLE_UNMERGED"
+  },
+  "boundaries": [
+    "NO_ISSUER_AUTHENTICATION",
+    "NO_BINARY_BYTE_VERIFICATION",
+    "NO_RUNTIME_DISPATCH",
+    "NO_PRIVATE_EVIDENCE_COMMITTED",
+    "NO_PILOT_FREEZE",
+    "NO_EXPERIMENTAL_ACCEPTANCE"
+  ],
+  "open_findings": ["AL-06", "AL-07"],
+  "open_development_obligations": 7
+}

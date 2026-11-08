@@ -1,5 +1,7 @@
 # ARDREC
 
+> **Propuesta P8-R4 pendiente de integración:** ver [`docs/estado-vigente-p8-r4.md`](docs/estado-vigente-p8-r4.md) y [`lab/p8-binding-contract-v1/README.md`](lab/p8-binding-contract-v1/README.md). La nueva gramática es deny-only; no vincula herramientas ni autoriza despachos.
+
 > **Estado vigente (8 de noviembre de 2026):** consultar [`docs/estado-vigente-p8-r3.md`](docs/estado-vigente-p8-r3.md). La descripción de arranque que sigue se conserva como histórica. P8 tiene 29 perfiles no vinculados y no autoriza despacho.
 
 ## Español

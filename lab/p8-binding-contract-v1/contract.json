@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "increment": "P8-R4",
+  "roadmap_step": 8,
+  "base_commit": "5855ac8956b1672c698919e3c8c87b2cfa1c1823",
+  "thesis_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "p7_sha256": "5161cdfc3c88281adbf21b839b40b12f92298d5a58f650ad761c0c6dbe16f88e",
+  "p8_sha256": "fe0fae200ac031622d27020b77d38bd18a22e3ffaa0dd0f57ec4e9f01f284ce3",
+  "record_status": "CONTRACT_ONLY_UNBOUND_NO_AUTHORIZATION",
+  "source_sections": ["3.7.5", "3.9.2"],
+  "authoritative_case_sources": [
+    "lab/scenario-separation-v1/dev.json",
+    "lab/scenario-separation-v1/pilot.json",
+    "lab/scenario-separation-v1/exp.json",
+    "lab/operational-catalog-v1/catalog.json",
+    "lab/execution-profiles-v1/profiles.json"
+  ],
+  "pre_execution_fields": [
+    "approved_target_ref",
+    "argv_typed_vector",
+    "auxiliary_executables",
+    "capture_policy_ref",
+    "case_authorization_ref",
+    "environment_allowlist",
+    "executable_absolute_path",
+    "executable_sha256",
+    "executable_version",
+    "fixed_resource_budget",
+    "working_directory"
+  ],
+  "post_execution_field": "cleanup_receipt_ref",
+  "authorization_lifecycle": [
+    "PROPOSED_NOT_VERIFIED",
+    "PRIVATE_VERIFICATION_PENDING",
+    "CASE_APPROVAL_PENDING",
+    "EXPIRED_OR_REVOKED_BLOCKS",
+    "DISPATCH_NOT_AVAILABLE_IN_P8_R4"
+  ],
+  "trust_boundaries": [
+    "P6_P7_P8_VALIDATED_SOURCES_REQUIRED",
+    "PUBLIC_CANDIDATE_NEVER_PRIVATE_AUTHORITY",
+    "DECLARED_HASH_NOT_A_FILE_DIGEST_VERIFICATION",
+    "ISSUER_REVOCATION_AND_CLOCK_UNVERIFIED",
+    "AL07_RUNTIME_IDENTITY_AND_PERMISSIONS_PENDING",
+    "AL06_ANALYTIC_EVIDENCE_SEPARATE",
+    "PILOT_LIMITS_NOT_FROZEN",
+    "CLEANUP_RECEIPT_ONLY_POST_EXECUTION",
+    "NO_SHELL_NO_SPAWN_NO_NETWORK_NO_SECRET_MATERIALIZATION"
+  ],
+  "public_candidate_records": 0,
+  "approved_profiles": 0,
+  "dispatch_enabled": false,
+  "pending_findings": ["AL-06", "AL-07"],
+  "pending_development_obligations": 7
+}
