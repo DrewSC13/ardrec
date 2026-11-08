@@ -103,6 +103,11 @@ jobs:
       - name: Probar ciclo de validez P8 R6 / Test P8 R6 synthetic lifecycle
         run: python3 -m unittest discover -s lab/tests -p test_p8_lifecycle.py -v
 
+      - name: Probar diagnóstico P8 R7 / Test P8 R7 deny-only diagnostics
+        run: python3 -m unittest discover -s tests/unit -p test_p8_diagnostic.py -v
+      - name: Verificar vectores Python P8 R7 / Verify Python P8 R7 fixtures
+        run: python3 scripts/verificar_p8_diagnostico.py --python-only
+
       - name: Probar contratos y transporte / Test contracts and transport
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 
@@ -151,4 +156,9 @@ jobs:
 
       - name: Verificar identidad del par / Verify peer identity
         run: python3 scripts/verificar_identidad_par.py
+
+      - name: Comparar Python-Rust P8 R7 / Compare P8 R7 deny-only diagnostics
+        run: |
+          cargo build --locked --offline --package ardrec-executor --example p8_diagnostic_probe
+          python3 scripts/verificar_p8_diagnostico.py --probe target/debug/examples/p8_diagnostic_probe
 
