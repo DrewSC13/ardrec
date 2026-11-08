@@ -63,6 +63,25 @@ class CurrentTraceabilityTests(unittest.TestCase):
         self.registry['reverse_indexes']['evidence']['EV-MAIN26-CI']=[];self.reject()
     def test_baseline_evidence_not_new_execution(self):
         self.evidence['new_increment_execution']='PASS';self.reject()
+    def test_r7_inventory_is_exact(self):
+        observed = sorted(
+            x for x in self.inventory
+            if x.startswith(checker.R7_TEST_MODULE + '.')
+        )
+        self.assertEqual(observed, sorted(checker.R7_TEST_IDS))
+
+    def test_missing_r7_method_is_rejected(self):
+        missing = 'test_p8_diagnostic.P8DiagnosticTests.test_shared_vectors_exact_codes'
+        self.inventory = [x for x in self.inventory if x != missing]
+        self.reject()
+
+    def test_unregistered_r7_method_is_rejected(self):
+        self.inventory = [
+            *self.inventory,
+            'test_p8_diagnostic.P8DiagnosticTests.test_unregistered_method'
+        ]
+        self.reject()
+
     def test_rendered_document_matches_registry(self):
         self.assertEqual((ROOT/checker.NOTE).read_text(),checker.render(self.registry))
 

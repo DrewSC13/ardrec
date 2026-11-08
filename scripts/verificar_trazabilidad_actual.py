@@ -13,6 +13,18 @@ REGISTRY = 'docs/traceability/development-v2.json'
 EVIDENCE = 'docs/traceability/evidence-v2.json'
 NOTE = 'docs/traceability/development-v2.md'
 TOOL_TEST = 'test_traceability_current'
+R7_TEST_MODULE = 'test_p8_diagnostic'
+R7_TEST_IDS = frozenset({
+    'test_p8_diagnostic.P8DiagnosticTests.test_all_29_profiles',
+    'test_p8_diagnostic.P8DiagnosticTests.test_byte_limits_and_types',
+    'test_p8_diagnostic.P8DiagnosticTests.test_documented_contract_and_cross_language_codes',
+    'test_p8_diagnostic.P8DiagnosticTests.test_duplicate_full_schema',
+    'test_p8_diagnostic.P8DiagnosticTests.test_non_utf8_and_surrogate',
+    'test_p8_diagnostic.P8DiagnosticTests.test_nonfinite_values_rejected',
+    'test_p8_diagnostic.P8DiagnosticTests.test_shared_vectors_exact_codes',
+    'test_p8_diagnostic.P8DiagnosticTests.test_source_no_operational_imports',
+    'test_p8_diagnostic.P8DiagnosticTests.test_unchanged_input',
+})
 # Reviewed requirement/component associations; update through an explicit source review.
 COMPONENT_REQUIREMENTS = {'NUMERIC': ['AC-02', 'AC-15'], 'PROTOCOL': ['AC-02', 'AC-04'], 'TRANSPORT': ['AC-03'], 'STATE': ['AC-01', 'AC-10', 'AC-11', 'AC-18', 'AC-19', 'AC-22', 'AC-24'], 'RECONCILIATION': ['AC-05', 'AC-10', 'AC-11', 'AC-21', 'AC-27'], 'PERSISTENCE': ['AC-20', 'AC-21', 'AC-27'], 'JOURNAL': ['AC-05', 'AC-10', 'AC-11', 'AC-21'], 'SOCKET_RECONCILIATION': ['AC-03', 'AC-05', 'AC-11', 'AC-21'], 'MAGNITUDES': ['AC-02', 'AC-15', 'AC-16', 'AC-20'], 'TEMPORAL': ['AC-04', 'AC-10', 'AC-11', 'AC-21'], 'PROJECTION': ['AC-02', 'AC-07', 'AC-15', 'AC-16', 'AC-17', 'AC-19'], 'REFERENCES': ['AC-04', 'AC-14', 'AC-19'], 'ARCHIVE': ['AC-14', 'AC-20', 'AC-21', 'AC-27'], 'ANCHOR': ['AC-07', 'AC-19', 'AC-20', 'AC-21', 'AC-27'], 'COUNTERS': ['AC-10', 'AC-19', 'AC-20', 'AC-21'], 'PEER': ['AC-01', 'AC-03'], 'REFERENCE_AUDIT': ['AC-06', 'AC-07', 'AC-09', 'AC-13', 'AC-14', 'AC-15', 'AC-16'], 'TRACEABILITY_AUDIT': ['AC-27']}
 
@@ -153,7 +165,17 @@ def validate(root=ROOT, registry=None, evidence=None, *, discovered=None, check_
     required_sources |= {'docs/traceability/development-v1.json','docs/traceability/evidence-v1.json','docs/traceability/alignment-current-v1.json','docs/traceability/point-1-closure-v1.json','docs/acceptance/system-v1.json','docs/acceptance/current-coverage-v1.json','docs/acceptance/current-coverage-v2.json','tests/fixtures/model-reference-v1.json'}
     require(set(sources) == required_sources, 'Procedencia incompleta o ajena')
     observed = discover(root) if discovered is None else discovered
-    baseline = sorted(x for x in observed if not x.startswith(TOOL_TEST + '.'))
+    r7_observed = sorted(
+        x for x in observed if x.startswith(R7_TEST_MODULE + '.')
+    )
+    require(
+        r7_observed == sorted(R7_TEST_IDS),
+        'Metodos P8-R7 ausentes, nuevos o renombrados'
+    )
+    baseline = sorted(
+        x for x in observed
+        if not x.startswith((TOOL_TEST + '.', R7_TEST_MODULE + '.'))
+    )
     declared = sorted(c['unittest_id'] for c in checks.values() if c['kind'] == 'PYTHON_UNIT')
     require(baseline == declared and len(baseline) == 405, 'Métodos Python ausentes, nuevos o renombrados')
     rust_observed = {}
