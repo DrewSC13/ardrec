@@ -97,6 +97,12 @@ jobs:
       - name: Probar observación de materiales P8 R5 / Test P8 R5 synthetic fd material audit
         run: python3 -m unittest discover -s lab/tests -p test_p8_material_attestation.py -v
 
+      - name: Verificar P8 R6 sin autorización / Verify deny-only P8 R6 lifecycle
+        run: python3 lab/verify_p8_lifecycle.py
+
+      - name: Probar ciclo de validez P8 R6 / Test P8 R6 synthetic lifecycle
+        run: python3 -m unittest discover -s lab/tests -p test_p8_lifecycle.py -v
+
       - name: Probar contratos y transporte / Test contracts and transport
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 

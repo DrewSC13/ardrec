@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "increment": "P8-R6-SYNTHETIC-LIFECYCLE-INVALIDATION",
+  "roadmap_step": 8,
+  "base_commit": "61f978a8cda7315dd09f66f4e3d63d99a6d7ee4c",
+  "thesis_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "source_sections": [
+    "3.7.5",
+    "3.9.2"
+  ],
+  "r5_validator_sha256": "3355c54171c80f4f6f54124996b76c7263240dbd559d2a95ba721fad7e69aa3e",
+  "r5_contract_sha256": "908e8ad7ae6c1c05ac9edbba641ada72619578d21996e3c279bde41bf9579693",
+  "status": "SYNTHETIC_TEMPORAL_REVOCATION_DENY_ALL",
+  "input_scope": "IN_MEMORY_SYNTHETIC_RECORDS_ONLY",
+  "max_events": 64,
+  "max_validity_seconds": 86400,
+  "max_materials": 13,
+  "invalidation_kinds": [
+    "AUTHORIZATION_EXPIRED",
+    "AUTHORIZATION_REVOKED",
+    "AUTHORIZATION_SUPERSEDED",
+    "BUDGET_CHANGED",
+    "CLEANUP_CHANGED",
+    "CLOCK_ROLLBACK",
+    "EVIDENCE_INVALIDATED",
+    "ISSUER_CHANGED",
+    "MATERIAL_CHANGED",
+    "POLICY_CHANGED",
+    "PROFILE_CHANGED",
+    "SCENARIO_CHANGED",
+    "TARGET_CHANGED"
+  ],
+  "trust_boundaries": [
+    "PUBLIC_CONTEXT_AND_EVENTS_UNTRUSTED",
+    "SYNTHETIC_CLOCK_NEVER_TRUSTED_TIME",
+    "EVENT_ABSENCE_NEVER_PROVES_NON_REVOCATION",
+    "R5_FD_BYTES_NOT_REAL_PROVENANCE",
+    "DETERMINISTIC_DOMAIN_SEPARATED_CONTEXT_FINGERPRINT",
+    "MUTATIONS_REQUIRE_NEW_CONTEXT_AND_EXTERNAL_REAUTHORIZATION",
+    "TERMINAL_INVALIDATIONS_CANNOT_BE_CLEARED_IN_THIS_MODEL",
+    "NO_SIGNED_ISSUER_OR_PRIVATE_REVOCATION_REGISTRY",
+    "NO_RUNTIME_TOCTOU_PROTECTION",
+    "NO_SPAWN_NO_NETWORK_NO_CREDENTIALS_NO_VM",
+    "NO_DISPATCH_OR_EXPERIMENT"
+  ],
+  "synthetic_cases": 0,
+  "real_cases": 0,
+  "private_authorities_verified": 0,
+  "real_artifacts_inspected": 0,
+  "dispatch_allowed": false,
+  "open_findings": [
+    "AL-06",
+    "AL-07"
+  ],
+  "open_development_obligations": 7
+}

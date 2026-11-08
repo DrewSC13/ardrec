@@ -47,3 +47,9 @@
 **ES:** Oráculo de observación de archivos de prueba temporales: SHA-256 sobre bytes leídos por FD, propiedad, permisos y estabilidad limitada; no certifica origen confiable, versiones reales, autorización, integridad futura ni aislamiento. P8, AL-06, AL-07 y siete obligaciones abiertas.
 
 **EN:** Synthetic test-owned FD byte observation only; no trusted real binary pins, no operational authority, no process dispatch and no experiment.
+
+## Propuesta adicional P8-R6 / Additional proposed P8-R6 source
+
+**ES:** Contrato puramente sintético de huella vinculada a caso y época, caducidad declarada, invalidación irreversible por eventos y rechazo de revocación no comprobada. Ninguna declaración pública prueba autoridad o reloj confiable. P8, AL-06, AL-07 y siete obligaciones de desarrollo siguen abiertos.
+
+**EN:** Deny-only synthetic temporal/revocation oracle; no trusted clock, issuer, revocation register, executable dispatch, physical tests or experiment.
