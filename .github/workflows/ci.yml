@@ -108,6 +108,12 @@ jobs:
       - name: Verificar vectores Python P8 R7 / Verify Python P8 R7 fixtures
         run: python3 scripts/verificar_p8_diagnostico.py --python-only
 
+      - name: Verificar frontera sintética P8 R8 / Verify P8 R8 state boundary
+        run: python3 scripts/verificar_p8_state_bridge.py
+
+      - name: Probar frontera de estado P8 R8 / Test P8 R8 state boundary
+        run: PYTHONPATH=src python3 -m unittest discover -s tests/unit -p test_p8_state_bridge.py -v
+
       - name: Probar contratos y transporte / Test contracts and transport
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 
