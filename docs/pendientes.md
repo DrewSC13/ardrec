@@ -41,3 +41,9 @@
 **ES:** `lab/p8-binding-contract-v1` verifica el contrato documentado para futuras propuestas por caso sin modificar registros P6/P7/P8. Ninguna propuesta real está aceptada y el alcance no acredita herramienta, presupuesto piloto ni autorización. P8, AL-06, AL-07 y siete obligaciones permanecen abiertos.
 
 **EN:** Synthetic P8-R4 per-case semantic contract only; no approval, execution, private artifact verification or experiment.
+
+## Propuesta adicional P8-R5 / Additional proposed P8-R5 source
+
+**ES:** Oráculo de observación de archivos de prueba temporales: SHA-256 sobre bytes leídos por FD, propiedad, permisos y estabilidad limitada; no certifica origen confiable, versiones reales, autorización, integridad futura ni aislamiento. P8, AL-06, AL-07 y siete obligaciones abiertas.
+
+**EN:** Synthetic test-owned FD byte observation only; no trusted real binary pins, no operational authority, no process dispatch and no experiment.
