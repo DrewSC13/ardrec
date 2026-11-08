@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "roadmap_step": 8,
+  "increment": "P8-R5-FD-TEST-FIXTURE-ATTESTATION",
+  "status": "SOURCE_ONLY_NOT_INTEGRATED",
+  "base_commit": "2030ef4fe24e3595cfb365853912548ff3294056",
+  "thesis_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "source_sections": ["3.7.5", "3.9.2"],
+  "r4_source_sha256": "7099a37f36096b0a50db08a88e34539b7269c9f6ee002b57f163cede0aed472a",
+  "scope": {
+    "profile_slots": 29,
+    "real_scenarios": 0,
+    "real_cases": 0,
+    "actual_tools_pinned": 0,
+    "private_approvals_verified": 0,
+    "dispatch_allowed": false,
+    "physical_laboratory": "NOT_TOUCHED"
+  },
+  "verification": {
+    "synthetic_fd_tests": "PENDING_CI",
+    "local_user_repo": "PENDING",
+    "remote_pr_ci": "NOT_RUN",
+    "postmerge_ci": "NOT_APPLICABLE_UNMERGED"
+  },
+  "open_findings": ["AL-06", "AL-07"],
+  "open_development_obligations": 7
+}

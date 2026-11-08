@@ -91,6 +91,12 @@ jobs:
       - name: Probar vinculaciones P8 R4 / Test P8 R4 semantic contracts
         run: python3 -m unittest discover -s lab/tests -p test_p8_binding_contract.py -v
 
+      - name: Verificar P8 R5 sin despacho / Verify deny-only P8 R5 material contract
+        run: python3 lab/verify_p8_material_attestation.py
+
+      - name: Probar observación de materiales P8 R5 / Test P8 R5 synthetic fd material audit
+        run: python3 -m unittest discover -s lab/tests -p test_p8_material_attestation.py -v
+
       - name: Probar contratos y transporte / Test contracts and transport
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 
