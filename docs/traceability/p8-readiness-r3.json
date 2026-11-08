@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "roadmap_step": 8,
+  "increment": "P8-R3-READINESS-AND-PREPOST-CLEANUP-SEPARATION",
+  "status": "LOCAL_PATCH_PREPARED_NOT_INTEGRATED",
+  "base_commit": "29b6fcf741ff7092730a49c6d2c6d5f53b9adabb",
+  "thesis_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "thesis_sections": ["3.7.5", "3.9.2"],
+  "p7_catalog_sha256": "5161cdfc3c88281adbf21b839b40b12f92298d5a58f650ad761c0c6dbe16f88e",
+  "p8_profiles_sha256": "fe0fae200ac031622d27020b77d38bd18a22e3ffaa0dd0f57ec4e9f01f284ce3",
+  "source_claims": {
+    "p7_families": 25,
+    "p8_profile_slots": 29,
+    "registered_scenarios": 0,
+    "real_cases": 0,
+    "materially_bound_profiles": 0,
+    "authorized_profiles": 0,
+    "dispatch_enabled": false
+  },
+  "verification": {
+    "local_test_scope": "SYNTHETIC_ADVERSARIAL_ONLY",
+    "baseline_verification_on_user_repo": "PENDING",
+    "head_ci": "PENDING",
+    "main_ci_for_new_increment": "NOT_APPLICABLE_UNMERGED",
+    "physical_laboratory": "NOT_TOUCHED"
+  },
+  "residual_findings": ["AL-06", "AL-07"],
+  "residual_development_obligations": 7,
+  "current_gate": "BLOCKED_UNBOUND_NO_EXECUTION",
+  "artifacts": [
+    "lab/verify_p8_readiness.py",
+    "lab/tests/test_p8_readiness.py",
+    "lab/p8-readiness-v1/README.md",
+    "docs/estado-vigente-p8-r3.md",
+    "docs/traceability/p8-readiness-r3.json"
+  ]
+}

@@ -79,6 +79,12 @@ jobs:
       - name: Probar perfiles P8 sin ejecución / Test non-executable P8 profile slots
         run: python3 -m unittest discover -s lab/tests -p test_execution_profiles.py -v
 
+      - name: Verificar P8 R3 denegado / Verify deny-only P8 R3 readiness
+        run: python3 lab/verify_p8_readiness.py --format markdown > /dev/null
+
+      - name: Probar preparación P8 R3 / Test P8 R3 readiness
+        run: python3 -m unittest discover -s lab/tests -p test_p8_readiness.py -v
+
       - name: Probar contratos y transporte / Test contracts and transport
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 
