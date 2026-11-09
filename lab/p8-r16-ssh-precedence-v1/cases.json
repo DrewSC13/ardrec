@@ -1,0 +1,1536 @@
+{
+  "approved_cli_grammars": 0,
+  "approved_cli_options": 0,
+  "authorized_cases": 0,
+  "authorized_profiles": 0,
+  "base_main_commit": "4453c98720ba9ee86bcdf9909b71829f15b05dfa",
+  "cases": [
+    {
+      "expected": {
+        "additive_identities": [
+          "REF_KEY_A"
+        ],
+        "first_wins": {
+          "batchmode": "yes",
+          "proxyjump": "none",
+          "stricthostkeychecking": "yes"
+        },
+        "status": "BLOCKED_MODEL_ONLY",
+        "violations": []
+      },
+      "id": "SYN_SPECIFIC_FIRST_FALLBACK",
+      "layers": {
+        "cli": [],
+        "system": [],
+        "user": [
+          {
+            "directives": [
+              {
+                "name": "StrictHostKeyChecking",
+                "value": "yes"
+              },
+              {
+                "name": "BatchMode",
+                "value": "yes"
+              },
+              {
+                "name": "CanonicalizeHostname",
+                "value": "no"
+              },
+              {
+                "name": "ProxyJump",
+                "value": "none"
+              },
+              {
+                "name": "ProxyCommand",
+                "value": "none"
+              },
+              {
+                "name": "KnownHostsCommand",
+                "value": "none"
+              },
+              {
+                "name": "ControlMaster",
+                "value": "no"
+              },
+              {
+                "name": "ControlPath",
+                "value": "none"
+              },
+              {
+                "name": "ControlPersist",
+                "value": "no"
+              },
+              {
+                "name": "UpdateHostKeys",
+                "value": "no"
+              },
+              {
+                "name": "CheckHostIP",
+                "value": "no"
+              },
+              {
+                "name": "VerifyHostKeyDNS",
+                "value": "no"
+              },
+              {
+                "name": "IdentitiesOnly",
+                "value": "yes"
+              },
+              {
+                "name": "IdentityAgent",
+                "value": "none"
+              },
+              {
+                "name": "AddKeysToAgent",
+                "value": "no"
+              },
+              {
+                "name": "PermitLocalCommand",
+                "value": "no"
+              },
+              {
+                "name": "ForwardAgent",
+                "value": "no"
+              },
+              {
+                "name": "SessionType",
+                "value": "none"
+              },
+              {
+                "name": "RequestTTY",
+                "value": "no"
+              },
+              {
+                "name": "ClearAllForwardings",
+                "value": "yes"
+              },
+              {
+                "name": "EscapeChar",
+                "value": "none"
+              },
+              {
+                "name": "ConnectionAttempts",
+                "value": "1"
+              },
+              {
+                "name": "ConnectTimeout",
+                "value": "15"
+              },
+              {
+                "name": "ServerAliveInterval",
+                "value": "0"
+              },
+              {
+                "name": "ServerAliveCountMax",
+                "value": "3"
+              },
+              {
+                "name": "HostName",
+                "value": "SIM_TGT_A"
+              },
+              {
+                "name": "Port",
+                "value": "2222"
+              },
+              {
+                "name": "UserKnownHostsFile",
+                "value": "REF_TRUST_A"
+              },
+              {
+                "name": "GlobalKnownHostsFile",
+                "value": "REF_TRUST_G"
+              },
+              {
+                "name": "IdentityFile",
+                "value": "REF_KEY_A"
+              }
+            ],
+            "patterns": [
+              "SIM_TGT_A"
+            ]
+          },
+          {
+            "directives": [
+              {
+                "name": "StrictHostKeyChecking",
+                "value": "no"
+              },
+              {
+                "name": "ProxyJump",
+                "value": "SIM_JUMP_A"
+              }
+            ],
+            "patterns": [
+              "*"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "expected": {
+        "additive_identities": [
+          "REF_KEY_A"
+        ],
+        "first_wins": {
+          "proxyjump": "none",
+          "stricthostkeychecking": "no"
+        },
+        "status": "BLOCKED_MODEL_ONLY",
+        "violations": [
+          "POLICY_MISMATCH:stricthostkeychecking"
+        ]
+      },
+      "id": "SYN_EARLY_GLOBAL_UNSAFE",
+      "layers": {
+        "cli": [],
+        "system": [],
+        "user": [
+          {
+            "directives": [
+              {
+                "name": "StrictHostKeyChecking",
+                "value": "no"
+              }
+            ],
+            "patterns": [
+              "*"
+            ]
+          },
+          {
+            "directives": [
+              {
+                "name": "StrictHostKeyChecking",
+                "value": "yes"
+              },
+              {
+                "name": "BatchMode",
+                "value": "yes"
+              },
+              {
+                "name": "CanonicalizeHostname",
+                "value": "no"
+              },
+              {
+                "name": "ProxyJump",
+                "value": "none"
+              },
+              {
+                "name": "ProxyCommand",
+                "value": "none"
+              },
+              {
+                "name": "KnownHostsCommand",
+                "value": "none"
+              },
+              {
+                "name": "ControlMaster",
+                "value": "no"
+              },
+              {
+                "name": "ControlPath",
+                "value": "none"
+              },
+              {
+                "name": "ControlPersist",
+                "value": "no"
+              },
+              {
+                "name": "UpdateHostKeys",
+                "value": "no"
+              },
+              {
+                "name": "CheckHostIP",
+                "value": "no"
+              },
+              {
+                "name": "VerifyHostKeyDNS",
+                "value": "no"
+              },
+              {
+                "name": "IdentitiesOnly",
+                "value": "yes"
+              },
+              {
+                "name": "IdentityAgent",
+                "value": "none"
+              },
+              {
+                "name": "AddKeysToAgent",
+                "value": "no"
+              },
+              {
+                "name": "PermitLocalCommand",
+                "value": "no"
+              },
+              {
+                "name": "ForwardAgent",
+                "value": "no"
+              },
+              {
+                "name": "SessionType",
+                "value": "none"
+              },
+              {
+                "name": "RequestTTY",
+                "value": "no"
+              },
+              {
+                "name": "ClearAllForwardings",
+                "value": "yes"
+              },
+              {
+                "name": "EscapeChar",
+                "value": "none"
+              },
+              {
+                "name": "ConnectionAttempts",
+                "value": "1"
+              },
+              {
+                "name": "ConnectTimeout",
+                "value": "15"
+              },
+              {
+                "name": "ServerAliveInterval",
+                "value": "0"
+              },
+              {
+                "name": "ServerAliveCountMax",
+                "value": "3"
+              },
+              {
+                "name": "HostName",
+                "value": "SIM_TGT_A"
+              },
+              {
+                "name": "Port",
+                "value": "2222"
+              },
+              {
+                "name": "UserKnownHostsFile",
+                "value": "REF_TRUST_A"
+              },
+              {
+                "name": "GlobalKnownHostsFile",
+                "value": "REF_TRUST_G"
+              },
+              {
+                "name": "IdentityFile",
+                "value": "REF_KEY_A"
+              }
+            ],
+            "patterns": [
+              "SIM_TGT_A"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "expected": {
+        "additive_identities": [
+          "REF_KEY_A",
+          "REF_KEY_B"
+        ],
+        "first_wins": {
+          "identitiesonly": "yes"
+        },
+        "status": "BLOCKED_MODEL_ONLY",
+        "violations": []
+      },
+      "id": "SYN_IDENTITY_ADDITIVE",
+      "layers": {
+        "cli": [],
+        "system": [],
+        "user": [
+          {
+            "directives": [
+              {
+                "name": "StrictHostKeyChecking",
+                "value": "yes"
+              },
+              {
+                "name": "BatchMode",
+                "value": "yes"
+              },
+              {
+                "name": "CanonicalizeHostname",
+                "value": "no"
+              },
+              {
+                "name": "ProxyJump",
+                "value": "none"
+              },
+              {
+                "name": "ProxyCommand",
+                "value": "none"
+              },
+              {
+                "name": "KnownHostsCommand",
+                "value": "none"
+              },
+              {
+                "name": "ControlMaster",
+                "value": "no"
+              },
+              {
+                "name": "ControlPath",
+                "value": "none"
+              },
+              {
+                "name": "ControlPersist",
+                "value": "no"
+              },
+              {
+                "name": "UpdateHostKeys",
+                "value": "no"
+              },
+              {
+                "name": "CheckHostIP",
+                "value": "no"
+              },
+              {
+                "name": "VerifyHostKeyDNS",
+                "value": "no"
+              },
+              {
+                "name": "IdentitiesOnly",
+                "value": "yes"
+              },
+              {
+                "name": "IdentityAgent",
+                "value": "none"
+              },
+              {
+                "name": "AddKeysToAgent",
+                "value": "no"
+              },
+              {
+                "name": "PermitLocalCommand",
+                "value": "no"
+              },
+              {
+                "name": "ForwardAgent",
+                "value": "no"
+              },
+              {
+                "name": "SessionType",
+                "value": "none"
+              },
+              {
+                "name": "RequestTTY",
+                "value": "no"
+              },
+              {
+                "name": "ClearAllForwardings",
+                "value": "yes"
+              },
+              {
+                "name": "EscapeChar",
+                "value": "none"
+              },
+              {
+                "name": "ConnectionAttempts",
+                "value": "1"
+              },
+              {
+                "name": "ConnectTimeout",
+                "value": "15"
+              },
+              {
+                "name": "ServerAliveInterval",
+                "value": "0"
+              },
+              {
+                "name": "ServerAliveCountMax",
+                "value": "3"
+              },
+              {
+                "name": "HostName",
+                "value": "SIM_TGT_A"
+              },
+              {
+                "name": "Port",
+                "value": "2222"
+              },
+              {
+                "name": "UserKnownHostsFile",
+                "value": "REF_TRUST_A"
+              },
+              {
+                "name": "GlobalKnownHostsFile",
+                "value": "REF_TRUST_G"
+              },
+              {
+                "name": "IdentityFile",
+                "value": "REF_KEY_A"
+              }
+            ],
+            "patterns": [
+              "SIM_TGT_A"
+            ]
+          },
+          {
+            "directives": [
+              {
+                "name": "IdentityFile",
+                "value": "REF_KEY_B"
+              }
+            ],
+            "patterns": [
+              "SIM_TGT_A"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "expected": {
+        "additive_identities": [
+          "REF_KEY_A"
+        ],
+        "first_wins": {
+          "stricthostkeychecking": "yes"
+        },
+        "status": "BLOCKED_MODEL_ONLY",
+        "violations": []
+      },
+      "id": "SYN_NEGATIVE_PATTERN",
+      "layers": {
+        "cli": [],
+        "system": [],
+        "user": [
+          {
+            "directives": [
+              {
+                "name": "StrictHostKeyChecking",
+                "value": "no"
+              }
+            ],
+            "patterns": [
+              "*",
+              "!SIM_TGT_A"
+            ]
+          },
+          {
+            "directives": [
+              {
+                "name": "StrictHostKeyChecking",
+                "value": "yes"
+              },
+              {
+                "name": "BatchMode",
+                "value": "yes"
+              },
+              {
+                "name": "CanonicalizeHostname",
+                "value": "no"
+              },
+              {
+                "name": "ProxyJump",
+                "value": "none"
+              },
+              {
+                "name": "ProxyCommand",
+                "value": "none"
+              },
+              {
+                "name": "KnownHostsCommand",
+                "value": "none"
+              },
+              {
+                "name": "ControlMaster",
+                "value": "no"
+              },
+              {
+                "name": "ControlPath",
+                "value": "none"
+              },
+              {
+                "name": "ControlPersist",
+                "value": "no"
+              },
+              {
+                "name": "UpdateHostKeys",
+                "value": "no"
+              },
+              {
+                "name": "CheckHostIP",
+                "value": "no"
+              },
+              {
+                "name": "VerifyHostKeyDNS",
+                "value": "no"
+              },
+              {
+                "name": "IdentitiesOnly",
+                "value": "yes"
+              },
+              {
+                "name": "IdentityAgent",
+                "value": "none"
+              },
+              {
+                "name": "AddKeysToAgent",
+                "value": "no"
+              },
+              {
+                "name": "PermitLocalCommand",
+                "value": "no"
+              },
+              {
+                "name": "ForwardAgent",
+                "value": "no"
+              },
+              {
+                "name": "SessionType",
+                "value": "none"
+              },
+              {
+                "name": "RequestTTY",
+                "value": "no"
+              },
+              {
+                "name": "ClearAllForwardings",
+                "value": "yes"
+              },
+              {
+                "name": "EscapeChar",
+                "value": "none"
+              },
+              {
+                "name": "ConnectionAttempts",
+                "value": "1"
+              },
+              {
+                "name": "ConnectTimeout",
+                "value": "15"
+              },
+              {
+                "name": "ServerAliveInterval",
+                "value": "0"
+              },
+              {
+                "name": "ServerAliveCountMax",
+                "value": "3"
+              },
+              {
+                "name": "HostName",
+                "value": "SIM_TGT_A"
+              },
+              {
+                "name": "Port",
+                "value": "2222"
+              },
+              {
+                "name": "UserKnownHostsFile",
+                "value": "REF_TRUST_A"
+              },
+              {
+                "name": "GlobalKnownHostsFile",
+                "value": "REF_TRUST_G"
+              },
+              {
+                "name": "IdentityFile",
+                "value": "REF_KEY_A"
+              }
+            ],
+            "patterns": [
+              "SIM_TGT_A"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "expected": {
+        "additive_identities": [
+          "REF_KEY_A"
+        ],
+        "first_wins": {
+          "batchmode": "yes"
+        },
+        "status": "BLOCKED_MODEL_ONLY",
+        "violations": [
+          "REQUIRED_EXPLICIT_MISSING:stricthostkeychecking"
+        ]
+      },
+      "id": "SYN_NO_HOSTKEY_POLICY",
+      "layers": {
+        "cli": [],
+        "system": [],
+        "user": [
+          {
+            "directives": [
+              {
+                "name": "BatchMode",
+                "value": "yes"
+              },
+              {
+                "name": "CanonicalizeHostname",
+                "value": "no"
+              },
+              {
+                "name": "ProxyJump",
+                "value": "none"
+              },
+              {
+                "name": "ProxyCommand",
+                "value": "none"
+              },
+              {
+                "name": "KnownHostsCommand",
+                "value": "none"
+              },
+              {
+                "name": "ControlMaster",
+                "value": "no"
+              },
+              {
+                "name": "ControlPath",
+                "value": "none"
+              },
+              {
+                "name": "ControlPersist",
+                "value": "no"
+              },
+              {
+                "name": "UpdateHostKeys",
+                "value": "no"
+              },
+              {
+                "name": "CheckHostIP",
+                "value": "no"
+              },
+              {
+                "name": "VerifyHostKeyDNS",
+                "value": "no"
+              },
+              {
+                "name": "IdentitiesOnly",
+                "value": "yes"
+              },
+              {
+                "name": "IdentityAgent",
+                "value": "none"
+              },
+              {
+                "name": "AddKeysToAgent",
+                "value": "no"
+              },
+              {
+                "name": "PermitLocalCommand",
+                "value": "no"
+              },
+              {
+                "name": "ForwardAgent",
+                "value": "no"
+              },
+              {
+                "name": "SessionType",
+                "value": "none"
+              },
+              {
+                "name": "RequestTTY",
+                "value": "no"
+              },
+              {
+                "name": "ClearAllForwardings",
+                "value": "yes"
+              },
+              {
+                "name": "EscapeChar",
+                "value": "none"
+              },
+              {
+                "name": "ConnectionAttempts",
+                "value": "1"
+              },
+              {
+                "name": "ConnectTimeout",
+                "value": "15"
+              },
+              {
+                "name": "ServerAliveInterval",
+                "value": "0"
+              },
+              {
+                "name": "ServerAliveCountMax",
+                "value": "3"
+              },
+              {
+                "name": "HostName",
+                "value": "SIM_TGT_A"
+              },
+              {
+                "name": "Port",
+                "value": "2222"
+              },
+              {
+                "name": "UserKnownHostsFile",
+                "value": "REF_TRUST_A"
+              },
+              {
+                "name": "GlobalKnownHostsFile",
+                "value": "REF_TRUST_G"
+              },
+              {
+                "name": "IdentityFile",
+                "value": "REF_KEY_A"
+              }
+            ],
+            "patterns": [
+              "SIM_TGT_A"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "expected": {
+        "additive_identities": [
+          "REF_KEY_A"
+        ],
+        "first_wins": {
+          "batchmode": "yes"
+        },
+        "status": "BLOCKED_MODEL_ONLY",
+        "violations": [
+          "REQUIRED_EXPLICIT_MISSING:serveraliveinterval"
+        ]
+      },
+      "id": "SYN_DEBIAN_IMPLICIT_ALIVE",
+      "layers": {
+        "cli": [],
+        "system": [],
+        "user": [
+          {
+            "directives": [
+              {
+                "name": "StrictHostKeyChecking",
+                "value": "yes"
+              },
+              {
+                "name": "BatchMode",
+                "value": "yes"
+              },
+              {
+                "name": "CanonicalizeHostname",
+                "value": "no"
+              },
+              {
+                "name": "ProxyJump",
+                "value": "none"
+              },
+              {
+                "name": "ProxyCommand",
+                "value": "none"
+              },
+              {
+                "name": "KnownHostsCommand",
+                "value": "none"
+              },
+              {
+                "name": "ControlMaster",
+                "value": "no"
+              },
+              {
+                "name": "ControlPath",
+                "value": "none"
+              },
+              {
+                "name": "ControlPersist",
+                "value": "no"
+              },
+              {
+                "name": "UpdateHostKeys",
+                "value": "no"
+              },
+              {
+                "name": "CheckHostIP",
+                "value": "no"
+              },
+              {
+                "name": "VerifyHostKeyDNS",
+                "value": "no"
+              },
+              {
+                "name": "IdentitiesOnly",
+                "value": "yes"
+              },
+              {
+                "name": "IdentityAgent",
+                "value": "none"
+              },
+              {
+                "name": "AddKeysToAgent",
+                "value": "no"
+              },
+              {
+                "name": "PermitLocalCommand",
+                "value": "no"
+              },
+              {
+                "name": "ForwardAgent",
+                "value": "no"
+              },
+              {
+                "name": "SessionType",
+                "value": "none"
+              },
+              {
+                "name": "RequestTTY",
+                "value": "no"
+              },
+              {
+                "name": "ClearAllForwardings",
+                "value": "yes"
+              },
+              {
+                "name": "EscapeChar",
+                "value": "none"
+              },
+              {
+                "name": "ConnectionAttempts",
+                "value": "1"
+              },
+              {
+                "name": "ConnectTimeout",
+                "value": "15"
+              },
+              {
+                "name": "ServerAliveCountMax",
+                "value": "3"
+              },
+              {
+                "name": "HostName",
+                "value": "SIM_TGT_A"
+              },
+              {
+                "name": "Port",
+                "value": "2222"
+              },
+              {
+                "name": "UserKnownHostsFile",
+                "value": "REF_TRUST_A"
+              },
+              {
+                "name": "GlobalKnownHostsFile",
+                "value": "REF_TRUST_G"
+              },
+              {
+                "name": "IdentityFile",
+                "value": "REF_KEY_A"
+              }
+            ],
+            "patterns": [
+              "SIM_TGT_A"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "expected": {
+        "additive_identities": [
+          "REF_KEY_A"
+        ],
+        "first_wins": {
+          "proxyjump": "SIM_JUMP_A"
+        },
+        "status": "BLOCKED_MODEL_ONLY",
+        "violations": [
+          "POLICY_MISMATCH:proxyjump"
+        ]
+      },
+      "id": "SYN_PROXY_JUMP_FORBIDDEN",
+      "layers": {
+        "cli": [],
+        "system": [],
+        "user": [
+          {
+            "directives": [
+              {
+                "name": "StrictHostKeyChecking",
+                "value": "yes"
+              },
+              {
+                "name": "BatchMode",
+                "value": "yes"
+              },
+              {
+                "name": "CanonicalizeHostname",
+                "value": "no"
+              },
+              {
+                "name": "ProxyJump",
+                "value": "SIM_JUMP_A"
+              },
+              {
+                "name": "ProxyCommand",
+                "value": "none"
+              },
+              {
+                "name": "KnownHostsCommand",
+                "value": "none"
+              },
+              {
+                "name": "ControlMaster",
+                "value": "no"
+              },
+              {
+                "name": "ControlPath",
+                "value": "none"
+              },
+              {
+                "name": "ControlPersist",
+                "value": "no"
+              },
+              {
+                "name": "UpdateHostKeys",
+                "value": "no"
+              },
+              {
+                "name": "CheckHostIP",
+                "value": "no"
+              },
+              {
+                "name": "VerifyHostKeyDNS",
+                "value": "no"
+              },
+              {
+                "name": "IdentitiesOnly",
+                "value": "yes"
+              },
+              {
+                "name": "IdentityAgent",
+                "value": "none"
+              },
+              {
+                "name": "AddKeysToAgent",
+                "value": "no"
+              },
+              {
+                "name": "PermitLocalCommand",
+                "value": "no"
+              },
+              {
+                "name": "ForwardAgent",
+                "value": "no"
+              },
+              {
+                "name": "SessionType",
+                "value": "none"
+              },
+              {
+                "name": "RequestTTY",
+                "value": "no"
+              },
+              {
+                "name": "ClearAllForwardings",
+                "value": "yes"
+              },
+              {
+                "name": "EscapeChar",
+                "value": "none"
+              },
+              {
+                "name": "ConnectionAttempts",
+                "value": "1"
+              },
+              {
+                "name": "ConnectTimeout",
+                "value": "15"
+              },
+              {
+                "name": "ServerAliveInterval",
+                "value": "0"
+              },
+              {
+                "name": "ServerAliveCountMax",
+                "value": "3"
+              },
+              {
+                "name": "HostName",
+                "value": "SIM_TGT_A"
+              },
+              {
+                "name": "Port",
+                "value": "2222"
+              },
+              {
+                "name": "UserKnownHostsFile",
+                "value": "REF_TRUST_A"
+              },
+              {
+                "name": "GlobalKnownHostsFile",
+                "value": "REF_TRUST_G"
+              },
+              {
+                "name": "IdentityFile",
+                "value": "REF_KEY_A"
+              }
+            ],
+            "patterns": [
+              "SIM_TGT_A"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "expected": {
+        "additive_identities": [
+          "REF_KEY_A"
+        ],
+        "first_wins": {
+          "stricthostkeychecking": "yes"
+        },
+        "status": "BLOCKED_MODEL_ONLY",
+        "violations": []
+      },
+      "id": "SYN_CLI_FIRST_VALUE",
+      "layers": {
+        "cli": [
+          {
+            "name": "StrictHostKeyChecking",
+            "value": "yes"
+          }
+        ],
+        "system": [],
+        "user": [
+          {
+            "directives": [
+              {
+                "name": "StrictHostKeyChecking",
+                "value": "no"
+              },
+              {
+                "name": "BatchMode",
+                "value": "yes"
+              },
+              {
+                "name": "CanonicalizeHostname",
+                "value": "no"
+              },
+              {
+                "name": "ProxyJump",
+                "value": "none"
+              },
+              {
+                "name": "ProxyCommand",
+                "value": "none"
+              },
+              {
+                "name": "KnownHostsCommand",
+                "value": "none"
+              },
+              {
+                "name": "ControlMaster",
+                "value": "no"
+              },
+              {
+                "name": "ControlPath",
+                "value": "none"
+              },
+              {
+                "name": "ControlPersist",
+                "value": "no"
+              },
+              {
+                "name": "UpdateHostKeys",
+                "value": "no"
+              },
+              {
+                "name": "CheckHostIP",
+                "value": "no"
+              },
+              {
+                "name": "VerifyHostKeyDNS",
+                "value": "no"
+              },
+              {
+                "name": "IdentitiesOnly",
+                "value": "yes"
+              },
+              {
+                "name": "IdentityAgent",
+                "value": "none"
+              },
+              {
+                "name": "AddKeysToAgent",
+                "value": "no"
+              },
+              {
+                "name": "PermitLocalCommand",
+                "value": "no"
+              },
+              {
+                "name": "ForwardAgent",
+                "value": "no"
+              },
+              {
+                "name": "SessionType",
+                "value": "none"
+              },
+              {
+                "name": "RequestTTY",
+                "value": "no"
+              },
+              {
+                "name": "ClearAllForwardings",
+                "value": "yes"
+              },
+              {
+                "name": "EscapeChar",
+                "value": "none"
+              },
+              {
+                "name": "ConnectionAttempts",
+                "value": "1"
+              },
+              {
+                "name": "ConnectTimeout",
+                "value": "15"
+              },
+              {
+                "name": "ServerAliveInterval",
+                "value": "0"
+              },
+              {
+                "name": "ServerAliveCountMax",
+                "value": "3"
+              },
+              {
+                "name": "HostName",
+                "value": "SIM_TGT_A"
+              },
+              {
+                "name": "Port",
+                "value": "2222"
+              },
+              {
+                "name": "UserKnownHostsFile",
+                "value": "REF_TRUST_A"
+              },
+              {
+                "name": "GlobalKnownHostsFile",
+                "value": "REF_TRUST_G"
+              },
+              {
+                "name": "IdentityFile",
+                "value": "REF_KEY_A"
+              }
+            ],
+            "patterns": [
+              "SIM_TGT_A"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "expected": {
+        "additive_identities": [],
+        "first_wins": {
+          "identitiesonly": "yes"
+        },
+        "status": "BLOCKED_MODEL_ONLY",
+        "violations": [
+          "NO_SYMBOLIC_IDENTITY_REFERENCE"
+        ]
+      },
+      "id": "SYN_MISSING_SYMBOLIC_IDENTITY",
+      "layers": {
+        "cli": [],
+        "system": [],
+        "user": [
+          {
+            "directives": [
+              {
+                "name": "StrictHostKeyChecking",
+                "value": "yes"
+              },
+              {
+                "name": "BatchMode",
+                "value": "yes"
+              },
+              {
+                "name": "CanonicalizeHostname",
+                "value": "no"
+              },
+              {
+                "name": "ProxyJump",
+                "value": "none"
+              },
+              {
+                "name": "ProxyCommand",
+                "value": "none"
+              },
+              {
+                "name": "KnownHostsCommand",
+                "value": "none"
+              },
+              {
+                "name": "ControlMaster",
+                "value": "no"
+              },
+              {
+                "name": "ControlPath",
+                "value": "none"
+              },
+              {
+                "name": "ControlPersist",
+                "value": "no"
+              },
+              {
+                "name": "UpdateHostKeys",
+                "value": "no"
+              },
+              {
+                "name": "CheckHostIP",
+                "value": "no"
+              },
+              {
+                "name": "VerifyHostKeyDNS",
+                "value": "no"
+              },
+              {
+                "name": "IdentitiesOnly",
+                "value": "yes"
+              },
+              {
+                "name": "IdentityAgent",
+                "value": "none"
+              },
+              {
+                "name": "AddKeysToAgent",
+                "value": "no"
+              },
+              {
+                "name": "PermitLocalCommand",
+                "value": "no"
+              },
+              {
+                "name": "ForwardAgent",
+                "value": "no"
+              },
+              {
+                "name": "SessionType",
+                "value": "none"
+              },
+              {
+                "name": "RequestTTY",
+                "value": "no"
+              },
+              {
+                "name": "ClearAllForwardings",
+                "value": "yes"
+              },
+              {
+                "name": "EscapeChar",
+                "value": "none"
+              },
+              {
+                "name": "ConnectionAttempts",
+                "value": "1"
+              },
+              {
+                "name": "ConnectTimeout",
+                "value": "15"
+              },
+              {
+                "name": "ServerAliveInterval",
+                "value": "0"
+              },
+              {
+                "name": "ServerAliveCountMax",
+                "value": "3"
+              },
+              {
+                "name": "HostName",
+                "value": "SIM_TGT_A"
+              },
+              {
+                "name": "Port",
+                "value": "2222"
+              },
+              {
+                "name": "UserKnownHostsFile",
+                "value": "REF_TRUST_A"
+              },
+              {
+                "name": "GlobalKnownHostsFile",
+                "value": "REF_TRUST_G"
+              }
+            ],
+            "patterns": [
+              "SIM_TGT_A"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "expected": {
+        "additive_identities": [
+          "REF_KEY_A"
+        ],
+        "first_wins": {
+          "hostname": "SIM_OTHER"
+        },
+        "status": "BLOCKED_MODEL_ONLY",
+        "violations": [
+          "POLICY_MISMATCH:hostname"
+        ]
+      },
+      "id": "SYN_HOSTNAME_REWRITE",
+      "layers": {
+        "cli": [],
+        "system": [],
+        "user": [
+          {
+            "directives": [
+              {
+                "name": "StrictHostKeyChecking",
+                "value": "yes"
+              },
+              {
+                "name": "BatchMode",
+                "value": "yes"
+              },
+              {
+                "name": "CanonicalizeHostname",
+                "value": "no"
+              },
+              {
+                "name": "ProxyJump",
+                "value": "none"
+              },
+              {
+                "name": "ProxyCommand",
+                "value": "none"
+              },
+              {
+                "name": "KnownHostsCommand",
+                "value": "none"
+              },
+              {
+                "name": "ControlMaster",
+                "value": "no"
+              },
+              {
+                "name": "ControlPath",
+                "value": "none"
+              },
+              {
+                "name": "ControlPersist",
+                "value": "no"
+              },
+              {
+                "name": "UpdateHostKeys",
+                "value": "no"
+              },
+              {
+                "name": "CheckHostIP",
+                "value": "no"
+              },
+              {
+                "name": "VerifyHostKeyDNS",
+                "value": "no"
+              },
+              {
+                "name": "IdentitiesOnly",
+                "value": "yes"
+              },
+              {
+                "name": "IdentityAgent",
+                "value": "none"
+              },
+              {
+                "name": "AddKeysToAgent",
+                "value": "no"
+              },
+              {
+                "name": "PermitLocalCommand",
+                "value": "no"
+              },
+              {
+                "name": "ForwardAgent",
+                "value": "no"
+              },
+              {
+                "name": "SessionType",
+                "value": "none"
+              },
+              {
+                "name": "RequestTTY",
+                "value": "no"
+              },
+              {
+                "name": "ClearAllForwardings",
+                "value": "yes"
+              },
+              {
+                "name": "EscapeChar",
+                "value": "none"
+              },
+              {
+                "name": "ConnectionAttempts",
+                "value": "1"
+              },
+              {
+                "name": "ConnectTimeout",
+                "value": "15"
+              },
+              {
+                "name": "ServerAliveInterval",
+                "value": "0"
+              },
+              {
+                "name": "ServerAliveCountMax",
+                "value": "3"
+              },
+              {
+                "name": "Port",
+                "value": "2222"
+              },
+              {
+                "name": "UserKnownHostsFile",
+                "value": "REF_TRUST_A"
+              },
+              {
+                "name": "GlobalKnownHostsFile",
+                "value": "REF_TRUST_G"
+              },
+              {
+                "name": "IdentityFile",
+                "value": "REF_KEY_A"
+              },
+              {
+                "name": "Hostname",
+                "value": "SIM_OTHER"
+              }
+            ],
+            "patterns": [
+              "SIM_TGT_A"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "complete_semantic_reviews": 0,
+  "configuration_effective_verified": false,
+  "dispatch_allowed": false,
+  "guest_binaries_executed": false,
+  "physical_laboratory_contact": false,
+  "profile_id": "SSH-T01-BASE",
+  "runnable_argv_renderers": 0,
+  "schema_version": "1.0",
+  "scope": "P8_R16_R5_SYNTHETIC_ONLY_NOT_OPENSSH_CONFIG",
+  "source_r4_sha256": "c2dbfcb7ab667008cb35c7432be883e3cb68b123fb5b1329216a7d012b2697ee",
+  "target_ref": "SIM_TGT_A"
+}
