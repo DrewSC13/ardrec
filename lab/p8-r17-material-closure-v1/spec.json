@@ -1,0 +1,73 @@
+{
+  "base_main_commit": "b0e805006d6e128f8ebbe3781596a80604e31138",
+  "binding_fields": [
+    "executable_absolute_path",
+    "executable_sha256",
+    "executable_version",
+    "argv_typed_vector",
+    "working_directory",
+    "environment_allowlist",
+    "auxiliary_executables",
+    "case_authorization_ref",
+    "approved_target_ref",
+    "fixed_resource_budget",
+    "capture_policy_ref",
+    "cleanup_receipt_ref"
+  ],
+  "expected": {
+    "authorized_cases": 0,
+    "authorized_profiles": 0,
+    "dispatch_allowed": false,
+    "missing_material_bindings": 348,
+    "open_evidence_gate_links": 271,
+    "profiles": 29,
+    "risk_profile_links": 238,
+    "write_cleanup_profiles": 5
+  },
+  "profile_ids": [
+    "SSH-T01-BASE",
+    "SSH-T02-BASE",
+    "SSH-T03-BASE",
+    "SSH-T04-BASE",
+    "SSH-T05-BASE",
+    "SSH-T06-BASE",
+    "SSH-T07-BASE",
+    "SSH-T08-BASE",
+    "FTP-T01-BASE",
+    "FTP-T02-CONTROL",
+    "FTP-T02-DATA",
+    "FTP-T03-BASE",
+    "FTP-T04-BASE",
+    "FTP-T05-BASE",
+    "FTP-T06-BASE",
+    "FTP-T07-BASE",
+    "FTP-T08-READ",
+    "FTP-T08-WRITE",
+    "SMB-T01-BASE",
+    "SMB-T02-BASE",
+    "SMB-T03-SIGNING",
+    "SMB-T03-ENCRYPTION",
+    "SMB-T04-BASE",
+    "SMB-T05-BASE",
+    "SMB-T06-BASE",
+    "SMB-T07-BASE",
+    "SMB-T08-BASE",
+    "SMB-T09-READ",
+    "SMB-T09-WRITE"
+  ],
+  "schema_version": "1.0",
+  "scope": "P8_R17_MATERIAL_CLOSURE_AUDIT_ONLY",
+  "source_sha256": {
+    "lab/execution-profiles-v1/profiles.json": "fe0fae200ac031622d27020b77d38bd18a22e3ffaa0dd0f57ec4e9f01f284ce3",
+    "lab/p8-cli-grammar-v1/spec.json": "df9fbfae39526a70f96972074357f0e4144bd3d39f7f771d291e95c23999f4e0",
+    "lab/p8-cli-review-gates-v1/gates.json": "90fe31e92366493e97818e2c706c142f91a47eff84446413374fa421169ca716",
+    "lab/p8-profile-contract-v1/contracts.json": "f09e92f395928a52e3c826a11aeef8ed13acb07299b322d173cc03fcf55b4f41"
+  },
+  "write_profile_ids": [
+    "SSH-T07-BASE",
+    "FTP-T07-BASE",
+    "FTP-T08-WRITE",
+    "SMB-T08-BASE",
+    "SMB-T09-WRITE"
+  ]
+}

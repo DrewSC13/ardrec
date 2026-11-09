@@ -162,6 +162,12 @@ jobs:
       - name: Probar precedencia sintética P8 R16 / Test deny-only precedence
         run: python3 -m unittest discover -s lab/tests -p test_p8_r16_ssh_precedence.py -v
 
+      - name: Auditar brechas de vinculacion material P8 R17 / Verify material closure gap
+        run: python3 lab/verify_p8_r17_material_closure.py
+
+      - name: Probar brechas de vinculacion P8 R17 / Test 29-profile material boundary
+        run: python3 -m unittest discover -s lab/tests -p test_p8_r17_material_closure.py -v
+
       - name: Probar contratos y transporte / Test contracts and transport
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 
