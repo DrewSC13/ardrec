@@ -77,3 +77,9 @@
 **ES:** Se proponen 29 contratos semánticos por variante, unidos a P8 y P8-R9 con operaciones, campos materiales simbólicos, controles declarativos y cinco políticas de limpieza para escritura. No equivalen a opciones reales de CLI, comandos SSH/SMB, `argv`, contratos privados ni autorizaciones. P8 y AL-06/AL-07 y siete obligaciones siguen abiertos; P9 y A1–A10 no iniciados.
 
 **EN:** 29 deny-only typed symbolic intents with separate SSH/FTP/SMB language boundaries and write cleanup gates, not runnable CLI recipes.
+
+## P8-R11 — fuentes documentales del runner / CLI documentary evidence
+
+**ES:** Registro reportado y verificable por lectura de 7 manuales de la QCOW2 y cuatro campos `Depends`, vinculados a 29 intenciones tipadas. No valida opciones CLI ni cierre de dependencias o autorización por caso. Cero argumentos materializados, casos reales o despachos; P8, AL-06/AL-07 y siete obligaciones continúan abiertos.
+
+**EN:** Version-pinned documentary source observations only; no semantic CLI grammar, trusted execution, private authority or algorithm implementation.

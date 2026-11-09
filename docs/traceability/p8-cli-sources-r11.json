@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "project": "ARDREC",
+  "roadmap_step": 8,
+  "increment": "P8-R11",
+  "thesis_sections": ["3.7.5", "3.9.2"],
+  "base_commit": "4412a1093eafbfcf61b52c647963511f01725576",
+  "prerequisites": [
+    "lab/p8-material-inventory-v1/inventory.json",
+    "lab/p8-profile-contract-v1/contracts.json"
+  ],
+  "evidence": "lab/p8-cli-source-v1/evidence.json",
+  "verifier": "lab/verify_p8_cli_sources.py",
+  "adversarial_tests": "lab/tests/test_p8_cli_sources.py",
+  "reported_manuals": 7,
+  "declared_package_dependencies": 4,
+  "blocked_profile_documentation_mappings": 29,
+  "cli_semantics_verified": 0,
+  "cli_grammars_approved": 0,
+  "case_authorizations": 0,
+  "dispatch_allowed": false,
+  "laboratory_runtime_executed": false,
+  "algorithms_A1_A10_started": false,
+  "open_findings": ["AL-06", "AL-07"],
+  "development_obligations_open": 7,
+  "acceptance": "SOURCE_ONLY_PENDING_GITHUB_CI_AND_PROTECTED_MERGE"
+}
