@@ -126,6 +126,12 @@ jobs:
       - name: Probar contratos P8 R10 / Test P8 R10 symbolic intents
         run: python3 -m unittest discover -s lab/tests -p test_p8_profile_contracts.py -v
 
+      - name: Verificar fuentes documentales P8 R11 / Verify P8 R11 documentation
+        run: python3 lab/verify_p8_cli_sources.py
+
+      - name: Probar fuentes P8 R11 / Test P8 R11 source pins
+        run: python3 -m unittest discover -s lab/tests -p test_p8_cli_sources.py -v
+
       - name: Probar contratos y transporte / Test contracts and transport
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 

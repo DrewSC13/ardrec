@@ -1,5 +1,7 @@
 # ARDREC
 
+> **P8-R11 — fuentes documentales del runner (propuesta):** [`docs/estado-vigente-p8-r11.md`](docs/estado-vigente-p8-r11.md). 7 manuales con hashes, 4 declaraciones de dependencias y 29 referencias documentales no autorizadas. Ningun flag/argv validado; P8 abierto, P9 y A1–A10 no iniciados. R10 integrado mediante PR #43.
+
 > **P8-R10 — contratos simbólicos por variante (propuesta):** [`docs/estado-vigente-p8-r10.md`](docs/estado-vigente-p8-r10.md). 29 intenciones tipadas no renderizables: sin `argv`, shell remoto, `smbclient -c`, permisos, presupuesto piloto, casos ni despacho. P8-R9 integrado por PR #42; P8 general permanece abierto.
 
 > **P8-R9 — inventario material del runner (propuesta):** [`docs/estado-vigente-p8-r9.md`](docs/estado-vigente-p8-r9.md). 15 ejecutables y 29 correspondencias candidatas, no autorizadas. La propuesta A1-R9 fue cerrada en PR #41 sin integrarse: los algoritmos se implementarán después del punto 13. R8 está integrado en PR #40.
