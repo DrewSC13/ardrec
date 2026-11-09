@@ -174,6 +174,12 @@ jobs:
       - name: Probar lector ELF P8 R18 / Test no-execution ELF metadata parser
         run: python3 -m unittest discover -s lab/tests -p test_p8_r18_elf_metadata.py -v
 
+      - name: Verificar grafo ELF offline P8 R19 / Verify static candidate graph
+        run: python3 lab/verify_p8_r19_graph.py
+
+      - name: Probar grafo ELF P8 R19 / Test bounded deny-only graph
+        run: python3 -m unittest discover -s lab/tests -p test_p8_r19_graph.py -v
+
       - name: Probar contratos y transporte / Test contracts and transport
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 
