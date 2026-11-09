@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "roadmap_step": 8,
+  "increment": "P8-R21",
+  "scope": "OFFLINE_SEVEN_DIRECTORY_ELF_CANDIDATE_RECONCILIATION_DENY_ONLY",
+  "base_main_commit": "363f5ca7b34419e5a1da270907f9b89c768e6a08",
+  "source_r19_receipt_sha256_operator_only": "785a85192e42588042467017f4ec65bafed96f4711bb1d42c6f846ede0e1a1cf",
+  "source_r20_receipt_sha256_operator_only": "0e3d4fb71dc8784d551cf2e028fa441e719d2c443baa14af5aebe7d76951f17d",
+  "image_sha256": "fc9244fe29917f9bbeab09604a5845506dc3ab222b5c53648b5b90b2b1bf2103",
+  "expected_r20_missing": {
+    "libdcerpc-binding.so.0": 2,
+    "libjansson.so.4": 1,
+    "libndr-krb5pac.so.0": 3,
+    "libsamdb.so.0": 1,
+    "libwbclient.so.0": 1
+  },
+  "max_layer_names": 96,
+  "max_new_nodes": 60,
+  "max_new_edges": 640,
+  "max_layers": 12,
+  "loader_resolution_verified": false,
+  "transitive_dependency_closure_verified": false,
+  "runtime_identity_verified": false,
+  "effective_configuration_verified": false,
+  "approved_profiles": 0,
+  "authorized_cases": 0,
+  "dispatch_allowed": false
+}
