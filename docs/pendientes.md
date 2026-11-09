@@ -101,3 +101,9 @@
 **ES:** 7 manuales roff íntegros autenticados desde una QCOW2 de solo lectura; 91 entradas localizadas exactamente con hashes de línea y 25 límites de seguridad. El informe privado se verifica por SHA y sin publicar las fuentes. No se completa una revisión semántica operacional ni se aprueban opciones, `argv`, perfil, caso o despacho. AL-06/AL-07 y siete obligaciones siguen abiertos.
 
 **EN:** Full pinned manuals, exact source headers and documented risk boundaries only. All 29 profiles deny-only; P9 and A1–A10 not started.
+
+## P8-R15 — matriz de obligaciones / CLI review release gates
+
+**ES:** Matriz de 25 riesgos anclados a fuentes R14 y 29 perfiles simbólicos R13, con 238 enlaces conservadores y nueve obligaciones de evidencia comunes. Las cinco variantes de escritura requieren además recibo independiente de limpieza y prueba de restauración. Todas las solicitudes sintéticas terminan bloqueadas; sin opciones CLI, `argv`, perfil, caso ni despacho habilitado. AL-06/AL-07 y siete obligaciones siguen abiertos.
+
+**EN:** Deterministic deny-only review matrix; protocol-wide conservative hazard projection is not operational evidence or execution permission. P9 and A1–A10 not started.

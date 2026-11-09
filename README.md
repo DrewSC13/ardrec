@@ -1,5 +1,7 @@
 # ARDREC
 
+> **P8-R15 — matriz de revisión por perfil (propuesta):** [`docs/estado-vigente-p8-r15.md`](docs/estado-vigente-p8-r15.md). 25 riesgos de manuales distribuidos conservadoramente entre 29 perfiles (238 enlaces), nueve obligaciones comunes y dos adicionales para cinco escrituras. Denegación determinista, cero opciones CLI/argv/autorizaciones/ejecución; R14 integrado por PR #47; P8 abierto, P9 y A1–A10 no iniciados.
+
 > **P8-R14 — anclas de entradas completas (propuesta):** [`docs/estado-vigente-p8-r14.md`](docs/estado-vigente-p8-r14.md). Siete fuentes íntegras autenticadas, 91 entradas documentales enlazadas a 29 perfiles, 25 límites de seguridad no autorizados. Cero opciones/argv/gramáticas ejecutables; P8 abierto, P9 y A1–A10 no iniciados. R13 integrado por PR #46.
 
 > **P8-R13 — gramática simbólica no ejecutable (propuesta):** [`docs/estado-vigente-p8-r13.md`](docs/estado-vigente-p8-r13.md). Validador puro para 29 contratos tipados y cinco obligaciones de limpieza; sin `argv`, flags CLI, destino, credenciales, caso ni despacho. P8 abierto, P9 y A1–A10 sin iniciar. R12 integrado por PR #45.
