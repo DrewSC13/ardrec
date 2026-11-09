@@ -65,3 +65,9 @@
 **ES:** T1–T10 y guardas trivalentes se inspeccionan junto con el diagnóstico R7 sin producir transición, despacho o generación publicada. R4–R7 constan como integrados en el nuevo corte `docs/estado-vigente-p8-r8.md`; los cortes históricos no se alteran. P8, AL-06, AL-07 y siete obligaciones siguen abiertos.
 
 **EN:** A pure source-only T1–T10/state diagnostic review, with no execution, publication, acceptance or laboratory testing.
+
+## P8-R9 — materiales del runner / Runner material inventory
+
+**ES:** Registro de 15 bytes-hash de ejecutables en imagen base QCOW2 comprobada por lectura y una herramienta ausente (`sshpass`); 29 correspondencias preliminares por protocolo. No acredita compatibilidad por familia, `argv`, presupuesto, autoridad, caso real, origen confiable ni operación futura. Ningún perfil habilitado; P8 y AL-06/AL-07 permanecen abiertos. A1-R9 PR #41 cerrado sin merge; A1–A10 se implementan desde punto 14.
+
+**EN:** Observed 15 point-in-time guest-image binary hashes and 29 non-authorized protocol-level candidates; no runtime pins, dispatch authorization, experiment or algorithm advancement.

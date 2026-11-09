@@ -1,5 +1,7 @@
 # ARDREC
 
+> **P8-R9 — inventario material del runner (propuesta):** [`docs/estado-vigente-p8-r9.md`](docs/estado-vigente-p8-r9.md). 15 ejecutables y 29 correspondencias candidatas, no autorizadas. La propuesta A1-R9 fue cerrada en PR #41 sin integrarse: los algoritmos se implementarán después del punto 13. R8 está integrado en PR #40.
+
 > **P8-R8 — propuesta source-only no integrada:** [`docs/estado-vigente-p8-r8.md`](docs/estado-vigente-p8-r8.md). Puente sintético de estado y diagnóstico P8, siempre `DENY_ALL`; no hay transiciones ni publicación operacional.
 
 > **Propuesta P8-R7 sin integrar:** [`docs/estado-vigente-p8-r7.md`](docs/estado-vigente-p8-r7.md). Diagnóstico sintético compatible Python/Rust, `DENY_ALL`; ninguna autoridad ni ejecución.

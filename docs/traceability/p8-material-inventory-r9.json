@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "roadmap_step": 8,
+  "increment": "P8-R9-MATERIAL-INVENTORY-CANDIDATES-DENY-ONLY",
+  "status": "SOURCE_ONLY_UNMERGED",
+  "base_commit": "9bb8e06c5d007cac82a102a97a87ab909bb35d7b",
+  "thesis_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "source_sections": ["3.7.5", "3.9.2"],
+  "input_sources": [
+    "lab/services-v1/versions.json",
+    "lab/operational-catalog-v1/catalog.json",
+    "lab/execution-profiles-v1/profiles.json",
+    "lab/scenario-separation-v1/dev.json",
+    "lab/scenario-separation-v1/pilot.json",
+    "lab/scenario-separation-v1/exp.json",
+    "OPERATOR_REPORTED_READ_ONLY_GUESTFS_TRANSCRIPT_20261108"
+  ],
+  "evidence_status": "REPORTED_OBSERVATIONS_NOT_PRIVATE_SIGNED_ATTESTATION",
+  "verification": {
+    "unit_tests": "PENDING_USER_REPO_AND_CI",
+    "repository_schema_validation": "PENDING_USER_REPO_AND_CI",
+    "offline_image_recheck": "PENDING_OPERATOR_RECHECK",
+    "ci": "NOT_RUN",
+    "postmerge_ci": "NOT_RUN"
+  },
+  "profile_slots": 29,
+  "observed_binaries": 15,
+  "absent_binaries": 1,
+  "verified_per_profile_commands": 0,
+  "authorized_profiles": 0,
+  "real_cases": 0,
+  "dispatch_allowed": false,
+  "experiment": "NOT_RUN",
+  "open_findings": ["AL-06", "AL-07"],
+  "open_development_obligations": 7
+}
