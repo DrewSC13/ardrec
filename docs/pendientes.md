@@ -95,3 +95,9 @@
 **ES:** Validador puro de seis campos tipados con correspondencia exacta a 29 perfiles SSH/FTP/SMB. Distingue cinco escrituras, TLS control/datos, firma/cifrado SMB y SMBv1 aislado; no acredita opciones reales, `argv`, credenciales, destinos, permisos ni despachos. AL-06/AL-07 y siete obligaciones siguen abiertos.
 
 **EN:** Canonical synthetic intent tags, not runnable CLI grammar, binary attestation, runtime protection or authorized case execution.
+
+## P8-R14 — fuentes completas y anclas / Full manual source anchors
+
+**ES:** 7 manuales roff íntegros autenticados desde una QCOW2 de solo lectura; 91 entradas localizadas exactamente con hashes de línea y 25 límites de seguridad. El informe privado se verifica por SHA y sin publicar las fuentes. No se completa una revisión semántica operacional ni se aprueban opciones, `argv`, perfil, caso o despacho. AL-06/AL-07 y siete obligaciones siguen abiertos.
+
+**EN:** Full pinned manuals, exact source headers and documented risk boundaries only. All 29 profiles deny-only; P9 and A1–A10 not started.

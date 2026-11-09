@@ -144,6 +144,12 @@ jobs:
       - name: Probar gramática P8 R13 / Test P8 R13 deny-only grammar
         run: python3 -m unittest discover -s lab/tests -p test_p8_cli_grammar.py -v
 
+      - name: Verificar fuentes completas P8 R14 / Verify full-source anchors
+        run: python3 lab/verify_p8_cli_full_sources.py
+
+      - name: Probar anclas P8 R14 / Test P8 R14 deny-only anchors
+        run: python3 -m unittest discover -s lab/tests -p test_p8_cli_full_sources.py -v
+
       - name: Probar contratos y transporte / Test contracts and transport
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 

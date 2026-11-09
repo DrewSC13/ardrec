@@ -1,0 +1,20 @@
+{
+  "increment": "P8-R14",
+  "roadmap_step": 8,
+  "source_base_commit": "67c55f1bb2165a1edac25ecaf86e8638ef705548",
+  "private_full_manual_report_sha256": "2968e57fc65554735cef5ad349ec8a159dcc42fae3b0f05a653b2df0b20af365",
+  "full_manual_sources": 7,
+  "term_entry_anchors": 91,
+  "reviewed_safety_boundaries_pending_verification": 25,
+  "profile_links": 29,
+  "complete_semantic_approvals": 0,
+  "approved_argv_renderers": 0,
+  "approved_cli_options": 0,
+  "authorized_profiles": 0,
+  "authorized_cases": 0,
+  "dispatch_allowed": false,
+  "algorithms_started": false,
+  "physical_laboratory_contact": "NONE",
+  "open_findings": ["AL-06", "AL-07"],
+  "state": "SOURCE_ONLY_PENDING_ALL_OPERATIONAL_GATES"
+}
