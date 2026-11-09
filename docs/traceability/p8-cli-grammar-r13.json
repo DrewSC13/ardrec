@@ -1,0 +1,19 @@
+{
+  "increment": "P8-R13",
+  "roadmap_step": 8,
+  "base_commit": "5e8502f1c6f93046fecaab837660e4b8c2caef7a",
+  "scope": "PURE_NON_EXECUTABLE_TYPED_INTENT_GRAMMAR",
+  "source_chains": ["P8-R9", "P8-R10", "P8-R11", "P8-R12"],
+  "test_entrypoint": "python3 -m unittest discover -s lab/tests -p test_p8_cli_grammar.py -v",
+  "verification_entrypoint": "python3 lab/verify_p8_cli_grammar.py",
+  "profile_count": 29,
+  "write_cleanup_gates": 5,
+  "approved_cli_grammars": 0,
+  "approved_argv_renderers": 0,
+  "authorized_profiles": 0,
+  "authorized_cases": 0,
+  "dispatch_allowed": false,
+  "algorithms_started": false,
+  "open_findings": ["AL-06", "AL-07"],
+  "functional_acceptance": "NOT_RUN"
+}
