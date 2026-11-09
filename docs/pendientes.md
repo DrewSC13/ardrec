@@ -89,3 +89,9 @@
 **ES:** Revisión de 91 fragmentos obtenidos en 7 manuales de la QCOW2: 74 definiciones de fragmento, 15 referencias insuficientes y 2 ambigüedades de opciones cortas. Conexión documentada con 29 perfiles sin aprobación de flags, `argv`, destino, credenciales, caso o despacho. AL-06/AL-07 y siete obligaciones continúan abiertos.
 
 **EN:** Excerpt-level source analysis only, not full manpage semantics, runtime capability, trusted authorization, executable grammar or algorithm implementation.
+
+## P8-R13 — gramática simbólica no ejecutable / Non-executable typed grammar
+
+**ES:** Validador puro de seis campos tipados con correspondencia exacta a 29 perfiles SSH/FTP/SMB. Distingue cinco escrituras, TLS control/datos, firma/cifrado SMB y SMBv1 aislado; no acredita opciones reales, `argv`, credenciales, destinos, permisos ni despachos. AL-06/AL-07 y siete obligaciones siguen abiertos.
+
+**EN:** Canonical synthetic intent tags, not runnable CLI grammar, binary attestation, runtime protection or authorized case execution.
