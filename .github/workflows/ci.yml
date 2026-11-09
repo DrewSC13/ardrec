@@ -180,6 +180,12 @@ jobs:
       - name: Probar grafo ELF P8 R19 / Test bounded deny-only graph
         run: python3 -m unittest discover -s lab/tests -p test_p8_r19_graph.py -v
 
+      - name: Verificar candidatos privados Samba P8 R20 / Verify candidate contract
+        run: python3 lab/verify_p8_r20_samba_candidate.py
+
+      - name: Probar rutas privadas Samba P8 R20 / Test bounded deny-only candidates
+        run: python3 -m unittest discover -s lab/tests -p test_p8_r20_samba_candidate.py -v
+
       - name: Probar contratos y transporte / Test contracts and transport
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 
