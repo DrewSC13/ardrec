@@ -1,0 +1,24 @@
+{
+  "authorizations": {
+    "cases": 0,
+    "dispatch_allowed": false,
+    "profiles": 0
+  },
+  "base_main_commit": "05513b28af3ffa23ef98cef3fd4e2dcf2a71eea8",
+  "binary_candidates": {
+    "/usr/bin/curl": "52e9ceef96bd7c7dd4c2c9d8ac4c5f466c563dc0d16817720518b430da7a94b7",
+    "/usr/bin/smbclient": "f7f2e53588c472c91fb7da57431aa76e014f746587a51dc4012ac93caaea14d6",
+    "/usr/bin/ssh": "af3b04ec5653755032fc18ad02445e4e51170e75d8bac4265647d423caa9a83e"
+  },
+  "image_path": "/var/lib/libvirt/images/ardrec-dev-point4-v4/runner-base.qcow2",
+  "image_sha256": "fc9244fe29917f9bbeab09604a5845506dc3ab222b5c53648b5b90b2b1bf2103",
+  "proof_limitations": [
+    "DIRECT_NEEDED_ONLY_NOT_TRANSITIVE_CLOSURE",
+    "NOT_LOADER_SEARCH_PATH_RESOLUTION",
+    "NOT_RUNTIME_BINARY_IDENTITY",
+    "NOT_EFFECTIVE_CONFIGURATION_OR_CLI_APPROVAL",
+    "NO_PRIVATE_CASE_AUTHORITY"
+  ],
+  "schema_version": "1.0",
+  "scope": "OFFLINE_ELF64_DIRECT_METADATA_ONLY"
+}
