@@ -1,0 +1,1788 @@
+{
+  "algorithms_started": false,
+  "anchor_class_totals": {
+    "EXACT_MANPAGE_ENTRY_LOCATED": 91
+  },
+  "approved_argv_renderers": 0,
+  "approved_cli_grammars": 0,
+  "approved_cli_options": 0,
+  "authorized_cases": 0,
+  "authorized_profiles": 0,
+  "base_commit": "67c55f1bb2165a1edac25ecaf86e8638ef705548",
+  "complete_semantic_reviews": 0,
+  "dispatch_allowed": false,
+  "full_original_manual_text_published": false,
+  "guest_binaries_executed": false,
+  "image_sha256": "fc9244fe29917f9bbeab09604a5845506dc3ab222b5c53648b5b90b2b1bf2103",
+  "increment": "P8-R14",
+  "kind": "FULL_SOURCE_ANCHORED_LOCATION_AND_SAFETY_BOUNDARY_NOT_SEMANTIC_APPROVAL",
+  "manual_count": 7,
+  "physical_laboratory_contact": "NONE",
+  "private_report_sha256": "2968e57fc65554735cef5ad349ec8a159dcc42fae3b0f05a653b2df0b20af365",
+  "profile_count": 29,
+  "profile_refs": [
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "SSH-T01-BASE",
+      "source_term_ids": [
+        "ssh.1.gz:-F",
+        "ssh.1.gz:-N",
+        "ssh_config.5.gz:StrictHostKeyChecking",
+        "ssh_config.5.gz:UserKnownHostsFile",
+        "ssh_config.5.gz:ProxyCommand",
+        "ssh_config.5.gz:KnownHostsCommand",
+        "ssh-keyscan.1.gz:-p"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "SSH-T02-BASE",
+      "source_term_ids": [
+        "ssh_config.5.gz:BatchMode",
+        "ssh_config.5.gz:KbdInteractiveAuthentication",
+        "ssh_config.5.gz:ConnectionAttempts",
+        "ssh_config.5.gz:ProxyCommand"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "SSH-T03-BASE",
+      "source_term_ids": [
+        "ssh_config.5.gz:BatchMode",
+        "ssh_config.5.gz:NumberOfPasswordPrompts",
+        "ssh_config.5.gz:KbdInteractiveAuthentication",
+        "ssh_config.5.gz:ProxyCommand"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "SSH-T04-BASE",
+      "source_term_ids": [
+        "ssh.1.gz:-i",
+        "ssh_config.5.gz:IdentityAgent",
+        "ssh_config.5.gz:ForwardAgent",
+        "ssh_config.5.gz:BatchMode"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "SSH-T05-BASE",
+      "source_term_ids": [
+        "ssh.1.gz:-T",
+        "ssh_config.5.gz:RemoteCommand",
+        "ssh_config.5.gz:PermitLocalCommand",
+        "ssh_config.5.gz:RequestTTY"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "SSH-T06-BASE",
+      "source_term_ids": [
+        "ssh_config.5.gz:RemoteCommand",
+        "ssh_config.5.gz:LocalCommand",
+        "sftp.1.gz:-b",
+        "sftp.1.gz:-o"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "SSH-T07-BASE",
+      "source_term_ids": [
+        "ssh_config.5.gz:RemoteCommand",
+        "ssh_config.5.gz:LocalCommand",
+        "sftp.1.gz:-b",
+        "sftp.1.gz:-P"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "SSH-T08-BASE",
+      "source_term_ids": [
+        "ssh_config.5.gz:RemoteCommand",
+        "ssh_config.5.gz:PermitLocalCommand",
+        "ssh_config.5.gz:BatchMode"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "FTP-T01-BASE",
+      "source_term_ids": [
+        "curl.1.gz:--disable",
+        "curl.1.gz:--proto",
+        "curl.1.gz:--connect-timeout",
+        "curl.1.gz:--proxy"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "FTP-T02-CONTROL",
+      "source_term_ids": [
+        "curl.1.gz:--ssl-reqd",
+        "curl.1.gz:--ftp-ssl-control",
+        "curl.1.gz:--ftp-ssl-ccc",
+        "curl.1.gz:--proxy"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "FTP-T02-DATA",
+      "source_term_ids": [
+        "curl.1.gz:--ssl-reqd",
+        "curl.1.gz:--ftp-ssl-control",
+        "curl.1.gz:--ftp-ssl-ccc",
+        "curl.1.gz:--ftp-pasv"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "FTP-T03-BASE",
+      "source_term_ids": [
+        "curl.1.gz:--user",
+        "curl.1.gz:--disable",
+        "curl.1.gz:--proto"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "FTP-T04-BASE",
+      "source_term_ids": [
+        "curl.1.gz:--user",
+        "curl.1.gz:--config",
+        "curl.1.gz:--insecure"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "FTP-T05-BASE",
+      "source_term_ids": [
+        "curl.1.gz:--list-only",
+        "curl.1.gz:--ftp-method",
+        "curl.1.gz:--globoff"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "FTP-T06-BASE",
+      "source_term_ids": [
+        "curl.1.gz:--output",
+        "curl.1.gz:--max-filesize",
+        "curl.1.gz:--limit-rate"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "FTP-T07-BASE",
+      "source_term_ids": [
+        "curl.1.gz:--upload-file",
+        "curl.1.gz:--quote",
+        "curl.1.gz:--ftp-create-dirs"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "FTP-T08-READ",
+      "source_term_ids": [
+        "curl.1.gz:--output",
+        "curl.1.gz:--max-filesize",
+        "curl.1.gz:--request"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "FTP-T08-WRITE",
+      "source_term_ids": [
+        "curl.1.gz:--upload-file",
+        "curl.1.gz:--quote",
+        "curl.1.gz:--ftp-create-dirs"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "SMB-T01-BASE",
+      "source_term_ids": [
+        "smbclient.1.gz:--max-protocol",
+        "smbclient.1.gz:--client-protection",
+        "smbclient.1.gz:--port"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "SMB-T02-BASE",
+      "source_term_ids": [
+        "smbclient.1.gz:--max-protocol",
+        "smbclient.1.gz:--configfile",
+        "rpcclient.1.gz:--command"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "SMB-T03-SIGNING",
+      "source_term_ids": [
+        "smbclient.1.gz:--client-protection",
+        "smbclient.1.gz:--command"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "SMB-T03-ENCRYPTION",
+      "source_term_ids": [
+        "smbclient.1.gz:--client-protection",
+        "smbclient.1.gz:--command"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "SMB-T04-BASE",
+      "source_term_ids": [
+        "smbclient.1.gz:--no-pass",
+        "smbclient.1.gz:--user"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "SMB-T05-BASE",
+      "source_term_ids": [
+        "smbclient.1.gz:--authentication-file",
+        "smbclient.1.gz:--user",
+        "smbclient.1.gz:--use-kerberos"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "SMB-T06-BASE",
+      "source_term_ids": [
+        "smbclient.1.gz:dir",
+        "smbclient.1.gz:ls",
+        "smbclient.1.gz:--directory"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "SMB-T07-BASE",
+      "source_term_ids": [
+        "smbclient.1.gz:get",
+        "smbclient.1.gz:--command",
+        "smbclient.1.gz:--timeout"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "SMB-T08-BASE",
+      "source_term_ids": [
+        "smbclient.1.gz:put",
+        "smbclient.1.gz:del",
+        "smbclient.1.gz:--command"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "SMB-T09-READ",
+      "source_term_ids": [
+        "smbclient.1.gz:allinfo",
+        "smbclient.1.gz:get",
+        "smbclient.1.gz:--command"
+      ],
+      "symbolic_grammar_only": true
+    },
+    {
+      "approved_for_execution": false,
+      "complete_semantic_review": false,
+      "profile_id": "SMB-T09-WRITE",
+      "source_term_ids": [
+        "smbclient.1.gz:put",
+        "smbclient.1.gz:del",
+        "smbclient.1.gz:--command"
+      ],
+      "symbolic_grammar_only": true
+    }
+  ],
+  "r12_semantics_sha256": "9701bc65e9e62f18389da021c5ac9c1a7e930e30152403a87d81b094cf0dfab0",
+  "r13_symbolic_spec_sha256": "df9fbfae39526a70f96972074357f0e4144bd3d39f7f771d291e95c23999f4e0",
+  "roadmap_step": 8,
+  "safety_boundaries": [
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "USER_AND_SYSTEM_CONFIGURATION_PRECEDENCE_NOT_PROVEN",
+      "evidence_line_1based": 236,
+      "evidence_line_sha256": "b6263126c635477b238500d5b2b4ff6fe3041013a6f53838c2a39581e428e614",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man1/ssh.1.gz",
+      "required_design_guard": "NO_RUNTIME_CONFIG_IMPORT_OR_PRECEDENCE_ASSUMPTIONS",
+      "risk_id": "SSH_CONFIG_PRECEDENCE",
+      "term_id": "ssh.1.gz:-F"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "PROXY_CONFIGURATION_CAN_INVOKE_EXTERNAL_COMMAND",
+      "evidence_line_1based": 1681,
+      "evidence_line_sha256": "fa35d0d6a699d770c74f1be78f9f550061ee35d8c49b3eeb2a1752dc97174683",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "required_design_guard": "NO_PROXY_COMMAND_OR_UNBOUNDED_SHELL",
+      "risk_id": "SSH_PROXY_SHELL",
+      "term_id": "ssh_config.5.gz:ProxyCommand"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "LOCAL_COMMAND_INTERPRETER_SURFACE",
+      "evidence_line_1based": 1453,
+      "evidence_line_sha256": "cff423e71a51d64ba046cf7bb4a97444bbbc0d6cf33a815b110fc644b2e081d9",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "required_design_guard": "NO_LOCAL_COMMAND_OR_EXTERNAL_EXEC",
+      "risk_id": "SSH_LOCAL_EXEC",
+      "term_id": "ssh_config.5.gz:LocalCommand"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "REMOTE_COMMAND_INTERPRETER_SURFACE",
+      "evidence_line_1based": 1831,
+      "evidence_line_sha256": "bd9337d41997b6d73b048234663889a0d78da5b1fbb9cf8e94e7f25d76abc48b",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "required_design_guard": "NO_FREEFORM_REMOTE_COMMAND",
+      "risk_id": "SSH_REMOTE_EXEC",
+      "term_id": "ssh_config.5.gz:RemoteCommand"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "HOST_KEY_POLICY_REQUIRES_TRUST_ANCHOR",
+      "evidence_line_1based": 2097,
+      "evidence_line_sha256": "0828960f527cf6791df5d7e313bfadedc4bfbdd3c14d02745db3a8fea4308216",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "required_design_guard": "NO_AUTO_ACCEPTANCE_OR_BYPASS",
+      "risk_id": "SSH_HOST_KEY_PIN",
+      "term_id": "ssh_config.5.gz:StrictHostKeyChecking"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "HOST_KEY_LOOKUP_CAN_INVOKE_COMMAND",
+      "evidence_line_1based": 1428,
+      "evidence_line_sha256": "7dd85897d8fab57178936913294f734443bde35dad36784f53e4571c4920bc18",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "required_design_guard": "NO_DYNAMIC_HOST_KEY_COMMAND",
+      "risk_id": "SSH_CONFIG_HOOK",
+      "term_id": "ssh_config.5.gz:KnownHostsCommand"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "CONNECTION_SHARING_ADDS_INHERITED_CHANNEL_STATE",
+      "evidence_line_1based": 690,
+      "evidence_line_sha256": "d46e8d0cf9a1f15528c9a87fcd57acc98d6012cfc361f16a88f72382e952bbad",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "required_design_guard": "NO_UNATTESTED_MULTIPLEXING",
+      "risk_id": "SSH_CONTROL_REUSE",
+      "term_id": "ssh_config.5.gz:ControlMaster"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "KEYSCAN_TARGETS_REQUIRE_EXPLICIT_BOUNDS",
+      "evidence_line_1based": 122,
+      "evidence_line_sha256": "90b0d2ea22b6d45c6e6e96ce61d850d9315c579216822b8b3219f7618bda4235",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man1/ssh-keyscan.1.gz",
+      "required_design_guard": "NO_RANGE_OR_UNLIMITED_ENUMERATION",
+      "risk_id": "SSH_SCAN_SCOPE",
+      "term_id": "ssh-keyscan.1.gz:-T"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "BATCH_COMMANDS_INCLUDE_MUTATING_OPERATIONS",
+      "evidence_line_1based": 125,
+      "evidence_line_sha256": "314e3f916561b11e80f186dc3c691ebf7e2574cb83727da96d2ba6da89a84d90",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man1/sftp.1.gz",
+      "required_design_guard": "NO_FREEFORM_BATCH_COMMANDS",
+      "risk_id": "SFTP_BATCH_MUTATION",
+      "term_id": "sftp.1.gz:-b"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "CURL_CONFIGURATION_BYPASS_DEPENDS_ON_FIRST_ARGUMENT",
+      "evidence_line_1based": 1102,
+      "evidence_line_sha256": "fef6c9a8e46610c277ae793ec4a82bdb3e3665a4161319f7d8f7f6c6db45e2fa",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "required_design_guard": "NO_ASSUMED_CONFIG_ISOLATION",
+      "risk_id": "CURL_CONFIG_FIRST",
+      "term_id": "curl.1.gz:--disable"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "TLS_UPGRADE_REQUIRED_ON_FAILURE_TERMINATES",
+      "evidence_line_1based": 5159,
+      "evidence_line_sha256": "43fb48c42d71aaac317802d26707ee65d538283072964d49dae449f096d8d009",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "required_design_guard": "REQUIRE_TESTED_TLS_CONTROL_AND_DATA_SEPARATELY",
+      "risk_id": "CURL_TLS_REQUIRED",
+      "term_id": "curl.1.gz:--ssl-reqd"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "FTP_CONTROL_ONLY_TLS_MAY_LEAVE_DATA_CLEAR",
+      "evidence_line_1based": 1925,
+      "evidence_line_sha256": "242df7025f1671038e5dbca4accec998564d65cacf978462c0d3466e97414351",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "required_design_guard": "NO_UNVERIFIED_PLAINTEXT_DATA_TRANSFER",
+      "risk_id": "CURL_TLS_DOWNGRADE",
+      "term_id": "curl.1.gz:--ftp-ssl-control"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "FTP_CONTROL_CHANNEL_CAN_RETURN_TO_CLEAR",
+      "evidence_line_1based": 1895,
+      "evidence_line_sha256": "e7c9d4fc84ac837addb9d3c5f5909a51bfac0f64e4348b4c362384d85b5898b2",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "required_design_guard": "NO_CLEARTEXT_COMMAND_CHANNEL",
+      "risk_id": "CURL_TLS_CCC",
+      "term_id": "curl.1.gz:--ftp-ssl-ccc"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "TLS_PEER_VERIFICATION_BYPASS_OPTION",
+      "evidence_line_1based": 2342,
+      "evidence_line_sha256": "cc699d22eab498a00cdee2f00be3b9c9ebf9126c201b417958f25a35d860d17e",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "required_design_guard": "NO_INSECURE_TLS",
+      "risk_id": "CURL_INSECURE",
+      "term_id": "curl.1.gz:--insecure"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "PROXY_AND_ENVIRONMENT_CAN_CHANGE_DESTINATION",
+      "evidence_line_1based": 3655,
+      "evidence_line_sha256": "afac5abb93889352ba7b4c620db58d27a2ab1768b2dadcbab625541f637d4e1e",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "required_design_guard": "NO_PROXY_INHERITANCE",
+      "risk_id": "CURL_PROXY",
+      "term_id": "curl.1.gz:--proxy"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "AUTOMATIC_RETRY_MULTIPLIES_ATTEMPTS",
+      "evidence_line_1based": 4655,
+      "evidence_line_sha256": "b94eacafdd43f01278e79127585be37c695e024a9784c39e352650c0bfacb3a2",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "required_design_guard": "NO_UNVERIFIED_RETRY_BUDGET",
+      "risk_id": "CURL_RETRY",
+      "term_id": "curl.1.gz:--retry"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "PROTOCOL_SELECTION_MUST_BE_EXPLICIT",
+      "evidence_line_1based": 3578,
+      "evidence_line_sha256": "4c76699f97480bf39bb9edeae3478930182491896a0c819e74fe3ddf8f3f2d28",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "required_design_guard": "NO_UNBOUNDED_PROTOCOLS_OR_REDIRECTS",
+      "risk_id": "CURL_PROTOCOLS",
+      "term_id": "curl.1.gz:--proto"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "FTP_ARBITRARY_COMMAND_SURFACE",
+      "evidence_line_1based": 4231,
+      "evidence_line_sha256": "8115ff4a13a9d2203d37fafc72a0506f1780c60ba295382ca9ee5b3eef92378c",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "required_design_guard": "NO_FREEFORM_FTP_COMMAND",
+      "risk_id": "CURL_QUOTE",
+      "term_id": "curl.1.gz:--quote"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "UPLOAD_CAUSES_REMOTE_MUTATION",
+      "evidence_line_1based": 5725,
+      "evidence_line_sha256": "b47d18c0ee9b4938ae494453dd15eaf6ec827c81a79e8815047d6355c775124c",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "required_design_guard": "NO_WRITE_WITHOUT_ISOLATED_CLEANUP",
+      "risk_id": "CURL_UPLOAD",
+      "term_id": "curl.1.gz:--upload-file"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "MAX_PROTOCOL_IS_NOT_MIN_PROTOCOL",
+      "evidence_line_1based": 125,
+      "evidence_line_sha256": "d158e1fb5a4f9475b8b6fbaa2a8e1d04c32b8a75cd2a4f092e52443aeec0992a",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "required_design_guard": "NO_NEGOTIATION_ASSUMPTION_OR_SMBV1_ENABLEMENT",
+      "risk_id": "SMB_MAX_DIALECT",
+      "term_id": "smbclient.1.gz:--max-protocol"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "SIGN_AND_ENCRYPT_ARE_DIFFERENT",
+      "evidence_line_1based": 719,
+      "evidence_line_sha256": "290bd0149e601847bd387b2ad65bc360a2ede8016260c327e4142104bddb3172",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "required_design_guard": "NO_SIGNING_AS_ENCRYPTION_CLAIM",
+      "risk_id": "SMB_SIGN_ENCRYPT",
+      "term_id": "smbclient.1.gz:--client-protection"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "SMB_COMMAND_STRING_ACCEPTS_MULTIPLE_COMMANDS",
+      "evidence_line_1based": 402,
+      "evidence_line_sha256": "54b2873e4ea0ab3ff685a9a2958d3df594e7d06b0ddf5f9dd17bb7ee47737ca1",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "required_design_guard": "NO_FREEFORM_CHAINED_COMMAND_STRING",
+      "risk_id": "SMB_COMMAND_LIST",
+      "term_id": "smbclient.1.gz:--command"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "REMOTE_WRITE_COMMAND",
+      "evidence_line_1based": 1048,
+      "evidence_line_sha256": "3d31293206a20342862b136c6e5374fbe89c98adbcc50e55e91a37aefbb4c790",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "required_design_guard": "NO_MUTATION_WITHOUT_RECEIPT_AND_CLEANUP",
+      "risk_id": "SMB_PUT",
+      "term_id": "smbclient.1.gz:put"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "REMOTE_DESTRUCTIVE_COMMAND",
+      "evidence_line_1based": 823,
+      "evidence_line_sha256": "b1a12f00a0191d20d676e435bc173d663959f1779b26fdc682063e663a987329",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "required_design_guard": "NO_ARBITRARY_DELETE_OR_WILDCARD",
+      "risk_id": "SMB_DELETE",
+      "term_id": "smbclient.1.gz:del"
+    },
+    {
+      "approved_for_execution": false,
+      "documented_boundary": "RPC_COMMAND_STRING_IS_NOT_TYPED_AST",
+      "evidence_line_1based": 377,
+      "evidence_line_sha256": "b15641cb92a6dc20c37fb0a6f37f1935ae1376fb0132b4cca3188bf71e5b0717",
+      "guard_verified_operationally": false,
+      "manual_path": "/usr/share/man/man1/rpcclient.1.gz",
+      "required_design_guard": "NO_ARBITRARY_RPC_COMMAND_STRING",
+      "risk_id": "RPC_COMMAND",
+      "term_id": "rpcclient.1.gz:--command"
+    }
+  ],
+  "schema_version": "1.0",
+  "source_manifests": [
+    {
+      "compressed_bytes": 15310,
+      "compressed_sha256": "78a8c50b4eecf26228707878018ca314aea3008c87caef6724030fc856e50481",
+      "lexical_candidates": 9,
+      "manual_path": "/usr/share/man/man1/ssh.1.gz",
+      "uncompressed_bytes": 48413,
+      "uncompressed_sha256": "c19056cc2e6661b282963673bba0ada5b5a4ae30f4d49f91a1d168fef9e25766"
+    },
+    {
+      "compressed_bytes": 20952,
+      "compressed_sha256": "7860149efded4d0d863e3227c78780137ee78ce437cca61aad74bdd425498b37",
+      "lexical_candidates": 24,
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "uncompressed_bytes": 73459,
+      "uncompressed_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "compressed_bytes": 2296,
+      "compressed_sha256": "9853bddce174b54203038fc07a8efe432cb52891e456d31eab6ff58984f3dadc",
+      "lexical_candidates": 4,
+      "manual_path": "/usr/share/man/man1/ssh-keyscan.1.gz",
+      "uncompressed_bytes": 4828,
+      "uncompressed_sha256": "43e1ad81c1f1448bce4339e8d177ad55f290bb79149fc7097396073f57f6309a"
+    },
+    {
+      "compressed_bytes": 6331,
+      "compressed_sha256": "14866f5f918982483f7bfa5d4c53fcc2662ab0d86db6d7113309fbc5a5dc53e0",
+      "lexical_candidates": 4,
+      "manual_path": "/usr/share/man/man1/sftp.1.gz",
+      "uncompressed_bytes": 18055,
+      "uncompressed_sha256": "29301db4c4c016483fc4d3c42652f678cc99bcfaec16cbb2490151fc172a15f7"
+    },
+    {
+      "compressed_bytes": 72618,
+      "compressed_sha256": "c890fbab33db8ed67773ffa4d422ed78da17f16d827f6615d94111923d242c16",
+      "lexical_candidates": 27,
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "uncompressed_bytes": 255928,
+      "uncompressed_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "compressed_bytes": 13812,
+      "compressed_sha256": "aca2de052bb22fa7fb03451de4f7cd2c235af5a84372e623d9b49863262ef77b",
+      "lexical_candidates": 20,
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "uncompressed_bytes": 47640,
+      "uncompressed_sha256": "902caa2613d93637dd47b112fdb573ae4fdfa4818d31960d3962acbe8d7833a5"
+    },
+    {
+      "compressed_bytes": 10872,
+      "compressed_sha256": "f264e9e8c4c1eece7688a1d1813974211f4969ec51e3e8a944d4ae40d26ba05a",
+      "lexical_candidates": 3,
+      "manual_path": "/usr/share/man/man1/rpcclient.1.gz",
+      "uncompressed_bytes": 37432,
+      "uncompressed_sha256": "4bc2690e466f70ce9d502feac76bcf8c28841feaa616b9baecfb6532ffa054cb"
+    }
+  ],
+  "term_anchors": [
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "b6263126c635477b238500d5b2b4ff6fe3041013a6f53838c2a39581e428e614",
+      "manual_path": "/usr/share/man/man1/ssh.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 236,
+      "term": "-F",
+      "term_id": "ssh.1.gz:-F",
+      "uncompressed_manual_sha256": "c19056cc2e6661b282963673bba0ada5b5a4ae30f4d49f91a1d168fef9e25766"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "15671e84e0d3225b310b2933c4721a6bfbc6cfaf19a80015eddc83adebf28f06",
+      "manual_path": "/usr/share/man/man1/ssh.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 500,
+      "term": "-o",
+      "term_id": "ssh.1.gz:-o",
+      "uncompressed_manual_sha256": "c19056cc2e6661b282963673bba0ada5b5a4ae30f4d49f91a1d168fef9e25766"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "0baf8c805b7fb683dd272f07383010e0ec8dc52f789cd83a6531197171251803",
+      "manual_path": "/usr/share/man/man1/ssh.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 775,
+      "term": "-T",
+      "term_id": "ssh.1.gz:-T",
+      "uncompressed_manual_sha256": "c19056cc2e6661b282963673bba0ada5b5a4ae30f4d49f91a1d168fef9e25766"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "97e31c799b0a9b1b39bd1be78efcd9f0ab8a548dd67af0824a59a0e4a96cb0b0",
+      "manual_path": "/usr/share/man/man1/ssh.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 444,
+      "term": "-N",
+      "term_id": "ssh.1.gz:-N",
+      "uncompressed_manual_sha256": "c19056cc2e6661b282963673bba0ada5b5a4ae30f4d49f91a1d168fef9e25766"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "cbe130350a00dccdfdbf4f582dbb36325d2b9d31ead3db3d30d06439c2c0a48c",
+      "manual_path": "/usr/share/man/man1/ssh.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 626,
+      "term": "-p",
+      "term_id": "ssh.1.gz:-p",
+      "uncompressed_manual_sha256": "c19056cc2e6661b282963673bba0ada5b5a4ae30f4d49f91a1d168fef9e25766"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "c1bd0ef2aec7f385a1009d831fe7aa7c665c2691a316ea1d676fce483f2e131e",
+      "manual_path": "/usr/share/man/man1/ssh.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 296,
+      "term": "-i",
+      "term_id": "ssh.1.gz:-i",
+      "uncompressed_manual_sha256": "c19056cc2e6661b282963673bba0ada5b5a4ae30f4d49f91a1d168fef9e25766"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "bca9ff36a485ac41608988e16f8ed94d0d3d3ed6122062ccf9189f811472741c",
+      "manual_path": "/usr/share/man/man1/ssh.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 409,
+      "term": "-l",
+      "term_id": "ssh.1.gz:-l",
+      "uncompressed_manual_sha256": "c19056cc2e6661b282963673bba0ada5b5a4ae30f4d49f91a1d168fef9e25766"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "852bbda73d1fc062333a30f3c1fb844e6351e44d00039b2faf0c3a4ffcbe4b91",
+      "manual_path": "/usr/share/man/man1/ssh.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 325,
+      "term": "-J",
+      "term_id": "ssh.1.gz:-J",
+      "uncompressed_manual_sha256": "c19056cc2e6661b282963673bba0ada5b5a4ae30f4d49f91a1d168fef9e25766"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "ad304a355de436f88111381cbc72e2d27612fc92680c358d2cb04eb4f1fecfd9",
+      "manual_path": "/usr/share/man/man1/ssh.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 804,
+      "term": "-W",
+      "term_id": "ssh.1.gz:-W",
+      "uncompressed_manual_sha256": "c19056cc2e6661b282963673bba0ada5b5a4ae30f4d49f91a1d168fef9e25766"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "0828960f527cf6791df5d7e313bfadedc4bfbdd3c14d02745db3a8fea4308216",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 2097,
+      "term": "StrictHostKeyChecking",
+      "term_id": "ssh_config.5.gz:StrictHostKeyChecking",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "49ee2527fdc83e99fae7a050251d5d827909ce411c0a8120af3cf5caf93375c0",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 2269,
+      "term": "UserKnownHostsFile",
+      "term_id": "ssh_config.5.gz:UserKnownHostsFile",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "8d5251797d86c1b1d7cf367818bc5978539ffccd6057d5c47e9567fa566dcc5f",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 999,
+      "term": "GlobalKnownHostsFile",
+      "term_id": "ssh_config.5.gz:GlobalKnownHostsFile",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "6d1195836529323c1278b54e753b546713b456afc25ddbc7ad6a28317fb2eaa5",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 356,
+      "term": "BatchMode",
+      "term_id": "ssh_config.5.gz:BatchMode",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "fa35d0d6a699d770c74f1be78f9f550061ee35d8c49b3eeb2a1752dc97174683",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 1681,
+      "term": "ProxyCommand",
+      "term_id": "ssh_config.5.gz:ProxyCommand",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "f1b61558fff33298f6dcca6e489d38fb86537c4b157ac01b63a55ccce0860c50",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 1719,
+      "term": "ProxyJump",
+      "term_id": "ssh_config.5.gz:ProxyJump",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "13b4f1add4a2502f6af11ec7de2e9c212e2aeb55d03a2a9e65bd90bcd86ae1d6",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 655,
+      "term": "ClearAllForwardings",
+      "term_id": "ssh_config.5.gz:ClearAllForwardings",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "7ba78741ec810fe0a95e6511dcfaed4463928ae423a6ef774c16443257e9a134",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 911,
+      "term": "ForwardAgent",
+      "term_id": "ssh_config.5.gz:ForwardAgent",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "9d4d22bf01518d525cd69e895ac768105b423ec5d06b41b51e5d7fad6302065c",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 1215,
+      "term": "IdentityAgent",
+      "term_id": "ssh_config.5.gz:IdentityAgent",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "aa10f3cc45d8be1427096bed377e0186a1dc0cc84932ed2d5df704099bdc0b4f",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 1611,
+      "term": "PermitLocalCommand",
+      "term_id": "ssh_config.5.gz:PermitLocalCommand",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "6e1f69b724f0f55c8552c7b31813e36f3a5a28a3b45aba836cd67a99eeebb011",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 2208,
+      "term": "UpdateHostKeys",
+      "term_id": "ssh_config.5.gz:UpdateHostKeys",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "f3f8ade9ac09a65f0a0726c64bbe1dd3eec80c46f6b0c5e83c11d7df0413ecc9",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 683,
+      "term": "ConnectTimeout",
+      "term_id": "ssh_config.5.gz:ConnectTimeout",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "06f763691c41908c1f7fed77cded2f1dede7ff3baadcbf42f2dd8743eddd2a44",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 678,
+      "term": "ConnectionAttempts",
+      "term_id": "ssh_config.5.gz:ConnectionAttempts",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "c6d8526996b86d62cd553950ed276ead279921d28e1917c7e25a0bd3f9a03dc1",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 1899,
+      "term": "RequestTTY",
+      "term_id": "ssh_config.5.gz:RequestTTY",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "19f955351bb9cd3a888e5a0b4a8893823dd83500997cd6680d2d58245611dc70",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 1581,
+      "term": "NumberOfPasswordPrompts",
+      "term_id": "ssh_config.5.gz:NumberOfPasswordPrompts",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "387b38df347454fdb862271d722144d3351f9ac9b64ab7c1b187e23f5a2fca26",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 2010,
+      "term": "ServerAliveInterval",
+      "term_id": "ssh_config.5.gz:ServerAliveInterval",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "b7a992d357351e5e1b0b02bb5a21606990a778ec144d0aae456d3fc9fe261132",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 1136,
+      "term": "HostKeyAlgorithms",
+      "term_id": "ssh_config.5.gz:HostKeyAlgorithms",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "60d8d6aa3aa32e366ab25383dfe8a99bba561f757f8f2fe5b5b98f1cb6a18560",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 1375,
+      "term": "KbdInteractiveAuthentication",
+      "term_id": "ssh_config.5.gz:KbdInteractiveAuthentication",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "7dd85897d8fab57178936913294f734443bde35dad36784f53e4571c4920bc18",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 1428,
+      "term": "KnownHostsCommand",
+      "term_id": "ssh_config.5.gz:KnownHostsCommand",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "d46e8d0cf9a1f15528c9a87fcd57acc98d6012cfc361f16a88f72382e952bbad",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 690,
+      "term": "ControlMaster",
+      "term_id": "ssh_config.5.gz:ControlMaster",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "e011bc5ca778ce8d201593b2ccf75d95925db06ea04bebcd448a22709184aaac",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 737,
+      "term": "ControlPath",
+      "term_id": "ssh_config.5.gz:ControlPath",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "cff423e71a51d64ba046cf7bb4a97444bbbc0d6cf33a815b110fc644b2e081d9",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 1453,
+      "term": "LocalCommand",
+      "term_id": "ssh_config.5.gz:LocalCommand",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "bd9337d41997b6d73b048234663889a0d78da5b1fbb9cf8e94e7f25d76abc48b",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 1831,
+      "term": "RemoteCommand",
+      "term_id": "ssh_config.5.gz:RemoteCommand",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "06de7848e5add96e92a6b06643d0b692b27d21e44e4e4ad101e045c6b27ecfb4",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "option_authorized": false,
+      "source_line_1based": 400,
+      "term": "CanonicalizeHostname",
+      "term_id": "ssh_config.5.gz:CanonicalizeHostname",
+      "uncompressed_manual_sha256": "10ea0a18bfd6b57d94037c5acd231ef3ab4d112c689039c4af9cbf6dc744a841"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "90b0d2ea22b6d45c6e6e96ce61d850d9315c579216822b8b3219f7618bda4235",
+      "manual_path": "/usr/share/man/man1/ssh-keyscan.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 122,
+      "term": "-T",
+      "term_id": "ssh-keyscan.1.gz:-T",
+      "uncompressed_manual_sha256": "43e1ad81c1f1448bce4339e8d177ad55f290bb79149fc7097396073f57f6309a"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "a72915e40debd209fee83417404919a207be7d271c2760a4200df0f220124d64",
+      "manual_path": "/usr/share/man/man1/ssh-keyscan.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 130,
+      "term": "-t",
+      "term_id": "ssh-keyscan.1.gz:-t",
+      "uncompressed_manual_sha256": "43e1ad81c1f1448bce4339e8d177ad55f290bb79149fc7097396073f57f6309a"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "cbe130350a00dccdfdbf4f582dbb36325d2b9d31ead3db3d30d06439c2c0a48c",
+      "manual_path": "/usr/share/man/man1/ssh-keyscan.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 115,
+      "term": "-p",
+      "term_id": "ssh-keyscan.1.gz:-p",
+      "uncompressed_manual_sha256": "43e1ad81c1f1448bce4339e8d177ad55f290bb79149fc7097396073f57f6309a"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "06fde08282e9604d2e3f79c8529b7181e6a302600563a09fc06cd8af2ceab23d",
+      "manual_path": "/usr/share/man/man1/ssh-keyscan.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 93,
+      "term": "-H",
+      "term_id": "ssh-keyscan.1.gz:-H",
+      "uncompressed_manual_sha256": "43e1ad81c1f1448bce4339e8d177ad55f290bb79149fc7097396073f57f6309a"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "314e3f916561b11e80f186dc3c691ebf7e2574cb83727da96d2ba6da89a84d90",
+      "manual_path": "/usr/share/man/man1/sftp.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 125,
+      "term": "-b",
+      "term_id": "sftp.1.gz:-b",
+      "uncompressed_manual_sha256": "29301db4c4c016483fc4d3c42652f678cc99bcfaec16cbb2490151fc172a15f7"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "dd4cc2cfdf9de194e0b3775d2ccaf32cfea373b7bd2f241b320dbd8fe0f77aa5",
+      "manual_path": "/usr/share/man/man1/sftp.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 212,
+      "term": "-o",
+      "term_id": "sftp.1.gz:-o",
+      "uncompressed_manual_sha256": "29301db4c4c016483fc4d3c42652f678cc99bcfaec16cbb2490151fc172a15f7"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "c8a8ad5a1b68034fe801d1edde77281f55ebeaec61dd7ff0c60f53f24c2ebf6d",
+      "manual_path": "/usr/share/man/man1/sftp.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 328,
+      "term": "-P",
+      "term_id": "sftp.1.gz:-P",
+      "uncompressed_manual_sha256": "29301db4c4c016483fc4d3c42652f678cc99bcfaec16cbb2490151fc172a15f7"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "c1bd0ef2aec7f385a1009d831fe7aa7c665c2691a316ea1d676fce483f2e131e",
+      "manual_path": "/usr/share/man/man1/sftp.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 188,
+      "term": "-i",
+      "term_id": "sftp.1.gz:-i",
+      "uncompressed_manual_sha256": "29301db4c4c016483fc4d3c42652f678cc99bcfaec16cbb2490151fc172a15f7"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "fef6c9a8e46610c277ae793ec4a82bdb3e3665a4161319f7d8f7f6c6db45e2fa",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 1102,
+      "term": "--disable",
+      "term_id": "curl.1.gz:--disable",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "4c76699f97480bf39bb9edeae3478930182491896a0c819e74fe3ddf8f3f2d28",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 3578,
+      "term": "--proto",
+      "term_id": "curl.1.gz:--proto",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "b0f691fabb569653570caa2976dbc02f951a69fa33b38946c91fce14f346b3e6",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 3633,
+      "term": "--proto-redir",
+      "term_id": "curl.1.gz:--proto-redir",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "0a4ed6b02516eadcb90eeb9b71d930fe0c169d8e75727f672917f8889b1e6408",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 2915,
+      "term": "--max-time",
+      "term_id": "curl.1.gz:--max-time",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "841c0a5849c8f0fa595ea96aeed0782b27b6dac516f8507d80e0f2cba53209c3",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 693,
+      "term": "--connect-timeout",
+      "term_id": "curl.1.gz:--connect-timeout",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "b94eacafdd43f01278e79127585be37c695e024a9784c39e352650c0bfacb3a2",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 4655,
+      "term": "--retry",
+      "term_id": "curl.1.gz:--retry",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "a4d2272772e4035ba6d9c14decf608fb29dfefc5a675d4f6dc1654b15bdd6bbd",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 1959,
+      "term": "--globoff",
+      "term_id": "curl.1.gz:--globoff",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "93d5ec89b50f5b90bb4769a8b620e998f9eb22aa86598d5ff564a4074a26ee12",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 3203,
+      "term": "--noproxy",
+      "term_id": "curl.1.gz:--noproxy",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "afac5abb93889352ba7b4c620db58d27a2ab1768b2dadcbab625541f637d4e1e",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 3655,
+      "term": "--proxy",
+      "term_id": "curl.1.gz:--proxy",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "263a23592d6e0705d8d5091d5cecdeb7b1dd3d20c9becef81b398d5d0db3c345",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 1806,
+      "term": "--ftp-pasv",
+      "term_id": "curl.1.gz:--ftp-pasv",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "75fe157504178de0af443a5413b2a74a63e2bec3114195c2b7efbbef1380b57a",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 1826,
+      "term": "--ftp-port",
+      "term_id": "curl.1.gz:--ftp-port",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "43fb48c42d71aaac317802d26707ee65d538283072964d49dae449f096d8d009",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 5159,
+      "term": "--ssl-reqd",
+      "term_id": "curl.1.gz:--ssl-reqd",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "242df7025f1671038e5dbca4accec998564d65cacf978462c0d3466e97414351",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 1925,
+      "term": "--ftp-ssl-control",
+      "term_id": "curl.1.gz:--ftp-ssl-control",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "ddc0487821900a26b96b2b9472df355a85c69ba3ed896991404ae0199b29098a",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 1778,
+      "term": "--ftp-method",
+      "term_id": "curl.1.gz:--ftp-method",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "8115ff4a13a9d2203d37fafc72a0506f1780c60ba295382ca9ee5b3eef92378c",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 4231,
+      "term": "--quote",
+      "term_id": "curl.1.gz:--quote",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "e881b69d46fc1b76701829590d9f5b496d2f45d21dbeabf93bf1faade7c0057f",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 4549,
+      "term": "--request",
+      "term_id": "curl.1.gz:--request",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "b47d18c0ee9b4938ae494453dd15eaf6ec827c81a79e8815047d6355c775124c",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 5725,
+      "term": "--upload-file",
+      "term_id": "curl.1.gz:--upload-file",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "efeb9061fcaf2e5cba615a11353f2105331174374e6a2a2b78e286efb8c83352",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 3279,
+      "term": "--output",
+      "term_id": "curl.1.gz:--output",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "48796d6ded4362d2df04a802957cbad90acb3c1223d07821030a1564fbe18518",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 2676,
+      "term": "--list-only",
+      "term_id": "curl.1.gz:--list-only",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "c6fc19733f9375c9780cf3144915dd5ae1665498b4bdb617e03c661d18092881",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 5860,
+      "term": "--user",
+      "term_id": "curl.1.gz:--user",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "a301908ffcf33cf1dc93cf27aa35a715a949602a379d341ebcfe020a83764843",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 615,
+      "term": "--config",
+      "term_id": "curl.1.gz:--config",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "cc699d22eab498a00cdee2f00be3b9c9ebf9126c201b417958f25a35d860d17e",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 2342,
+      "term": "--insecure",
+      "term_id": "curl.1.gz:--insecure",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "ae2c3a7b5b9eecf6d437d600eea3757df5f6288df83007d9863fd3d432047e92",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 1764,
+      "term": "--ftp-create-dirs",
+      "term_id": "curl.1.gz:--ftp-create-dirs",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "7d588e7c89ac239e57bffa4674226c43eac6dd61b83b49f904103d58fe860615",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 2648,
+      "term": "--limit-rate",
+      "term_id": "curl.1.gz:--limit-rate",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "8bea90f1690028541374a40a1f88e8d8c6f3e9366a277a621e6b109aa48b16e2",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 2876,
+      "term": "--max-filesize",
+      "term_id": "curl.1.gz:--max-filesize",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "e7c9d4fc84ac837addb9d3c5f5909a51bfac0f64e4348b4c362384d85b5898b2",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 1895,
+      "term": "--ftp-ssl-ccc",
+      "term_id": "curl.1.gz:--ftp-ssl-ccc",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "d5c3e85dfdb8599485c12c937b31e1e44382190a31335f353e6f816deaa61f93",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 1877,
+      "term": "--ftp-skip-pasv-ip",
+      "term_id": "curl.1.gz:--ftp-skip-pasv-ip",
+      "uncompressed_manual_sha256": "4ed8ecde3cc54664c458d80a29addf867cac7b261ec51ceafba3fac87be6a7e0"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "290bd0149e601847bd387b2ad65bc360a2ede8016260c327e4142104bddb3172",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 719,
+      "term": "--client-protection",
+      "term_id": "smbclient.1.gz:--client-protection",
+      "uncompressed_manual_sha256": "902caa2613d93637dd47b112fdb573ae4fdfa4818d31960d3962acbe8d7833a5"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "d158e1fb5a4f9475b8b6fbaa2a8e1d04c32b8a75cd2a4f092e52443aeec0992a",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 125,
+      "term": "--max-protocol",
+      "term_id": "smbclient.1.gz:--max-protocol",
+      "uncompressed_manual_sha256": "902caa2613d93637dd47b112fdb573ae4fdfa4818d31960d3962acbe8d7833a5"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "53798cd7336cf201ae997bd031dc478145ae235f29796d4485fa2950c124064a",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 452,
+      "term": "--option",
+      "term_id": "smbclient.1.gz:--option",
+      "uncompressed_manual_sha256": "902caa2613d93637dd47b112fdb573ae4fdfa4818d31960d3962acbe8d7833a5"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "72910df59b6cfbdd208860186d362af4fc2a12fb3cb110b798227aa93f31a435",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 444,
+      "term": "--configfile",
+      "term_id": "smbclient.1.gz:--configfile",
+      "uncompressed_manual_sha256": "902caa2613d93637dd47b112fdb573ae4fdfa4818d31960d3962acbe8d7833a5"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "0e7630e9fd55e43ce2fc0604b992acc204e7f4b38efc05e0c4cb8f4b6ae62bef",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 666,
+      "term": "--authentication-file",
+      "term_id": "smbclient.1.gz:--authentication-file",
+      "uncompressed_manual_sha256": "902caa2613d93637dd47b112fdb573ae4fdfa4818d31960d3962acbe8d7833a5"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "54b2873e4ea0ab3ff685a9a2958d3df594e7d06b0ddf5f9dd17bb7ee47737ca1",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 402,
+      "term": "--command",
+      "term_id": "smbclient.1.gz:--command",
+      "uncompressed_manual_sha256": "902caa2613d93637dd47b112fdb573ae4fdfa4818d31960d3962acbe8d7833a5"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "0d6607b1e389c6e921e98ea722eba135631549376483bdbfd3a6061e5f0c7bcb",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 632,
+      "term": "--no-pass",
+      "term_id": "smbclient.1.gz:--no-pass",
+      "uncompressed_manual_sha256": "902caa2613d93637dd47b112fdb573ae4fdfa4818d31960d3962acbe8d7833a5"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "ea7ade72b859ba6783fa9957b0eeda5a0dfbbad4e97de252eeba2242099dc896",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 612,
+      "term": "--user",
+      "term_id": "smbclient.1.gz:--user",
+      "uncompressed_manual_sha256": "902caa2613d93637dd47b112fdb573ae4fdfa4818d31960d3962acbe8d7833a5"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "1788130375714c16e8f3eb5ca815a0d9455cadc2994a204f797cccbe850a8d29",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 175,
+      "term": "--timeout",
+      "term_id": "smbclient.1.gz:--timeout",
+      "uncompressed_manual_sha256": "902caa2613d93637dd47b112fdb573ae4fdfa4818d31960d3962acbe8d7833a5"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "2d6c41e421b8bc2f233ba887fbde4687515695e7c178708959e30346cbd118e7",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 113,
+      "term": "--port",
+      "term_id": "smbclient.1.gz:--port",
+      "uncompressed_manual_sha256": "902caa2613d93637dd47b112fdb573ae4fdfa4818d31960d3962acbe8d7833a5"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "0e018f9031f4e2a4071104d0528868b3302c2eab9bcfe4efb576ac2b1c1b0a30",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 397,
+      "term": "--directory",
+      "term_id": "smbclient.1.gz:--directory",
+      "uncompressed_manual_sha256": "902caa2613d93637dd47b112fdb573ae4fdfa4818d31960d3962acbe8d7833a5"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "d3c23629de80d95387855a1bf85ee723edf7cbad740b2f48fd06796da01221d7",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 135,
+      "term": "--ip-address",
+      "term_id": "smbclient.1.gz:--ip-address",
+      "uncompressed_manual_sha256": "902caa2613d93637dd47b112fdb573ae4fdfa4818d31960d3962acbe8d7833a5"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "0bec64f5ef6d382af0cd5d7980da8177e8d70cc6be56cf63e57639ade171b740",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 696,
+      "term": "--use-kerberos",
+      "term_id": "smbclient.1.gz:--use-kerberos",
+      "uncompressed_manual_sha256": "902caa2613d93637dd47b112fdb573ae4fdfa4818d31960d3962acbe8d7833a5"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "7ed61173833b7e6d1982eceaa8a684b8777cde448505d58e2f669c193fbe7f36",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 423,
+      "term": "--debuglevel",
+      "term_id": "smbclient.1.gz:--debuglevel",
+      "uncompressed_manual_sha256": "902caa2613d93637dd47b112fdb573ae4fdfa4818d31960d3962acbe8d7833a5"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "2ac2ef2bf3060143641e832749d3c3a280fe78426a7b87e398a620512fbf64b8",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 859,
+      "term": "get",
+      "term_id": "smbclient.1.gz:get",
+      "uncompressed_manual_sha256": "902caa2613d93637dd47b112fdb573ae4fdfa4818d31960d3962acbe8d7833a5"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "3d31293206a20342862b136c6e5374fbe89c98adbcc50e55e91a37aefbb4c790",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 1048,
+      "term": "put",
+      "term_id": "smbclient.1.gz:put",
+      "uncompressed_manual_sha256": "902caa2613d93637dd47b112fdb573ae4fdfa4818d31960d3962acbe8d7833a5"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "b1a12f00a0191d20d676e435bc173d663959f1779b26fdc682063e663a987329",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 823,
+      "term": "del",
+      "term_id": "smbclient.1.gz:del",
+      "uncompressed_manual_sha256": "902caa2613d93637dd47b112fdb573ae4fdfa4818d31960d3962acbe8d7833a5"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "b47fbd72187479770a18227b4b8bf82253bda8c3c310f79707786dd7c2c4417f",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 766,
+      "term": "allinfo",
+      "term_id": "smbclient.1.gz:allinfo",
+      "uncompressed_manual_sha256": "902caa2613d93637dd47b112fdb573ae4fdfa4818d31960d3962acbe8d7833a5"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "1c43c8e449d901b38ef776a80c11e47ce0b8a389a6e0b77ded872f49b612f99b",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 935,
+      "term": "ls",
+      "term_id": "smbclient.1.gz:ls",
+      "uncompressed_manual_sha256": "902caa2613d93637dd47b112fdb573ae4fdfa4818d31960d3962acbe8d7833a5"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "112c79dfde5a5ed975c2c17c8272c8c0866eeaf1cb61ca5d8b9f4efe9b9c5a99",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 837,
+      "term": "dir",
+      "term_id": "smbclient.1.gz:dir",
+      "uncompressed_manual_sha256": "902caa2613d93637dd47b112fdb573ae4fdfa4818d31960d3962acbe8d7833a5"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "b15641cb92a6dc20c37fb0a6f37f1935ae1376fb0132b4cca3188bf71e5b0717",
+      "manual_path": "/usr/share/man/man1/rpcclient.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 377,
+      "term": "--command",
+      "term_id": "rpcclient.1.gz:--command",
+      "uncompressed_manual_sha256": "4bc2690e466f70ce9d502feac76bcf8c28841feaa616b9baecfb6532ffa054cb"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "ea7ade72b859ba6783fa9957b0eeda5a0dfbbad4e97de252eeba2242099dc896",
+      "manual_path": "/usr/share/man/man1/rpcclient.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 598,
+      "term": "--user",
+      "term_id": "rpcclient.1.gz:--user",
+      "uncompressed_manual_sha256": "4bc2690e466f70ce9d502feac76bcf8c28841feaa616b9baecfb6532ffa054cb"
+    },
+    {
+      "anchor_class": "EXACT_MANPAGE_ENTRY_LOCATED",
+      "annotation_status": "SOURCE_LOCATION_ONLY_SEMANTIC_REVIEW_NOT_COMPLETED",
+      "caller_supplied_values_approved": false,
+      "exact_roff_line_sha256": "0d6607b1e389c6e921e98ea722eba135631549376483bdbfd3a6061e5f0c7bcb",
+      "manual_path": "/usr/share/man/man1/rpcclient.1.gz",
+      "option_authorized": false,
+      "source_line_1based": 618,
+      "term": "--no-pass",
+      "term_id": "rpcclient.1.gz:--no-pass",
+      "uncompressed_manual_sha256": "4bc2690e466f70ce9d502feac76bcf8c28841feaa616b9baecfb6532ffa054cb"
+    }
+  ],
+  "term_count": 91
+}
