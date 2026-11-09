@@ -1,0 +1,26 @@
+{
+  "increment": "P8-R15",
+  "roadmap_step": 8,
+  "base_commit": "62812d92dd89ccf4559d9d2e7219fd96b197d5c6",
+  "claim": "static-conservative-deny-only-risk-to-profile-gating-not-operational-readiness",
+  "source_lineage": [
+    "lab/p8-cli-grammar-v1/spec.json",
+    "lab/p8-cli-full-source-v1/anchors.json",
+    "lab/p8-cli-review-gates-v1/gates.json"
+  ],
+  "implementation": ["lab/verify_p8_cli_review_gates.py"],
+  "tests": ["lab/tests/test_p8_cli_review_gates.py"],
+  "risk_boundaries": 25,
+  "profiles": 29,
+  "conservative_risk_profile_links": 238,
+  "write_cleanup_gated_profiles": 5,
+  "approved_cli_options": 0,
+  "approved_argv_renderers": 0,
+  "authorized_cases": 0,
+  "authorized_profiles": 0,
+  "dispatch_allowed": false,
+  "algorithms_started": false,
+  "open_findings": ["AL-06", "AL-07"],
+  "development_obligations_open": 7,
+  "next_step": "source-grounded per-utility option review, effective configuration and runtime evidence; never infer authorizations from manual text"
+}
