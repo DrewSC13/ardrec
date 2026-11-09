@@ -71,3 +71,9 @@
 **ES:** Registro de 15 bytes-hash de ejecutables en imagen base QCOW2 comprobada por lectura y una herramienta ausente (`sshpass`); 29 correspondencias preliminares por protocolo. No acredita compatibilidad por familia, `argv`, presupuesto, autoridad, caso real, origen confiable ni operación futura. Ningún perfil habilitado; P8 y AL-06/AL-07 permanecen abiertos. A1-R9 PR #41 cerrado sin merge; A1–A10 se implementan desde punto 14.
 
 **EN:** Observed 15 point-in-time guest-image binary hashes and 29 non-authorized protocol-level candidates; no runtime pins, dispatch authorization, experiment or algorithm advancement.
+
+## P8-R10 — intenciones técnicas tipadas / Typed symbolic intents
+
+**ES:** Se proponen 29 contratos semánticos por variante, unidos a P8 y P8-R9 con operaciones, campos materiales simbólicos, controles declarativos y cinco políticas de limpieza para escritura. No equivalen a opciones reales de CLI, comandos SSH/SMB, `argv`, contratos privados ni autorizaciones. P8 y AL-06/AL-07 y siete obligaciones siguen abiertos; P9 y A1–A10 no iniciados.
+
+**EN:** 29 deny-only typed symbolic intents with separate SSH/FTP/SMB language boundaries and write cleanup gates, not runnable CLI recipes.

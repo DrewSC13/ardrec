@@ -120,6 +120,12 @@ jobs:
       - name: Probar materiales P8 R9 / Test P8 R9 material constraints
         run: python3 -m unittest discover -s lab/tests -p test_p8_material_inventory.py -v
 
+      - name: Verificar contratos P8 R10 sin ejecución / Verify P8 R10 profiles
+        run: python3 lab/verify_p8_profile_contracts.py
+
+      - name: Probar contratos P8 R10 / Test P8 R10 symbolic intents
+        run: python3 -m unittest discover -s lab/tests -p test_p8_profile_contracts.py -v
+
       - name: Probar contratos y transporte / Test contracts and transport
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 
