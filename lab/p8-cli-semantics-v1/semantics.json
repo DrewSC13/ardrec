@@ -1,0 +1,2689 @@
+{
+  "schema_version": "1.0",
+  "roadmap_step": 8,
+  "increment": "P8-R12",
+  "base_commit": "82ed763b809f0ae0bc94c8dbfa5bc9fb1fd300f4",
+  "kind": "BOUNDED_EXCERPT_ANALYST_NOTES_NOT_FULL_MANUAL_ATTESTATION",
+  "probe_report_sha256": "976d239af18d3a8abc51fbe74828cb27267f44918c1c27f280b3021627658559",
+  "r11_evidence_sha256": "6ce04b5faaf9e1847627d4552a6909d57f15c00f8bd35478118ab914eca01e86",
+  "r10_contracts_sha256": "f09e92f395928a52e3c826a11aeef8ed13acb07299b322d173cc03fcf55b4f41",
+  "image_sha256": "fc9244fe29917f9bbeab09604a5845506dc3ab222b5c53648b5b90b2b1bf2103",
+  "manual_count": 7,
+  "lexical_term_count": 91,
+  "snippet_class_totals": {
+    "DIRECT_DEFINITION_FRAGMENT": 74,
+    "AMBIGUOUS_SHORT_TOKEN": 2,
+    "MENTION_OR_INCOMPLETE": 15
+  },
+  "term_reviews": [
+    {
+      "id": "ssh.1.gz:-F",
+      "manual_path": "/usr/share/man/man1/ssh.1.gz",
+      "term": "-F",
+      "lexical_matches": 10,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 236,
+          "context_sha256": "506c152f867c6446fff7a48306f879ca5349f72d3befeef10f461a9d916201a4"
+        },
+        {
+          "line_1based": 248,
+          "context_sha256": "7a1980a19bb8af6caa351507a72abf087219f0fb6396ae64c8ce0f16a751f1d5"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Permite escoger configuración del usuario; verificar además configuración del sistema y precedencia.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh.1.gz:-o",
+      "manual_path": "/usr/share/man/man1/ssh.1.gz",
+      "term": "-o",
+      "lexical_matches": 6,
+      "review_class": "AMBIGUOUS_SHORT_TOKEN",
+      "design_disposition": "NEEDS_COMPLETE_MANUAL",
+      "evidence_anchors": [
+        {
+          "line_1based": 479,
+          "context_sha256": "0cc1bd4c76b390e04e93755c0a81e8d7006deaf6b892cd88533b5b2e6979c15c"
+        },
+        {
+          "line_1based": 482,
+          "context_sha256": "289cb73844bd4cd8fab6aa25d5459eb3c73fa6334e52f91a43c458978a19597a"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Colisión léxica con -O: el fragmento no prueba el formato de -o; requiere lectura integral.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh.1.gz:-T",
+      "manual_path": "/usr/share/man/man1/ssh.1.gz",
+      "term": "-T",
+      "lexical_matches": 7,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 775,
+          "context_sha256": "7fda3cd547ea701396241398f71cefda0758922d6380a0826efe58ee851791e9"
+        },
+        {
+          "line_1based": 778,
+          "context_sha256": "693aae329c480fa4c594ad3d7fe7b55f5e37faeeab14ac31a8349482796ed98f"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "El fragmento define desactivación de pseudo-terminal; no impide órdenes remotas.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh.1.gz:-N",
+      "manual_path": "/usr/share/man/man1/ssh.1.gz",
+      "term": "-N",
+      "lexical_matches": 5,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 257,
+          "context_sha256": "98e272a32cf97be1a5d2f8e25cfd57de24c435801d9cdf60f03d9dd7ca8e6a6b"
+        },
+        {
+          "line_1based": 444,
+          "context_sha256": "d87d9021da07bdfacf4c92e33b70b8f084de82656e601395f5dbe605435403a7"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "No ejecuta comando remoto, pero puede usarse con reenvío de puertos; prohibir reenvíos independientemente.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh.1.gz:-p",
+      "manual_path": "/usr/share/man/man1/ssh.1.gz",
+      "term": "-p",
+      "lexical_matches": 2,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 616,
+          "context_sha256": "672d2d90bd18c21ef8d62889caedfd3c5217eb09556a0e72c9ac89a98af87833"
+        },
+        {
+          "line_1based": 626,
+          "context_sha256": "fd64d3816c40cb384b613c576ea876427f51c401bb4e6dda434783de10f7ab49"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Indica puerto remoto, sujeto a destino autorizado.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh.1.gz:-i",
+      "manual_path": "/usr/share/man/man1/ssh.1.gz",
+      "term": "-i",
+      "lexical_matches": 3,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "PRIVATE_MATERIAL_UNRESOLVED",
+      "evidence_anchors": [
+        {
+          "line_1based": 290,
+          "context_sha256": "50e381d0fe22f54f34c2e70374d20ba58d4b4c78bdeabdf216d27cfaddf725dc"
+        },
+        {
+          "line_1based": 296,
+          "context_sha256": "644328fac4e48727186986b2309adf3b0c84de402ee423c4c9f23cdb89de60a1"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Selecciona archivo de identidad; requiere custodia privada y exclusión de exposición de claves.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh.1.gz:-l",
+      "manual_path": "/usr/share/man/man1/ssh.1.gz",
+      "term": "-l",
+      "lexical_matches": 8,
+      "review_class": "AMBIGUOUS_SHORT_TOKEN",
+      "design_disposition": "NEEDS_COMPLETE_MANUAL",
+      "evidence_anchors": [
+        {
+          "line_1based": 350,
+          "context_sha256": "8b5f30dcfc71b4fe5c1899f9c425841593349a7b65b745bb5c6df920db7c55ed"
+        },
+        {
+          "line_1based": 356,
+          "context_sha256": "8d2bd11f9711d8f1e45c6d6d7d7dd6ff1f4e93b98c4cc1c1b368aa36e704a1e3"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Colisión léxica con -L: el fragmento no prueba el formato de -l; requiere lectura integral.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh.1.gz:-J",
+      "manual_path": "/usr/share/man/man1/ssh.1.gz",
+      "term": "-J",
+      "lexical_matches": 2,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 134,
+          "context_sha256": "b87c75300d006959a3c7c17db65ebfba42ca1cb9d7d90a78bc521dc32f33fed0"
+        },
+        {
+          "line_1based": 325,
+          "context_sha256": "63852bbbd6002f6d6486f10156966a154ae543a84348ed75d57b2c9f509c8b30"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Accede a destino mediante host de salto; riesgo de alcance/ruta fuera del laboratorio autorizado.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh.1.gz:-W",
+      "manual_path": "/usr/share/man/man1/ssh.1.gz",
+      "term": "-W",
+      "lexical_matches": 4,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 804,
+          "context_sha256": "bc6caf82c60c4a26bee2f9f1dc1916a3ce27a53cbe1f84e1f3a2372574d761d1"
+        },
+        {
+          "line_1based": 820,
+          "context_sha256": "e14c9a3662eb1ee43c77cff33e3cab529295f44523e38cd520252bead0da028b"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Reenvía stdin/stdout a host y puerto; superficie de pivotado.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:StrictHostKeyChecking",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "StrictHostKeyChecking",
+      "lexical_matches": 3,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 611,
+          "context_sha256": "fa337c920e1e2e2222c36e1117034992c07a59a8e330a934c50d5603ae78fecd"
+        },
+        {
+          "line_1based": 2097,
+          "context_sha256": "e172f169726da59ef660a6c1e62b76187895cc40ad54f2e7bbcda8e26bf6915c"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Yes rechaza claves de host cambiadas y no añade claves automáticamente; ancla confiable aún ausente.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:UserKnownHostsFile",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "UserKnownHostsFile",
+      "lexical_matches": 7,
+      "review_class": "MENTION_OR_INCOMPLETE",
+      "design_disposition": "NEEDS_COMPLETE_MANUAL",
+      "evidence_anchors": [
+        {
+          "line_1based": 1431,
+          "context_sha256": "482ae79302e4b726a3637e85e92e4133649a464d8ed88cce6b7fc12511811675"
+        },
+        {
+          "line_1based": 2213,
+          "context_sha256": "33a7bb6a076e814276c957eb17fa263d2dca4a6d366a1f3e983d039a33b2dbd3"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Solo referencias contextuales; falta definición de rutas y escritura en el fragmento.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:GlobalKnownHostsFile",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "GlobalKnownHostsFile",
+      "lexical_matches": 3,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 999,
+          "context_sha256": "b4a3cf33bf94e3452a8977c1cd7e5040117df4bc80f505a8faa63180b4f48ef5"
+        },
+        {
+          "line_1based": 1433,
+          "context_sha256": "4df2626a1c5adfbd1e73ba1662a93f4c1251fcd405264fd58ce9b9d2530d0231"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "El fragmento define ruta(s) de la base global de claves de host; requiere control de integridad y precedencia.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:BatchMode",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "BatchMode",
+      "lexical_matches": 2,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 356,
+          "context_sha256": "86e3e6e6a9ad814de00b3c7f46a0405027eb41d9f355263e8a0a0adb52595e2d"
+        },
+        {
+          "line_1based": 2019,
+          "context_sha256": "9410975ed69192641139b2a106e55a4d9d5cc496dca26ce1713203f8b810ed08"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Deshabilita interacción por contraseña y confirmación de clave; no establece autenticación exitosa.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:ProxyCommand",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "ProxyCommand",
+      "lexical_matches": 7,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 409,
+          "context_sha256": "87eed99e5ff4aabfe4219ff421435ad8e6348f56181cdafed73383ab9334f25a"
+        },
+        {
+          "line_1based": 1681,
+          "context_sha256": "84ada3b1536c41635c44c4d88663169f9fccb14d8b797422e96b4141ea603af0"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "El fragmento dice que ejecuta una cadena con el shell del usuario: superficie de órdenes locales.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:ProxyJump",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "ProxyJump",
+      "lexical_matches": 6,
+      "review_class": "MENTION_OR_INCOMPLETE",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 411,
+          "context_sha256": "721e567ea87b69ca90fbd31b2ba03effe37b0e3d65010c9bba4111b51ed2f11f"
+        },
+        {
+          "line_1based": 434,
+          "context_sha256": "315e65dee869f13eea6090cabf62c52fa4b1b0c9c87058f285591d12da727e47"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Mención contextual; no se dispone aquí de su definición completa.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:ClearAllForwardings",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "ClearAllForwardings",
+      "lexical_matches": 1,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 655,
+          "context_sha256": "7133f5dafda85e30a937bce0a339a5a23b7fa9c48d476b578cb33e5eaa2c092d"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Limpia reenvíos configurados; no demuestra ausencia de otros canales de desvío.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:ForwardAgent",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "ForwardAgent",
+      "lexical_matches": 1,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 911,
+          "context_sha256": "8d338a24161a4838c6d222aab4c10b90a5bd644d9bce1739f8f0a95416f1da50"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Controla reenvío del agente de autenticación; mantener prohibido en esta especificación.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:IdentityAgent",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "IdentityAgent",
+      "lexical_matches": 4,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 1215,
+          "context_sha256": "d5bfb10a0ec281be9007fd501fd43fe8bff1f8f162b585ae2b068675778fec69"
+        },
+        {
+          "line_1based": 1237,
+          "context_sha256": "9927fc7311e36b616e7a7e986c0f07d781fb3fbf645fa4806a99290eb87318a4"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Selecciona socket del agente y puede interpolar tokens y variables.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:PermitLocalCommand",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "PermitLocalCommand",
+      "lexical_matches": 2,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 1471,
+          "context_sha256": "6e438fe9418d0f6b07b7fdcdf2e53340202e98ac2e5b969f06d2bd13343c0f66"
+        },
+        {
+          "line_1based": 1611,
+          "context_sha256": "d0ce0c873f2d7d5ac7f9f6967ba5df6711a08fa9f8c0d476e8609a5114e79f89"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Permite comandos locales a través de LocalCommand o secuencia de escape.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:UpdateHostKeys",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "UpdateHostKeys",
+      "lexical_matches": 4,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 2208,
+          "context_sha256": "9e62d47eda727fedffa0875dd5839fb938a6bb5c7a4cc6ec8922b176d5a1150e"
+        },
+        {
+          "line_1based": 2231,
+          "context_sha256": "33857b7b99030990f55990236966cc3561b46f66059baf8b2f6517310d46784b"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Puede añadir claves de host tras autenticación; representa mutación de estado local.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:ConnectTimeout",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "ConnectTimeout",
+      "lexical_matches": 1,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 683,
+          "context_sha256": "06e509cb3ca8dd2e3cd877542f0863cd3185e4dcd3af4070eefcdfe20f103aa0"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Tiempo de conexión y negociación inicial; no sustituye límite global de proceso.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:ConnectionAttempts",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "ConnectionAttempts",
+      "lexical_matches": 1,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 678,
+          "context_sha256": "298ed8a55256744064c84bbd79cf91695833dd79e64520ec7b23a58c4e2a1d91"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Número de intentos de conexión; evitar reintentos implícitos.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:RequestTTY",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "RequestTTY",
+      "lexical_matches": 1,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 1899,
+          "context_sha256": "d1ffda29bb7a6334386f02542fa81e01b7557cfdfbe7e0359ff29738bd3c5faa"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Solicita pseudo terminal; no necesario para operaciones de laboratorio prefijadas.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:NumberOfPasswordPrompts",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "NumberOfPasswordPrompts",
+      "lexical_matches": 1,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 1581,
+          "context_sha256": "01a1d051c1ee3c59780d73dec40e291c73fbaded9f1713d642fad69c96cf743c"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Número de preguntas de contraseña; no resuelve mecanismo seguro de entrega.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:ServerAliveInterval",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "ServerAliveInterval",
+      "lexical_matches": 5,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 362,
+          "context_sha256": "5dfa0a9f5a3229df039386628c2600dcfbb453a1eeb7e7fbd52702cbf3d36ffd"
+        },
+        {
+          "line_1based": 2005,
+          "context_sha256": "8d2f03c824e5edf39033932ee8e1fe176c57537e6f4d067a20895a10284c2c44"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Intervalo de actividad; no sustituye watchdog o presupuesto total.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:HostKeyAlgorithms",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "HostKeyAlgorithms",
+      "lexical_matches": 2,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 1136,
+          "context_sha256": "6d0b3ad91d58e8290a9816c82f9117c9281cd4e9a7b1c6898b46cee0f6bb69bb"
+        },
+        {
+          "line_1based": 1172,
+          "context_sha256": "4d2766249ea7e2b977f2750f2ff59148aaec0478603f3696cdbb970d62d29c6d"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Restringe preferencias criptográficas de claves de host; algoritmo permitido queda pendiente.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:KbdInteractiveAuthentication",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "KbdInteractiveAuthentication",
+      "lexical_matches": 1,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 1375,
+          "context_sha256": "e2a0e3a8025e096f66a946156fad8c2b4b1791f5a7cae952fb0751c8f48e0de2"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Activa/desactiva método teclado-interactivo; no implica credencial aprobada.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:KnownHostsCommand",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "KnownHostsCommand",
+      "lexical_matches": 6,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 1428,
+          "context_sha256": "f206219d98156b664941096e3c4b6e6f117163a376d9ae1410166728675df53c"
+        },
+        {
+          "line_1based": 1441,
+          "context_sha256": "4b5796398a33f33f0b086dd7962cbddf8e5b2ba80b6a063c3158dbe91c8acba0"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Ejecuta orden local para obtener claves de host, potencialmente varias veces.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:ControlMaster",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "ControlMaster",
+      "lexical_matches": 4,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 690,
+          "context_sha256": "a84057f135dffdd85ae5ae7e1d6eede05153308f39fb4dc9b16c0decf424e451"
+        },
+        {
+          "line_1based": 701,
+          "context_sha256": "c9d4e6500e4c68ba75b2ec56c03a1cb86f711df9a3b8d9987c8e954f93d1818d"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Multiplexa sesiones mediante un socket; podría reutilizar estados no atestados.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:ControlPath",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "ControlPath",
+      "lexical_matches": 8,
+      "review_class": "MENTION_OR_INCOMPLETE",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 696,
+          "context_sha256": "966ecf6f6564c8681153b52e3026466ceea6dbf0007cfa73185fded8116a3555"
+        },
+        {
+          "line_1based": 699,
+          "context_sha256": "46797d32ce87ed7d968087c280e8d6101f7776e4b912761c573b1e57bd2c206a"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Mención contextual del socket; no acredita límites de su ruta.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:LocalCommand",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "LocalCommand",
+      "lexical_matches": 4,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 1453,
+          "context_sha256": "ea111f2d06f3645a96e2c64b055e4e33b3dc8bd763b52dbd2cf9e2fa699d53cc"
+        },
+        {
+          "line_1based": 1459,
+          "context_sha256": "bc9c3a6fb6a2c2ef8131a044b9d7b60f7ca640cefa3270bffb2548c668cf08d6"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Comando local expresamente ejecutado por shell del usuario.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:RemoteCommand",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "RemoteCommand",
+      "lexical_matches": 3,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 1831,
+          "context_sha256": "135f0b36fef945efaf68b0505160fb793faf2928410fdfe6cbf8603a410a69f9"
+        },
+        {
+          "line_1based": 1837,
+          "context_sha256": "8166be7f0c0b5a4f600ef39c85a202fc43a18e1a90fe1b8315c38c002af1b2ad"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Comando remoto expresamente ejecutado por shell del usuario.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh_config.5.gz:CanonicalizeHostname",
+      "manual_path": "/usr/share/man/man5/ssh_config.5.gz",
+      "term": "CanonicalizeHostname",
+      "lexical_matches": 10,
+      "review_class": "MENTION_OR_INCOMPLETE",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 67,
+          "context_sha256": "bfefa2865a3daeb1ea087073c95ab73cd817fb87d295e3a2af5be08675b39da0"
+        },
+        {
+          "line_1based": 136,
+          "context_sha256": "ed5e53d9419dedbaaef24991b0dded49f3dc1a442798bcfec3f1f75bbe54c124"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Menciones contextuales sin definición completa; resolución canónica requeriría ancla de destino.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh-keyscan.1.gz:-T",
+      "manual_path": "/usr/share/man/man1/ssh-keyscan.1.gz",
+      "term": "-T",
+      "lexical_matches": 4,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 122,
+          "context_sha256": "b1fe5aff92da1cd980388bf8e2b58d00e285cd2a1e94fa96d0465df8bd3486fd"
+        },
+        {
+          "line_1based": 130,
+          "context_sha256": "4e8df6c933ee1e1448a229c823c02968ceea9923305a997a64617b075cf9e525"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Timeout del escaneo; no autentica la clave de host recuperada.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh-keyscan.1.gz:-t",
+      "manual_path": "/usr/share/man/man1/ssh-keyscan.1.gz",
+      "term": "-t",
+      "lexical_matches": 4,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 122,
+          "context_sha256": "b1fe5aff92da1cd980388bf8e2b58d00e285cd2a1e94fa96d0465df8bd3486fd"
+        },
+        {
+          "line_1based": 130,
+          "context_sha256": "4e8df6c933ee1e1448a229c823c02968ceea9923305a997a64617b075cf9e525"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Tipo de clave solicitado; mayúsculas/minúsculas importan (-T es timeout).",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh-keyscan.1.gz:-p",
+      "manual_path": "/usr/share/man/man1/ssh-keyscan.1.gz",
+      "term": "-p",
+      "lexical_matches": 1,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 115,
+          "context_sha256": "edab59b9cdf3c1f9b5220fdf1395c3c7a1a2fcb2753301c6ab70749458642f2e"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Puerto objetivo; la clave observada sin fuente confiable no es prueba de identidad.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "ssh-keyscan.1.gz:-H",
+      "manual_path": "/usr/share/man/man1/ssh-keyscan.1.gz",
+      "term": "-H",
+      "lexical_matches": 1,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 93,
+          "context_sha256": "a33e9639905841e28e8e1b1af8c2b2c3cf862aff30e3dd4b46abb7c0629531f7"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Ofusca nombres en salida; no verifica por sí mismo la identidad remota.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "sftp.1.gz:-b",
+      "manual_path": "/usr/share/man/man1/sftp.1.gz",
+      "term": "-b",
+      "lexical_matches": 3,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 118,
+          "context_sha256": "107c9c98ac8c6a1ce4d9635fe1d5b6380997d43213fa0163f840cea73383b8c9"
+        },
+        {
+          "line_1based": 125,
+          "context_sha256": "5d7e16ddff50f0cdbf070d2e1a10537cd103c5a2d4409637b5f953afe1872484"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Un archivo batch contiene órdenes SFTP; no se aprueban secuencias arbitrarias.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "sftp.1.gz:-o",
+      "manual_path": "/usr/share/man/man1/sftp.1.gz",
+      "term": "-o",
+      "lexical_matches": 1,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 212,
+          "context_sha256": "fc0a7eac8ab5c530eb7f0ea2f12bd2a441a0d1cce14d27f59eef2ec87e5c774f"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Transfiere opciones SSH; hereda los riesgos de ssh_config.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "sftp.1.gz:-P",
+      "manual_path": "/usr/share/man/man1/sftp.1.gz",
+      "term": "-P",
+      "lexical_matches": 4,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 328,
+          "context_sha256": "db1f3cfe0f6430747a85833e389f06fe6d6605516f55ee1db7a2c8b562ea9249"
+        },
+        {
+          "line_1based": 330,
+          "context_sha256": "ebc1a97e1d19d8257a94bbf2cec04091db51b767ea481f96a16a785b8296af3d"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Puerto remoto (en sftp es -P, distinto de ssh -p).",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "sftp.1.gz:-i",
+      "manual_path": "/usr/share/man/man1/sftp.1.gz",
+      "term": "-i",
+      "lexical_matches": 2,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "PRIVATE_MATERIAL_UNRESOLVED",
+      "evidence_anchors": [
+        {
+          "line_1based": 188,
+          "context_sha256": "2dc353248dec552e43794abcdc715c0d00b16e9477d3c77615fc269ec5a4a67d"
+        },
+        {
+          "line_1based": 484,
+          "context_sha256": "832ed7c5aa3079d38317d63a56f4b7eeeb70f0e738cd9e93e3167c959158c869"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Identidad privada; el fragmento también contiene un -i de comando interactivo no equivalente.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--disable",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--disable",
+      "lexical_matches": 5,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 661,
+          "context_sha256": "1f0e88f801a9819bf0932d4625fd4c59d1c9d216fd8e1afe502642ad88032af5"
+        },
+        {
+          "line_1based": 692,
+          "context_sha256": "efeee9cf65781d0cc54615ccdf5be2124a9a8ca37befad146904e350d8d14dd1"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Evita leer configuración por defecto; la posición inicial y todas las rutas deben revisarse.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--proto",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--proto",
+      "lexical_matches": 12,
+      "review_class": "MENTION_OR_INCOMPLETE",
+      "design_disposition": "NEEDS_COMPLETE_MANUAL",
+      "evidence_anchors": [
+        {
+          "line_1based": 1176,
+          "context_sha256": "68cf38ee205cd04881fdc4acafe65cda9dfa8b3b84bf447fab35e59470111aeb"
+        },
+        {
+          "line_1based": 2190,
+          "context_sha256": "5b98bd0456e31a020fcc7e50c20c34aea68e564e07d2f2ea9e3d4b460f794694"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Solo referencias contextuales; no se ha extraído su sintaxis/orden de precedencia.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--proto-redir",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--proto-redir",
+      "lexical_matches": 6,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 3614,
+          "context_sha256": "3b2bfa677debef3487e1e74116fb5e670d4ca22d757ff08b83557a36721ca847"
+        },
+        {
+          "line_1based": 3632,
+          "context_sha256": "5d34aeb58f13cdcc1d8504b02517545b406bb876392b7b8cae382c80458eb393"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Limita protocolos de redirecciones; no habilitar redirecciones por esta sola opción.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--max-time",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--max-time",
+      "lexical_matches": 9,
+      "review_class": "MENTION_OR_INCOMPLETE",
+      "design_disposition": "NEEDS_COMPLETE_MANUAL",
+      "evidence_anchors": [
+        {
+          "line_1based": 713,
+          "context_sha256": "9348379cf6f3c9280fbf95e0a52b6926d9d1de8a7f768438a3971f5415bf97b1"
+        },
+        {
+          "line_1based": 1995,
+          "context_sha256": "c9e8a170bdef96a43335962fdfd7cdc2f46f454a983b66d9ec54c609b56bf3a2"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "El fragmento menciona reinicio del contador con reintentos, sin definición completa.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--connect-timeout",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--connect-timeout",
+      "lexical_matches": 8,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 693,
+          "context_sha256": "521e240be456e26e88ddbf9728cef99380af93f87dbce17ca21f56af34dbef16"
+        },
+        {
+          "line_1based": 705,
+          "context_sha256": "d03de4758b04f3dd68fa0f99645ac539ae2ca839461dbe7ebb95c7e55195b4d1"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Solo limita conexión, no la transferencia completa; valores repetidos sustituyen al previo.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--retry",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--retry",
+      "lexical_matches": 19,
+      "review_class": "MENTION_OR_INCOMPLETE",
+      "design_disposition": "NEEDS_COMPLETE_MANUAL",
+      "evidence_anchors": [
+        {
+          "line_1based": 2920,
+          "context_sha256": "b817a9a4f91f5061a5682828a06bd149852a7867a215560ae2270fb4b5322084"
+        },
+        {
+          "line_1based": 4388,
+          "context_sha256": "d97cde4774f4c0da1028a12bbb5c9a0b1384c87c34e9b83d8dffb52e56aaee25"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "El fragmento menciona efectos de reintento y resets del contador; política completa pendiente.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--globoff",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--globoff",
+      "lexical_matches": 4,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 117,
+          "context_sha256": "4bac0415d186933fe144ecdbeaa256353b02dfa3c94c64b59980d1ef4ffd6e44"
+        },
+        {
+          "line_1based": 1959,
+          "context_sha256": "8e08c1424ef6ac1d0939e63a8263dc8b3aaaffb6f29cfdbf6545bbb1317ba616"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Desactiva expansión de globbing de URL; no valida por sí sola la URL.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--noproxy",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--noproxy",
+      "lexical_matches": 3,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 3203,
+          "context_sha256": "c90f3f098931162919c66761b0e147d07fb1731487eb39942d2fa88632397cc5"
+        },
+        {
+          "line_1based": 3221,
+          "context_sha256": "eb6b306be3301920247a8ccce50bb07d67484c55d05acc934b2757c7a64c5ce6"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Lista para excluir uso de proxy; necesita verificar entorno y otras opciones.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--proxy",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--proxy",
+      "lexical_matches": 48,
+      "review_class": "MENTION_OR_INCOMPLETE",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 2020,
+          "context_sha256": "c658a3f12cd20d721162d3aeade5c917d934fd7df5bb964c8588e6d99d275d08"
+        },
+        {
+          "line_1based": 2037,
+          "context_sha256": "5484e2ce8dc43ceca4cfdad951f7f29c214341e072eb8aabb76c8f970c6fbb05"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "No aparece definición completa; se prohíben desvíos de ruta por proxy.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--ftp-pasv",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--ftp-pasv",
+      "lexical_matches": 8,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 1130,
+          "context_sha256": "b8f4876f6b1a4098d45e81cd037682e89bcc3833ae28dee5e8f9da5f3e4b3686"
+        },
+        {
+          "line_1based": 1806,
+          "context_sha256": "420a58a5216b2cb78ddbc0b6fc23b4744f8a26ca56e961a0ee3d1cd6e52bf112"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Fuerza modo pasivo; el manual advierte interacción con --ftp-port.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--ftp-port",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--ftp-port",
+      "lexical_matches": 11,
+      "review_class": "MENTION_OR_INCOMPLETE",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 1130,
+          "context_sha256": "b8f4876f6b1a4098d45e81cd037682e89bcc3833ae28dee5e8f9da5f3e4b3686"
+        },
+        {
+          "line_1based": 1140,
+          "context_sha256": "ecdc864ae7799cb967d3518a98c71db3c34c9c6fafec6407175196432eabfd32"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Mención contextual; modo activo excluido de diseños de red sin aprobación.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--ssl-reqd",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--ssl-reqd",
+      "lexical_matches": 7,
+      "review_class": "MENTION_OR_INCOMPLETE",
+      "design_disposition": "NEEDS_COMPLETE_MANUAL",
+      "evidence_anchors": [
+        {
+          "line_1based": 3698,
+          "context_sha256": "cdb5a829281f7d5490670e7fa8ca36277b94d8d90112b100ace2689c717ec3e8"
+        },
+        {
+          "line_1based": 5085,
+          "context_sha256": "acbd6b527dfce8c66816e205a304dcc585022dda5547f842f6e087d9d076b57d"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "El contexto recomienda esta opción frente a --ssl, pero no define cobertura completa.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--ftp-ssl-control",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--ftp-ssl-control",
+      "lexical_matches": 5,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 1925,
+          "context_sha256": "6ab641ae575995f1462965c3d56cc068c5323b2a891e5f074b6d20214e9d7cd8"
+        },
+        {
+          "line_1based": 1930,
+          "context_sha256": "804512664843d5e8d6a629b238f8f8e9cc2c637c078e9400ec974409fb4bfb36"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "El fragmento exige TLS en login y permite datos en claro: insuficiente para FTPS de datos.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--ftp-method",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--ftp-method",
+      "lexical_matches": 5,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 1778,
+          "context_sha256": "711c0d214be6797d5c6fe462ff243d9be7fee4805dc3cecc48a35a26fd354fa3"
+        },
+        {
+          "line_1based": 1796,
+          "context_sha256": "81ed1c832477a6ab06bc586eae065e985aced34f1280dc0f4c3e3640a3b88bec"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Controla CWD por partes de URL; puede aumentar operaciones implícitas.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--quote",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--quote",
+      "lexical_matches": 4,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 2710,
+          "context_sha256": "9355ebcceea2584e42382b753c7280deaaab0a1af16ef10eb4be0524ebbc8b0a"
+        },
+        {
+          "line_1based": 4231,
+          "context_sha256": "6b1f370d58dc3d1126245c2e26d1756d3036d75da868317f7f0b9f0c6cc8dcd5"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Envía comandos arbitrarios al servidor FTP/SFTP; no permitir cadena libre.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--request",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--request",
+      "lexical_matches": 10,
+      "review_class": "MENTION_OR_INCOMPLETE",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 1958,
+          "context_sha256": "89389026da2ba5cb51e88faddca4f60a21495765b50f7d9fb2d2c7a78c040769"
+        },
+        {
+          "line_1based": 2698,
+          "context_sha256": "7dd94519c0f148304083d5e2974a4da086838bea428916bf7f2b74f066876d68"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Menciones indirectas de método/orden; definición completa ausente.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--upload-file",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--upload-file",
+      "lexical_matches": 12,
+      "review_class": "MENTION_OR_INCOMPLETE",
+      "design_disposition": "WRITE_NEEDS_SEPARATE_CLEANUP",
+      "evidence_anchors": [
+        {
+          "line_1based": 353,
+          "context_sha256": "68d07a5ffe14cc8fe67d4e981a29a6572f6ff389c9fc944e56a25a2f113fde34"
+        },
+        {
+          "line_1based": 976,
+          "context_sha256": "cfd651f97e0a11f00a0a22345e025a5cdee5e0a18bcaa0fa01d1670650b781c0"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Transferencia con efecto remoto; requiere destino, cuotas y limpieza independientes.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--output",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--output",
+      "lexical_matches": 16,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 166,
+          "context_sha256": "ac53a62ef4ceae61fedd6fabd88b14dc58c86b883ea23bef6f7ffdb3b25e8f11"
+        },
+        {
+          "line_1based": 237,
+          "context_sha256": "e2e6c28934db6947628cf39e85dd018f5ba5ad613feb54b47e938185355a16f6"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Puede guardar salida local; ruta, volumen y permisos deben fijarse.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--list-only",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--list-only",
+      "lexical_matches": 4,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 1805,
+          "context_sha256": "361b40d6a23fb14cb2edd3929b3ee0facb726ee31b564a32b6747c760a597ed1"
+        },
+        {
+          "line_1based": 2676,
+          "context_sha256": "3256c80ba2d6f7b807d0f952eb21134b518b8b59d91b2530a0db2de673ef93ee"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Listado de nombres FTP con NLST; no autoriza enumeración ilimitada.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--user",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--user",
+      "lexical_matches": 20,
+      "review_class": "MENTION_OR_INCOMPLETE",
+      "design_disposition": "PRIVATE_MATERIAL_UNRESOLVED",
+      "evidence_anchors": [
+        {
+          "line_1based": 332,
+          "context_sha256": "da8848b0c428c3c50618b21e835023b30ae2a27152bea372b70cd0e50369dda1"
+        },
+        {
+          "line_1based": 338,
+          "context_sha256": "8f968b27711bbd8bc755fa9311ad11594be5bafc77f3225485f19ee4d83a92f0"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Fragmentos incluyen credenciales en argumentos de ejemplo; no publicarlas en argv.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--config",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--config",
+      "lexical_matches": 16,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 615,
+          "context_sha256": "ee422af5f6582d1c36b92f10479504ccff37bbc50013d32385ec766f488a3fe9"
+        },
+        {
+          "line_1based": 638,
+          "context_sha256": "93e4fd5219dd25bc163c5b985a895d484bd30942a392a66b7b26474d6110afdc"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Permite archivo de argumentos, incluso desde stdin; fuente de opciones implícitas.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--insecure",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--insecure",
+      "lexical_matches": 20,
+      "review_class": "MENTION_OR_INCOMPLETE",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 426,
+          "context_sha256": "fbed4d2e360c60a980d73802a22e7d2348f710ad69991370a0566092ebc8a291"
+        },
+        {
+          "line_1based": 462,
+          "context_sha256": "41f196b0228bd5d471919bcee572e3e0d005765767982591806be0288d918eb7"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Solo se menciona cerca de opciones TLS; mantener deshabilitada verificación insegura.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--ftp-create-dirs",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--ftp-create-dirs",
+      "lexical_matches": 6,
+      "review_class": "MENTION_OR_INCOMPLETE",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 869,
+          "context_sha256": "054fe2c3f98ce9ee2b5c0e4c84ff9036beae331bf628fae4ef647dedc08078d4"
+        },
+        {
+          "line_1based": 879,
+          "context_sha256": "da138bf929a2a63b8783752a50e7eab9cf878e15a8afbfcf6e2e26c7612bd803"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Mención contextual; crea recursos remotos y exige control de cambios.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--limit-rate",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--limit-rate",
+      "lexical_matches": 9,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 2648,
+          "context_sha256": "57ff3a505dd1c805ab0f401d54ff7b2b0cea8303bc40be0e1c6a6901f2517438"
+        },
+        {
+          "line_1based": 2666,
+          "context_sha256": "783cfdb1a2ee46027ff3b60f55be781fbdd0b0facebd424be788cf1dab6ee80e"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Tasa máxima de transferencia; no reemplaza cuotas de bytes y tiempo.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--max-filesize",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--max-filesize",
+      "lexical_matches": 3,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 2876,
+          "context_sha256": "24f9129c648b515f40624b20b101ccee18eab755aa14e603809237e561dc28c8"
+        },
+        {
+          "line_1based": 2894,
+          "context_sha256": "9a910af2621bd512ff9f96652ba23ce898574e1d747b28560ffc0f78e112dd5d"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Límite declarado de descarga; el valor cero lo desactiva.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--ftp-ssl-ccc",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--ftp-ssl-ccc",
+      "lexical_matches": 5,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 1895,
+          "context_sha256": "87ed811071781d2d7cbc40bd78b3350074dd95435ee532198fb430cd90402e8b"
+        },
+        {
+          "line_1based": 1901,
+          "context_sha256": "f4055b487d3693d326e5fa840ebbc80f0a2c1ec7cce4b3b3b1648a853c1f49f0"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Retira TLS del canal de control tras autenticación: prohibido.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "curl.1.gz:--ftp-skip-pasv-ip",
+      "manual_path": "/usr/share/man/man1/curl.1.gz",
+      "term": "--ftp-skip-pasv-ip",
+      "lexical_matches": 4,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 1877,
+          "context_sha256": "7b61a0b1ed06f57f90a00c8569c98cdc8d424ada7ccc36acc5ef7a8c84290308"
+        },
+        {
+          "line_1based": 1886,
+          "context_sha256": "66532e7379fcc5d78145298c0237e408e3e065a256f6d624f59d13200dd73cfc"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Reutiliza la IP de control en lugar de la propuesta en PASV; sujetar a destino aprobado.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "smbclient.1.gz:--client-protection",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "term": "--client-protection",
+      "lexical_matches": 2,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 34,
+          "context_sha256": "0326c62210df6d952a88bbd6f29bb76445e3f738cd2e007d98dd5342a5900c04"
+        },
+        {
+          "line_1based": 719,
+          "context_sha256": "5525019e03c9235dc65cd367b9df3f3da4489b5461ccf6478205e955638aa2b0"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Permite sign|encrypt|off; firma no equivale a cifrado y off degrada protección.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "smbclient.1.gz:--max-protocol",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "term": "--max-protocol",
+      "lexical_matches": 3,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 34,
+          "context_sha256": "0326c62210df6d952a88bbd6f29bb76445e3f738cd2e007d98dd5342a5900c04"
+        },
+        {
+          "line_1based": 125,
+          "context_sha256": "47cc23833ceee485804156d3a8e78a699ab7677a070eee158b800c319b2b7340"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Fija versión SMB máxima, no prueba mínimo negociado; SMBv1 debe aislarse.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "smbclient.1.gz:--option",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "term": "--option",
+      "lexical_matches": 6,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 34,
+          "context_sha256": "0326c62210df6d952a88bbd6f29bb76445e3f738cd2e007d98dd5342a5900c04"
+        },
+        {
+          "line_1based": 452,
+          "context_sha256": "db0a0f33ec2ed94a3c62277788c3d54ac96a191443e0285cf40fda411e5cbdbd"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Sobrescribe parámetros de smb.conf por CLI; fuera de alcance genérico.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "smbclient.1.gz:--configfile",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "term": "--configfile",
+      "lexical_matches": 2,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 34,
+          "context_sha256": "0326c62210df6d952a88bbd6f29bb76445e3f738cd2e007d98dd5342a5900c04"
+        },
+        {
+          "line_1based": 444,
+          "context_sha256": "f67b34ce7d9f825eeaa31cc95f4ccbc87ccc0ea8191e8df3cccd19dd5ec78379"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Selecciona configuración; se requiere custodia y hash de configuración explícitos.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "smbclient.1.gz:--authentication-file",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "term": "--authentication-file",
+      "lexical_matches": 2,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "PRIVATE_MATERIAL_UNRESOLVED",
+      "evidence_anchors": [
+        {
+          "line_1based": 34,
+          "context_sha256": "0326c62210df6d952a88bbd6f29bb76445e3f738cd2e007d98dd5342a5900c04"
+        },
+        {
+          "line_1based": 666,
+          "context_sha256": "2a4a475c8254c2700f289db312ca04bfe2077a5c8efb0c85ca1a9547245e98d3"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Lee credenciales de archivo; requiere ruta privada y permisos verificados.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "smbclient.1.gz:--command",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "term": "--command",
+      "lexical_matches": 2,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 34,
+          "context_sha256": "0326c62210df6d952a88bbd6f29bb76445e3f738cd2e007d98dd5342a5900c04"
+        },
+        {
+          "line_1based": 402,
+          "context_sha256": "5607cc491663ca37a61a471a6b6441a07be3cf8075a2b60225dbda31dac88af9"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Cadena de órdenes separadas por punto y coma; prohíbe texto arbitrario.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "smbclient.1.gz:--no-pass",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "term": "--no-pass",
+      "lexical_matches": 2,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 34,
+          "context_sha256": "0326c62210df6d952a88bbd6f29bb76445e3f738cd2e007d98dd5342a5900c04"
+        },
+        {
+          "line_1based": 632,
+          "context_sha256": "6802607a28424e0180606bbfc65aa1a746ac3b9037746eea1f047f0db95bb8ee"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Suprime solicitud de contraseña; no acredita sesión invitada.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "smbclient.1.gz:--user",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "term": "--user",
+      "lexical_matches": 3,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "PRIVATE_MATERIAL_UNRESOLVED",
+      "evidence_anchors": [
+        {
+          "line_1based": 34,
+          "context_sha256": "0326c62210df6d952a88bbd6f29bb76445e3f738cd2e007d98dd5342a5900c04"
+        },
+        {
+          "line_1based": 612,
+          "context_sha256": "edc792a3c8916f4a3e21b54f8f5c16f019cee0697136057e22fa5761fb397382"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Acepta contraseña embebida tras % o deriva de USER; evitar filtración.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "smbclient.1.gz:--timeout",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "term": "--timeout",
+      "lexical_matches": 2,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 34,
+          "context_sha256": "0326c62210df6d952a88bbd6f29bb76445e3f738cd2e007d98dd5342a5900c04"
+        },
+        {
+          "line_1based": 175,
+          "context_sha256": "17ce275da0153494b28a863d5d12c608e6a8aad88d1ee8f75524ed9f71db0eee"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Timeout por solicitud SMB, no presupuesto global del proceso.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "smbclient.1.gz:--port",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "term": "--port",
+      "lexical_matches": 2,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 34,
+          "context_sha256": "0326c62210df6d952a88bbd6f29bb76445e3f738cd2e007d98dd5342a5900c04"
+        },
+        {
+          "line_1based": 113,
+          "context_sha256": "c9252b079ae68f10f07b51f3493399a4db7c2f795593a283de568616bb7113a3"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Puerto TCP objetivo; requiere atestación del destino.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "smbclient.1.gz:--directory",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "term": "--directory",
+      "lexical_matches": 2,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 34,
+          "context_sha256": "0326c62210df6d952a88bbd6f29bb76445e3f738cd2e007d98dd5342a5900c04"
+        },
+        {
+          "line_1based": 397,
+          "context_sha256": "b7c13cff413bcaf6949ce7db67d8040a9b67b1e656d867c0956dc815e459c337"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Directorio inicial; validar resolución y alcance de recursos.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "smbclient.1.gz:--ip-address",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "term": "--ip-address",
+      "lexical_matches": 2,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 34,
+          "context_sha256": "0326c62210df6d952a88bbd6f29bb76445e3f738cd2e007d98dd5342a5900c04"
+        },
+        {
+          "line_1based": 135,
+          "context_sha256": "bbd7507d577c48ab08672c9d83dadcacef0eac88123e345b9f7e8aff6713c3aa"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "IP de destino; evitar resolución alternativa fuera de alcance.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "smbclient.1.gz:--use-kerberos",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "term": "--use-kerberos",
+      "lexical_matches": 3,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 34,
+          "context_sha256": "0326c62210df6d952a88bbd6f29bb76445e3f738cd2e007d98dd5342a5900c04"
+        },
+        {
+          "line_1based": 696,
+          "context_sha256": "aa43a5c532f5944b1d8ef297b67b9a622c47baa0a499394da3414fec17d90cd2"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Modes desired|required|off; Kerberos exige DNS en la descripción.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "smbclient.1.gz:--debuglevel",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "term": "--debuglevel",
+      "lexical_matches": 2,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 34,
+          "context_sha256": "0326c62210df6d952a88bbd6f29bb76445e3f738cd2e007d98dd5342a5900c04"
+        },
+        {
+          "line_1based": 423,
+          "context_sha256": "0b1421fee8af8ec6e2fada9e24cb787417f0d58542726b75b7a0789f975ad822"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Aumenta registros potencialmente sensibles; no habilitar trazas indiscriminadas.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "smbclient.1.gz:get",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "term": "get",
+      "lexical_matches": 4,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 228,
+          "context_sha256": "e567064aee5b098e04abefcb247ed5945f05c1fe73d641e919280c8c0e79a48b"
+        },
+        {
+          "line_1based": 859,
+          "context_sha256": "328fb779055c642a44684052bd941dfca0fa5b4fb1303e6998de3d5a2c10b454"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Copia archivo remoto hacia cliente; requiere cuotas y ruta de captura.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "smbclient.1.gz:put",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "term": "put",
+      "lexical_matches": 2,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "WRITE_NEEDS_SEPARATE_CLEANUP",
+      "evidence_anchors": [
+        {
+          "line_1based": 1048,
+          "context_sha256": "977aaac3b27740f6806f3994673ad92957ca2fa0365c520b308e091df536f6a6"
+        },
+        {
+          "line_1based": 1238,
+          "context_sha256": "a2d236a04946468dec3003f79ca08df929d642772f83e3643e15e06dbb762c8d"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Copia archivo local al remoto; mutación sujeta a recibo de limpieza.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "smbclient.1.gz:del",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "term": "del",
+      "lexical_matches": 1,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 823,
+          "context_sha256": "59e470df58d97663d3a3f386194ee3bebcf25e8a386829900c6fdbe9f74d02e7"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Solicita borrar múltiples archivos según máscara; operación destructiva no autorizada.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "smbclient.1.gz:allinfo",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "term": "allinfo",
+      "lexical_matches": 1,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 766,
+          "context_sha256": "04971da70e1fd92d3062f335777da298cac7eed98b4f717ff17e949949f47d08"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Consulta metadatos de recurso; no autoriza enumeración masiva.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "smbclient.1.gz:ls",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "term": "ls",
+      "lexical_matches": 1,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 935,
+          "context_sha256": "d4455a85cd757112b8753cd14827e0f092b60b38d831ab3f1b202684de97f4f8"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Alias de dir según fragmento; máscara debe fijarse.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "smbclient.1.gz:dir",
+      "manual_path": "/usr/share/man/man1/smbclient.1.gz",
+      "term": "dir",
+      "lexical_matches": 4,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 34,
+          "context_sha256": "0326c62210df6d952a88bbd6f29bb76445e3f738cd2e007d98dd5342a5900c04"
+        },
+        {
+          "line_1based": 837,
+          "context_sha256": "b248cbb045b937072230fe7bb4bcc95fa49aeee07233b63c553089d2082d44c8"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Lista coincidencias de máscara; acotar alcance y número de resultados.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "rpcclient.1.gz:--command",
+      "manual_path": "/usr/share/man/man1/rpcclient.1.gz",
+      "term": "--command",
+      "lexical_matches": 2,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "EXCLUDE_FREEFORM_OR_DOWNGRADE",
+      "evidence_anchors": [
+        {
+          "line_1based": 34,
+          "context_sha256": "12ea72b669854e8241e88d9836f1d12ea05658edbcbbc93739cc9803aac2455b"
+        },
+        {
+          "line_1based": 377,
+          "context_sha256": "d5dee9ef469a51e21d0d07f84c09b30bec003d6d06c6ca84bd9daedf9aab84dd"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Recibe órdenes separadas por punto y coma; no se permite texto arbitrario.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "rpcclient.1.gz:--user",
+      "manual_path": "/usr/share/man/man1/rpcclient.1.gz",
+      "term": "--user",
+      "lexical_matches": 2,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "PRIVATE_MATERIAL_UNRESOLVED",
+      "evidence_anchors": [
+        {
+          "line_1based": 34,
+          "context_sha256": "12ea72b669854e8241e88d9836f1d12ea05658edbcbbc93739cc9803aac2455b"
+        },
+        {
+          "line_1based": 598,
+          "context_sha256": "edc792a3c8916f4a3e21b54f8f5c16f019cee0697136057e22fa5761fb397382"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Credenciales en CLI potencialmente filtrables a procesos y logs.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    },
+    {
+      "id": "rpcclient.1.gz:--no-pass",
+      "manual_path": "/usr/share/man/man1/rpcclient.1.gz",
+      "term": "--no-pass",
+      "lexical_matches": 2,
+      "review_class": "DIRECT_DEFINITION_FRAGMENT",
+      "design_disposition": "BOUNDED_FUTURE_CANDIDATE",
+      "evidence_anchors": [
+        {
+          "line_1based": 34,
+          "context_sha256": "12ea72b669854e8241e88d9836f1d12ea05658edbcbbc93739cc9803aac2455b"
+        },
+        {
+          "line_1based": 618,
+          "context_sha256": "6802607a28424e0180606bbfc65aa1a746ac3b9037746eea1f047f0db95bb8ee"
+        }
+      ],
+      "bounded_excerpt_interpretation_es": "Desactiva prompt; no acredita permiso remoto.",
+      "complete_manual_semantics_verified": false,
+      "cli_flag_approved": false,
+      "runtime_capability_verified": false
+    }
+  ],
+  "profile_count": 29,
+  "profiles": [
+    {
+      "profile_id": "SSH-T01-BASE",
+      "semantic_operation_id": "VERIFY_TRANSPORT_AND_PINNED_HOST_KEY",
+      "source_term_ids": [
+        "ssh.1.gz:-F",
+        "ssh.1.gz:-N",
+        "ssh_config.5.gz:StrictHostKeyChecking",
+        "ssh_config.5.gz:UserKnownHostsFile",
+        "ssh_config.5.gz:ProxyCommand",
+        "ssh_config.5.gz:KnownHostsCommand",
+        "ssh-keyscan.1.gz:-p"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "SSH-T02-BASE",
+      "semantic_operation_id": "OBSERVE_AUTH_METHODS_FIXED_IDENTITY",
+      "source_term_ids": [
+        "ssh_config.5.gz:BatchMode",
+        "ssh_config.5.gz:KbdInteractiveAuthentication",
+        "ssh_config.5.gz:ConnectionAttempts",
+        "ssh_config.5.gz:ProxyCommand"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "SSH-T03-BASE",
+      "semantic_operation_id": "AUTHENTICATE_PREAUTHORIZED_PASSWORD",
+      "source_term_ids": [
+        "ssh_config.5.gz:BatchMode",
+        "ssh_config.5.gz:NumberOfPasswordPrompts",
+        "ssh_config.5.gz:KbdInteractiveAuthentication",
+        "ssh_config.5.gz:ProxyCommand"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "SSH-T04-BASE",
+      "semantic_operation_id": "AUTHENTICATE_PREAUTHORIZED_PUBLIC_KEY",
+      "source_term_ids": [
+        "ssh.1.gz:-i",
+        "ssh_config.5.gz:IdentityAgent",
+        "ssh_config.5.gz:ForwardAgent",
+        "ssh_config.5.gz:BatchMode"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "SSH-T05-BASE",
+      "semantic_operation_id": "OPEN_CHANNEL_AND_VERIFY_IDENTITY",
+      "source_term_ids": [
+        "ssh.1.gz:-T",
+        "ssh_config.5.gz:RemoteCommand",
+        "ssh_config.5.gz:PermitLocalCommand",
+        "ssh_config.5.gz:RequestTTY"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "SSH-T06-BASE",
+      "semantic_operation_id": "READ_KNOWN_SYNTHETIC_RESOURCE",
+      "source_term_ids": [
+        "ssh_config.5.gz:RemoteCommand",
+        "ssh_config.5.gz:LocalCommand",
+        "sftp.1.gz:-b",
+        "sftp.1.gz:-o"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "SSH-T07-BASE",
+      "semantic_operation_id": "CREATE_VERIFY_REMOVE_SYNTHETIC_MARKER",
+      "source_term_ids": [
+        "ssh_config.5.gz:RemoteCommand",
+        "ssh_config.5.gz:LocalCommand",
+        "sftp.1.gz:-b",
+        "sftp.1.gz:-P"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "SSH-T08-BASE",
+      "semantic_operation_id": "VERIFY_SINGLE_PREAUTHORIZED_PRIVILEGE",
+      "source_term_ids": [
+        "ssh_config.5.gz:RemoteCommand",
+        "ssh_config.5.gz:PermitLocalCommand",
+        "ssh_config.5.gz:BatchMode"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "FTP-T01-BASE",
+      "semantic_operation_id": "CONNECT_PREAUTHORIZED_CONTROL_CHANNEL",
+      "source_term_ids": [
+        "curl.1.gz:--disable",
+        "curl.1.gz:--proto",
+        "curl.1.gz:--connect-timeout",
+        "curl.1.gz:--proxy"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "FTP-T02-CONTROL",
+      "semantic_operation_id": "VERIFY_TLS_CONTROL_CHANNEL",
+      "source_term_ids": [
+        "curl.1.gz:--ssl-reqd",
+        "curl.1.gz:--ftp-ssl-control",
+        "curl.1.gz:--ftp-ssl-ccc",
+        "curl.1.gz:--proxy"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "FTP-T02-DATA",
+      "semantic_operation_id": "VERIFY_TLS_DATA_CHANNEL",
+      "source_term_ids": [
+        "curl.1.gz:--ssl-reqd",
+        "curl.1.gz:--ftp-ssl-control",
+        "curl.1.gz:--ftp-ssl-ccc",
+        "curl.1.gz:--ftp-pasv"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "FTP-T03-BASE",
+      "semantic_operation_id": "AUTHENTICATE_PREDEFINED_GUEST",
+      "source_term_ids": [
+        "curl.1.gz:--user",
+        "curl.1.gz:--disable",
+        "curl.1.gz:--proto"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "FTP-T04-BASE",
+      "semantic_operation_id": "AUTHENTICATE_SYNTHETIC_ACCOUNT",
+      "source_term_ids": [
+        "curl.1.gz:--user",
+        "curl.1.gz:--config",
+        "curl.1.gz:--insecure"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "FTP-T05-BASE",
+      "semantic_operation_id": "LIST_ONLY_KNOWN_SYNTHETIC_DIRECTORY",
+      "source_term_ids": [
+        "curl.1.gz:--list-only",
+        "curl.1.gz:--ftp-method",
+        "curl.1.gz:--globoff"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "FTP-T06-BASE",
+      "semantic_operation_id": "DOWNLOAD_KNOWN_SYNTHETIC_FILE",
+      "source_term_ids": [
+        "curl.1.gz:--output",
+        "curl.1.gz:--max-filesize",
+        "curl.1.gz:--limit-rate"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "FTP-T07-BASE",
+      "semantic_operation_id": "UPLOAD_VERIFY_REMOVE_SYNTHETIC_MARKER",
+      "source_term_ids": [
+        "curl.1.gz:--upload-file",
+        "curl.1.gz:--quote",
+        "curl.1.gz:--ftp-create-dirs"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "FTP-T08-READ",
+      "semantic_operation_id": "COMPARE_READ_ON_KNOWN_CONTROL_AND_RESTRICTED_RESOURCES",
+      "source_term_ids": [
+        "curl.1.gz:--output",
+        "curl.1.gz:--max-filesize",
+        "curl.1.gz:--request"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "FTP-T08-WRITE",
+      "semantic_operation_id": "COMPARE_BOUNDED_WRITE_ON_KNOWN_CONTROL_AND_RESTRICTED_RESOURCES",
+      "source_term_ids": [
+        "curl.1.gz:--upload-file",
+        "curl.1.gz:--quote",
+        "curl.1.gz:--ftp-create-dirs"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "SMB-T01-BASE",
+      "semantic_operation_id": "NEGOTIATE_PREAUTHORIZED_SMB_DIALECT",
+      "source_term_ids": [
+        "smbclient.1.gz:--max-protocol",
+        "smbclient.1.gz:--client-protection",
+        "smbclient.1.gz:--port"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "SMB-T02-BASE",
+      "semantic_operation_id": "VERIFY_PREDEFINED_SMBV1_NEGOTIATION",
+      "source_term_ids": [
+        "smbclient.1.gz:--max-protocol",
+        "smbclient.1.gz:--configfile",
+        "rpcclient.1.gz:--command"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "SMB-T03-SIGNING",
+      "semantic_operation_id": "VERIFY_SIGNED_SMB_OPERATION",
+      "source_term_ids": [
+        "smbclient.1.gz:--client-protection",
+        "smbclient.1.gz:--command"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "SMB-T03-ENCRYPTION",
+      "semantic_operation_id": "VERIFY_ENCRYPTED_SMB_OPERATION",
+      "source_term_ids": [
+        "smbclient.1.gz:--client-protection",
+        "smbclient.1.gz:--command"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "SMB-T04-BASE",
+      "semantic_operation_id": "IDENTIFY_PREDEFINED_GUEST_SESSION",
+      "source_term_ids": [
+        "smbclient.1.gz:--no-pass",
+        "smbclient.1.gz:--user"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "SMB-T05-BASE",
+      "semantic_operation_id": "AUTHENTICATE_SYNTHETIC_SMB_ACCOUNT",
+      "source_term_ids": [
+        "smbclient.1.gz:--authentication-file",
+        "smbclient.1.gz:--user",
+        "smbclient.1.gz:--use-kerberos"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "SMB-T06-BASE",
+      "semantic_operation_id": "LIST_ONLY_KNOWN_SYNTHETIC_SHARE_DIRECTORY",
+      "source_term_ids": [
+        "smbclient.1.gz:dir",
+        "smbclient.1.gz:ls",
+        "smbclient.1.gz:--directory"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "SMB-T07-BASE",
+      "semantic_operation_id": "READ_KNOWN_SYNTHETIC_SMB_RESOURCE",
+      "source_term_ids": [
+        "smbclient.1.gz:get",
+        "smbclient.1.gz:--command",
+        "smbclient.1.gz:--timeout"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "SMB-T08-BASE",
+      "semantic_operation_id": "CREATE_VERIFY_REMOVE_SYNTHETIC_SMB_MARKER",
+      "source_term_ids": [
+        "smbclient.1.gz:put",
+        "smbclient.1.gz:del",
+        "smbclient.1.gz:--command"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "SMB-T09-READ",
+      "semantic_operation_id": "COMPARE_READ_SMB_CONTROL_AND_RESTRICTED_RESOURCES",
+      "source_term_ids": [
+        "smbclient.1.gz:allinfo",
+        "smbclient.1.gz:get",
+        "smbclient.1.gz:--command"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    },
+    {
+      "profile_id": "SMB-T09-WRITE",
+      "semantic_operation_id": "COMPARE_BOUNDED_WRITE_SMB_CONTROL_AND_RESTRICTED_RESOURCES",
+      "source_term_ids": [
+        "smbclient.1.gz:put",
+        "smbclient.1.gz:del",
+        "smbclient.1.gz:--command"
+      ],
+      "cli_grammar": null,
+      "rendered_argv": null,
+      "remote_command_ast": null,
+      "smb_command_ast": null,
+      "credential_ref": null,
+      "private_case_authorization": null,
+      "approved_target_ref": null,
+      "budget_ref": null,
+      "capture_ref": null,
+      "cleanup_receipt_ref": null,
+      "effective_cli_option_tokens": [],
+      "source_semantics_complete": false,
+      "profile_capability_verified": false,
+      "dispatch_allowed": false,
+      "status": "BLOCKED_SEMANTIC_EXCERPTS_ONLY_NO_EXECUTION"
+    }
+  ],
+  "complete_manual_semantic_reviews": 0,
+  "approved_cli_grammars": 0,
+  "approved_cli_options": 0,
+  "verified_tool_capabilities": 0,
+  "authorized_cases": 0,
+  "authorized_profiles": 0,
+  "dispatch_allowed": false,
+  "algorithms_started": false,
+  "physical_laboratory_contact": "NONE",
+  "guest_binaries_executed": false
+}

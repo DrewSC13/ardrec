@@ -1,5 +1,7 @@
 # ARDREC
 
+> **P8-R12 — semántica acotada de manuales (propuesta):** [`docs/estado-vigente-p8-r12.md`](docs/estado-vigente-p8-r12.md). 91 fragmentos clasificados en 7 manuales y vinculados a 29 perfiles. Ninguna opción CLI aprobada, ningún `argv` ni despacho; P8 continúa abierto, P9 y A1–A10 no iniciados. R11 integrado mediante PR #44.
+
 > **P8-R11 — fuentes documentales del runner (propuesta):** [`docs/estado-vigente-p8-r11.md`](docs/estado-vigente-p8-r11.md). 7 manuales con hashes, 4 declaraciones de dependencias y 29 referencias documentales no autorizadas. Ningun flag/argv validado; P8 abierto, P9 y A1–A10 no iniciados. R10 integrado mediante PR #43.
 
 > **P8-R10 — contratos simbólicos por variante (propuesta):** [`docs/estado-vigente-p8-r10.md`](docs/estado-vigente-p8-r10.md). 29 intenciones tipadas no renderizables: sin `argv`, shell remoto, `smbclient -c`, permisos, presupuesto piloto, casos ni despacho. P8-R9 integrado por PR #42; P8 general permanece abierto.

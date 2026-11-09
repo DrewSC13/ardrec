@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "increment": "P8-R12",
+  "roadmap_step": 8,
+  "parent_protected_merge_sha": "82ed763b809f0ae0bc94c8dbfa5bc9fb1fd300f4",
+  "source": "lab/p8-cli-semantics-v1/semantics.json",
+  "verifier": "lab/verify_p8_cli_semantics.py",
+  "adversarial_tests": "lab/tests/test_p8_cli_semantics.py",
+  "prior_documentation": "lab/p8-cli-source-v1/evidence.json",
+  "prior_semantic_intents": "lab/p8-profile-contract-v1/contracts.json",
+  "scope": "Source-only bounded manpage excerpt analysis; not real CLI capability attestation",
+  "manuals": 7,
+  "lexical_terms": 91,
+  "candidate_profiles": 29,
+  "all_profiles_denied": true,
+  "cli_grammars_approved": 0,
+  "cases_approved": 0,
+  "dispatch_authorized": false,
+  "open_findings": ["AL-06", "AL-07"],
+  "algorithms_started": false,
+  "experiment_executed": false
+}

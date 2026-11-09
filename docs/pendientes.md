@@ -83,3 +83,9 @@
 **ES:** Registro reportado y verificable por lectura de 7 manuales de la QCOW2 y cuatro campos `Depends`, vinculados a 29 intenciones tipadas. No valida opciones CLI ni cierre de dependencias o autorización por caso. Cero argumentos materializados, casos reales o despachos; P8, AL-06/AL-07 y siete obligaciones continúan abiertos.
 
 **EN:** Version-pinned documentary source observations only; no semantic CLI grammar, trusted execution, private authority or algorithm implementation.
+
+## P8-R12 — fragmentos semánticos acotados / Bounded semantic excerpts
+
+**ES:** Revisión de 91 fragmentos obtenidos en 7 manuales de la QCOW2: 74 definiciones de fragmento, 15 referencias insuficientes y 2 ambigüedades de opciones cortas. Conexión documentada con 29 perfiles sin aprobación de flags, `argv`, destino, credenciales, caso o despacho. AL-06/AL-07 y siete obligaciones continúan abiertos.
+
+**EN:** Excerpt-level source analysis only, not full manpage semantics, runtime capability, trusted authorization, executable grammar or algorithm implementation.
