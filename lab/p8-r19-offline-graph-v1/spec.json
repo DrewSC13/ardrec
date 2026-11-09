@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "roadmap_step": 8,
+  "increment": "P8-R19",
+  "scope": "READ_ONLY_OFFLINE_ELF_CANDIDATE_GRAPH_NOT_LOADER_PROOF",
+  "base_main_commit": "e1e43c621e28628d004775d888ef5b133debfb52",
+  "image_sha256": "fc9244fe29917f9bbeab09604a5845506dc3ab222b5c53648b5b90b2b1bf2103",
+  "r18_private_receipt_sha256_operator_only": "90586b0fedd11fad28e9896f75f654fe3ff7558f2510940bd5e48d2171cbb806",
+  "root_candidates": ["/usr/bin/ssh", "/usr/bin/curl", "/usr/bin/smbclient"],
+  "expected_r18_direct_needed_counts": [5, 3, 23],
+  "max_nodes": 160,
+  "max_edges": 1000,
+  "max_depth": 16,
+  "loader_resolution_verified": false,
+  "transitive_dependency_closure_verified": false,
+  "runtime_identity_verified": false,
+  "approved_profiles": 0,
+  "authorized_cases": 0,
+  "dispatch_allowed": false
+}
