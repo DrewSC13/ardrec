@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "roadmap_step": 8,
+  "increment": "P8-R10",
+  "base_commit": "4290e759842fa090a0fb13979501dd8a8cc7d760",
+  "source_thesis_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "source_sections": ["3.7.5", "3.9.2"],
+  "upstream": [
+    "lab/operational-catalog-v1/catalog.json",
+    "lab/execution-profiles-v1/profiles.json",
+    "lab/p8-material-inventory-v1/inventory.json",
+    "lab/p8-material-inventory-v1/compatibility.json"
+  ],
+  "artifacts": [
+    "lab/p8-profile-contract-v1/contracts.json",
+    "lab/p8-profile-contract-v1/README.md",
+    "lab/verify_p8_profile_contracts.py",
+    "lab/tests/test_p8_profile_contracts.py"
+  ],
+  "profile_contracts": 29,
+  "families": 25,
+  "write_profiles_requiring_cleanup": 5,
+  "historical_binary_hashes": 15,
+  "arg_vectors_materialized": 0,
+  "proven_tool_capabilities": 0,
+  "runtime_binary_pins_verified": 0,
+  "authorized_cases": 0,
+  "enabled_profiles": 0,
+  "dispatch_allowed": false,
+  "algorithm_implementation": "NOT_STARTED",
+  "experimental_validation": "NOT_RUN",
+  "open_findings": ["AL-06", "AL-07"],
+  "open_development_obligations": 7
+}
