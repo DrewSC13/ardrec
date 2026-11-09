@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "increment": "P8-R20",
+  "scope": "SAMBA_MULTIARCH_PRIVATE_DSO_CANDIDATE_SEARCH_ONLY",
+  "base_main_commit": "4d0907a982183a33b18eb2decba20fc02f37b822",
+  "r19_private_receipt_sha256_operator_only": "785a85192e42588042467017f4ec65bafed96f4711bb1d42c6f846ede0e1a1cf",
+  "image_sha256": "fc9244fe29917f9bbeab09604a5845506dc3ab222b5c53648b5b90b2b1bf2103",
+  "samba_candidate_directory": "/usr/lib/x86_64-linux-gnu/samba",
+  "expected_r19_observation": {
+    "libraries": 68,
+    "edges": 292,
+    "unresolved": 67,
+    "ambiguous": 0
+  },
+  "bounds": { "max_probe_names": 128, "max_new_libraries": 92, "max_added_edges": 1000, "max_layers": 12 },
+  "effective_loader_resolution_verified": false,
+  "runtime_dependency_closure_verified": false,
+  "authorized_profiles": 0,
+  "authorized_cases": 0,
+  "dispatch_allowed": false
+}
