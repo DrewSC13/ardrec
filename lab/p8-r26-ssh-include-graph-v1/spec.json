@@ -1,0 +1,52 @@
+{
+  "algorithms_a1_to_a10_started": false,
+  "authorized_cases": 0,
+  "authorized_profiles": 0,
+  "base_main_commit": "d4dfb21ba81143e27870586b9ebf442326287eb7",
+  "binding_fields_pending_unchanged": 348,
+  "ci_executes_ssh": false,
+  "ci_reads_private_receipt": false,
+  "ci_reads_qcow2": false,
+  "dispatch_allowed": false,
+  "effective_config_verified": false,
+  "increment": "P8-R26",
+  "limits": {
+    "file_bytes": 262144,
+    "include_depth": 8,
+    "include_edges": 96,
+    "include_tokens_per_directive": 8,
+    "include_visits": 96,
+    "lines_per_file": 8192,
+    "source_count": 33,
+    "total_bytes": 1048576
+  },
+  "p9_started": false,
+  "pinned_image_sha256_not_rechecked": "fc9244fe29917f9bbeab09604a5845506dc3ab222b5c53648b5b90b2b1bf2103",
+  "profile_count_total_unchanged": 29,
+  "proof_gates_pending_unchanged": 261,
+  "r25_private_receipt_sha256_operator_report_only": "eee28ad26a1d775b2d1f6215410ce072d64b1ea3a209567f8493848f4483fe5c",
+  "real_include_graph_resolved": false,
+  "roadmap_step": 8,
+  "schema_version": "1.0",
+  "scope": "SYNTHETIC_BOUNDED_SSH_INCLUDE_CANDIDATE_GRAPH_SOURCE_ONLY",
+  "supported_include_patterns": [
+    "/etc/ssh/ssh_config.d/*.conf",
+    "/etc/ssh/ssh_config.d/<literal-safe-name>.conf"
+  ],
+  "synthetic_cases": 17,
+  "synthetic_fixture_sha256": "fe4793dd16b0837a22824e28379375e96ccdc12f47163fbbd211cc0584d0fd2c",
+  "unsupported": [
+    "relative_paths",
+    "user_config",
+    "token_expansion",
+    "wildcards_except_single_glob",
+    "Match exec",
+    "Host_Match_condition_evaluation",
+    "quoting_and_escapes",
+    "actual_filesystem_glob",
+    "effective_config",
+    "CLI_argv",
+    "ssh -G",
+    "guest_execution"
+  ]
+}
