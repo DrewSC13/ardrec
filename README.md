@@ -1,5 +1,7 @@
 # ARDREC
 
+> **Estado propuesto P8-R26 — grafo sintético SSH (no integrado):** [`docs/estado-vigente-p8-r26.md`](docs/estado-vigente-p8-r26.md). Contrato de `Include` acotado con pruebas sintéticas; no resuelve grafo material, configuración efectiva, `Host`/`Match`, usuario ni CLI. P8 sigue abierto: 29 perfiles bloqueados y cero despachos. R25/PR #58 integrado, con CI posmerge aprobada.
+
 > **P8-R15 — matriz de revisión por perfil (propuesta):** [`docs/estado-vigente-p8-r15.md`](docs/estado-vigente-p8-r15.md). 25 riesgos de manuales distribuidos conservadoramente entre 29 perfiles (238 enlaces), nueve obligaciones comunes y dos adicionales para cinco escrituras. Denegación determinista, cero opciones CLI/argv/autorizaciones/ejecución; R14 integrado por PR #47; P8 abierto, P9 y A1–A10 no iniciados.
 
 > **P8-R14 — anclas de entradas completas (propuesta):** [`docs/estado-vigente-p8-r14.md`](docs/estado-vigente-p8-r14.md). Siete fuentes íntegras autenticadas, 91 entradas documentales enlazadas a 29 perfiles, 25 límites de seguridad no autorizados. Cero opciones/argv/gramáticas ejecutables; P8 abierto, P9 y A1–A10 no iniciados. R13 integrado por PR #46.

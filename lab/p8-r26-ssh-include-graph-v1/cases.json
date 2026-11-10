@@ -1,0 +1,186 @@
+{
+  "cases": [
+    {
+      "candidate_edges": 1,
+      "conditional_edges": 0,
+      "expect": "SYNTHETIC_GRAPH_CANDIDATES_ONLY_DENY_ALL",
+      "files": {
+        "/etc/ssh/ssh_config.d/20-systemd-ssh-proxy.conf": "Host staging\n  ProxyJump none\n"
+      },
+      "name": "wildcard_alias",
+      "root_text": "Include /etc/ssh/ssh_config.d/*.conf\nHost *\n  ForwardAgent no\n",
+      "synthetic_alias_exact": true
+    },
+    {
+      "candidate_edges": 1,
+      "conditional_edges": 0,
+      "expect": "SYNTHETIC_GRAPH_CANDIDATES_ONLY_DENY_ALL",
+      "files": {
+        "/etc/ssh/ssh_config.d/10-local.conf": "# synthetic\n"
+      },
+      "name": "literal",
+      "root_text": "Include /etc/ssh/ssh_config.d/10-local.conf\n",
+      "synthetic_alias_exact": false
+    },
+    {
+      "candidate_edges": 2,
+      "conditional_edges": 0,
+      "expect": "SYNTHETIC_GRAPH_CANDIDATES_ONLY_DENY_ALL",
+      "files": {
+        "/etc/ssh/ssh_config.d/10-local.conf": "Include /etc/ssh/ssh_config.d/20-more.conf\n",
+        "/etc/ssh/ssh_config.d/20-more.conf": "# end\n"
+      },
+      "name": "nested",
+      "root_text": "Include /etc/ssh/ssh_config.d/10-local.conf\n",
+      "synthetic_alias_exact": false
+    },
+    {
+      "candidate_edges": 1,
+      "conditional_edges": 1,
+      "expect": "SYNTHETIC_GRAPH_CANDIDATES_ONLY_DENY_ALL",
+      "files": {
+        "/etc/ssh/ssh_config.d/10-local.conf": "# only candidate\n"
+      },
+      "name": "host_conditional",
+      "root_text": "Host staging\n Include /etc/ssh/ssh_config.d/10-local.conf\n",
+      "synthetic_alias_exact": false
+    },
+    {
+      "candidate_edges": 1,
+      "conditional_edges": 1,
+      "expect": "SYNTHETIC_GRAPH_CANDIDATES_ONLY_DENY_ALL",
+      "files": {
+        "/etc/ssh/ssh_config.d/10-local.conf": "# only candidate\n"
+      },
+      "name": "match_conditional",
+      "root_text": "Match host staging\nInclude /etc/ssh/ssh_config.d/10-local.conf\n",
+      "synthetic_alias_exact": false
+    },
+    {
+      "candidate_edges": null,
+      "conditional_edges": null,
+      "expect": "FAIL_CLOSED",
+      "files": {
+        "/etc/ssh/ssh_config.d/10-local.conf": "Include /etc/ssh/ssh_config.d/10-local.conf\n"
+      },
+      "name": "cycle",
+      "root_text": "Include /etc/ssh/ssh_config.d/10-local.conf\n",
+      "synthetic_alias_exact": false
+    },
+    {
+      "candidate_edges": null,
+      "conditional_edges": null,
+      "expect": "FAIL_CLOSED",
+      "files": {},
+      "name": "unobserved_include",
+      "root_text": "Include /etc/ssh/ssh_config.d/never-captured.conf\n",
+      "synthetic_alias_exact": false
+    },
+    {
+      "candidate_edges": null,
+      "conditional_edges": null,
+      "expect": "FAIL_CLOSED",
+      "files": {},
+      "name": "outside_scope",
+      "root_text": "Include /etc/ssh/ssh_config.d/../../etc/passwd\n",
+      "synthetic_alias_exact": false
+    },
+    {
+      "candidate_edges": null,
+      "conditional_edges": null,
+      "expect": "FAIL_CLOSED",
+      "files": {
+        "/etc/ssh/ssh_config.d/10-local.conf": "# dummy\n"
+      },
+      "name": "match_exec_forbidden",
+      "root_text": "Match exec echo\nInclude /etc/ssh/ssh_config.d/10-local.conf\n",
+      "synthetic_alias_exact": false
+    },
+    {
+      "candidate_edges": 0,
+      "conditional_edges": 0,
+      "expect": "SYNTHETIC_GRAPH_CANDIDATES_ONLY_DENY_ALL",
+      "files": {},
+      "name": "no_includes",
+      "root_text": "Host *\n  ForwardAgent no\n",
+      "synthetic_alias_exact": false
+    },
+    {
+      "candidate_edges": null,
+      "conditional_edges": null,
+      "expect": "FAIL_CLOSED",
+      "files": {},
+      "name": "empty_glob",
+      "root_text": "Include /etc/ssh/ssh_config.d/*.conf\n",
+      "synthetic_alias_exact": false
+    },
+    {
+      "candidate_edges": null,
+      "conditional_edges": null,
+      "expect": "FAIL_CLOSED",
+      "files": {},
+      "name": "relative_include",
+      "root_text": "Include user.conf\n",
+      "synthetic_alias_exact": false
+    },
+    {
+      "candidate_edges": 2,
+      "conditional_edges": 0,
+      "expect": "SYNTHETIC_GRAPH_CANDIDATES_ONLY_DENY_ALL",
+      "files": {
+        "/etc/ssh/ssh_config.d/10-a.conf": "# A\n",
+        "/etc/ssh/ssh_config.d/21-b.conf": "# B\n"
+      },
+      "name": "glob_sorted",
+      "root_text": "Include /etc/ssh/ssh_config.d/*.conf\n",
+      "synthetic_alias_exact": false
+    },
+    {
+      "candidate_edges": 2,
+      "conditional_edges": 2,
+      "expect": "SYNTHETIC_GRAPH_CANDIDATES_ONLY_DENY_ALL",
+      "files": {
+        "/etc/ssh/ssh_config.d/a.conf": "Include /etc/ssh/ssh_config.d/b.conf\n",
+        "/etc/ssh/ssh_config.d/b.conf": "Port 2222\n"
+      },
+      "name": "host_condition_propagates_down_nested_include",
+      "root_text": "Host restricted\n  Include /etc/ssh/ssh_config.d/a.conf\n",
+      "synthetic_alias_exact": false
+    },
+    {
+      "candidate_edges": 2,
+      "conditional_edges": 2,
+      "expect": "SYNTHETIC_GRAPH_CANDIDATES_ONLY_DENY_ALL",
+      "files": {
+        "/etc/ssh/ssh_config.d/a.conf": "Include /etc/ssh/ssh_config.d/b.conf\n",
+        "/etc/ssh/ssh_config.d/b.conf": "# End\n"
+      },
+      "name": "match_condition_propagates_down_nested_include",
+      "root_text": "Match host example\n  Include /etc/ssh/ssh_config.d/a.conf\n",
+      "synthetic_alias_exact": false
+    },
+    {
+      "candidate_edges": 4,
+      "conditional_edges": 2,
+      "expect": "SYNTHETIC_GRAPH_CANDIDATES_ONLY_DENY_ALL",
+      "files": {
+        "/etc/ssh/ssh_config.d/a.conf": "Include /etc/ssh/ssh_config.d/b.conf\n",
+        "/etc/ssh/ssh_config.d/b.conf": "# End\n"
+      },
+      "name": "revisited_source_changes_conditional_context",
+      "root_text": "Include /etc/ssh/ssh_config.d/a.conf\nHost restricted\nInclude /etc/ssh/ssh_config.d/a.conf\n",
+      "synthetic_alias_exact": false
+    },
+    {
+      "candidate_edges": null,
+      "conditional_edges": null,
+      "expect": "FAIL_CLOSED",
+      "files": {},
+      "name": "negated_match_exec_rejected",
+      "root_text": "Match !exec true\n",
+      "synthetic_alias_exact": false
+    }
+  ],
+  "schema_version": "1.0",
+  "scope": "SYNTHETIC_ONLY_NO_REAL_SSH_FILES"
+}

@@ -216,6 +216,12 @@ jobs:
       - name: Probar captura estatica SSH P8 R25 / Test source-byte audit contract
         run: python3 -m unittest discover -s lab/tests -p test_p8_r25_ssh_source_provenance.py -v
 
+      - name: Verificar grafo Include SSH P8 R26 / Verify bounded SSH Include candidates
+        run: python3 lab/verify_p8_r26_ssh_include_graph.py
+
+      - name: Probar grafo sintético SSH P8 R26 / Test synthetic bounded Include graph
+        run: python3 -B -m unittest discover -s lab/tests -p test_p8_r26_ssh_include_graph.py -v
+
       - name: Probar contratos y transporte / Test contracts and transport
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 
