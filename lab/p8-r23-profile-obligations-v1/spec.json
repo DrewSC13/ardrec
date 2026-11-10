@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "roadmap_step": 8,
+  "increment": "P8-R23",
+  "scope": "PINNED_PUBLIC_PROFILE_MATERIAL_OBLIGATION_LEDGER_DENY_ONLY",
+  "base_main_commit": "f9fc5c42141bfe1e66672ecb71b4ab6fef9debcc",
+  "r22_private_receipt_sha256_operator_only": "3c67529808db1ab8ddc05f5e2cf9a4b0ce7d34ca4bcb0e28993c4cb0db200408",
+  "r9_image_sha256": "fc9244fe29917f9bbeab09604a5845506dc3ab222b5c53648b5b90b2b1bf2103",
+  "expected_families": 25,
+  "expected_profiles": 29,
+  "expected_protocol_distribution": {"ssh": 8, "ftp": 10, "smb": 11},
+  "expected_unbound_material_fields": 348,
+  "expected_writing_variants": 5,
+  "ci_reads_private_receipts": false,
+  "private_audit_reads_qcow2": false,
+  "actual_cli_capability_verified": false,
+  "runtime_binary_identity_verified": false,
+  "effective_configuration_verified": false,
+  "approved_profiles": 0,
+  "authorized_cases": 0,
+  "dispatch_allowed": false
+}
