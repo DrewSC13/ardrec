@@ -186,6 +186,12 @@ jobs:
       - name: Probar rutas privadas Samba P8 R20 / Test bounded deny-only candidates
         run: python3 -m unittest discover -s lab/tests -p test_p8_r20_samba_candidate.py -v
 
+      - name: Verificar conciliacion ELF P8 R21 / Verify offline candidate reconciliation
+        run: python3 lab/verify_p8_r21_multiarch_reconcile.py
+
+      - name: Probar conciliacion ELF P8 R21 / Test bounded multiarch lookup
+        run: python3 -m unittest discover -s lab/tests -p test_p8_r21_multiarch_reconcile.py -v
+
       - name: Probar contratos y transporte / Test contracts and transport
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 
