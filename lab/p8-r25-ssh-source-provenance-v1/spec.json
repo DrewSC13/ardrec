@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "roadmap_step": 8,
+  "increment": "P8-R25",
+  "scope": "ACTUAL_PINNED_QCOW2_SSH_CONFIG_SOURCE_READONLY_OPERATOR_CAPTURE",
+  "base_main_commit": "acf2f68b7687095a50691b93d3c538456b8b9cef",
+  "r24_private_receipt_sha256_operator_only": "68747c677b41dea3f5c5329075ddc1a97b1bf8f47d34bc7c07a54be67a5194aa",
+  "r24_matrix_sha256": "e53900abea3d83ef27de6fc77e25d1698788a9616c90f696c5ea5781dbd6c5d2",
+  "pinned_image_sha256": "fc9244fe29917f9bbeab09604a5845506dc3ab222b5c53648b5b90b2b1bf2103",
+  "source_root": "/etc/ssh/ssh_config",
+  "source_fragment_directory": "/etc/ssh/ssh_config.d",
+  "target_profile_count": 8,
+  "profile_total_unchanged": 29,
+  "unbound_fields_unchanged": 348,
+  "unverified_gates_unchanged": 261,
+  "ci_reads_qcow2": false,
+  "ci_reads_private_receipts": false,
+  "guest_binaries_execute": false,
+  "active_vm_access": false,
+  "operator_readonly_qcow2_access_requires_explicit_execution": true,
+  "effective_configuration_verified": false,
+  "client_capability_verified": false,
+  "authorized_profiles": 0,
+  "authorized_cases": 0,
+  "dispatch_allowed": false,
+  "literal_symlink_exception": {
+    "guest_path": "/etc/ssh/ssh_config.d/20-systemd-ssh-proxy.conf",
+    "resolved_regular_path": "/usr/lib/systemd/ssh_config.d/20-systemd-ssh-proxy.conf",
+    "max_aliases": 1,
+    "arbitrary_following": false,
+    "effective_include_resolution": false
+  }
+}
