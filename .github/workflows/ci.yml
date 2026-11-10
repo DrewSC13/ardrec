@@ -204,6 +204,12 @@ jobs:
       - name: Probar negacion perfiles P8 R23 / Test deny-only profile ledger
         run: python3 -m unittest discover -s lab/tests -p test_p8_r23_profile_obligations.py -v
 
+      - name: Verificar suficiencia probatoria P8 R24 / Verify proof boundary
+        run: python3 lab/verify_p8_r24_capability_proof_boundary.py
+
+      - name: Probar barrera de capacidad P8 R24 / Test deny-only proof boundary
+        run: python3 -m unittest discover -s lab/tests -p test_p8_r24_capability_proof_boundary.py -v
+
       - name: Probar contratos y transporte / Test contracts and transport
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 
