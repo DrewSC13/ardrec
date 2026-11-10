@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "roadmap_step": 8,
+  "increment": "P8-R22",
+  "scope": "OFFLINE_AUTHENTICATED_RECEIPT_ONLY_ELF_RPATH_RUNPATH_BOUNDARY_DENY_ONLY",
+  "base_main_commit": "0abec70380976b15a674580ab600f9bd933678c8",
+  "r18_private_receipt_sha256_operator_only": "90586b0fedd11fad28e9896f75f654fe3ff7558f2510940bd5e48d2171cbb806",
+  "r19_private_receipt_sha256_operator_only": "785a85192e42588042467017f4ec65bafed96f4711bb1d42c6f846ede0e1a1cf",
+  "r20_private_receipt_sha256_operator_only": "0e3d4fb71dc8784d551cf2e028fa441e719d2c443baa14af5aebe7d76951f17d",
+  "r21_private_receipt_sha256_operator_only": "79a9d6512cb3fccaafb90240b44d29d9747df798c34d2b956008161d667cbeff",
+  "image_sha256": "fc9244fe29917f9bbeab09604a5845506dc3ab222b5c53648b5b90b2b1bf2103",
+  "expected_candidate_dso_nodes": 138,
+  "expected_candidate_edges": 906,
+  "expected_search_flagged_objects": 66,
+  "ci_reads_private_receipts": false,
+  "private_collector_reads_qcow2": false,
+  "effective_loader_resolution_verified": false,
+  "effective_configuration_verified": false,
+  "runtime_binary_identity_verified": false,
+  "authorized_profiles": 0,
+  "authorized_cases": 0,
+  "dispatch_allowed": false
+}
