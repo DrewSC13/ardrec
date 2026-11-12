@@ -240,6 +240,12 @@ jobs:
       - name: Probar ventanas documentales R31 / Test bounded manual window rules
         run: python3 -B -m unittest discover -s lab/tests -p test_p8_r31_manual_windows.py -v
 
+      - name: Verificar cola de revisión documental R32 / Verify source-bound review queue
+        run: python3 -B lab/verify_p8_r32_semantic_triage.py
+
+      - name: Probar cola de revisión R32 / Test deny-only semantic review queue
+        run: python3 -B -m unittest discover -s lab/tests -p test_p8_r32_semantic_triage.py -v
+
       - name: Probar contratos y transporte / Test contracts and transport
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 

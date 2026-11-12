@@ -1,6 +1,8 @@
 # ARDREC
 
-> **Propuesta P8-R31 — contextos de fuentes reales para revisión semántica FTP/SMB:** [`docs/estado-vigente-p8-r31.md`](docs/estado-vigente-p8-r31.md). 39 entradas de tres manuales previamente capturados, previstas para extracción privada acotada; no hay semántica CLI aprobada, autorización, prueba runtime ni despacho.
+> **Propuesta P8-R32 — cola privada de revisión semántica sin aprobaciones:** [`docs/estado-vigente-p8-r32.md`](docs/estado-vigente-p8-r32.md). 39 fichas y 312 preguntas pendientes, verificadas frente al recibo privado R31; no se leen manuales otra vez, ni se aprueban opciones CLI, perfiles o despachos.
+
+> **P8-R31 integrado mediante PR #62 — contextos autenticados de fuentes reales para revisión semántica FTP/SMB:** [`docs/estado-vigente-p8-r31.md`](docs/estado-vigente-p8-r31.md). 39 entradas de tres manuales previamente capturados, previstas para extracción privada acotada; no hay semántica CLI aprobada, autorización, prueba runtime ni despacho.
 
 > **P8-R30 integrado mediante PR #61 — oráculos sintéticos de aceptación FTP/SMB sin despacho:** [`docs/estado-vigente-p8-r30.md`](docs/estado-vigente-p8-r30.md). Veintiún perfiles con resultados estrictamente sintéticos, distinción TLS control/datos, firma/cifrado SMB y limpieza de cuatro escrituras FTP/SMB; 348 campos y 261 pruebas runtime siguen pendientes, cero casos autorizados.
 
