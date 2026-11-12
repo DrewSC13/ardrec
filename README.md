@@ -1,6 +1,8 @@
 # ARDREC
 
-> **Propuesta P8-R34 — navegacion documental privada de solo lectura:** [`docs/estado-vigente-p8-r34.md`](docs/estado-vigente-p8-r34.md). Consultas acotadas de las 39 entradas y 312 preguntas originalmente pendientes sin mostrar roff/notas ni crear decisiones, permisos, `argv` o despachos.
+> **Propuesta P8-R35 — expedientes anclados a fuentes originales sin certificacion:** [`docs/estado-vigente-p8-r35.md`](docs/estado-vigente-p8-r35.md). Concilia R14/R31/R32/R33 y vincula 39 candidatos de clausula con 312 requisitos de lectura y observaciones preliminares; no autoriza CLI, `argv`, clientes, casos ni despachos.
+
+> **P8-R34 integrado mediante PR #65 — navegacion documental privada de solo lectura:** [`docs/estado-vigente-p8-r34.md`](docs/estado-vigente-p8-r34.md). Consultas acotadas de las 39 entradas y 312 preguntas originalmente pendientes sin mostrar roff/notas ni crear decisiones, permisos, `argv` o despachos.
 
 > **P8-R33 integrado mediante PR #64 — registro privado de decisiones humanas sin aprobaciones:** [`docs/estado-vigente-p8-r33.md`](docs/estado-vigente-p8-r33.md). Instrumento offline para clasificar individualmente las 312 preguntas de 39 fuentes; cada decisión conserva contexto SHA y ninguna crea autoridad, `argv` ni despacho.
 
