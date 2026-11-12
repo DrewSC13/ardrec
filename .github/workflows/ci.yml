@@ -252,6 +252,12 @@ jobs:
       - name: Probar adjudicacion documental R33 / Test human documentary dispositions
         run: python3 -B -m unittest discover -s lab/tests -p test_p8_r33_human_adjudication.py -v
 
+      - name: Verificar navegacion documental R34 / Verify source-bound review navigation
+        run: python3 -B lab/verify_p8_r34_review_navigation.py
+
+      - name: Probar consultas R34 sin autoridad / Test read-only review navigation
+        run: python3 -B -m unittest discover -s lab/tests -p test_p8_r34_review_navigation.py -v
+
       - name: Probar contratos y transporte / Test contracts and transport
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 

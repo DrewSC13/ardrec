@@ -1,0 +1,13 @@
+# ARDREC — P8-R34: navegación de revisión documental privada, sin promoción semántica
+
+**Base fijada:** `c9113291d08034934cca86373c8ea5f221323c46`, merge verificado del PR #64 (R33). CI posmerge Python/Rust aprobada y copia local `main` sincronizada mediante `--ff-only`, según controles de Prometheus. R34 es una propuesta nueva; no se integra hasta recibir CI y autorización independientes.
+
+**Antecedentes autenticados:** R31 preservó 39 ventanas roff acotadas de tres manuales FTP/SMB asociadas a 21 perfiles, sin certificar cláusulas completas. R32 creó 39 fichas con ocho preguntas cada una. R33 creó el libro privado de decisiones humanas y un registro inmutable por evento mediante creación exclusiva y enlaces SHA-256; su revisión posterior reportó **cero eventos y 312 preguntas sin clasificación**. El SHA del libro inicial es `24374563958fa3efde9046aa4286f4ada43da8638b46d8984fca822b177cf93a`. Este hash identifica el libro inicial, no acredita la autenticidad independiente de cualquier decisión futura.
+
+**Alcance R34:** producir una consulta **de solo lectura** (`summary`, `list`, `focus`) que reconcilia la cola original R32, el libro inicial R33 y sus eventos humanos privados, sin mostrar texto roff, notas ni decisiones concretas. La vista por entrada presenta identificador y ventana documental, hash de contexto, prioridad estrictamente orientativa y estados pendientes/registrados de ocho preguntas. Registrar una disposición sigue sin equivaler a resolver la semántica. La CLI privada solo utiliza los lectores R33 ya integrados y exige permisos de directorios `0700` y archivos `0600`, nombres de eventos contiguos, formato JSON canónico, cadena SHA-256 y referencias exactas. No modifica registros, no abre QCOW2, no ejecuta clientes ni lee manuales originales.
+
+**Límite metodológico:** una ventana de 24 líneas, incluso con SHA verificado, es una *muestra contextual*, no una cláusula semántica completa, ni especifica necesariamente gramática, defaults, precedencia, credenciales, cifrado o consecuencias remotas. Las preguntas solo podrán justificarse mediante revisión documental humana con evidencia integral adicional y pruebas independientes posteriormente autorizadas.
+
+**Estado invariable de autoridad:** P8 abierto; AL-06/AL-07 abiertos; 29 perfiles bloqueados; 348 vinculaciones materiales sin satisfacer; 261 pruebas runtime no acreditadas; cinco variantes de escritura sin acreditación independiente de limpieza; cero aprobaciones CLI, renderizadores argv, casos autorizados o despachos. P9 y A1–A10 no iniciados.
+
+**EN:** Deny-only, read-only navigation for source-linked human review; no semantic certification or execution authority.
