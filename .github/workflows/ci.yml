@@ -234,6 +234,12 @@ jobs:
       - name: Probar oraculos FTP/SMB P8 R30 / Test FTP SMB deny-only fixtures
         run: python3 -B -m unittest discover -s lab/tests -p test_p8_r30_synthetic_acceptance.py -v
 
+      - name: Verificar 39 anclas reales R31 / Verify authenticated manual source anchors
+        run: python3 -B lab/verify_p8_r31_manual_windows.py
+
+      - name: Probar ventanas documentales R31 / Test bounded manual window rules
+        run: python3 -B -m unittest discover -s lab/tests -p test_p8_r31_manual_windows.py -v
+
       - name: Probar contratos y transporte / Test contracts and transport
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 

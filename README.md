@@ -1,6 +1,8 @@
 # ARDREC
 
-> **Estado propuesto P8-R30 — oráculos sintéticos de aceptación FTP/SMB sin despacho:** [`docs/estado-vigente-p8-r30.md`](docs/estado-vigente-p8-r30.md). Veintiún perfiles con resultados estrictamente sintéticos, distinción TLS control/datos, firma/cifrado SMB y limpieza de cuatro escrituras FTP/SMB; 348 campos y 261 pruebas runtime siguen pendientes, cero casos autorizados.
+> **Propuesta P8-R31 — contextos de fuentes reales para revisión semántica FTP/SMB:** [`docs/estado-vigente-p8-r31.md`](docs/estado-vigente-p8-r31.md). 39 entradas de tres manuales previamente capturados, previstas para extracción privada acotada; no hay semántica CLI aprobada, autorización, prueba runtime ni despacho.
+
+> **P8-R30 integrado mediante PR #61 — oráculos sintéticos de aceptación FTP/SMB sin despacho:** [`docs/estado-vigente-p8-r30.md`](docs/estado-vigente-p8-r30.md). Veintiún perfiles con resultados estrictamente sintéticos, distinción TLS control/datos, firma/cifrado SMB y limpieza de cuatro escrituras FTP/SMB; 348 campos y 261 pruebas runtime siguen pendientes, cero casos autorizados.
 
 > **P8-R29 integrado mediante PR #60 — 29 declaraciones simbólicas verificables, sin despacho:** [`docs/estado-vigente-p8-r29.md`](docs/estado-vigente-p8-r29.md). Diferencia las 348 vinculaciones, 261 obligaciones probatorias, 271 enlaces documentales y 238 riesgos; no supone capacidades CLI, configuración efectiva ni autorización.
 
