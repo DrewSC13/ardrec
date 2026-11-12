@@ -21,7 +21,7 @@
     "ssh": 8
   },
   "r27_private_receipt_sha256_operator_report_only": "71fbb3cadcbfb303ad5ce299ef9c2416c7cbec2242d938280ed65c112956ab93",
-  "r27_source_bound_graph_is_not_effective_configuration": false,
+  "r27_source_bound_graph_is_not_effective_configuration": true,
   "r28_private_report_sha256_operator_report_only": "381f20d35a0bc3863775a41df785bd9ef4a2c66eb851066c3e82de92cca8b22b",
   "roadmap_step": 8,
   "schema_version": "1.0",

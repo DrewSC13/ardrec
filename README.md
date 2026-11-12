@@ -2,7 +2,7 @@
 
 > **Estado propuesto P8-R29 — 29 declaraciones simbólicas verificables, sin despacho:** [`docs/estado-vigente-p8-r29.md`](docs/estado-vigente-p8-r29.md). Diferencia las 348 vinculaciones, 261 obligaciones probatorias, 271 enlaces documentales y 238 riesgos; no supone capacidades CLI, configuración efectiva ni autorización.
 
-> **Estado propuesto P8-R26 — grafo sintético SSH (no integrado):** [`docs/estado-vigente-p8-r26.md`](docs/estado-vigente-p8-r26.md). Contrato de `Include` acotado con pruebas sintéticas; no resuelve grafo material, configuración efectiva, `Host`/`Match`, usuario ni CLI. P8 sigue abierto: 29 perfiles bloqueados y cero despachos. R25/PR #58 integrado, con CI posmerge aprobada.
+> **P8-R26 — grafo sintético SSH (integrado mediante PR #59):** [`docs/estado-vigente-p8-r26.md`](docs/estado-vigente-p8-r26.md). Contrato de `Include` acotado con pruebas sintéticas; R27 aporta únicamente un grafo candidato ligado a fuentes offline, sin acreditar configuración SSH efectiva, `Host`/`Match`, usuario ni capacidad CLI. P8 sigue abierto: 29 perfiles bloqueados y cero despachos.
 
 > **P8-R15 — matriz de revisión por perfil (propuesta):** [`docs/estado-vigente-p8-r15.md`](docs/estado-vigente-p8-r15.md). 25 riesgos de manuales distribuidos conservadoramente entre 29 perfiles (238 enlaces), nueve obligaciones comunes y dos adicionales para cinco escrituras. Denegación determinista, cero opciones CLI/argv/autorizaciones/ejecución; R14 integrado por PR #47; P8 abierto, P9 y A1–A10 no iniciados.
 

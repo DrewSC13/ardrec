@@ -85,6 +85,15 @@ class RegistryTests(unittest.TestCase):
         cls.data=fixture()
         cls.rows=mod.compile_registry(*cls.data)
 
+    def test_r27_source_graph_does_not_prove_effective_configuration(self):
+        import json
+        spec = json.loads((Path(__file__).resolve().parents[2] /
+            'lab/p8-r29-typed-intents-v1/spec.json').read_text(encoding='utf-8'))
+        self.assertIs(spec['r27_source_bound_graph_is_not_effective_configuration'], True)
+        self.assertIs(spec['ci_reads_private_receipts'], False)
+        self.assertIs(spec['ci_reads_qcow2'], False)
+        self.assertIs(spec['dispatch_allowed'], False)
+
     def test_all_29_cross_source_consistent(self):
         self.assertEqual(len(self.rows),29)
         self.assertEqual(mod.summarize(self.rows)['material_bindings_unbound'],348)

@@ -17,7 +17,7 @@ import verify_p8_r26_ssh_include_graph as v26
 
 ROOT=Path(__file__).resolve().parents[1]
 SPEC=ROOT/'lab/p8-r29-typed-intents-v1/spec.json'
-SPEC_SHA='553ff967a7fec5ef078e61c09bafb9b14d9eb8401ef3a0ccfc7e1cef310efc13'
+SPEC_SHA='c626c080fd772fcf500c54d53b00a05076b81dd16642f4563efd70c0b09d0ed1'
 MODEL_SHA='564a5dbedf60cd9d1d9ffb5186a08d09067089d1d034701d5e69cb7d40a921cc'
 
 
@@ -53,8 +53,9 @@ def verify() -> dict:
          spec['r28_private_report_sha256_operator_report_only']==
          '381f20d35a0bc3863775a41df785bd9ef4a2c66eb851066c3e82de92cca8b22b',
          'spec_identity')
-    for key in ('r27_source_bound_graph_is_not_effective_configuration',
-                'ci_reads_private_receipts','ci_reads_qcow2','ci_spawns_clients',
+    model.must(spec['r27_source_bound_graph_is_not_effective_configuration'] is True,
+               'r27_source_graph_not_effective_configuration')
+    for key in ('ci_reads_private_receipts','ci_reads_qcow2','ci_spawns_clients',
                 'argv_renderable','dispatch_allowed','p8_closed','p9_started',
                 'a1_to_a10_started'):
         model.must(spec[key] is False,'spec_scope_'+key)
