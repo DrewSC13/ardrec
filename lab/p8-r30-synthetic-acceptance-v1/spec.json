@@ -1,0 +1,270 @@
+{
+  "a1_to_a10_started": false,
+  "approved_profiles": 0,
+  "authorized_cases": 0,
+  "base_main_commit": "a3ecc122bcd5819c6a211174ac33214bb19bc021",
+  "dispatch_allowed": false,
+  "increment": "P8-R30",
+  "material_fields_unbound": 348,
+  "p8_closed": false,
+  "p9_started": false,
+  "profile_count": 21,
+  "profiles": [
+    {
+      "acceptance_supports": [
+        "CONTROL_CHANNEL_RESPONSE"
+      ],
+      "cleanup_contract": "NO_MUTATION",
+      "operation_id": "CONNECT_PREAUTHORIZED_CONTROL_CHANNEL",
+      "profile_id": "FTP-T01-BASE",
+      "protocol": "ftp",
+      "write_variant": false
+    },
+    {
+      "acceptance_supports": [
+        "TLS_NEGOTIATION",
+        "TLS_CHANNEL_PROTECTION"
+      ],
+      "cleanup_contract": "NO_MUTATION",
+      "operation_id": "VERIFY_TLS_CONTROL_CHANNEL",
+      "profile_id": "FTP-T02-CONTROL",
+      "protocol": "ftp",
+      "write_variant": false
+    },
+    {
+      "acceptance_supports": [
+        "TLS_NEGOTIATION",
+        "TLS_CHANNEL_PROTECTION",
+        "CONTROL_DATA_CORRELATION"
+      ],
+      "cleanup_contract": "NO_MUTATION",
+      "operation_id": "VERIFY_TLS_DATA_CHANNEL",
+      "profile_id": "FTP-T02-DATA",
+      "protocol": "ftp",
+      "write_variant": false
+    },
+    {
+      "acceptance_supports": [
+        "AUTH_COMPLETION",
+        "SESSION_CORRELATION"
+      ],
+      "cleanup_contract": "NO_MUTATION",
+      "operation_id": "AUTHENTICATE_PREDEFINED_GUEST",
+      "profile_id": "FTP-T03-BASE",
+      "protocol": "ftp",
+      "write_variant": false
+    },
+    {
+      "acceptance_supports": [
+        "AUTH_COMPLETION",
+        "EFFECTIVE_IDENTITY"
+      ],
+      "cleanup_contract": "NO_MUTATION",
+      "operation_id": "AUTHENTICATE_SYNTHETIC_ACCOUNT",
+      "profile_id": "FTP-T04-BASE",
+      "protocol": "ftp",
+      "write_variant": false
+    },
+    {
+      "acceptance_supports": [
+        "DIRECTORY_LISTING",
+        "CONTROL_DATA_CORRELATION"
+      ],
+      "cleanup_contract": "NO_MUTATION",
+      "operation_id": "LIST_ONLY_KNOWN_SYNTHETIC_DIRECTORY",
+      "profile_id": "FTP-T05-BASE",
+      "protocol": "ftp",
+      "write_variant": false
+    },
+    {
+      "acceptance_supports": [
+        "RESOURCE_READ",
+        "KNOWN_CONTENT_DIGEST"
+      ],
+      "cleanup_contract": "NO_MUTATION",
+      "operation_id": "DOWNLOAD_KNOWN_SYNTHETIC_FILE",
+      "profile_id": "FTP-T06-BASE",
+      "protocol": "ftp",
+      "write_variant": false
+    },
+    {
+      "acceptance_supports": [
+        "MARKER_CREATED",
+        "MARKER_VERIFIED",
+        "CLEANUP_CONFIRMED"
+      ],
+      "cleanup_contract": "VERIFY_THEN_REMOVE_MARKER",
+      "operation_id": "UPLOAD_VERIFY_REMOVE_SYNTHETIC_MARKER",
+      "profile_id": "FTP-T07-BASE",
+      "protocol": "ftp",
+      "write_variant": true
+    },
+    {
+      "acceptance_supports": [
+        "ACCESS_COMPARISON",
+        "OPERATION_RESPONSE"
+      ],
+      "cleanup_contract": "NO_MUTATION",
+      "operation_id": "COMPARE_READ_ON_KNOWN_CONTROL_AND_RESTRICTED_RESOURCES",
+      "profile_id": "FTP-T08-READ",
+      "protocol": "ftp",
+      "write_variant": false
+    },
+    {
+      "acceptance_supports": [
+        "ACCESS_COMPARISON",
+        "OPERATION_RESPONSE",
+        "MARKER_CREATED",
+        "MARKER_VERIFIED",
+        "CLEANUP_CONFIRMED"
+      ],
+      "cleanup_contract": "VERIFY_THEN_REMOVE_MARKER",
+      "operation_id": "COMPARE_BOUNDED_WRITE_ON_KNOWN_CONTROL_AND_RESTRICTED_RESOURCES",
+      "profile_id": "FTP-T08-WRITE",
+      "protocol": "ftp",
+      "write_variant": true
+    },
+    {
+      "acceptance_supports": [
+        "SMB_DIALECT",
+        "TRANSPORT_NEGOTIATION"
+      ],
+      "cleanup_contract": "NO_MUTATION",
+      "operation_id": "NEGOTIATE_PREAUTHORIZED_SMB_DIALECT",
+      "profile_id": "SMB-T01-BASE",
+      "protocol": "smb",
+      "write_variant": false
+    },
+    {
+      "acceptance_supports": [
+        "SMBV1_RESPONSE",
+        "SMB_DIALECT"
+      ],
+      "cleanup_contract": "NO_MUTATION",
+      "operation_id": "VERIFY_PREDEFINED_SMBV1_NEGOTIATION",
+      "profile_id": "SMB-T02-BASE",
+      "protocol": "smb",
+      "write_variant": false
+    },
+    {
+      "acceptance_supports": [
+        "OPERATION_RESPONSE",
+        "SMB_SIGNATURE"
+      ],
+      "cleanup_contract": "NO_MUTATION",
+      "operation_id": "VERIFY_SIGNED_SMB_OPERATION",
+      "profile_id": "SMB-T03-SIGNING",
+      "protocol": "smb",
+      "write_variant": false
+    },
+    {
+      "acceptance_supports": [
+        "OPERATION_RESPONSE",
+        "SMB_ENCRYPTION"
+      ],
+      "cleanup_contract": "NO_MUTATION",
+      "operation_id": "VERIFY_ENCRYPTED_SMB_OPERATION",
+      "profile_id": "SMB-T03-ENCRYPTION",
+      "protocol": "smb",
+      "write_variant": false
+    },
+    {
+      "acceptance_supports": [
+        "GUEST_SESSION_TYPE",
+        "AUTH_COMPLETION"
+      ],
+      "cleanup_contract": "NO_MUTATION",
+      "operation_id": "IDENTIFY_PREDEFINED_GUEST_SESSION",
+      "profile_id": "SMB-T04-BASE",
+      "protocol": "smb",
+      "write_variant": false
+    },
+    {
+      "acceptance_supports": [
+        "AUTH_COMPLETION",
+        "EFFECTIVE_IDENTITY"
+      ],
+      "cleanup_contract": "NO_MUTATION",
+      "operation_id": "AUTHENTICATE_SYNTHETIC_SMB_ACCOUNT",
+      "profile_id": "SMB-T05-BASE",
+      "protocol": "smb",
+      "write_variant": false
+    },
+    {
+      "acceptance_supports": [
+        "SHARE_ACCESS",
+        "DIRECTORY_LISTING"
+      ],
+      "cleanup_contract": "NO_MUTATION",
+      "operation_id": "LIST_ONLY_KNOWN_SYNTHETIC_SHARE_DIRECTORY",
+      "profile_id": "SMB-T06-BASE",
+      "protocol": "smb",
+      "write_variant": false
+    },
+    {
+      "acceptance_supports": [
+        "RESOURCE_READ",
+        "KNOWN_CONTENT_DIGEST"
+      ],
+      "cleanup_contract": "NO_MUTATION",
+      "operation_id": "READ_KNOWN_SYNTHETIC_SMB_RESOURCE",
+      "profile_id": "SMB-T07-BASE",
+      "protocol": "smb",
+      "write_variant": false
+    },
+    {
+      "acceptance_supports": [
+        "MARKER_CREATED",
+        "MARKER_VERIFIED",
+        "CLEANUP_CONFIRMED"
+      ],
+      "cleanup_contract": "VERIFY_THEN_REMOVE_MARKER",
+      "operation_id": "CREATE_VERIFY_REMOVE_SYNTHETIC_SMB_MARKER",
+      "profile_id": "SMB-T08-BASE",
+      "protocol": "smb",
+      "write_variant": true
+    },
+    {
+      "acceptance_supports": [
+        "ACCESS_COMPARISON",
+        "OPERATION_RESPONSE"
+      ],
+      "cleanup_contract": "NO_MUTATION",
+      "operation_id": "COMPARE_READ_SMB_CONTROL_AND_RESTRICTED_RESOURCES",
+      "profile_id": "SMB-T09-READ",
+      "protocol": "smb",
+      "write_variant": false
+    },
+    {
+      "acceptance_supports": [
+        "ACCESS_COMPARISON",
+        "OPERATION_RESPONSE",
+        "MARKER_CREATED",
+        "MARKER_VERIFIED",
+        "CLEANUP_CONFIRMED"
+      ],
+      "cleanup_contract": "VERIFY_THEN_REMOVE_MARKER",
+      "operation_id": "COMPARE_BOUNDED_WRITE_SMB_CONTROL_AND_RESTRICTED_RESOURCES",
+      "profile_id": "SMB-T09-WRITE",
+      "protocol": "smb",
+      "write_variant": true
+    }
+  ],
+  "protocol_counts": {
+    "ftp": 10,
+    "smb": 11
+  },
+  "r29_model_module_sha256": "564a5dbedf60cd9d1d9ffb5186a08d09067089d1d034701d5e69cb7d40a921cc",
+  "r29_spec_git_blob": "9f8c4c60a4fe9bc6f56e3f15756024c2ea95323c",
+  "roadmap_step": 8,
+  "runtime_gates_unverified": 261,
+  "schema_version": "1.0",
+  "scope": "FTP_SMB_OPERATION_SPECIFIC_SYNTHETIC_ACCEPTANCE_ORACLES_DENY_ONLY",
+  "synthetic_only": true,
+  "write_profiles": [
+    "FTP-T07-BASE",
+    "FTP-T08-WRITE",
+    "SMB-T08-BASE",
+    "SMB-T09-WRITE"
+  ]
+}

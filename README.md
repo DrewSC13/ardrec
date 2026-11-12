@@ -1,6 +1,8 @@
 # ARDREC
 
-> **Estado propuesto P8-R29 — 29 declaraciones simbólicas verificables, sin despacho:** [`docs/estado-vigente-p8-r29.md`](docs/estado-vigente-p8-r29.md). Diferencia las 348 vinculaciones, 261 obligaciones probatorias, 271 enlaces documentales y 238 riesgos; no supone capacidades CLI, configuración efectiva ni autorización.
+> **Estado propuesto P8-R30 — oráculos sintéticos de aceptación FTP/SMB sin despacho:** [`docs/estado-vigente-p8-r30.md`](docs/estado-vigente-p8-r30.md). Veintiún perfiles con resultados estrictamente sintéticos, distinción TLS control/datos, firma/cifrado SMB y limpieza de cuatro escrituras FTP/SMB; 348 campos y 261 pruebas runtime siguen pendientes, cero casos autorizados.
+
+> **P8-R29 integrado mediante PR #60 — 29 declaraciones simbólicas verificables, sin despacho:** [`docs/estado-vigente-p8-r29.md`](docs/estado-vigente-p8-r29.md). Diferencia las 348 vinculaciones, 261 obligaciones probatorias, 271 enlaces documentales y 238 riesgos; no supone capacidades CLI, configuración efectiva ni autorización.
 
 > **P8-R26 — grafo sintético SSH (integrado mediante PR #59):** [`docs/estado-vigente-p8-r26.md`](docs/estado-vigente-p8-r26.md). Contrato de `Include` acotado con pruebas sintéticas; R27 aporta únicamente un grafo candidato ligado a fuentes offline, sin acreditar configuración SSH efectiva, `Host`/`Match`, usuario ni capacidad CLI. P8 sigue abierto: 29 perfiles bloqueados y cero despachos.
 
