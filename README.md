@@ -1,6 +1,8 @@
 # ARDREC
 
-> **Propuesta P8-R33 — registro privado de decisiones humanas sin aprobaciones:** [`docs/estado-vigente-p8-r33.md`](docs/estado-vigente-p8-r33.md). Instrumento offline para clasificar individualmente las 312 preguntas de 39 fuentes; cada decisión conserva contexto SHA y ninguna crea autoridad, `argv` ni despacho.
+> **Propuesta P8-R34 — navegacion documental privada de solo lectura:** [`docs/estado-vigente-p8-r34.md`](docs/estado-vigente-p8-r34.md). Consultas acotadas de las 39 entradas y 312 preguntas originalmente pendientes sin mostrar roff/notas ni crear decisiones, permisos, `argv` o despachos.
+
+> **P8-R33 integrado mediante PR #64 — registro privado de decisiones humanas sin aprobaciones:** [`docs/estado-vigente-p8-r33.md`](docs/estado-vigente-p8-r33.md). Instrumento offline para clasificar individualmente las 312 preguntas de 39 fuentes; cada decisión conserva contexto SHA y ninguna crea autoridad, `argv` ni despacho.
 
 > **P8-R32 integrado mediante PR #63 — cola privada de revisión semántica sin aprobaciones:** [`docs/estado-vigente-p8-r32.md`](docs/estado-vigente-p8-r32.md). 39 fichas y 312 preguntas pendientes, verificadas frente al recibo privado R31; no se leen manuales otra vez, ni se aprueban opciones CLI, perfiles o despachos.
 
