@@ -1,6 +1,8 @@
 # ARDREC
 
-> **Propuesta P8-R32 — cola privada de revisión semántica sin aprobaciones:** [`docs/estado-vigente-p8-r32.md`](docs/estado-vigente-p8-r32.md). 39 fichas y 312 preguntas pendientes, verificadas frente al recibo privado R31; no se leen manuales otra vez, ni se aprueban opciones CLI, perfiles o despachos.
+> **Propuesta P8-R33 — registro privado de decisiones humanas sin aprobaciones:** [`docs/estado-vigente-p8-r33.md`](docs/estado-vigente-p8-r33.md). Instrumento offline para clasificar individualmente las 312 preguntas de 39 fuentes; cada decisión conserva contexto SHA y ninguna crea autoridad, `argv` ni despacho.
+
+> **P8-R32 integrado mediante PR #63 — cola privada de revisión semántica sin aprobaciones:** [`docs/estado-vigente-p8-r32.md`](docs/estado-vigente-p8-r32.md). 39 fichas y 312 preguntas pendientes, verificadas frente al recibo privado R31; no se leen manuales otra vez, ni se aprueban opciones CLI, perfiles o despachos.
 
 > **P8-R31 integrado mediante PR #62 — contextos autenticados de fuentes reales para revisión semántica FTP/SMB:** [`docs/estado-vigente-p8-r31.md`](docs/estado-vigente-p8-r31.md). 39 entradas de tres manuales previamente capturados, previstas para extracción privada acotada; no hay semántica CLI aprobada, autorización, prueba runtime ni despacho.
 
