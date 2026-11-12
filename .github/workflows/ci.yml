@@ -258,6 +258,12 @@ jobs:
       - name: Probar consultas R34 sin autoridad / Test read-only review navigation
         run: python3 -B -m unittest discover -s lab/tests -p test_p8_r34_review_navigation.py -v
 
+      - name: Verificar expedientes de fuente R35 / Verify source-bound dossiers
+        run: python3 -B lab/verify_p8_r35_source_dossiers.py
+
+      - name: Probar expedientes documentales R35 / Test deny-only R35 dossiers
+        run: python3 -B -m unittest discover -s lab/tests -p test_p8_r35_source_dossiers.py -v
+
       - name: Probar contratos y transporte / Test contracts and transport
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 

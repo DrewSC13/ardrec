@@ -1,0 +1,2046 @@
+{
+  "allowed_dispatch_count": 0,
+  "audit_status": "PRELIMINARY_SOURCE_DESK_REVIEW_NOT_R33_HUMAN_RECORD",
+  "base_main_sha": "f0c7ad3feee1315dd9a47ec09763280ce3d564b2",
+  "basis": "Nombres de opciones del catálogo público R14 en GitHub; documentación pública de curl y Samba, no recibos privados R31/R32/R33.",
+  "documentary_semantics_approved": 0,
+  "entries": [
+    {
+      "category": "CONFIG_IMPORT",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Carga parámetros desde un archivo; puede introducir opciones no incluidas en el diseño declarado.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Exigir origen, hash y semántica de precedencia de la configuración; bloquear entradas no declaradas.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "curl.1.gz:--config",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "RESOURCE_LIMIT",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Acota el establecimiento de la conexión, no constituye por sí solo un límite total de ejecución.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Separar tiempo de conexión, tiempo total, presupuestos y terminación forzada.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "curl.1.gz:--connect-timeout",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "CONFIG_IMPORT",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "La omisión de la configuración predeterminada depende de la posición del argumento.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Demostrar aislamiento de curlrc y orden exacto en el argv tipado.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "curl.1.gz:--disable",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "REMOTE_MUTATION",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Puede crear directorios remotos al transferir archivos.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Denegar sin caso autorizado, inventario previo y prueba de limpieza independiente.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "curl.1.gz:--ftp-create-dirs",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "FTP_PATH",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Modifica la estrategia FTP de cambio y uso de rutas.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Fijar rutas, directorio de trabajo y semántica efectiva de servidor.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "curl.1.gz:--ftp-method",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "NETWORK_ROUTING",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Modifica modalidad de conexión de datos pasiva; hay endpoints adicionales.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Delimitar puertos, destinos y aislamiento de conexiones de datos.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "curl.1.gz:--ftp-pasv",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "TLS_DOWNGRADE",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Puede apagar TLS del canal de control tras autenticación.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Denegar por defecto; solo estudiar degradación en experimento expresamente autorizado.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "curl.1.gz:--ftp-ssl-ccc",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "TLS_DOWNGRADE",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Protege autenticación FTP con TLS, pero permite transferencia de datos sin cifrar.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "No asumir confidencialidad del canal de datos; exigir prueba independiente.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "curl.1.gz:--ftp-ssl-control",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "INPUT_SCOPE",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Desactiva expansión de patrones de URL; no valida destinos por sí mismo.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Validar por separado el destino y los componentes de ruta.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "curl.1.gz:--globoff",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "TLS_DOWNGRADE",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Desactiva verificaciones de seguridad de certificados TLS.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Denegar por defecto; nunca usar como remedio automático de fallos TLS.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "curl.1.gz:--insecure",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "RESOURCE_LIMIT",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Limita ritmo de transferencia, no presupuestos totales de bytes o duración.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Exigir además límite acumulado, watchdog y evidencia de consumo.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "curl.1.gz:--limit-rate",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "REMOTE_READ",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Solicita listados del servidor; el resultado depende de permisos y configuración.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Acreditar alcance de ruta, volumen, ausencia de enumeración ilimitada.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "curl.1.gz:--list-only",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "RESOURCE_LIMIT",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Restringe tamaño de archivos descargados; no prueba aislamiento de todo el proceso.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Verificar comportamiento y versión; presupuestos independientes de salida/tiempo.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "curl.1.gz:--max-filesize",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "LOCAL_MUTATION",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Escribe el resultado a un archivo local.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Ruta exclusiva bajo caja de seguridad y control de integridad/capacidad.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "curl.1.gz:--output",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "NETWORK_SCOPE",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Restringe protocolos permitidos; no valida por sí mismo host, puerto o red.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Exigir allowlist exacta de esquemas y destinos/puertos.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "curl.1.gz:--proto",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "NETWORK_ROUTING",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Puede redirigir la conexión por un intermediario fuera del alcance esperado.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Denegar proxies y variables de entorno no fijados; verificar canal de datos FTP.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "curl.1.gz:--proxy",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "REMOTE_COMMAND",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Permite órdenes FTP/SFTP arbitrarias; ciertas órdenes pueden borrar o renombrar.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Denegar cadenas libres; exige gramática cerrada y clasificación de efectos.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "curl.1.gz:--quote",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "REMOTE_COMMAND",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Cambia el método/solicitud usada según protocolo; efecto remoto depende del destino.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Analizar semántica precisa de FTP con la versión fijada y rechazar cambios no tipados.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "curl.1.gz:--request",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "TRANSPORT_PROTECTION",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Exige actualización TLS cuando el protocolo lo admite; fallo aborta.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Acreditar ambos canales FTP, negociación y verificación de certificados.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "curl.1.gz:--ssl-reqd",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "REMOTE_MUTATION",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Escribe o transfiere contenido hacia el servidor.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Exigir autorización del caso, hash previo/posterior y restauración independiente.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "curl.1.gz:--upload-file",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "SECRET_HANDLING",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Proporciona credenciales; la forma de argv puede exponer secretos.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "No incrustar contraseña en argv; demostrar canal seguro de secretos.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "curl.1.gz:--user",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "REMOTE_COMMAND",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Ejecuta una secuencia de comandos MS-RPC; potenciales efectos administrativos.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Denegar texto libre; allowlist de comandos no mutadores y prueba específica.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "rpcclient.1.gz:--command",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "SECRET_HANDLING",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Lee credenciales desde un archivo; exige permisos estrictos y limpieza.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Fijar identidad, modo del archivo y no publicación de secretos.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "smbclient.1.gz:--authentication-file",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "TRANSPORT_PROTECTION",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Modo de protección sign/encrypt/off; no acredita negociación efectiva por sí mismo.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Distinguir firma y cifrado; exigir fallo seguro y comprobación del modo real.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "smbclient.1.gz:--client-protection",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "REMOTE_COMMAND",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Admite comandos separados por punto y coma y comandos con efectos remotos o shell local.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Denegar texto libre; no permitir ! ni comandos mutadores fuera de allowlist.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "smbclient.1.gz:--command",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "CONFIG_IMPORT",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Permite seleccionar la configuración Samba; puede cambiar identidad y políticas.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Fijar fuente y contenido de configuración; prohibir imports externos no declarados.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "smbclient.1.gz:--configfile",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "REMOTE_READ",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Selecciona directorio inicial; no implica autorización de rutas.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Fijar raíz permitida, normalización de rutas y aislamiento.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "smbclient.1.gz:--directory",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "PROTOCOL_POLICY",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Controla el protocolo máximo, no garantiza un mínimo aceptable.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Acreditar versión negociada y bloqueo explícito de versiones inseguras.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "smbclient.1.gz:--max-protocol",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "SECRET_HANDLING",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Suprime la solicitud interactiva de contraseña; no garantiza cuenta anónima segura.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Acreditar identidad efectiva y política de autenticación.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "smbclient.1.gz:--no-pass",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "NETWORK_SCOPE",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Selecciona puerto de conexión; no valida rango ni destino.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Fijar destino y puerto autorizados.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "smbclient.1.gz:--port",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "RESOURCE_LIMIT",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Define tiempo de espera del cliente; no sustituye presupuesto global del ejecutor.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Watchdog independiente, límites y evidencia de interrupción.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "smbclient.1.gz:--timeout",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "AUTHENTICATION",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Admite políticas de Kerberos cuya configuración puede depender del entorno.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Distinguir required/desired/off y demostrar identidad/ccache efectiva.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "smbclient.1.gz:--use-kerberos",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "SECRET_HANDLING",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Proporciona usuario y posiblemente contraseña, con riesgo de exposición.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Evitar secretos en argv, configuración confiable y trazabilidad no sensible.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "smbclient.1.gz:--user",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "REMOTE_READ",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Lee metadatos/streams de objetos remotos.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Fijar objeto permitido y alcance de lectura.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "smbclient.1.gz:allinfo",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "REMOTE_MUTATION",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Solicita eliminar archivos del servidor que coinciden con un patrón.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Denegar en la fase actual; nunca permitir comodines ni borrado sin restauración.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "smbclient.1.gz:del",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "REMOTE_READ",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Enumera el contenido de un directorio remoto.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Imponer límites de ruta, cantidad de entradas, tiempo y salida.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "smbclient.1.gz:dir",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "LOCAL_MUTATION",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Descarga el archivo remoto y crea contenido local.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Ruta local exclusiva, cuotas, integridad y limpieza de destino.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "smbclient.1.gz:get",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "REMOTE_READ",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Equivalente funcional de listado; puede generar enumeración.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Mismos límites estrictos que dir; verificar efectos bajo versión fijada.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "smbclient.1.gz:ls",
+      "term_semantic_certified": false
+    },
+    {
+      "category": "REMOTE_MUTATION",
+      "cli_approved": false,
+      "developer_observation_public_docs_only": "Copia archivo local al servidor remoto.",
+      "local_binary_capability_proven": false,
+      "next_evidence_needed": "Solo tras caso expresamente autorizado y limpieza independiente acreditada.",
+      "operational_authorization": false,
+      "questions": [
+        {
+          "evidence_requirement": "Cláusula completa y efectos de la operación sobre servidor/cliente.",
+          "question_id": "SCOPE_AND_OPERATION_SEMANTICS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Gramática exacta, quoting, combinaciones, valores, opciones repetidas.",
+          "question_id": "INPUT_ARGUMENT_SYNTAX_AND_PRECEDENCE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Configuraciones, variables de entorno, valores por defecto y precedencia.",
+          "question_id": "DEFAULTS_ENVIRONMENT_AND_CONFIG_IMPORT",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Modo de autenticación y secretos sin argv, logs ni exportación.",
+          "question_id": "AUTHENTICATION_AND_SECRET_HANDLING",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Control y datos protegidos, verificación, negociación y degradación.",
+          "question_id": "TLS_SIGNING_ENCRYPTION_AND_DOWNGRADE",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Destinos, puertos, comandos, escritura, alcance y política deny.",
+          "question_id": "NETWORK_SIDE_EFFECTS_AND_REMOTE_COMMANDS",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Mutaciones locales/remotas, integridad, reversión y limpieza independiente.",
+          "question_id": "DATA_READ_WRITE_DELETE_AND_ROLLBACK",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        },
+        {
+          "evidence_requirement": "Tiempo total, transferencia, memoria, bytes, fallas y pruebas runtime.",
+          "question_id": "BOUNDS_ERRORS_AND_EXTERNAL_PROOF_NEEDED",
+          "review_status": "PENDING_PINNED_SOURCE_AND_PROFILE_EVIDENCE"
+        }
+      ],
+      "term_id": "smbclient.1.gz:put",
+      "term_semantic_certified": false
+    }
+  ],
+  "local_runtime_proofs_count": 0,
+  "official_sources": [
+    "https://curl.se/docs/manpage.html",
+    "https://www.samba.org/samba/docs/current/man-html/smbclient.1.html",
+    "https://www.samba.org/samba/docs/current/man-html/rpcclient.1.html"
+  ],
+  "question_count": 312,
+  "source_term_count": 39,
+  "title": "ARDREC P8 revisión técnica preliminar no integrada"
+}
