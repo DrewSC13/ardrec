@@ -195,6 +195,16 @@ pub mod process_group {
             group_absent_at_probe: bool,
         },
 
+        /// El líder terminó, pero sigue existiendo un grupo
+        /// o no pudo acreditarse su ausencia.
+        ///
+        /// El líder ya fue recogido. No se permite señalizar
+        /// nuevamente el PGID desde esta instancia.
+        LeaderExitedGroupNotProvenAbsent {
+            /// Código de salida del líder, si está disponible.
+            code: Option<i32>,
+        },
+
         /// Tras SIGTERM se observó la ausencia del grupo.
         DeadlineTerminated {
             /// Resultado puntual, sin certificar limpieza global.
@@ -343,11 +353,19 @@ pub mod process_group {
             }
 
             if let Some(status) = self.leader.try_wait()? {
+                // try_wait recoge al líder. A partir de aquí
+                // no se enviarán señales usando su antiguo PGID.
                 let absent = self.group_absent();
+
+                if !absent {
+                    return Ok(self.finish(GroupOutcome::LeaderExitedGroupNotProvenAbsent {
+                        code: status.code(),
+                    }));
+                }
 
                 return Ok(self.finish(GroupOutcome::LeaderExited {
                     code: status.code(),
-                    group_absent_at_probe: absent,
+                    group_absent_at_probe: true,
                 }));
             }
 
