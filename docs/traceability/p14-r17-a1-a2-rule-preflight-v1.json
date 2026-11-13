@@ -1,0 +1,27 @@
+{
+  "schema": "ardrec-p14-r17-a1-a2-preflight-v1",
+  "base_sha": "9295db4bf83a54a3da7b7b5b478982135ac8d36c",
+  "scope": "pure_synthetic_structural_rule_preflight_only",
+  "source": "src/ardrec/initialization/rule_preflight.py",
+  "depends_on": "src/ardrec/rules/kernel.py",
+  "tests": "lab/tests/test_p14_r17_a1_a2_preflight.py",
+  "demo": "scripts/demo_p14_r17_a1_a2_preflight.py",
+  "a1_status": "PARTIAL_NOT_CLOSED",
+  "a2_status": "PREFLIGHT_ONLY_NOT_CLOSED",
+  "ac_06": "PENDING",
+  "ac_07": "PENDING",
+  "system_functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN",
+  "p8_operational": "NO-GO",
+  "authorized_cases": 0,
+  "operational_dispatch": false,
+  "pure_frozen_sha256": "UNTRUSTED_LOCAL_DIGEST_NOT_EXTERNAL_AUTHORITY",
+  "residual": [
+    "complete_A1_semantics_alignment_with_final_pseudocode",
+    "full_A2_configuration_characterization_and_initial_values",
+    "case_catalog_dependencies_weights_and_budgets",
+    "external_authority_and_freshness_custody",
+    "A9_durable_publication_and_system_acceptance",
+    "P8_operational_profiles_unbound"
+  ]
+}
