@@ -178,5 +178,25 @@ class PipelineTest(unittest.TestCase):
         self.assertEqual(file.stat().st_mode & 0o077, 0)
 
 
+    @unittest.skipUnless(sys.platform == "linux", "procfs fixture")
+    def test_spawn_registration_exception_reaps_owned_leader(self):
+        # Inyecta la falla DESPUES de Popen, ANTES de registrar PID duradero.
+        observed = []
+
+        def injected_failure(pid, ticks):
+            observed.append((pid, ticks))
+            raise OSError("forced_registration_failure")
+
+        with self.assertRaisesRegex(OSError, "forced_registration_failure"):
+            BenignPipeline._bounded_run("slow", 1000, 512, injected_failure)
+        self.assertEqual(len(observed), 1)
+        pid, ticks = observed[0]
+        stat_file = Path(f"/proc/{pid}/stat")
+        if stat_file.exists():
+            fields = stat_file.read_text(encoding="ascii").rsplit(") ", 1)[1].split()
+            self.assertNotEqual(int(fields[19]), ticks,
+                                "El lider propio no fue recogido tras el error")
+
+
 if __name__ == "__main__":
     unittest.main()

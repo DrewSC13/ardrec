@@ -266,7 +266,20 @@ class BenignPipeline:
                                 stderr=subprocess.PIPE, start_new_session=True, close_fds=True)
         started_ns = time.monotonic_ns()
         observed_ticks = _start_ticks(proc.pid)
-        on_spawn(proc.pid, observed_ticks)
+        try:
+            on_spawn(proc.pid, observed_ticks)
+        except BaseException:
+            # Popen conserva la propiedad del hijo. El fallo al registrar
+            # la identidad NO puede abandonar vivo ese fixture benigno.
+            try:
+                if proc.poll() is None:
+                    proc.kill()
+                proc.wait(timeout=5)
+            finally:
+                for stream in (proc.stdout, proc.stderr):
+                    if stream is not None:
+                        stream.close()
+            raise
         pidfd = None
         if sys.platform == "linux" and hasattr(os, "pidfd_open"):
             try:
