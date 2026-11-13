@@ -1,0 +1,28 @@
+{
+  "schema": "ardrec-p9-r14-active-stop-development-v1",
+  "base_sha": "1a50e30a37e43bddb8897dbf0b21b79662bb5ad9",
+  "scope": "one_owned_benign_transient_user_service",
+  "test_script": "lab/p9_r14_active_stop_probe.py",
+  "negative_tests": "lab/tests/test_p9_r14_active_stop_probe.py",
+  "evidence_receipt": "r14_report.json",
+  "previous_local_active_probe": {
+    "result": "PASS_SCOPED_ACTIVE_STOP",
+    "stop_rc": 0,
+    "prestop_active": true,
+    "prestop_two_identities_alive": true,
+    "poststop_two_identities_absent": true,
+    "poststop_cgroup_exists": false,
+    "log_sha256": "0582b7ea65750e5a2fd680cce999d2f0b970c7cba28d7df1f5fa597907934e4b",
+    "report_sha256": "d683269152c21af07667eba201de086f7ad6074b4e8afed4c70b69c8331edb6b",
+    "custody": "PROMETHEUS_LOCAL_NOT_CI"
+  },
+  "active_reproduction_required": true,
+  "ci_active_unit_execution": false,
+  "ci_negative_tests": true,
+  "success_scope": "scoped_active_stop_plus_two_identites_and_empty_or_absent_cgroup",
+  "general_cleanup_certified": false,
+  "service_crash_recovery_certified": false,
+  "p8_operational_authorized_cases": 0,
+  "p8_operational_status": "NO-GO",
+  "residual": ["complete_descendant_ownership", "durable_service_lifecycle_handoff", "systemd_manager_crash", "power_loss", "freshness_custody", "P8_case_specific_proofs"]
+}
