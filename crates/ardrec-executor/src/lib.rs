@@ -59,3 +59,6 @@ pub mod p8_evidence_boundary;
 
 /// Revisión de admisión integrada P8, sin permiso de ejecución.
 pub mod p8_integrated_admission;
+
+/// P9: supervisión local de procesos de prueba, sin despacho.
+pub mod p9_process_supervision;
