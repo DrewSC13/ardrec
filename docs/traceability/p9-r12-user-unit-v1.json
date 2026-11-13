@@ -1,0 +1,19 @@
+{
+  "schema": "ardrec-p9-r12-user-transient-unit-trace-v1",
+  "base_commit": "1c6ea04489a685cbd9b12c9e6e0bd956839cefe9",
+  "scope": "transient_user_service_owned_benign_test_only",
+  "p8_operational": "NO-GO",
+  "p8_authorized_cases": 0,
+  "p8_material_bindings_unbound": 348,
+  "p8_operational_checks_pending": 261,
+  "claims": [
+    {"id": "R12-01", "property": "separate_user_service_not_konsole_cgroup", "module": "lab/p9_r12_systemd_user_probe.py", "test": "test_wrong_cgroup_cannot_be_attributed", "active_evidence": "ready.json and cgroup.procs", "acceptance": "PENDING_PROMETHEUS"},
+    {"id": "R12-02", "property": "effective_cpu_memory_pids", "module": "lab/p9_r12_systemd_user_probe.py", "test": "test_pids_limit_must_be_effective;test_memory_limit_must_be_effective;test_cpu_quota_must_be_effective", "active_evidence": "observed_limits in report.json", "acceptance": "PENDING_PROMETHEUS"},
+    {"id": "R12-03", "property": "owned_child_moves_pgid_but_not_cgroup", "module": "lab/p9_r12_systemd_user_probe.py", "test": "test_escape_of_process_group_is_required;test_one_process_not_present_denies_ownership", "active_evidence": "ready.json and independent group probe", "acceptance": "PENDING_PROMETHEUS"},
+    {"id": "R12-04", "property": "poststop_absence_of_both_exact_identities", "module": "lab/p9_r12_systemd_user_probe.py", "test": "test_absence_is_scoped_to_pid_and_start_ticks", "active_evidence": "poststop_absence_proven and systemd_run_rc", "acceptance": "PENDING_PROMETHEUS"}
+  ],
+  "residual": ["independent_durable_supervision", "power_loss", "multi-process_orphan_recovery", "systemd_dbus_failure", "trusted_operational_authorization", "no_general_tree_cleanup_certification"],
+  "real_sysctl_change": false,
+  "writes_cgroupfs": false,
+  "p8_to_p12_operational_closed": false
+}
