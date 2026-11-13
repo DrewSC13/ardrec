@@ -112,6 +112,8 @@ pub enum AdmissionBlocker {
     CaseAuthorizationAbsent,
     /// El gate tipado produjo un resultado incompatible.
     ContractGateInvariantViolation,
+    /// Existen errores del gate distintos del rechazo obligatorio.
+    ContractGateFindingsPresent,
 }
 
 /// Resultado unificado, siempre sin permisos operacionales.
@@ -123,6 +125,8 @@ pub struct AdmissionReview {
     pub symbolic_operation: Option<String>,
     /// Hallazgos aportados por `contract_gate::review`.
     pub contract_findings: usize,
+    /// Hallazgos exactos del gate, conservando orden y variantes.
+    pub contract_finding_details: Vec<contract_gate::Finding>,
     /// Vinculaciones pendientes para este perfil.
     pub unbound_fields_per_profile: usize,
     /// Comprobaciones pendientes para este perfil.
@@ -208,6 +212,7 @@ pub fn inspect_profile(
         profile_id: profile_id.to_owned(),
         symbolic_operation: None,
         contract_findings: 0,
+        contract_finding_details: Vec::new(),
         unbound_fields_per_profile: 0,
         unverified_gates_per_profile: 0,
         unresolved_documentary_references: 0,
@@ -306,6 +311,29 @@ pub fn review_draft(
     let mut result = inspect_profile(definition.profile_id, sources, surface);
 
     result.contract_findings = gate.findings.len();
+
+    if gate
+        .findings
+        .iter()
+        .any(|finding| !matches!(finding, contract_gate::Finding::AuthorizationUnavailable))
+    {
+        add(
+            &mut result.blockers,
+            AdmissionBlocker::ContractGateFindingsPresent,
+        );
+    }
+
+    if !gate
+        .findings
+        .contains(&contract_gate::Finding::AuthorizationUnavailable)
+    {
+        add(
+            &mut result.blockers,
+            AdmissionBlocker::ContractGateInvariantViolation,
+        );
+    }
+
+    result.contract_finding_details = gate.findings;
 
     if gate.dispatch_allowed
         || gate.authorized
