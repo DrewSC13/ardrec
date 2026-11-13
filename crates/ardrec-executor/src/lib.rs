@@ -56,3 +56,6 @@ pub mod p8_contract_bridge;
 
 /// Evidencia documental versionada, sin autoridad operacional.
 pub mod p8_evidence_boundary;
+
+/// Revisión de admisión integrada P8, sin permiso de ejecución.
+pub mod p8_integrated_admission;
