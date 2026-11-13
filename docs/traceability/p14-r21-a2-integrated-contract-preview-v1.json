@@ -1,0 +1,50 @@
+{
+  "schema": "ardrec-p14-r21-a2-integrated-contract-preview-v1",
+  "base_sha": "aec09553415d01f152d37ed85424cd659fada33a",
+  "scope": "synthetic_read_only_a2_contract_assembly_only",
+  "prerequisites": [
+    "src/ardrec/rules/kernel.py",
+    "src/ardrec/initialization/rule_preflight.py",
+    "src/ardrec/initialization/initial_preview.py",
+    "src/ardrec/initialization/dependency_preview.py",
+    "src/ardrec/initialization/control_preview.py"
+  ],
+  "module": "src/ardrec/initialization/integrated_preview.py",
+  "tests": "lab/tests/test_p14_r21_a2_integrated_preview.py",
+  "demo": "scripts/demo_p14_r21_a2_integrated_preview.py",
+  "synthetic_units": 54,
+  "synthetic_cases": 108,
+  "synthetic_controls": 108,
+  "synthetic_protocol_counts": {"ssh": 18, "ftp": 18, "smb": 18},
+  "checks": [
+    "recursive_verification_four_previous_snapshots",
+    "closed_local_case_and_control_reference_matrix",
+    "stable_case_and_control_topological_orders",
+    "initial_prepared_zero_evidence_equal_r0_rf",
+    "no_mutable_input_references",
+    "canonical_serialization_and_distinct_sha256",
+    "source_hash_rebinding_denied",
+    "forged_in_memory_content_denied",
+    "no_control_application_or_operational_authority"
+  ],
+  "a1_full": false,
+  "a2_full": false,
+  "a3_full": false,
+  "p8_operational": "NO-GO",
+  "p8_authorized_cases": 0,
+  "operational_dispatch": false,
+  "generation_published": false,
+  "system_functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN",
+  "not_proven": [
+    "full_a2_initialization_contracts",
+    "full_A1_to_A10_functional_pipeline",
+    "interservice_dependencies",
+    "operational_guard_consumption_A3",
+    "durable_committed_generation_A9",
+    "physical_54_scenario_experiment",
+    "all_descendant_cleanup_and_power_loss",
+    "AL-06",
+    "AL-07"
+  ]
+}
