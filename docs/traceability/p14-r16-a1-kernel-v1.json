@@ -1,0 +1,29 @@
+{
+  "schema": "ardrec-p14-r16-a1-component-v1",
+  "base_sha": "53d8c01f26bbaab6de3e3a23662bffc5322d8568",
+  "source": {
+    "label": "TESIS ARDREC (20261110-143453), apartado 3.3.2 y figuras 3.4/3.5",
+    "comparison_scope": "typed_expression_evaluation_and_conservative_rule_table_subset",
+    "full_algorithm_equivalence": false
+  },
+  "module": "src/ardrec/rules/kernel.py",
+  "tests": "lab/tests/test_p14_r16_a1_kernel.py",
+  "demo": "scripts/demo_p14_r16_a1.py",
+  "algorithm": "A1",
+  "implementation_status": "PARTIAL_COMPONENT",
+  "a1_algorithm_completed": false,
+  "acceptance_criterion": "AC-06",
+  "acceptance_status": "PENDING",
+  "system_functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN",
+  "p8_operational": "NO-GO",
+  "operational_dispatches": 0,
+  "remaining": [
+    "verify_complete_pseudocode_operator_and_decision_table_semantics",
+    "bind_rule_references_and_domains_to_frozen_configuration_A2",
+    "independent_end_to_end_oracles_A1_A10",
+    "functional_acceptance_AC06",
+    "p8_case_specific_authority_and_proofs"
+  ],
+  "operational_p8_approval_implied": false
+}
