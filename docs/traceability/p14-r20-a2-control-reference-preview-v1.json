@@ -1,0 +1,48 @@
+{
+  "schema": "ardrec-p14-r20-a2-control-reference-preview-v1",
+  "base_sha": "0f38df2341278e81b65840f9f75a00a8b0a7b147",
+  "scope": "synthetic_local_control_references_only",
+  "prerequisites": [
+    "src/ardrec/rules/kernel.py",
+    "src/ardrec/initialization/rule_preflight.py",
+    "src/ardrec/initialization/initial_preview.py",
+    "src/ardrec/initialization/dependency_preview.py"
+  ],
+  "module": "src/ardrec/initialization/control_preview.py",
+  "max_services": 64,
+  "max_controls_per_service": 32,
+  "controls_in_synthetic_demo": 108,
+  "synthetic_units": 54,
+  "synthetic_protocol_counts": {"ssh": 18, "ftp": 18, "smb": 18},
+  "checks": [
+    "exact_source_digests_R17_R18_R19",
+    "local_guard_rule_and_target_case_exist",
+    "duplicate_control_and_edges_denied",
+    "cycle_and_self_reference_denied",
+    "precedence_tiebreak_does_not_override_dependencies",
+    "bounded_types_and_canonical_serialization",
+    "no_runtime_commands_or_operational_fields",
+    "deterministic_validation_and_no_mutation"
+  ],
+  "tests": "lab/tests/test_p14_r20_a2_control_preview.py",
+  "demo": "scripts/demo_p14_r20_a2_control_preview.py",
+  "a1_full": false,
+  "a2_full": false,
+  "a3_full": false,
+  "p8_operational": "NO-GO",
+  "p8_authorized_cases": 0,
+  "operational_dispatch": false,
+  "generation_published": false,
+  "system_functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN",
+  "not_proven": [
+    "A1_A2_A3_complete_semantics",
+    "physical_54_scenario_execution",
+    "full_catalog_and_interservice_dependencies",
+    "control_consumption_or_real_guard_authority",
+    "durable_generation_publication",
+    "all_descendant_cleanup_and_power_loss",
+    "AL-06",
+    "AL-07"
+  ]
+}
