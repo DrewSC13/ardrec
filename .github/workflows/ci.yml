@@ -321,6 +321,12 @@ jobs:
       - name: Demostrar contrato integrado de 54 unidades R21 / Demonstrate R21 contract
         run: python3 -B scripts/demo_p14_r21_a2_integrated_preview.py
 
+      - name: Probar diagnóstico trivalente A3 R22 / Test R22 guard diagnosis
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r22_a3_guard_preview.py -v
+
+      - name: Demostrar 54 unidades y guardas trivalentes A3 R22 / Demonstrate R22 diagnostics
+        run: python3 -B scripts/demo_p14_r22_a3_guard_preview.py
+
       - name: Demostrar recorrido P9-P12 / Exercise benign end-to-end pipeline
         run: |
           state=$(mktemp -d /tmp/ardrec-p9-p12-ci.XXXXXXXX)
