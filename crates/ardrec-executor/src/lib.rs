@@ -47,3 +47,6 @@ pub mod p8_resource_contract;
 
 /// Captura acotada sintética sin ejecución ni autorización.
 pub mod p8_bounded_capture;
+
+/// Frontera de aborto irreversible de captura sintética P8.
+pub mod p8_terminal_capture;
