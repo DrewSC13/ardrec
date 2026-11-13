@@ -53,3 +53,6 @@ pub mod p8_terminal_capture;
 
 /// Integración sintética R10/R13 con captura terminal, sin despacho.
 pub mod p8_contract_bridge;
+
+/// Evidencia documental versionada, sin autoridad operacional.
+pub mod p8_evidence_boundary;
