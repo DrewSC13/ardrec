@@ -41,6 +41,12 @@ fn p9_group_fixture() {
         Ok("descendant") => {
             thread::sleep(Duration::from_millis(2000));
         }
+        Ok("leader_with_member") => {
+            thread::sleep(Duration::from_millis(800));
+        }
+        Ok("member_survivor") => {
+            thread::sleep(Duration::from_secs(5));
+        }
         Ok("tree") => {
             let mut descendant = command("descendant").spawn().unwrap();
 
@@ -215,4 +221,99 @@ fn terminal_outcome_is_stable() {
 
     assert_eq!(supervisor.poll().unwrap(), outcome);
     assert_eq!(supervisor.poll().unwrap(), outcome);
+}
+
+// -----------------------------------------------------------------------------
+// P9-R09 / Grupo superviviente tras finalizar el líder
+// -----------------------------------------------------------------------------
+
+/// Propiedad de un proceso benigno auxiliar de prueba.
+///
+/// A diferencia de un descendiente huérfano, este proceso
+/// permanece bajo el control directo del test y se recoge.
+struct GroupMemberGuard(Child);
+
+impl Drop for GroupMemberGuard {
+    fn drop(&mut self) {
+        let _ = self.0.kill();
+        let _ = self.0.wait();
+    }
+}
+
+fn leader_and_surviving_group_member() -> (GroupSupervisor, GroupMemberGuard) {
+    // El líder ocupa su propio grupo POSIX.
+    let leader = grouped("leader_with_member");
+    let pgid = leader.id() as i32;
+
+    // La adopción sucede antes de que termine el líder.
+    let supervisor = adopt(leader, 3000, 100);
+
+    // Otro proceso benigno se incorpora al mismo grupo,
+    // pero permanece como hijo directo del test.
+    // Esto permite recogerlo sin dejar huérfanos.
+    let mut cmd = command("member_survivor");
+    cmd.process_group(pgid);
+
+    let member = cmd.spawn().unwrap();
+
+    (supervisor, GroupMemberGuard(member))
+}
+
+#[test]
+fn leader_exit_with_live_group_member_is_not_clean() {
+    let (mut supervisor, mut member) = leader_and_surviving_group_member();
+
+    let result = supervisor.run().unwrap();
+
+    assert!(matches!(
+        result,
+        GroupOutcome::LeaderExitedGroupNotProvenAbsent { code: Some(0) }
+    ));
+
+    // El miembro del grupo sigue activo aunque el
+    // proceso líder ya haya terminado.
+    assert!(member.0.try_wait().unwrap().is_none());
+}
+
+#[test]
+fn incomplete_group_result_remains_terminal_and_unverified() {
+    let (mut supervisor, mut member) = leader_and_surviving_group_member();
+
+    let first = supervisor.run().unwrap();
+
+    assert!(matches!(
+        first,
+        GroupOutcome::LeaderExitedGroupNotProvenAbsent { .. }
+    ));
+
+    assert_eq!(supervisor.poll().unwrap(), first);
+    assert_eq!(supervisor.poll().unwrap(), first);
+
+    // Un resultado terminal de observación no significa
+    // que se haya acreditado la limpieza del grupo.
+    assert!(member.0.try_wait().unwrap().is_none());
+}
+
+#[test]
+fn dropping_unverified_supervisor_does_not_signal_old_pgid() {
+    let (mut supervisor, mut member) = leader_and_surviving_group_member();
+
+    let result = supervisor.run().unwrap();
+
+    assert!(matches!(
+        result,
+        GroupOutcome::LeaderExitedGroupNotProvenAbsent { .. }
+    ));
+
+    // Una vez recogido el líder, el supervisor ya
+    // no tiene identidad suficiente para volver
+    // a enviar señales a su antiguo PGID.
+    drop(supervisor);
+
+    assert!(
+        member.0.try_wait().unwrap().is_none(),
+        "surviving group member was unexpectedly terminated"
+    );
+
+    // GroupMemberGuard termina y recoge el proceso.
 }
