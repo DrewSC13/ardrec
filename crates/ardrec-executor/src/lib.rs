@@ -41,3 +41,9 @@ pub mod contract_gate;
 
 /// Diagnóstico sintético P8-R7; solo denegación / deny-only synthetic diagnostics.
 pub mod p8_diagnostic;
+
+/// Contrato puro de presupuesto y consumo P8; nunca autoriza despacho.
+pub mod p8_resource_contract;
+
+/// Captura acotada sintética sin ejecución ni autorización.
+pub mod p8_bounded_capture;

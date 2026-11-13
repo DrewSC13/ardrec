@@ -142,6 +142,96 @@ def render(registry):
     return '\n'.join(lines)
 
 
+
+# P8-R53/R54: extensión explícita del inventario Rust.
+# No modifica los 73 registros históricos de development-v2.json.
+# Declarar una prueba aquí acredita su identidad, no su aceptación
+# funcional, su ejecución en laboratorio ni autorización operacional.
+P8_R53_R54_RUST_TESTS = {
+    "crates/ardrec-executor/src/p8_resource_contract.rs": frozenset({
+        "bounded_data_never_authorizes",
+        "zero_limit_rejected",
+        "unbounded_limit_rejected",
+        "hidden_retries_rejected",
+        "total_deadline_rejected",
+        "stdout_and_stderr_limits_rejected",
+        "aggregate_capture_limit_rejected",
+        "capture_overflow_rejected",
+        "transfer_and_entries_rejected",
+        "excess_attempts_rejected",
+        "all_existing_profile_ids_remain_denied",
+    }),
+    "crates/ardrec-executor/src/p8_bounded_capture.rs": frozenset({
+        "valid_capture_never_authorizes",
+        "invalid_zero_budget_is_rejected",
+        "unbounded_storage_is_rejected",
+        "capture_before_attempt_is_rejected",
+        "repeated_attempt_is_rejected_atomically",
+        "stdout_excess_preserves_previous_content",
+        "stderr_excess_preserves_previous_content",
+        "aggregate_capture_excess_is_atomic",
+        "exact_capture_boundary_is_accepted",
+        "transfer_and_entry_excesses_are_atomic",
+        "clock_regression_and_timeout_are_rejected",
+        "arithmetic_overflow_is_rejected",
+        "all_29_profiles_remain_denied",
+    }),
+}
+
+
+def verify_p8_rust_inventory(observed, checks):
+    """Concilia línea base congelada y extensión revisada; fail-closed."""
+    historical = {
+        c["id"]: c["symbol"]
+        for c in checks.values()
+        if c["kind"] == "RUST_UNIT"
+    }
+
+    extension = {
+        path + "::" + symbol: symbol
+        for path, symbols in P8_R53_R54_RUST_TESTS.items()
+        for symbol in symbols
+    }
+
+    require(
+        len(historical) == 73,
+        "Inventario Rust histórico alterado"
+    )
+    require(
+        len(P8_R53_R54_RUST_TESTS) == 2
+        and len(P8_R53_R54_RUST_TESTS[
+            "crates/ardrec-executor/src/p8_resource_contract.rs"
+        ]) == 11
+        and len(P8_R53_R54_RUST_TESTS[
+            "crates/ardrec-executor/src/p8_bounded_capture.rs"
+        ]) == 13
+        and len(extension) == 24,
+        "Extensión Rust R53/R54 incompleta"
+    )
+
+    require(
+        not (set(historical) & set(extension)),
+        "Colisión con inventario Rust histórico"
+    )
+
+    expected = dict(historical)
+    expected.update(extension)
+
+    require(
+        len(expected) == 97
+        and len(observed) == 97
+        and observed == expected,
+        "Inventario Rust incompleto"
+    )
+
+    return {
+        "historical_rust_tests": 73,
+        "p8_r53_r54_rust_tests": 24,
+        "current_rust_lib_tests": 97,
+        "historical_inventory_changed": False,
+    }
+
+
 def validate(root=ROOT, registry=None, evidence=None, *, discovered=None, check_note=True):
     registry = read(root, REGISTRY) if registry is None else registry
     evidence = read(root, EVIDENCE) if evidence is None else evidence
@@ -205,11 +295,20 @@ def validate(root=ROOT, registry=None, evidence=None, *, discovered=None, check_
     declared = sorted(c['unittest_id'] for c in checks.values() if c['kind'] == 'PYTHON_UNIT')
     require(baseline == declared and len(baseline) == 405, 'Métodos Python ausentes, nuevos o renombrados')
     rust_observed = {}
+
     for path in (root / 'crates/ardrec-executor/src').rglob('*.rs'):
-        for name in re.findall(r'#\[test\]\s*fn\s+(\w+)\s*\(', path.read_text()):
-            rust_observed[path.relative_to(root).as_posix() + '::' + name] = name
-    require({c['id']:c['symbol'] for c in checks.values() if c['kind']=='RUST_UNIT'} == rust_observed
-            and len(rust_observed)==73, 'Inventario Rust incompleto')
+        for name in re.findall(
+            '#\\[test\\]\\s*fn\\s+(\\w+)\\s*\\(',
+            path.read_text(encoding='utf-8')
+        ):
+            test_id = path.relative_to(root).as_posix() + '::' + name
+            require(
+                test_id not in rust_observed,
+                'Prueba Rust duplicada: ' + test_id
+            )
+            rust_observed[test_id] = name
+
+    verify_p8_rust_inventory(rust_observed, checks)
     require(sum(c['kind']=='INTEGRATION_SCRIPT' for c in checks.values())==7, 'Faltan verificadores de integración')
     require((registry['baseline_python_tests'],registry['baseline_rust_tests'],registry['integration_scripts'])==(405,73,7), 'Conteos de base alterados')
     for cid, c in components.items():
