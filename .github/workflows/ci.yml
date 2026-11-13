@@ -285,6 +285,12 @@ jobs:
       - name: Probar puente durable R15 / Test R15 durable active-stop handoff
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p9_r15_durable_stop_handoff.py -v
 
+      - name: Probar nucleo tipado A1-R16 / Test A1 typed rule kernel
+        run: python3 -B -m unittest discover -s lab/tests -p test_p14_r16_a1_kernel.py -v
+
+      - name: Demostrar nucleo tipado A1-R16 / Demonstrate A1 rule kernel
+        run: python3 -B scripts/demo_p14_r16_a1.py
+
       - name: Demostrar recorrido P9-P12 / Exercise benign end-to-end pipeline
         run: |
           state=$(mktemp -d /tmp/ardrec-p9-p12-ci.XXXXXXXX)
