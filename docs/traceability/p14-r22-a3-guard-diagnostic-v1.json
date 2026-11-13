@@ -1,0 +1,49 @@
+{
+  "schema": "ardrec-p14-r22-a3-guard-diagnostic-v1",
+  "base_sha": "8c3cf450de9523411d543149af3744074dc16db7",
+  "scope": "synthetic_trivalent_guard_diagnostics_no_agenda",
+  "algorithm": "A3_PARTIAL_DIAGNOSTIC_ONLY",
+  "required_sources": [
+    "src/ardrec/rules/kernel.py",
+    "src/ardrec/initialization/rule_preflight.py",
+    "src/ardrec/initialization/initial_preview.py",
+    "src/ardrec/initialization/dependency_preview.py",
+    "src/ardrec/initialization/control_preview.py",
+    "src/ardrec/initialization/integrated_preview.py"
+  ],
+  "module": "src/ardrec/scheduling/guard_preview.py",
+  "test": "lab/tests/test_p14_r22_a3_guard_preview.py",
+  "demo": "scripts/demo_p14_r22_a3_guard_preview.py",
+  "units_synthetic": 54,
+  "cases_synthetic": 108,
+  "controls_synthetic": 108,
+  "table_status_counts": {"VERDADERO": 18, "FALSO": 18, "ND": 18},
+  "checks": [
+    "verifies_R17_R21_sources_recursively",
+    "reuses_A1_decide_without_boolean_reimplementation",
+    "rejects_ambiguous_rule_tables",
+    "preserves_true_false_nd_without_implicit_grant",
+    "checks_declared_case_and_control_dependencies_as_unconfirmed",
+    "typed_nonfloating_user_supplied_synthetic_environment",
+    "deterministic_sha256_canonical_document",
+    "no_executable_agenda_or_generation_or_dispatch"
+  ],
+  "a1_full": false,
+  "a2_full": false,
+  "a3_full": false,
+  "p8_operational": "NO-GO",
+  "authorized_cases": 0,
+  "operational_dispatch": false,
+  "generation_published": false,
+  "system_functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN",
+  "not_proven": [
+    "A3_full_authorized_scheduling",
+    "control_consumption_or_runtime_guard_authority",
+    "validating_real_facts_or_experimental_evidence",
+    "physical_54_scenario_execution",
+    "interservice_dependencies",
+    "AL-06",
+    "AL-07"
+  ]
+}
