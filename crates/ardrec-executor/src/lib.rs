@@ -50,3 +50,6 @@ pub mod p8_bounded_capture;
 
 /// Frontera de aborto irreversible de captura sintética P8.
 pub mod p8_terminal_capture;
+
+/// Integración sintética R10/R13 con captura terminal, sin despacho.
+pub mod p8_contract_bridge;
