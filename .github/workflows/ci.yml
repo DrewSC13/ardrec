@@ -276,6 +276,9 @@ jobs:
       - name: Probar frontera de unidad aislada R12 / Test R12 user unit boundary
         run: python3 -B -m unittest discover -s lab/tests -p test_p9_r12_systemd_user_probe.py -v
 
+      - name: Probar puente durable P9-R13 / Test R13 durable handoff
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p9_r13_durable_handoff.py -v
+
       - name: Demostrar recorrido P9-P12 / Exercise benign end-to-end pipeline
         run: |
           state=$(mktemp -d /tmp/ardrec-p9-p12-ci.XXXXXXXX)
