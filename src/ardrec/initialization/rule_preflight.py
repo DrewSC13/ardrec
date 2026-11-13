@@ -16,7 +16,7 @@ from ardrec.rules.kernel import (
 from ardrec.state import Truth
 
 FORMAT = 'ardrec-a1-a2-r17-rule-preflight-v1'
-MAX_SERVICES = 32
+MAX_SERVICES = 64
 MAX_SNAPSHOT_BYTES = 65536
 
 

@@ -1,0 +1,48 @@
+{
+  "schema": "ardrec-p14-r19-a2-dependency-preview-v1",
+  "base_sha": "d2a8d46ba18c124e0d07201d79d728ed2911f3c1",
+  "scope": "synthetic_local_case_references_only",
+  "prerequisites": [
+    "src/ardrec/rules/kernel.py",
+    "src/ardrec/initialization/rule_preflight.py",
+    "src/ardrec/initialization/initial_preview.py"
+  ],
+  "modules": [
+    "src/ardrec/initialization/dependency_preview.py"
+  ],
+  "service_bound_before": 32,
+  "service_bound_after": 64,
+  "legacy_r17_upper_bound_oracle_updated": true,
+  "synthetic_example_services": 54,
+  "synthetic_example_protocol_counts": {"ssh": 18, "ftp": 18, "smb": 18},
+  "checks": [
+    "exact_r17_r18_source_hash_binding",
+    "local_case_references_exist",
+    "no_duplicate_case_references",
+    "no_self_reference_or_cycles",
+    "deterministic_topological_order",
+    "bounded_canonical_json_and_sha256",
+    "54_synthetic_units_without_dispatch",
+    "negative_untrusted_or_forged_inputs"
+  ],
+  "negative_tests": "lab/tests/test_p14_r19_a2_dependency_preview.py",
+  "demo": "scripts/demo_p14_r19_a2_dependency_preview.py",
+  "a1_full": false,
+  "a2_full": false,
+  "system_functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN",
+  "p8_operational": "NO-GO",
+  "p8_authorized_cases": 0,
+  "generation_published": false,
+  "execution_permitted": false,
+  "not_proven": [
+    "full_54_physical_scenarios",
+    "inter_service_dependencies",
+    "full_control_and_case_catalog",
+    "operational_permissions",
+    "physical_lab_support",
+    "durable_initial_generation",
+    "AL-06",
+    "AL-07"
+  ]
+}
