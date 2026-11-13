@@ -162,3 +162,238 @@ impl Drop for Supervisor {
         }
     }
 }
+
+// -----------------------------------------------------------------------------
+// P9-R03 / Linux process-group supervision
+// -----------------------------------------------------------------------------
+
+/// Supervisión de grupos POSIX mediante interfaces seguras.
+/// No inicia procesos ni habilita el despacho P8.
+#[cfg(target_os = "linux")]
+pub mod process_group {
+    use super::Policy;
+    use rustix::io::Errno;
+    use rustix::process::{
+        Pid, Signal, getpgid, getpgrp, kill_process_group, test_kill_process_group,
+    };
+    use std::io;
+    use std::process::Child;
+    use std::thread;
+    use std::time::{Duration, Instant};
+
+    /// Resultado observado. No certifica limpieza global.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+    pub enum GroupOutcome {
+        /// El líder continúa bajo supervisión.
+        Running,
+
+        /// Se observó la terminación natural del líder.
+        LeaderExited {
+            /// Código de salida, cuando está disponible.
+            code: Option<i32>,
+            /// Ausencia del grupo en una observación puntual.
+            group_absent_at_probe: bool,
+        },
+
+        /// Tras SIGTERM se observó la ausencia del grupo.
+        DeadlineTerminated {
+            /// Resultado puntual, sin certificar limpieza global.
+            group_absent_at_probe: bool,
+        },
+
+        /// Se emitió SIGKILL después del plazo de gracia.
+        DeadlineEscalated {
+            /// Resultado puntual, sin certificar limpieza global.
+            group_absent_at_probe: bool,
+        },
+    }
+
+    /// Supervisor que conserva propiedad del proceso líder.
+    pub struct GroupSupervisor {
+        leader: Child,
+        pgid: Pid,
+        policy: Policy,
+        grace: Duration,
+        started: Instant,
+        term_sent_at: Option<Instant>,
+        terminal: Option<GroupOutcome>,
+    }
+
+    impl GroupSupervisor {
+        /// Requiere que el líder pertenezca a un grupo
+        /// independiente. Ante error devuelve el Child.
+        pub fn adopt(
+            leader: Child,
+            policy: Policy,
+            grace_ms: u64,
+        ) -> Result<Self, (io::Error, Child)> {
+            if grace_ms == 0 || grace_ms > 5000 {
+                return Err((
+                    io::Error::new(io::ErrorKind::InvalidInput, "invalid grace period"),
+                    leader,
+                ));
+            }
+
+            let raw = match i32::try_from(leader.id()) {
+                Ok(value) if value > 1 => value,
+                _ => {
+                    return Err((
+                        io::Error::new(io::ErrorKind::InvalidInput, "invalid leader PID"),
+                        leader,
+                    ));
+                }
+            };
+
+            let Some(pid) = Pid::from_raw(raw) else {
+                return Err((
+                    io::Error::new(io::ErrorKind::InvalidInput, "invalid PID"),
+                    leader,
+                ));
+            };
+
+            let isolated = matches!(
+                getpgid(Some(pid)),
+                Ok(group) if group == pid && group != getpgrp()
+            );
+
+            if !isolated {
+                return Err((
+                    io::Error::new(
+                        io::ErrorKind::InvalidInput,
+                        "child must own an independent group",
+                    ),
+                    leader,
+                ));
+            }
+
+            Ok(Self {
+                leader,
+                pgid: pid,
+                policy,
+                grace: Duration::from_millis(grace_ms),
+                started: Instant::now(),
+                term_sent_at: None,
+                terminal: None,
+            })
+        }
+
+        fn signal_group(&self, signal: Signal) -> io::Result<()> {
+            kill_process_group(self.pgid, signal)
+                .map_err(|error| io::Error::from_raw_os_error(error.raw_os_error()))
+        }
+
+        fn group_absent(&self) -> bool {
+            matches!(test_kill_process_group(self.pgid), Err(Errno::SRCH))
+        }
+
+        fn finish(&mut self, outcome: GroupOutcome) -> GroupOutcome {
+            self.terminal = Some(outcome);
+            outcome
+        }
+
+        /// Observa el líder y controla el plazo monotónico.
+        ///
+        /// Después de SIGTERM conserva el líder sin recoger
+        /// hasta la escalada. No señala un PGID después de
+        /// haber recogido al líder.
+        pub fn poll(&mut self) -> io::Result<GroupOutcome> {
+            if let Some(outcome) = self.terminal {
+                return Ok(outcome);
+            }
+
+            if let Some(sent_at) = self.term_sent_at {
+                // El grupo puede haber desaparecido tras SIGTERM.
+                // No es necesario escalar en ese caso.
+                if self.group_absent() {
+                    self.leader.wait()?;
+                    return Ok(self.finish(GroupOutcome::DeadlineTerminated {
+                        group_absent_at_probe: true,
+                    }));
+                }
+
+                if sent_at.elapsed() >= self.grace {
+                    // Todavía no se ha recogido al líder.
+                    // Si el grupo desaparece entre la consulta
+                    // y la señal, ESRCH no acredita una escalada.
+                    let kill_sent = match self.signal_group(Signal::KILL) {
+                        Ok(()) => true,
+                        Err(error) if error.raw_os_error() == Some(Errno::SRCH.raw_os_error()) => {
+                            false
+                        }
+                        Err(error) => return Err(error),
+                    };
+
+                    self.leader.wait()?;
+                    let absent = self.group_absent();
+
+                    let outcome = if kill_sent {
+                        GroupOutcome::DeadlineEscalated {
+                            group_absent_at_probe: absent,
+                        }
+                    } else {
+                        GroupOutcome::DeadlineTerminated {
+                            group_absent_at_probe: absent,
+                        }
+                    };
+
+                    return Ok(self.finish(outcome));
+                }
+
+                return Ok(GroupOutcome::Running);
+            }
+
+            if let Some(status) = self.leader.try_wait()? {
+                let absent = self.group_absent();
+
+                return Ok(self.finish(GroupOutcome::LeaderExited {
+                    code: status.code(),
+                    group_absent_at_probe: absent,
+                }));
+            }
+
+            if self.started.elapsed() >= Duration::from_millis(self.policy.deadline_ms) {
+                self.signal_group(Signal::TERM)?;
+                self.term_sent_at = Some(Instant::now());
+            }
+
+            Ok(GroupOutcome::Running)
+        }
+
+        /// Supervisa hasta observar un resultado terminal.
+        ///
+        /// No certifica la ausencia de procesos fuera del grupo.
+        pub fn run(&mut self) -> io::Result<GroupOutcome> {
+            loop {
+                let outcome = self.poll()?;
+
+                if outcome != GroupOutcome::Running {
+                    return Ok(outcome);
+                }
+
+                thread::sleep(Duration::from_millis(self.policy.poll_ms));
+            }
+        }
+
+        /// Identificador del proceso líder adoptado.
+        pub fn leader_pid(&self) -> u32 {
+            self.leader.id()
+        }
+
+        /// PGID inicial del grupo supervisado.
+        ///
+        /// No es una identidad persistente reutilizable.
+        pub fn group_id(&self) -> i32 {
+            self.pgid.as_raw_pid()
+        }
+    }
+
+    impl Drop for GroupSupervisor {
+        fn drop(&mut self) {
+            if self.terminal.is_none() {
+                let _ = self.signal_group(Signal::KILL);
+                let _ = self.leader.kill();
+                let _ = self.leader.wait();
+            }
+        }
+    }
+}
