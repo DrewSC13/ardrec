@@ -197,7 +197,7 @@ class RulePreflightTests(unittest.TestCase):
         self.assert_code(a,'tabla_invalida')
 
     def test_service_over_limit_denied(self):
-        a=source();a['services']=[{'id':f'S{i}','initial_state':'PREPARADO','rules':[row()]} for i in range(33)]
+        a=source();a['services']=[{'id':f'S{i}','initial_state':'PREPARADO','rules':[row()]} for i in range(65)]
         self.assert_code(a,'servicios_invalidos')
 
     def test_schema_type_denied(self):
