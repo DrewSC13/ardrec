@@ -1,0 +1,27 @@
+{
+  "schema": "ardrec-p9-r13-durable-user-service-traceability-v1",
+  "base_commit": "cd5f4eb1d1e975f25c5a482f24ced07e541577a5",
+  "scope": "owned_predefined_benign_r12_probe_only",
+  "p8_operational": "NO-GO",
+  "authorized_operational_profiles": 0,
+  "p8_contractual_profile_variants": 29,
+  "material_fields_pending": 348,
+  "runtime_proof_checks_pending": 261,
+  "source_pin": "bd3d750468ffbb1934d46d39974c5a9b9bcc476b6b39021c4b5a026430542726",
+  "components": [
+    {"id": "P9-R13", "module": "ardrec.benign_r12_handoff", "status": "TEST_CANDIDATE", "claim": "durable_single_start_intent_and_scoped_r12_observation"},
+    {"id": "P10", "module": "ardrec.benign_pipeline", "status": "BENIGN_SINGLE_INTENT", "claim": "sqlite_atomic_claim_and_idempotence"},
+    {"id": "P11", "module": "ardrec.benign_r12_handoff", "status": "SCOPED_RECEIPT_ONLY", "claim": "bounded_report_and_digest"},
+    {"id": "P12", "module": "ardrec.benign_r12_handoff", "status": "CONSERVATIVE_RECOVERY", "claim": "no_auto_relaunch_after_crash"}
+  ],
+  "tests": {
+    "unit": "lab/tests/test_p9_r13_durable_handoff.py",
+    "active": "scripts/demo_p9_r13_durable_systemd.py",
+    "active_systemd_required_for_pass": true
+  },
+  "not_proven": [
+    "general_tree_cleanup", "systemd_stop_command_success",
+    "power_loss_consistency", "external_freshness_anchor",
+    "operational_authorization", "arbitrary_binary_execution"
+  ]
+}

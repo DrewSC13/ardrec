@@ -23,7 +23,7 @@ from contextlib import contextmanager
 from typing import Any, Callable
 
 ID_PATTERN = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,63}$")
-FIXTURES = frozenset({"ok", "nonzero", "noisy", "slow"})
+FIXTURES = frozenset({"ok", "nonzero", "noisy", "slow", "r12_systemd"})
 # Ninguna entrada ni argv del usuario puede cambiar este codigo.
 FIXTURE_SOURCE = r'''
 import sys, time
@@ -197,7 +197,7 @@ class BenignPipeline:
             raise GateError("invalid_request_id")
         if fixture not in FIXTURES:
             raise GateError("only_predefined_benign_fixtures")
-        if type(deadline_ms) is not int or not 100 <= deadline_ms <= 3000:
+        if type(deadline_ms) is not int or not 100 <= deadline_ms <= (30000 if fixture == "r12_systemd" else 3000):
             raise GateError("invalid_deadline")
         if type(output_cap) is not int or not 128 <= output_cap <= 65536:
             raise GateError("invalid_capture_cap")
@@ -366,6 +366,9 @@ class BenignPipeline:
         return result, bytes(streams["stdout"]), bytes(streams["stderr"])
 
     def execute(self, rid: str) -> dict[str, Any]:
+        # La ruta systemd debe usar exclusivamente el puente de custodia R13.
+        if self.read(rid)["fixture"] == "r12_systemd":
+            raise GateError("r12_requires_durable_bridge")
         self.accept(rid)
         row = self._claim_start(rid)
         if row is None:
@@ -414,7 +417,7 @@ class BenignPipeline:
         recovered = []
         with self._managed() as db:
             db.execute("BEGIN IMMEDIATE")
-            rows = db.execute("SELECT id FROM attempts WHERE state='START_INTENT' ORDER BY id").fetchall()
+            rows = db.execute("SELECT id FROM attempts WHERE state='START_INTENT' AND fixture != 'r12_systemd' ORDER BY id").fetchall()
             for row in rows:
                 rid = row["id"]
                 db.execute("UPDATE attempts SET state='RECOVERY_UNCERTAIN' WHERE id=? AND state='START_INTENT'", (rid,))
