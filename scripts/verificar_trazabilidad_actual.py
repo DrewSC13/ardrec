@@ -179,6 +179,16 @@ P8_R53_R54_RUST_TESTS = {
 }
 
 
+# P9-R11-R02: extension explicita para las DOS pruebas de parsing del
+# sondeo read-only de testigos. No altera inventarios historicos ni autoriza P8.
+P9_R11_RUST_TESTS = {
+    "crates/ardrec-executor/src/p9_r11_witness_probe.rs": frozenset({
+        "parses_stat_with_inner_parentheses",
+        "parses_uid_without_accepting_missing_data",
+    }),
+}
+
+
 def verify_p8_rust_inventory(observed, checks):
     """Concilia línea base congelada y extensión revisada; fail-closed."""
     historical = {
@@ -190,6 +200,12 @@ def verify_p8_rust_inventory(observed, checks):
     extension = {
         path + "::" + symbol: symbol
         for path, symbols in P8_R53_R54_RUST_TESTS.items()
+        for symbol in symbols
+    }
+
+    r11_extension = {
+        path + "::" + symbol: symbol
+        for path, symbols in P9_R11_RUST_TESTS.items()
         for symbol in symbols
     }
 
@@ -213,13 +229,30 @@ def verify_p8_rust_inventory(observed, checks):
         not (set(historical) & set(extension)),
         "Colisión con inventario Rust histórico"
     )
+    require(
+        len(P9_R11_RUST_TESTS) == 1
+        and P9_R11_RUST_TESTS.get(
+            "crates/ardrec-executor/src/p9_r11_witness_probe.rs"
+        ) == frozenset({
+            "parses_stat_with_inner_parentheses",
+            "parses_uid_without_accepting_missing_data",
+        })
+        and len(r11_extension) == 2,
+        "Extensión Rust P9-R11 incompleta"
+    )
+    require(
+        not ((set(historical) | set(extension)) & set(r11_extension)),
+        "Colisión con inventario Rust P9-R11"
+    )
 
     expected = dict(historical)
     expected.update(extension)
+    require(len(expected) == 97, "Inventario Rust 73+24 alterado")
+    expected.update(r11_extension)
 
     require(
-        len(expected) == 97
-        and len(observed) == 97
+        len(expected) == 99
+        and len(observed) == 99
         and observed == expected,
         "Inventario Rust incompleto"
     )
@@ -227,7 +260,8 @@ def verify_p8_rust_inventory(observed, checks):
     return {
         "historical_rust_tests": 73,
         "p8_r53_r54_rust_tests": 24,
-        "current_rust_lib_tests": 97,
+        "p9_r11_rust_tests": 2,
+        "current_rust_lib_tests": 99,
         "historical_inventory_changed": False,
     }
 

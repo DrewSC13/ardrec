@@ -62,3 +62,7 @@ pub mod p8_integrated_admission;
 
 /// P9: supervisión local de procesos de prueba, sin despacho.
 pub mod p9_process_supervision;
+
+/// P9-R11: sondeo no operativo de identidad de testigos Linux.
+#[cfg(target_os = "linux")]
+pub mod p9_r11_witness_probe;
