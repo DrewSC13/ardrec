@@ -297,6 +297,12 @@ jobs:
       - name: Demostrar prevalidacion A1-A2 R17 / Demonstrate R17 preflight
         run: python3 -B scripts/demo_p14_r17_a1_a2_preflight.py
 
+      - name: Probar estado inicial sintetico A2 R18 / Test R18 initial preview
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r18_a2_initial_preview.py -v
+
+      - name: Demostrar estado inicial A2 R18 / Demonstrate R18 initial state
+        run: python3 -B scripts/demo_p14_r18_a2_initial_preview.py
+
       - name: Demostrar recorrido P9-P12 / Exercise benign end-to-end pipeline
         run: |
           state=$(mktemp -d /tmp/ardrec-p9-p12-ci.XXXXXXXX)
