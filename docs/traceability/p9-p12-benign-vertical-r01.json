@@ -1,0 +1,21 @@
+{
+  "schema": "ardrec-p9-p12-development-matrix-v1",
+  "base_commit": "78a8e4f64cc367feb4acc596f929dd90c1ea4c0c",
+  "scope": "benign_fixtures_only",
+  "p8_contractual_variants": 29,
+  "p8_operational_authorized_cases": 0,
+  "p8_operational_dispatches": 0,
+  "p8_material_fields_pending": 348,
+  "p8_operational_checks_pending": 261,
+  "p8_operational_status": "NO-GO",
+  "p9_p12_operational_closed": false,
+  "points": [
+    {"id": 8, "status": "CONTRACT_ONLY", "gate": "OPERATIONAL_NO_GO", "module": "p8_integrated_admission", "residual": ["material_bindings", "runtime_proofs", "case_specific_authority"]},
+    {"id": 9, "status": "PARTIAL_BENIGN", "module": "p9_process_supervision / p9_r11_witness_probe", "residual": ["proven_tree_ownership", "durable_cleanup", "enforced_resource_limits"]},
+    {"id": 10, "status": "BENIGN_DEVELOPMENT_IMPLEMENTED", "module": "ardrec.benign_pipeline", "residual": ["p8_operational_adapter", "distributed_atomicity", "trusted_permissions"]},
+    {"id": 11, "status": "BENIGN_LIMITED_CAPTURE_IMPLEMENTED", "module": "ardrec.benign_pipeline", "residual": ["general_tree_cleanup", "resources_after_crash"]},
+    {"id": 12, "status": "NO_RETRY_RECOVERY_DEVELOPMENT_IMPLEMENTED", "module": "ardrec.benign_pipeline", "residual": ["surviving_process_recovery", "power_loss", "freshness_custody"]}
+  ],
+  "execution_fixture_allowlist": ["ok", "nonzero", "noisy", "slow"],
+  "requires_preintegration_tests": true
+}

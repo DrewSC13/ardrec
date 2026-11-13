@@ -267,6 +267,17 @@ jobs:
       - name: Probar contratos y transporte / Test contracts and transport
         run: PYTHONPATH=src python -m unittest discover -s tests/unit -p 'test_*.py' -v
 
+      - name: Probar recorrido benigno P9-P12 / Test bounded benign pipeline
+        run: python3 -B -m unittest discover -s lab/tests -p test_p9_p12_benign_pipeline.py -v
+
+      - name: Verificar inventario Rust P9 R11 / Verify exact R11 Rust inventory
+        run: python3 -B -m unittest discover -s lab/tests -p test_p9_r11_rust_inventory.py -v
+
+      - name: Demostrar recorrido P9-P12 / Exercise benign end-to-end pipeline
+        run: |
+          state=$(mktemp -d /tmp/ardrec-p9-p12-ci.XXXXXXXX)
+          python3 -B scripts/demo_p9_p12_benign.py --state-dir "$state"
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
