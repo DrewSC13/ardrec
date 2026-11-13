@@ -1,0 +1,25 @@
+{
+  "schema": "ardrec-p9-r15-durable-active-stop-v1",
+  "base_sha": "4dc793293eb9dd38792e1a0b643b110c4b1b99dd",
+  "scope": "owned_fixed_benign_systemd_user_unit_only",
+  "p8_operational": "NO-GO",
+  "authorized_p8_cases": 0,
+  "independent_fixture": "r14_systemd_stop",
+  "source": "src/ardrec/benign_r14_stop_handoff.py",
+  "pinned_observer": "lab/p9_r14_active_stop_probe.py",
+  "observer_sha256": "8741bf4c4af8b2059c98f8cba3a36af553270d478b2b42b386ef5cbfe6014439",
+  "negative_tests": "lab/tests/test_p9_r15_durable_stop_handoff.py",
+  "active_demo": "scripts/demo_p9_r15_durable_stop_systemd.py",
+  "ci_executes_systemd": false,
+  "local_active_proof_required": true,
+  "residual": [
+    "all_descendant_membership_and_cleanup",
+    "manager_crash",
+    "power_loss",
+    "external_freshness_custody",
+    "per_case_p8_authorization"
+  ],
+  "general_cleanup_certified": false,
+  "operational_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN"
+}
