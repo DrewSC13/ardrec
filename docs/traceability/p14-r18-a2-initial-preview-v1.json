@@ -1,0 +1,41 @@
+{
+  "schema": "ardrec-p14-r18-a2-initial-preview-v1",
+  "base_commit": "40bc124cd171e0c5bb5beef74b0bd6e5bb23b388",
+  "scope": "synthetic_immutable_initial_state_preview_only",
+  "requirements": ["AC-02", "AC-07", "AC-09", "AC-10"],
+  "algorithms_supported_not_completed": ["A1", "A2"],
+  "source_rule_preflight": "src/ardrec/initialization/rule_preflight.py",
+  "component": "src/ardrec/initialization/initial_preview.py",
+  "tests": "lab/tests/test_p14_r18_a2_initial_preview.py",
+  "demo": "scripts/demo_p14_r18_a2_initial_preview.py",
+  "invariants_observed": [
+    "PREPARADO_INITIAL",
+    "EXACT_FRACTIONS_IN_0_1",
+    "ET_INITIAL_ZERO",
+    "RF_INITIAL_EQUALS_R0",
+    "PRIORITY_EMPTY",
+    "CASE_STARTS_ZERO",
+    "CASE_LIMIT_1_PLUS_MAX_REPEAT",
+    "HISTORY_EMPTY",
+    "RULES_SHA_BOUND",
+    "NO_GLOBAL_GENERATION_PUBLISHED"
+  ],
+  "max_service_count_inherited_from_r17": 32,
+  "laboratory_54_units_reproduced": false,
+  "p8_operational": "NO-GO",
+  "authorized_cases": 0,
+  "operational_dispatch": false,
+  "a1_complete": false,
+  "a2_complete": false,
+  "system_functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN",
+  "pending": [
+    "complete_A2_configuration_and_external_references",
+    "all_54_service_scenarios_and_25_families",
+    "initial_exposure_impact_and_dependency_contracts",
+    "trusted_authority_and_freshness",
+    "A9_durable_generation_publication",
+    "AL-06",
+    "AL-07"
+  ]
+}
