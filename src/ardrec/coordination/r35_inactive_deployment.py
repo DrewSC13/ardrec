@@ -486,8 +486,7 @@ class Host:
         allowed = {
             ('list', '--all', '--name'), ('list', '--name'),
             ('list', '--all', '--uuid'), ('net-list', '--all', '--name'),
-            ('net-list', '--name'), ('net-list', '--all', '--uuid'), ('nwfilter-list', '--name'),
-            ('nwfilter-list', '--uuid'),
+            ('net-list', '--name'), ('net-list', '--all', '--uuid'), ('nwfilter-list',),
         }
         # Post-deployment readback commands are added only from fixed call sites.
         post = (args[0] in {'nwfilter-dumpxml', 'net-dumpxml', 'net-info',
@@ -508,6 +507,41 @@ def _lines(raw: bytes) -> set[str]:
         return {line.strip() for line in raw.decode('utf-8').splitlines() if line.strip()}
     except UnicodeError as exc:
         raise R35Error('libvirt_inventory_encoding_invalid') from exc
+
+
+
+def _nwfilter_inventory(raw: bytes) -> tuple[set[str], set[str]]:
+    """Parse virsh nwfilter-list's UUID/Name table, rejecting malformed rows.
+
+    nwfilter-list has NO --name or --uuid flags; these are from other virsh
+    list commands and must never be sent to a real libvirt host.
+    """
+    try:
+        lines = [line.strip() for line in raw.decode('utf-8').splitlines()
+                 if line.strip()]
+    except UnicodeError as exc:
+        raise R35Error('nwfilter_inventory_encoding_invalid') from exc
+    need(len(lines) >= 2 and re.fullmatch(r'UUID\s+Name', lines[0]) is not None
+         and re.fullmatch(r'-{5,}', lines[1]) is not None,
+         'nwfilter_inventory_header_invalid')
+    names: set[str] = set()
+    uuids: set[str] = set()
+    uuid_pattern = re.compile(
+        r'[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-'
+        r'[0-9a-fA-F]{4}-[0-9a-fA-F]{12}')
+    for line in lines[2:]:
+        columns = line.split()
+        need(len(columns) == 2 and
+             uuid_pattern.fullmatch(columns[0]) is not None and
+             re.fullmatch(r'[A-Za-z0-9_.-]+', columns[1]) is not None,
+             'nwfilter_inventory_row_invalid')
+        ident, name = columns
+        ident = ident.lower()
+        need(ident not in uuids and name not in names,
+             'nwfilter_inventory_duplicate_identity')
+        names.add(name)
+        uuids.add(ident)
+    return names, uuids
 
 
 def _nft_table_names(raw: bytes) -> set[tuple[str, str]]:
@@ -686,8 +720,7 @@ def _assert_resource_absent(host: Host, *, kind: str, name: str, uuid: str) -> N
         names = _lines(host.virsh_ro(['net-list', '--all', '--name']))
         uuids = _lines(host.virsh_ro(['net-list', '--all', '--uuid']))
     elif kind == 'nwfilter':
-        names = _lines(host.virsh_ro(['nwfilter-list', '--name']))
-        uuids = _lines(host.virsh_ro(['nwfilter-list', '--uuid']))
+        names, uuids = _nwfilter_inventory(host.virsh_ro(['nwfilter-list']))
     else:
         raise R35Error('libvirt_resource_kind_invalid')
     need(name not in names and uuid not in uuids,
@@ -718,8 +751,7 @@ def host_preflight(bundle: dict[str, Any], *, runner: Callable[..., Any] = subpr
     domain_uuids = _lines(host.virsh_ro(['list', '--all', '--uuid']))
     networks = _lines(host.virsh_ro(['net-list', '--all', '--name']))
     network_uuids = _lines(host.virsh_ro(['net-list', '--all', '--uuid']))
-    filters = _lines(host.virsh_ro(['nwfilter-list', '--name']))
-    filter_uuids = _lines(host.virsh_ro(['nwfilter-list', '--uuid']))
+    filters, filter_uuids = _nwfilter_inventory(host.virsh_ro(['nwfilter-list']))
 
     need(not any(name.startswith(('ardrec-r33-', 'ardrec-dev-')) for name in domains | networks),
          'ardrec_domain_or_network_collision')
@@ -1116,7 +1148,7 @@ def deploy(bundle: dict[str, Any], preflight: dict[str, Any], host: Host) -> dic
         current_active_domains = _lines(host.virsh_ro(['list', '--name']))
         current_networks = _lines(host.virsh_ro(['net-list', '--all', '--name']))
         current_active_networks = _lines(host.virsh_ro(['net-list', '--name']))
-        current_filters = _lines(host.virsh_ro(['nwfilter-list', '--name']))
+        current_filters, _ = _nwfilter_inventory(host.virsh_ro(['nwfilter-list']))
         active_domains_observed = sorted(set(DOMAINS) & current_active_domains)
         active_networks_observed = sorted(set(NETWORKS) & current_active_networks)
         need(set(DOMAINS) <= current_domains and
