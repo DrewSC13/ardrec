@@ -1,0 +1,19 @@
+{
+  "schema": "ardrec-p14-r33-offline-topology-contract-v1",
+  "base_merge_commit": "f97ee69f94946c3dc07f8945f567e0b3ecb869c8",
+  "r32_physical_receipt_file_sha256": "b032c35c5f9760b9b057b6bbc3e681fca82ff37532c897b37463a147b1cdaadf",
+  "role_order": ["ssh", "ftp", "smb", "runner"],
+  "networks": ["ardrec-r33-dev-net-ssh", "ardrec-r33-dev-net-ftp", "ardrec-r33-dev-net-smb"],
+  "domains": ["ardrec-r33-dev-ssh", "ardrec-r33-dev-ftp", "ardrec-r33-dev-smb", "ardrec-r33-dev-runner"],
+  "disk_scope": "/var/lib/libvirt/images/ardrec-dev-point4-r32/*-runtime.qcow2",
+  "firewall_containment": "REQUIRED_BEFORE_LIBVIRT_DEPLOYMENT_OR_START",
+  "interface_filter": "ardrec-r33-block-until-containment",
+  "filter_implementation": "NOT_INCLUDED_FAIL_START_IF_UNRESOLVED",
+  "new_overlays_created": 0,
+  "libvirt_objects_defined": 0,
+  "vm_boot": "FORBIDDEN",
+  "network_activation": "FORBIDDEN",
+  "operational_dispatch": false,
+  "p8_operational": "NO-GO",
+  "next": "R34_CONTAINMENT_AND_SEPARATE_DEPLOYMENT_AUTHORIZATION"
+}
