@@ -1,0 +1,20 @@
+{
+  "schema": "ardrec-p14-r32-storage-staging-contract-v1",
+  "base_commit": "fd23463b9d6893aa1ac1a06680bbdf95be47b47d",
+  "source": "R31_EXPLICIT_SUDO_READONLY_SHA256_BOUND",
+  "roles": ["ssh", "ftp", "smb", "runner"],
+  "stage_directory": "/var/lib/libvirt/images/ardrec-dev-point4-r32",
+  "new_assets": ["ssh-runtime.qcow2", "ftp-runtime.qcow2", "smb-runtime.qcow2", "runner-runtime.qcow2"],
+  "new_backing": "EXISTING_V6_OVERLAY_PER_ROLE",
+  "old_image_mutation": "FORBIDDEN",
+  "new_directory_if_exists": "FAIL_PRESERVE",
+  "partial_failure": "FAIL_PRESERVE_ALL_FORENSIC_MATERIAL",
+  "disk_free_floor_gib": 40,
+  "activation": "NOT_INCLUDED",
+  "network_creation": "NOT_INCLUDED",
+  "vm_start": "NOT_INCLUDED",
+  "operational_dispatch": false,
+  "p8_operational": "NO-GO",
+  "authority_to_restore_or_execute": false,
+  "experimental_validation": "NOT_RUN"
+}
