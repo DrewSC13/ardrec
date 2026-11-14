@@ -1,0 +1,72 @@
+{
+  "schema": "ardrec-p14-r35-traceability-v1",
+  "base_main": "b9b52e6fc65415e939728b17366acb49d2551563",
+  "source_archive_sha256": "58e7cf2f59dd97cab948c190d637b6ff8ee8f67b45400769fe0d97a9e8f2ea36",
+  "dependencies": [
+    "R32_FOUR_NEW_COW_OVERLAYS",
+    "R33_SEVEN_XML_VALIDATED",
+    "R34_DENY_FIRST_POLICIES_AND_READONLY_HOST_PREFLIGHT"
+  ],
+  "source_chain": ["R32", "R33", "R34"],
+  "actions": [
+    "INSTALL_ONLY_BRIDGE_TABLE_ARDREC_R34_GUARD",
+    "DEFINE_DENY_ALL_NWFILTER",
+    "DEFINE_THREE_LIBVIRT_NETWORKS_INACTIVE",
+    "DEFINE_FOUR_LIBVIRT_DOMAINS_SHUT_OFF"
+  ],
+  "host_preflight": [
+    "AUTHENTICATE_SOURCE_ARCHIVE_AND_INTERNAL_RECEIPTS",
+    "VERIFY_R32_R33_R34_DIGEST_CHAIN",
+    "VERIFY_SEVEN_TOPOLOGY_XML_AND_ONE_NWFILTER_XML",
+    "VERIFY_TWELVE_QCOW2_HASHES_PERMISSIONS_AND_BACKING_CHAIN",
+    "REHASH_TWELVE_QCOW2_FILES_BEFORE_DOMAIN_DEFINITION",
+    "RECHECK_LIBVIRT_NAMES_AND_UUIDS_BEFORE_EACH_DEFINE",
+    "RECHECK_TAP_AND_BRIDGE_ABSENCE_BEFORE_DOMAIN_DEFINITION",
+    "VERIFY_LIBVIRT_NAME_AND_UUID_ABSENCE",
+    "VERIFY_RESERVED_TAP_AND_BRIDGE_ABSENCE",
+    "VERIFY_NFT_TABLE_ABSENCE_AND_POLICY_SYNTAX"
+  ],
+  "nft_table": "bridge/ardrec_r34_guard",
+  "nwfilter": "ardrec-r33-block-until-containment",
+  "networks": [
+    "ardrec-r33-dev-net-ssh",
+    "ardrec-r33-dev-net-ftp",
+    "ardrec-r33-dev-net-smb"
+  ],
+  "domains": [
+    "ardrec-r33-dev-ssh",
+    "ardrec-r33-dev-ftp",
+    "ardrec-r33-dev-smb",
+    "ardrec-r33-dev-runner"
+  ],
+  "reserved_taps": [
+    "a33d30r", "a33d30t", "a33d31r", "a33d31t", "a33d32r", "a33d32t"
+  ],
+  "reserved_bridges": ["br33d30", "br33d31", "br33d32"],
+  "prohibitions": [
+    "NO_NFT_FLUSH_RULESET",
+    "NO_GLOBAL_FIREWALL_REPLACEMENT",
+    "NO_QCOW2_MUTATION",
+    "NO_VIRSH_START",
+    "NO_VIRSH_NET_START",
+    "NO_AUTOSTART_ENABLE",
+    "NO_NETWORK_ACTIVATION",
+    "NO_VM_START",
+    "NO_PENTESTING",
+    "NO_AUTOMATIC_ROLLBACK"
+  ],
+  "runtime_firewall_only": true,
+  "firewall_persistence_configured": false,
+  "network_activation": false,
+  "vm_start": false,
+  "active_networks_observed_on_success": [],
+  "active_domains_observed_on_success": [],
+  "operational_dispatch": false,
+  "can_restore": false,
+  "p8_operational": "NO-GO",
+  "system_functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN",
+  "final_risk": null,
+  "open_findings": ["AL-06", "AL-07"],
+  "tests": "lab/tests/test_p14_r35_inactive_deployment.py"
+}
