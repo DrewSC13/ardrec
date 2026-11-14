@@ -1,0 +1,17 @@
+{
+  "schema":"ardrec-p14-r34-containment-contract-v1",
+  "base_main":"7e339d2b7fbcd0d657f923a513a65fd575725123",
+  "source_r33_receipt_sha256":"1b55caefef6808fbfddf32a66a19be7f23c3f63b226799b098380fd93627421c",
+  "scope":"THREE_PRIVATE_BRIDGES_SIX_TAPS_AND_FOUR_INACTIVE_VM_DEFINITIONS",
+  "nft_table":"bridge ardrec_r34_guard",
+  "nft_actions":"DROP_ALL_TRAFFIC_IN_SCOPED_INTERFACES_NO_GLOBAL_FLUSH",
+  "nwfilter":"ardrec-r33-block-until-containment",
+  "nwfilter_action":"DROP_INOUT_ALL_PROTOCOLS",
+  "modes":["PLAN_ONLY","OFFLINE_PREPARED","READONLY_HOST_PREFLIGHT"],
+  "host_write_actions":"NOT_IMPLEMENTED_R34",
+  "libvirt_define":"NOT_IMPLEMENTED_R34",
+  "network_activation":"FORBIDDEN",
+  "vm_start":"FORBIDDEN",
+  "p8_operational":"NO-GO",
+  "next_gate":"R35_EXPLICIT_HOST_CONTAINMENT_INSTALL_AND_INACTIVE_DEFINITIONS"
+}
