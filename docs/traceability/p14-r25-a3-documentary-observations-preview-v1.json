@@ -1,0 +1,36 @@
+{
+  "schema": "ardrec-p14-r25-a3-documentary-traceability-v1",
+  "increment": "P14-R25",
+  "base_sha256_commit": "d59bbca3962f3a0995d6ffa5b2ba70e42224c0ba",
+  "objective": "A3: reconciliar declaraciones sinteticas con soportes binarios, sin acreditar hechos tecnicos ni autorizar ejecucion",
+  "source_contracts": ["R16-A1", "R17-A1-A2", "R18-A2", "R19-A2", "R20-A2", "R21-A2", "R22-A3", "R23-A3", "R24-A3"],
+  "implementation": "src/ardrec/scheduling/observation_preview.py",
+  "tests": "lab/tests/test_p14_r25_a3_documentary_observations.py",
+  "demo": "scripts/demo_p14_r25_a3_documentary_observations.py",
+  "development_doc": "docs/development/p14-r25-a3-documentary-observations-preview-v1.md",
+  "invariants": {
+    "synthetic_only": true,
+    "document_integrity_is_not_truth": true,
+    "external_custody_verified": false,
+    "technical_truth_accredited": false,
+    "all_non_nd_require_content_bound_support": true,
+    "nd_has_no_support": true,
+    "generation_published": false,
+    "operational_dispatch": false,
+    "controls_applied": false,
+    "p8_operational": "NO-GO"
+  },
+  "demo_expected": {
+    "services": 54,
+    "per_protocol": 18,
+    "observations": 216,
+    "support_documents": 36,
+    "matches_assumptions": 18,
+    "differs_from_assumptions": 18,
+    "unknown": 180
+  },
+  "open_obligations": ["AL-06", "AL-07", "A1_FULL", "A2_FULL", "A3_FULL", "P8_OPERATIONAL"],
+  "acceptance_level": "SYNTHETIC_READ_ONLY_INTEGRATION",
+  "functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN"
+}
