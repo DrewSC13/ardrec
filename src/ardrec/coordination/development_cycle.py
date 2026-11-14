@@ -14,6 +14,7 @@ from ardrec.coordination.demo_session import build_development_session,normalize
 from ardrec.coordination.benign_review import analyze_selection,execute_local_review
 from ardrec.persistence.development_receipt import build_receipt,persist_receipt,verify_receipt
 from ardrec.stopping.development_stop import preview_stop,verify_stop
+from ardrec.evidence.defensive_import import validate_admission
 
 FORMAT='ardrec-p14-r28-a1-a10-tutor-development-cycle-v1'
 
@@ -23,10 +24,15 @@ class CycleError(ValueError):
 
 
 def build_development_cycle(scenario: dict[str,Any], *, journal_root: Path | None = None,
-                            run_local_benign: bool = False) -> dict[str,Any]:
+                            run_local_benign: bool = False,
+                            defensive_observation: dict[str, Any] | None = None) -> dict[str,Any]:
     normalized=normalize_scenario(scenario)
     session=build_development_session(normalized)
     session.verify()
+    if defensive_observation is not None:
+        validate_admission(defensive_observation)
+        if defensive_observation["session_id"] != normalized["session_id"]:
+            raise CycleError("defensive_observation_session_mismatch")
     if run_local_benign:
         if not isinstance(journal_root,Path):
             raise CycleError('local_run_requires_journal_root')
@@ -84,6 +90,10 @@ def build_development_cycle(scenario: dict[str,Any], *, journal_root: Path | Non
       {'algorithm':'A10','source':'DEVELOPMENT_REPORT','status':'READ_ONLY_REPORT',
        'detail':'Vista de terminal sobre la misma sesión y sus huellas'},
     ]
+    if defensive_observation is not None:
+        stages[5] = {'algorithm':'A6','source':defensive_observation['source_kind'],
+                     'status':'ND_DOCUMENTARY_ACCEPTED',
+                     'detail':'Observacion importada para revision; soporte íntegro, procedencia física NO acreditada'}
     doc={
        'schema':FORMAT,'source_kind':source_kind,
        'session_id':session.document['session_id'],
@@ -112,6 +122,8 @@ def build_development_cycle(scenario: dict[str,Any], *, journal_root: Path | Non
        'operational_dispatch':False,'final_risk':None,
        'a7_a10_full':False,
     }
+    if defensive_observation is not None:
+        doc['a6_import']=defensive_observation
     doc['sha256']=digest(doc)
     return doc
 
@@ -121,6 +133,10 @@ def verify_development_cycle(doc: dict[str, Any]) -> bool:
         raise CycleError('report_invalid')
     if digest({k:v for k,v in doc.items() if k!='sha256'})!=doc['sha256']:
         raise CycleError('report_digest_mismatch')
+    if 'a6_import' in doc:
+        validate_admission(doc['a6_import'])
+        if doc['a10']['stages'][5]['status'] != 'ND_DOCUMENTARY_ACCEPTED':
+            raise CycleError('a6_import_not_visible')
     if doc.get('schema')!=FORMAT or doc.get('p8_operational')!='NO-GO':
         raise CycleError('report_schema_or_gate')
     if (doc.get('operational_dispatch') is not False or

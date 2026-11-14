@@ -24,6 +24,16 @@ def lines_for_page(report: dict[str,Any], index: int, width: int = 78) -> list[s
     elif index in (4,5):
         out.append('A5 ESTADO: '+str(report['r27']['a5_state']))
         out.append('A6 CLASE: '+report['r27']['a6_classification'])
+        if index == 5 and report.get('a6_import') is not None:
+            imported=report['a6_import']
+            out.append('A6 ADMISION DOCUMENTAL: '+imported['admission'])
+            out.append('REGISTRO: '+imported['record_id']+' / '+imported['service_id'])
+            out.append('PROCEDENCIA DECLARADA: '+imported['source_kind'])
+            out.append('CAPTURA: '+imported['captured_at_utc'])
+            out.append('AS-OF: '+imported['review_as_of_utc'])
+            out.append('AFIRMACION NO VERIFICADA: '+imported['observed_claim_unverified'])
+            out.append('SOPORTE SHA256: '+imported['support_sha256_verified'][:32]+'...')
+            out.append('VERDAD TECNICA: NO ACREDITADA / RF: ND')
     elif index == 6:
         out.append('RF ORACULO HIPOTETICO: '+report['a7']['hypothetical_rf'])
         out.append('RF ACREDITADO: ND')
