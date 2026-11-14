@@ -339,6 +339,12 @@ jobs:
       - name: Demostrar 54 escenarios hipotéticos A3 R24 / Demonstrate R24 readiness
         run: python3 -B scripts/demo_p14_r24_a3_readiness_preview.py
 
+      - name: Probar conciliación documental A3 R25 / Test R25 documentary reconciliation
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r25_a3_documentary_observations.py -v
+
+      - name: Demostrar 54 unidades documentales A3 R25 / Demonstrate R25 documentary observations
+        run: python3 -B scripts/demo_p14_r25_a3_documentary_observations.py
+
       - name: Demostrar recorrido P9-P12 / Exercise benign end-to-end pipeline
         run: |
           state=$(mktemp -d /tmp/ardrec-p9-p12-ci.XXXXXXXX)
