@@ -1,0 +1,20 @@
+{
+  "schema": "ardrec-p14-r365-first-boot-ssh-traceability-v1",
+  "base_main": "a161cb625ed48d0a35251e3976f79f196b6fd039",
+  "increment": "R36.5",
+  "gate": "FIRST_BOOT_SSH_ONLY",
+  "scope": ["ardrec-r33-dev-net-ssh", "ardrec-r33-dev-ssh"],
+  "source_chain": "R35_FINAL_R36_SNAPSHOT_R361_DEV_R363_PREFLIGHT_R364_READINESS_R32_R34_ARCHIVE",
+  "required_controls": ["DENY_FIRST_NFT_JSON", "NWFILTER_DROP_ALL", "EXACT_LIBVIRT_XML", "NO_AUTOSTART", "NO_UNEXPECTED_ACTIVE_RESOURCES", "R32_STORAGE_SHA256", "EXPLICIT_PHYSICAL_AUTHORIZATION", "PHASE_READBACK", "PRIVATE_SEALED_RECEIPTS"],
+  "permitted_physical_writes_on_explicit_install": ["virsh net-start ardrec-r33-dev-net-ssh", "virsh start ardrec-r33-dev-ssh"],
+  "preflight_physical_writes": 0,
+  "postboot_network_isolation_tested": false,
+  "guest_service_tests_executed": false,
+  "operational_dispatch": false,
+  "final_risk": null,
+  "experiment_validation": "NOT_RUN",
+  "system_functional_acceptance": "PENDING",
+  "p8_operational": "NO-GO",
+  "open_findings": ["AL-06", "AL-07"],
+  "next_gate": "R36.6_NEGATIVE_CONNECTIVITY_AND_GUEST_ISOLATION_PROOF"
+}
