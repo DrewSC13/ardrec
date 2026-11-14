@@ -1,0 +1,30 @@
+{
+  "schema": "ardrec-p14-r352-recovery-traceability-v1",
+  "base_main": "62c59af210557a75161325f250485eed1271ed26",
+  "dependencies": [
+    "R35.1_LIBVIRT_NWFILTER_LIST_FIX",
+    "R35_PARTIAL_NFT_ONLY_RECEIPT",
+    "NFT_JSON_FORENSIC_VERIFIED"
+  ],
+  "source_archive_sha256": "58e7cf2f59dd97cab948c190d637b6ff8ee8f67b45400769fe0d97a9e8f2ea36",
+  "controls": [
+    "NUMERIC_NFT_PRIORITY_MINUS_200",
+    "EXACT_EIGHT_NFT_OBJECTS",
+    "EXACT_FOUR_DROP_RULES",
+    "EXACT_SIX_TAPS",
+    "EXACT_CHAINS_HOOKS",
+    "AUTHENTICATE_PRIOR_PARTIAL",
+    "FRESH_CURRENT_HOST_PREFLIGHT",
+    "NO_SECOND_NFT_INSTALL",
+    "NO_GUEST_OR_NETWORK_START",
+    "FAIL_CLOSED_NO_ROLLBACK"
+  ],
+  "execution_in_patch": false,
+  "p8_operational": "NO-GO",
+  "experimental_validation": "NOT_RUN",
+  "system_functional_acceptance": "PENDING",
+  "open_findings": [
+    "AL-06",
+    "AL-07"
+  ]
+}

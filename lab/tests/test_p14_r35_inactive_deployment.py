@@ -26,9 +26,37 @@ BINARIES = {
 }
 
 
+def nft_json_fixture(*, corrupt: str | None = None) -> bytes:
+    """Equivalent to /usr/sbin/nft -j -a list table bridge ardrec_r34_guard."""
+    data = [{'metainfo': {'version': '1.1.0'}},
+            {'table': {'family': 'bridge', 'name': t.NFT_TABLE, 'handle': 12}}]
+    for i, name in enumerate(('input', 'output', 'forward')):
+        data.append({'chain': {'family': 'bridge', 'table': t.NFT_TABLE,
+                   'name': name, 'handle': i + 1, 'type': 'filter',
+                   'hook': name, 'prio': -200, 'policy': 'accept'}})
+    for i, (chain, direction) in enumerate((
+        ('input', 'iifname'), ('output', 'oifname'),
+        ('forward', 'iifname'), ('forward', 'oifname'),
+    )):
+        data.append({'rule': {'family': 'bridge', 'table': t.NFT_TABLE,
+            'chain': chain, 'handle': 5 + i * 2,
+            'expr': [{'match': {'left': {'meta': {'key': direction}},
+                               'op': '==', 'right': {'set': list(t.TAPS)}}},
+                     {'counter': {'packets': 0, 'bytes': 0}}, {'drop': None}]}})
+    if corrupt == 'priority': data[2]['chain']['prio'] = -199
+    if corrupt == 'extra_rule': data.append(data[-1])
+    if corrupt == 'accept': data[-1]['rule']['expr'][-1] = {'accept': None}
+    if corrupt == 'interfaces': data[-1]['rule']['expr'][0]['match']['right']['set'][-1]='other-tap'
+    if corrupt == 'chain_policy': data[2]['chain']['policy']='drop'
+    if corrupt == 'wrong_hook': data[2]['chain']['hook']='output'
+    if corrupt == 'duplicate_rule': data[-1] = data[-2]
+    if corrupt == 'extra_expression': data[-1]['rule']['expr'].insert(1, {'log': {'prefix':'bad'}})
+    return json.dumps({'nftables': data}, sort_keys=True).encode('ascii')
+
+
 class FakeHostRunner:
     def __init__(self, r32, root, *, collision=None, fail_at=None, drift_after_preflight=False, late_collision=None, late_interface=False,
-                 late_active_network=False, late_active_domain=False):
+                 late_active_network=False, late_active_domain=False, nft_corrupt=None):
         self.r32 = r32
         self.root = root
         self.collision = collision
@@ -38,6 +66,7 @@ class FakeHostRunner:
         self.late_interface = late_interface
         self.late_active_network = late_active_network
         self.late_active_domain = late_active_domain
+        self.nft_corrupt = nft_corrupt
         self.hash_calls = {}
         self.calls = []
         self.nft_installed = False
@@ -109,6 +138,8 @@ class FakeHostRunner:
             elif cmd[1:] == ['-f', '-']:
                 self.nft_installed = True
                 data = b''
+            elif cmd[1:] == ['-j', '-a', 'list', 'table', 'bridge', t.NFT_TABLE]:
+                data = nft_json_fixture(corrupt=self.nft_corrupt)
             elif cmd[1:] == ['list', 'table', 'bridge', t.NFT_TABLE]:
                 source = self.policy['bridge-deny.nft'].decode()
                 data = source.replace('counter drop', 'counter packets 0 bytes 0 drop').encode()
@@ -505,6 +536,165 @@ class R35Tests(unittest.TestCase):
         self.assertEqual(result['domains_defined'], [])
         self.assertFalse(result['vm_started'])
         self.assertEqual(result['p8_operational'], 'NO-GO')
+
+
+    def test_nft_json_accepts_real_host_numeric_priority(self):
+        t._verify_nft_json(nft_json_fixture())
+        host, fake = self.host()
+        preflight, host = t.host_preflight(self.bundle, runner=fake,
+                                           which=lambda n: BINARIES.get(n))
+        result = t.deploy(self.bundle, preflight, host)
+        self.assertEqual(result['status'], 'DEPLOYMENT_COMPLETE_INACTIVE')
+        self.assertTrue(any(call[0][4:7] == ['-j', '-a', 'list'] for call in fake.calls))
+
+    def test_nft_json_rejects_priority_or_policy_or_extra_rule(self):
+        for issue in ('priority', 'extra_rule', 'accept', 'interfaces',
+                      'chain_policy', 'wrong_hook', 'duplicate_rule', 'extra_expression'):
+            with self.subTest(issue=issue):
+                with self.assertRaises(t.R35Error):
+                    t._verify_nft_json(nft_json_fixture(corrupt=issue))
+
+    def test_resume_requires_existing_exact_table(self):
+        host, fake = self.host()
+        with self.assertRaises(t.R35Error):
+            t.host_preflight(self.bundle, runner=fake,
+                             which=lambda n: BINARIES.get(n), existing_nft=True)
+        self.assertFalse(fake.nft_installed)
+
+    def test_resume_preflight_rejects_corrupt_nft(self):
+        _, fake = self.host(nft_corrupt='priority')
+        fake.nft_installed=True
+        with self.assertRaises(t.R35Error):
+            t.host_preflight(self.bundle, runner=fake,
+                             which=lambda n: BINARIES.get(n), existing_nft=True)
+        self.assertFalse(fake.filter_defined)
+
+    def test_resume_exact_table_no_second_nft_write(self):
+        host, fake = self.host()
+        fake.nft_installed=True
+        preflight, host = t.host_preflight(self.bundle, runner=fake,
+                           which=lambda n: BINARIES.get(n), existing_nft=True)
+        self.assertTrue(preflight['nft_existing_verified_json'])
+        report = t.deploy(self.bundle, preflight, host, reuse_verified_nft=True)
+        self.assertEqual(report['status'], 'DEPLOYMENT_COMPLETE_INACTIVE')
+        self.assertTrue(report['nft_table_verified'])
+        self.assertEqual(report['domains_defined'], list(t.DOMAINS))
+        self.assertFalse(any(call[0][3:] == ['/usr/sbin/nft','-f','-']
+                             for call in fake.calls))
+        self.assertFalse(report['vm_started'])
+
+    def test_resume_never_writes_when_prior_state_invalid(self):
+        temp=Path(self.temp.name)/'recibos-instalacion-fake'
+        temp.mkdir(mode=0o700)
+        with self.assertRaises(t.R35Error):
+            t.verify_prior_partial_receipt(temp,self.bundle)
+
+    def test_resume_rejects_changed_table_on_final_readback(self):
+        host, fake = self.host()
+        fake.nft_installed=True
+        preflight, host = t.host_preflight(self.bundle, runner=fake,
+                           which=lambda n: BINARIES.get(n), existing_nft=True)
+        fake.nft_corrupt='priority'
+        report=t.deploy(self.bundle,preflight,host,reuse_verified_nft=True)
+        self.assertEqual(report['status'],'PARTIAL_NO_GO_REVIEW_REQUIRED')
+        self.assertEqual(report['domains_defined'],[])
+        self.assertEqual(report['networks_defined'],[])
+        self.assertFalse(fake.filter_defined)
+
+    def test_fresh_install_rejects_bad_json_after_nft_write(self):
+        host, fake=self.host(nft_corrupt='interfaces')
+        preflight, host=t.host_preflight(self.bundle,runner=fake,
+                         which=lambda n: BINARIES.get(n))
+        result=t.deploy(self.bundle,preflight,host)
+        self.assertEqual(result['status'],'PARTIAL_NO_GO_REVIEW_REQUIRED')
+        self.assertTrue(fake.nft_installed)
+        self.assertFalse(fake.filter_defined)
+        self.assertEqual(result['failure_code'],'nft_interface_set_invalid')
+
+    def test_resume_host_report_cannot_claim_table_absent(self):
+        host,fake=self.host();fake.nft_installed=True
+        report,_=t.host_preflight(self.bundle,runner=fake,
+                  which=lambda n: BINARIES.get(n),existing_nft=True)
+        report['nft_table_absent']=True
+        report['sha256']=t.sha(t.canon({k:v for k,v in report.items() if k!='sha256'}))
+        with self.assertRaises(t.R35Error): t.verify_host_report(report)
+
+    def _historical_partial(self):
+        path = self.root / 'recibos-instalacion-test-r35'
+        path.mkdir(mode=0o700)
+        host,fake=self.host()
+        old_host,_=t.host_preflight(self.bundle,runner=fake,
+                                     which=lambda n: BINARIES.get(n))
+        # Historical R35.1 preflight had no nft_existing_verified_json.
+        old_host.pop('nft_existing_verified_json')
+        old_host['sha256']=t.sha(t.canon({k:v for k,v in old_host.items() if k!='sha256'}))
+        deployment=t.deployment_report(self.bundle,old_host,
+            status='PARTIAL_NO_GO_REVIEW_REQUIRED',
+            nft_installed=True,failure='installed_nft_table_semantics_mismatch')
+        nft_text='table bridge '+t.NFT_TABLE+' {\n chain input { type filter hook input priority filter; policy accept; }\n}\n'
+        commands=[
+          {'argv':['/usr/bin/sudo','-n','--','/usr/sbin/nft','-f','-'],
+           'returncode':0,'stdout_sha256':t.sha(b''),'stderr_sha256':t.sha(b''),'stdout':'','stderr':''},
+          {'argv':['/usr/bin/sudo','-n','--','/usr/sbin/nft','list','table','bridge',t.NFT_TABLE],
+           'returncode':0,'stdout_sha256':t.sha(nft_text.encode()),
+           'stderr_sha256':t.sha(b''),'stdout':nft_text,'stderr':''},
+        ]
+        t._write_receipts(path,{
+            'r35_source_attestation.json':self.bundle['attestation'],
+            'r35_host_preflight.json':old_host,
+            'r35_deployment.json':deployment,
+        },commands)
+        return path
+
+    def test_prior_partial_receipt_exact_authentication(self):
+        receipt=self._historical_partial()
+        old=json.loads((receipt/'r35_deployment.json').read_text())
+        with mock.patch.object(t,'R35_PARTIAL_REPORT_SHA256',old['sha256']):
+            attestation=t.verify_prior_partial_receipt(receipt,self.bundle)
+        self.assertTrue(attestation['old_nft_installed'])
+        self.assertTrue(attestation['old_libvirt_definitions_absent'])
+
+    def test_prior_partial_receipt_rejects_changed_file(self):
+        receipt=self._historical_partial()
+        (receipt/'commands.jsonl').write_bytes(b'changed')
+        old=json.loads((receipt/'r35_deployment.json').read_text())
+        with mock.patch.object(t,'R35_PARTIAL_REPORT_SHA256',old['sha256']):
+            with self.assertRaises(t.R35Error):
+                t.verify_prior_partial_receipt(receipt,self.bundle)
+
+    def test_prior_partial_receipt_rejects_extra_libvirt_write(self):
+        receipt=self._historical_partial()
+        records=[json.loads(x) for x in (receipt/'commands.jsonl').read_text().splitlines()]
+        records.append({'argv':['/usr/bin/sudo','-n','--','/usr/bin/virsh',
+                         '-c','qemu:///system','net-define','/tmp/a.xml'],
+                        'returncode':0,'stdout_sha256':t.sha(b''),'stderr_sha256':t.sha(b'')})
+        (receipt/'commands.jsonl').write_bytes(b''.join(t.canon(x)+b'\n' for x in records))
+        lines=[]
+        for path in sorted(receipt.iterdir()):
+            if path.name!='SHA256SUMS':
+                lines.append(t.sha(path.read_bytes())+'  '+path.name)
+        (receipt/'SHA256SUMS').write_text('\n'.join(lines)+'\n')
+        old=json.loads((receipt/'r35_deployment.json').read_text())
+        with mock.patch.object(t,'R35_PARTIAL_REPORT_SHA256',old['sha256']):
+            with self.assertRaises(t.R35Error):
+                t.verify_prior_partial_receipt(receipt,self.bundle)
+
+    def test_resume_readonly_preflight_report(self):
+        host,fake=self.host();fake.nft_installed=True
+        preflight,_=t.host_preflight(self.bundle,runner=fake,
+                           which=lambda n: BINARIES.get(n),existing_nft=True)
+        doc=t.deployment_report(self.bundle,preflight,
+             status='RESUME_PREFLIGHT_PASS_EXISTING_NFT',
+             nft_installed=True,table_verified=True)
+        doc['recovery_mode']='EXISTING_NFT_VERIFIED_JSON'
+        doc['prior_partial_receipt_sha256']='a'*64
+        doc['resume_attestation_sha256']='b'*64
+        doc['sha256']=t.sha(t.canon({k:v for k,v in doc.items() if k!='sha256'}))
+        t.verify_deployment_report(doc)
+        self.assertFalse(any('net-define' in call[0] or 'nwfilter-define' in call[0]
+                             or 'define' in call[0] for call in fake.calls))
+        self.assertFalse(any(call[0][3:] == ['/usr/sbin/nft','-f','-']
+                             for call in fake.calls))
 
 
 if __name__ == '__main__':
