@@ -1,0 +1,53 @@
+{
+  "schema": "ardrec-p14-r23-a3-candidate-order-preview-v1",
+  "base_sha": "9422d418e4d7ddcb931ae3f1bac856daf3d4c5ae",
+  "scope": "synthetic_non_executable_candidate_order_only",
+  "prerequisites": [
+    "src/ardrec/rules/kernel.py",
+    "src/ardrec/initialization/rule_preflight.py",
+    "src/ardrec/initialization/initial_preview.py",
+    "src/ardrec/initialization/dependency_preview.py",
+    "src/ardrec/initialization/control_preview.py",
+    "src/ardrec/initialization/integrated_preview.py",
+    "src/ardrec/scheduling/guard_preview.py"
+  ],
+  "module": "src/ardrec/scheduling/agenda_preview.py",
+  "max_services": 64,
+  "max_candidates_per_service": 32,
+  "max_total_candidates": 2048,
+  "synthetic_units": 54,
+  "synthetic_protocol_counts": {"ssh": 18, "ftp": 18, "smb": 18},
+  "synthetic_candidate_count": 36,
+  "synthetic_excluded_count": 72,
+  "checks": [
+    "recompute_R17_through_R22_source_chain",
+    "selected_rule_true_required",
+    "false_nd_and_unconfirmed_tables_rejected",
+    "predecessor_candidate_closure",
+    "bounded_integer_exact_budgets",
+    "canonical_input_and_reproducible_hash",
+    "no_commands_no_execution_no_publication",
+    "no_mutation_of_source_or_guards"
+  ],
+  "tests": "lab/tests/test_p14_r23_a3_candidate_order.py",
+  "demo": "scripts/demo_p14_r23_a3_candidate_order.py",
+  "a1_full": false,
+  "a2_full": false,
+  "a3_full": false,
+  "p8_operational": "NO-GO",
+  "p8_authorized_cases": 0,
+  "operational_dispatch": false,
+  "generation_published": false,
+  "system_functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN",
+  "not_proven": [
+    "executable_A3_schedule",
+    "case_completion_or_control_consumption",
+    "interservice_execution_dependencies",
+    "A4_selection_semantics",
+    "physical_54_scenario_execution",
+    "durable_generation_publication",
+    "AL-06",
+    "AL-07"
+  ]
+}
