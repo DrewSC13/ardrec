@@ -345,6 +345,9 @@ jobs:
       - name: Demostrar 54 unidades documentales A3 R25 / Demonstrate R25 documentary observations
         run: python3 -B scripts/demo_p14_r25_a3_documentary_observations.py
 
+      - name: Probar despliegue deny-first inactivo P14 R35 / Test P14 R35 contained inactive deployment
+        run: python3 -B -m unittest discover -s lab/tests -p test_p14_r35_inactive_deployment.py -v
+
       - name: Demostrar recorrido P9-P12 / Exercise benign end-to-end pipeline
         run: |
           state=$(mktemp -d /tmp/ardrec-p9-p12-ci.XXXXXXXX)

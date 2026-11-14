@@ -1,0 +1,53 @@
+{
+  "schema": "ardrec-p14-r35-deployment-contract-v1",
+  "source_archive_sha256": "58e7cf2f59dd97cab948c190d637b6ff8ee8f67b45400769fe0d97a9e8f2ea36",
+  "base_main": "b9b52e6fc65415e939728b17366acb49d2551563",
+  "nftables": {
+    "family": "bridge",
+    "table": "ardrec_r34_guard",
+    "source_policy": "R34/bridge-deny.nft",
+    "permitted_mutation": "CREATE_THIS_TABLE_ONLY",
+    "global_flush": false,
+    "persistent_across_reboot": false
+  },
+  "libvirt": {
+    "nwfilter": "ardrec-r33-block-until-containment",
+    "nwfilter_action": "DROP_ALL_INOUT",
+    "networks": [
+      {"name": "ardrec-r33-dev-net-ssh", "bridge": "br33d30", "target_state": "DEFINED_INACTIVE"},
+      {"name": "ardrec-r33-dev-net-ftp", "bridge": "br33d31", "target_state": "DEFINED_INACTIVE"},
+      {"name": "ardrec-r33-dev-net-smb", "bridge": "br33d32", "target_state": "DEFINED_INACTIVE"}
+    ],
+    "domains": [
+      {"name": "ardrec-r33-dev-ssh", "target_state": "DEFINED_SHUT_OFF", "autostart": false},
+      {"name": "ardrec-r33-dev-ftp", "target_state": "DEFINED_SHUT_OFF", "autostart": false},
+      {"name": "ardrec-r33-dev-smb", "target_state": "DEFINED_SHUT_OFF", "autostart": false},
+      {"name": "ardrec-r33-dev-runner", "target_state": "DEFINED_SHUT_OFF", "autostart": false}
+    ]
+  },
+  "interfaces": {
+    "taps": ["a33d30r", "a33d30t", "a33d31r", "a33d31t", "a33d32r", "a33d32t"],
+    "bridges": ["br33d30", "br33d31", "br33d32"],
+    "must_be_absent_before_and_after_definition": true
+  },
+  "qcow2": {
+    "roles": ["ssh", "ftp", "smb", "runner"],
+    "files_verified": 12,
+    "mutations_permitted": false,
+    "revalidate_all_twelve_files_before_domain_definition": true,
+    "recheck_names_and_uuids_before_each_libvirt_define": true,
+    "recheck_reserved_interfaces_before_domain_definitions": true
+  },
+  "terminal_invariants": {
+    "network_started": false,
+    "vm_started": false,
+    "active_networks_observed": [],
+    "active_domains_observed": [],
+    "operational_dispatch": false,
+    "can_restore": false,
+    "p8_operational": "NO-GO",
+    "experimental_validation": "NOT_RUN",
+    "final_risk": null,
+    "open_findings": ["AL-06", "AL-07"]
+  }
+}
