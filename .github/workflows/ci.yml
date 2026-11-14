@@ -333,6 +333,12 @@ jobs:
       - name: Demostrar 54 unidades y candidatos A3 R23 / Demonstrate R23 candidate preview
         run: python3 -B scripts/demo_p14_r23_a3_candidate_order.py
 
+      - name: Probar elegibilidad hipotética A3 R24 / Test R24 hypothetical readiness
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r24_a3_readiness_preview.py -v
+
+      - name: Demostrar 54 escenarios hipotéticos A3 R24 / Demonstrate R24 readiness
+        run: python3 -B scripts/demo_p14_r24_a3_readiness_preview.py
+
       - name: Demostrar recorrido P9-P12 / Exercise benign end-to-end pipeline
         run: |
           state=$(mktemp -d /tmp/ardrec-p9-p12-ci.XXXXXXXX)
