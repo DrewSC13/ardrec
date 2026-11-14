@@ -1,0 +1,37 @@
+name: R36.5 SSH first-boot safety / seguridad
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  first_boot_safety:
+    name: R36.5 bounded SSH first-boot safety tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Obtener código / Check out code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Preparar Python / Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version-file: .python-version
+          architecture: x64
+      - name: Verificar sintaxis / Check syntax
+        run: python3 -B -m compileall -q src/ardrec/coordination/r365_first_boot.py scripts/ardrec_p14_r365_first_boot.py lab/tests/test_p14_r365_first_boot.py
+      - name: Probar arranque limitado y rechazos / Verify bounded first boot
+        run: python3 -B -m unittest discover -s lab/tests -p test_p14_r365_first_boot.py -v
+      - name: Verificar regresión cercana R33-R36 / Adjacent regression
+        run: |
+          python3 -B -m unittest discover -s lab/tests -p test_p14_r33_topology.py -v
+          python3 -B -m unittest discover -s lab/tests -p test_p14_r34_containment.py -v
+          python3 -B -m unittest discover -s lab/tests -p test_p14_r35_inactive_deployment.py -v
+          python3 -B -m unittest discover -s lab/tests -p test_p14_r36_readonly_dashboard.py -v
