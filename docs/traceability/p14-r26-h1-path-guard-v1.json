@@ -1,0 +1,33 @@
+{
+  "schema": "ardrec-p14-r26-h1-path-guard-traceability-v1",
+  "increment": "P14-R26-H1",
+  "base": "f42083f42bf5c2bbff66a8163276ea69e6323c0b",
+  "failure": "11 errores en setUp por type(path) is Path con PosixPath",
+  "change": {
+    "file": "src/ardrec/coordination/demo_session.py",
+    "old": "type(path) is Path",
+    "new": "isinstance(path, Path)",
+    "scope": "Solo comprobacion de tipo del path de fixture; no cambia reglas, estado, autorizaciones o semantica A1-A3"
+  },
+  "regression": "lab/tests/test_p14_r26_path_regression.py",
+  "acceptance": [
+    "unittest test_p14_r26_path_regression.py",
+    "unittest test_p14_r26_session_a1_a3.py",
+    "unittest test_p14*.py",
+    "demos R16, R21 y R25",
+    "demo R26 JSON/texto",
+    "verificar_trazabilidad_actual.py",
+    "firma de commit"
+  ],
+  "invariants": {
+    "synthetic_only": true,
+    "symlinks_rejected": true,
+    "missing_file_rejected": true,
+    "operational_dispatch": false,
+    "published_generation": false,
+    "p8_operational": "NO-GO",
+    "vm_checks_run_by_patch": false
+  },
+  "status": "PATCH_CREATED_NOT_YET_APPLIED_OR_ACCEPTED",
+  "experimental_validation": "NOT_RUN"
+}
