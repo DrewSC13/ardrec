@@ -1,0 +1,35 @@
+{
+  "schema": "ardrec-p14-r31-readonly-qcow2-attestation-traceability-v1",
+  "increment": "P14-R31",
+  "required_parent1": "8231b8da5db66f918d812d8305b6243c568c53ae",
+  "required_parent2": "f44c38c6cb3780559d7bc7ba0354c226f4591301",
+  "source_contracts": ["R29-LIBVIRT-READONLY", "R30-H1-QCOW2-INVENTORY"],
+  "implementation": "src/ardrec/coordination/qcow2_readonly_attestation.py",
+  "cli": "scripts/ardrec_p14_r31_asset_audit.py",
+  "tests": "lab/tests/test_p14_r31_assets.py",
+  "prior_observation": {
+    "base_files": 4,
+    "base_status": "REGULAR_METADATA_ONLY",
+    "overlays": 4,
+    "overlay_status": "ACCESS_DENIED",
+    "metadata_matching_roles": 0
+  },
+  "invariants": {
+    "exact_fixed_paths_only": true,
+    "explicit_sudo_readonly_mode_only": true,
+    "root_python_executed": false,
+    "mutating_commands_permitted": false,
+    "network_or_vm_commands_permitted": false,
+    "r30_external_file_digest_required": true,
+    "historical_hash_is_not_current_hash": true,
+    "overlay_hash_is_not_external_custody": true,
+    "restoration_allowed": false,
+    "operational_dispatch": false,
+    "p8_operational": "NO-GO",
+    "generations_published": false,
+    "experimental_validation": "NOT_RUN"
+  },
+  "open_findings": ["AL-06", "AL-07"],
+  "acceptance_level": "READONLY_ASSET_AUDIT_NOT_RESTORATION",
+  "system_functional_acceptance": "PENDING"
+}
