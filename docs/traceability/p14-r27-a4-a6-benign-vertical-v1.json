@@ -1,0 +1,42 @@
+{
+  "schema": "ardrec-p14-r27-a4-a6-development-traceability-v1",
+  "increment": "P14-R27",
+  "required_ancestor": "983f4e00899223189f8b38d84e639657396e33df",
+  "thesis_reference": "Tesis ARDREC(20261114-012812).pdf sections 3.2.6 3.4.2 figures 3.13-3.20",
+  "implementation": [
+    "src/ardrec/selection/greedy_development.py",
+    "src/ardrec/coordination/benign_review.py"
+  ],
+  "demo": "scripts/demo_p14_r27_a4_a6_local.py",
+  "tests": [
+    "lab/tests/test_p14_r27_selection.py",
+    "lab/tests/test_p14_r27_vertical.py"
+  ],
+  "source": "SYNTHETIC_PROJECTION_ONLY_OR_LOCAL_BENIGN_FIXTURE",
+  "selection_invariant": "(-priority, precedence, service_id, case_id)",
+  "expected": {
+    "r26_confirmed_a4_selection": null,
+    "synthetic_shadow_a4_choice": "SSH_DEV/CASE_REFERENCE",
+    "synthetic_shadow_priority": "1/4",
+    "a5_attempt_id": "r27.dev_tutor_001.ssh_case_reference",
+    "a5_expected_local_fixture_outcome": "BENIGN_EXIT_ZERO",
+    "a6_technical_evidence": null,
+    "a6_classification": "ND"
+  },
+  "invariants": {
+    "r26_prepared_is_not_pending": true,
+    "a4_projection_is_not_confirmed": true,
+    "a4_uses_exact_fractions": true,
+    "a5_reuses_existing_benign_pipeline": true,
+    "a5_once_per_attempt_id": true,
+    "a6_support_integrity_is_not_technical_truth": true,
+    "vm_checks_executed": false,
+    "p8_operational": "NO-GO",
+    "a4_a6_full": false,
+    "a7_final_risk_computed": false,
+    "published_generation": false
+  },
+  "acceptance_level": "DEVELOPMENT_VERTICAL_LOCAL_BENIGN",
+  "functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN"
+}
