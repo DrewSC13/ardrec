@@ -56,7 +56,8 @@ def nft_json_fixture(*, corrupt: str | None = None) -> bytes:
 
 class FakeHostRunner:
     def __init__(self, r32, root, *, collision=None, fail_at=None, drift_after_preflight=False, late_collision=None, late_interface=False,
-                 late_active_network=False, late_active_domain=False, nft_corrupt=None):
+                 late_active_network=False, late_active_domain=False, nft_corrupt=None,
+                 normalized_network=False):
         self.r32 = r32
         self.root = root
         self.collision = collision
@@ -67,6 +68,7 @@ class FakeHostRunner:
         self.late_active_network = late_active_network
         self.late_active_domain = late_active_domain
         self.nft_corrupt = nft_corrupt
+        self.normalized_network = normalized_network
         self.hash_calls = {}
         self.calls = []
         self.nft_installed = False
@@ -181,6 +183,10 @@ class FakeHostRunner:
                         name = ('other-filter' if self.collision == 'filter_uuid'
                                 else t.FILTER_NAME)
                         data += f' {ident}  {name}\n'.encode('ascii')
+                elif args == ['net-list', '--all', '--uuid'] and self.networks_defined:
+                    data = ('\n'.join(ET.fromstring(self.xml[f'network-{n.removeprefix(t33.NETWORK_PREFIX)}.xml']).findtext('uuid') for n in self.networks_defined) + '\n').encode()
+                elif args == ['list', '--all', '--uuid'] and self.domains_defined:
+                    data = ('\n'.join(ET.fromstring(self.xml[f'domain-{n.removeprefix(t33.DOMAIN_PREFIX)}.xml']).findtext('uuid') for n in self.domains_defined) + '\n').encode()
                 elif args == ['list', '--all', '--name'] and self.domains_defined:
                     data = ('\n'.join(self.domains_defined) + '\n').encode()
                 elif args == ['net-list', '--all', '--name'] and self.networks_defined:
@@ -193,6 +199,15 @@ class FakeHostRunner:
                 name = args[1]
                 role = name.removeprefix(t33.NETWORK_PREFIX)
                 data = self.xml[f'network-{role}.xml']
+                if self.normalized_network:
+                    root = ET.fromstring(data)
+                    root.attrib.pop('ipv6', None)
+                    addr = {'ssh':t.SSH_BRIDGE_MAC_R353, 'ftp':'52:54:00:12:34:56',
+                            'smb':'52:54:00:65:43:21'}[role]
+                    bridge = root.find('bridge')
+                    mac = ET.Element('mac', {'address':addr})
+                    root.insert(list(root).index(bridge) + 1, mac)
+                    data = ET.tostring(root, encoding='utf-8')
             elif verb == 'net-info':
                 data = b'Name: test\nActive: no\nAutostart: no\n'
             elif verb == 'dumpxml':
@@ -695,6 +710,184 @@ class R35Tests(unittest.TestCase):
                              or 'define' in call[0] for call in fake.calls))
         self.assertFalse(any(call[0][3:] == ['/usr/sbin/nft','-f','-']
                              for call in fake.calls))
+
+    def test_r353_network_normalization_accepts_only_expected_semantics(self):
+        original=self.xml['network-ssh.xml']
+        root=ET.fromstring(original)
+        root.attrib.pop('ipv6')
+        root.insert(3, ET.Element('mac', {'address':t.SSH_BRIDGE_MAC_R353}))
+        normalized=ET.tostring(root, encoding='utf-8')
+        self.assertEqual(t._network_bridge_mac(normalized, original, 'ssh'),
+                         t.SSH_BRIDGE_MAC_R353)
+        self.assertIsNone(t._network_bridge_mac(original, original, 'ssh'))
+        for bad in ('forward', 'ip', 'dhcp', 'route', 'network'):
+            with self.subTest(extra=bad):
+                mutated=ET.fromstring(normalized)
+                ET.SubElement(mutated,bad)
+                with self.assertRaises(t.R35Error):
+                    t._network_bridge_mac(ET.tostring(mutated), original, 'ssh')
+
+    def test_r353_network_rejects_ipv6_enable_or_bridge_drift(self):
+        original=self.xml['network-ssh.xml']
+        for bad in ('ipv6', 'bridge', 'dns', 'uuid', 'extra_root'):
+            with self.subTest(bad=bad):
+                root=ET.fromstring(original)
+                if bad=='ipv6': root.set('ipv6','yes')
+                if bad=='bridge': root.find('bridge').set('name','virbr0')
+                if bad=='dns': root.find('dns').set('enable','yes')
+                if bad=='uuid': root.find('uuid').text='ffffffff-ffff-ffff-ffff-ffffffffffff'
+                if bad=='extra_root': root.set('isolated','no')
+                with self.assertRaises(t.R35Error):
+                    t._network_bridge_mac(ET.tostring(root), original, 'ssh')
+
+    def test_r353_network_rejects_mac_spoof_or_duplicate(self):
+        original=self.xml['network-ssh.xml']
+        for mac in ('ff:ff:ff:ff:ff:ff', '01:11:22:33:44:55',
+                    '02:11:22:33:44:GG', '52:54:00:59:04:5a:11'):
+            with self.subTest(mac=mac):
+                root=ET.fromstring(original)
+                ET.SubElement(root,'mac',{'address':mac})
+                with self.assertRaises(t.R35Error):
+                    t._network_bridge_mac(ET.tostring(root), original, 'ssh')
+        with self.assertRaises(t.R35Error):
+            t._verify_network_mac_inventory({'ssh':t.SSH_BRIDGE_MAC_R353,
+                 'ftp':t.SSH_BRIDGE_MAC_R353},prior_ssh=True)
+        with self.assertRaises(t.R35Error):
+            t._verify_network_mac_inventory({'ssh':'52:54:00:11:22:33'},prior_ssh=True)
+
+    def r353_fake(self, **kw):
+        host,fake=self.host(normalized_network=True,**kw)
+        fake.nft_installed=True
+        fake.filter_defined=True
+        fake.networks_defined=[t33.NETWORK_PREFIX+'ssh']
+        return host,fake
+
+    def test_r353_preflight_reuses_exact_installed_filter_and_ssh_readonly(self):
+        _,fake=self.r353_fake()
+        report,host=t.host_preflight(self.bundle,runner=fake,
+                  which=lambda name:BINARIES.get(name),existing_nft=True,
+                  existing_filter=True,existing_networks=('ssh',))
+        self.assertTrue(t.verify_host_report(report))
+        self.assertEqual(report['existing_network_bridge_macs'],{'ssh':t.SSH_BRIDGE_MAC_R353})
+        self.assertEqual(report['qcow2_assets_verified'],12)
+        self.assertFalse(any('net-define' in argv or 'nwfilter-define' in argv
+                        or argv[4:]==['-f','-'] for argv,_ in fake.calls))
+
+    def test_r353_preflight_rejects_unexpected_existing_resources(self):
+        for condition in ('missing_filter', 'missing_ssh','extra_ftp','other_nft'):
+            with self.subTest(condition=condition):
+                _,fake=self.r353_fake()
+                if condition=='missing_filter':fake.filter_defined=False
+                if condition=='missing_ssh':fake.networks_defined=[]
+                if condition=='extra_ftp':fake.networks_defined.append(t33.NETWORK_PREFIX+'ftp')
+                if condition=='other_nft':fake.nft_corrupt='priority'
+                with self.assertRaises(t.R35Error):
+                    t.host_preflight(self.bundle,runner=fake,
+                           which=lambda name:BINARIES.get(name),existing_nft=True,
+                           existing_filter=True,existing_networks=('ssh',))
+
+    def test_r353_resume_never_redefines_nft_filter_ssh(self):
+        _,fake=self.r353_fake()
+        report,host=t.host_preflight(self.bundle,runner=fake,
+                  which=lambda name:BINARIES.get(name),existing_nft=True,
+                  existing_filter=True,existing_networks=('ssh',))
+        result=t.deploy(self.bundle, report, host, reuse_verified_nft=True,
+                         reuse_verified_filter_ssh=True)
+        self.assertEqual(result['status'],'DEPLOYMENT_COMPLETE_INACTIVE')
+        self.assertEqual(result['network_bridge_macs']['ssh'],t.SSH_BRIDGE_MAC_R353)
+        self.assertEqual(len(result['networks_defined']),3)
+        self.assertEqual(len(result['domains_defined']),4)
+        sudo_virsh=[argv for argv,_ in fake.calls if argv[:4]==
+               ['/usr/bin/sudo','-n','--','/usr/bin/virsh']]
+        self.assertEqual(sum('net-define' in row for row in sudo_virsh),2)
+        self.assertFalse(any('nwfilter-define' in row for row in sudo_virsh))
+        self.assertFalse(any('network-ssh.xml' in ' '.join(row) for row in sudo_virsh))
+        self.assertFalse(any(argv[:4]==['/usr/bin/sudo','-n','--','/usr/sbin/nft']
+                and argv[4:]==['-f','-'] for argv,_ in fake.calls))
+        self.assertFalse(result['vm_started'])
+
+    def test_r353_second_partial_receipt_authentic_and_negative(self):
+        first_dir=self._historical_partial()
+        first_old=json.loads((first_dir/'r35_deployment.json').read_text())
+        with mock.patch.object(t,'R35_PARTIAL_REPORT_SHA256',first_old['sha256']):
+            first=t.verify_prior_partial_receipt(first_dir,self.bundle)
+        _,fake=self.host()
+        fake.nft_installed=True
+        host_report,_=t.host_preflight(self.bundle,runner=fake,
+                     which=lambda n:BINARIES.get(n),existing_nft=True)
+        old=t.deployment_report(self.bundle,host_report,
+            status='PARTIAL_NO_GO_REVIEW_REQUIRED',
+            failure='defined_network_xml_mismatch_ssh',nft_installed=True,
+            table_verified=True,filter_defined=True,filter_verified=True,
+            networks_defined=[t33.NETWORK_PREFIX+'ssh'])
+        previous={**first,'current_host_preflight_sha256':host_report['sha256']}
+        previous['sha256']=t.sha(t.canon(previous))
+        old['recovery_mode']='EXISTING_NFT_VERIFIED_JSON'
+        old['prior_partial_receipt_sha256']=first['original_receipt_sha256']
+        old['resume_attestation_sha256']=previous['sha256']
+        old['sha256']=t.sha(t.canon({k:v for k,v in old.items() if k!='sha256'}))
+        partial=self.root/'recibos-recuperacion-r352-test'
+        partial.mkdir(mode=0o700)
+        xml=self.xml['network-ssh.xml']
+        root=ET.fromstring(xml);root.attrib.pop('ipv6')
+        root.insert(3,ET.Element('mac',{'address':t.SSH_BRIDGE_MAC_R353}))
+        actual=ET.tostring(root).decode()
+        def cmd(args,stdout=''):
+            return {'argv':args,'returncode':0,'stdout':stdout,'stderr':'',
+                    'stdout_sha256':t.sha(stdout.encode()),'stderr_sha256':t.sha(b'')}
+        vir=['/usr/bin/sudo','-n','--','/usr/bin/virsh','-c','qemu:///system']
+        ro=['/usr/bin/virsh','--readonly','-c','qemu:///system']
+        entries=[cmd(vir+['nwfilter-define','/tmp/ardrec-r35-source-abc/'+t.R34_DIR+'/nwfilter-deny.xml']),
+                 cmd(ro+['nwfilter-dumpxml',t.FILTER_NAME]),
+                 cmd(vir+['net-define','/tmp/ardrec-r35-source-abc/'+t.R33_DIR+'/network-ssh.xml']),
+                 cmd(ro+['net-dumpxml',t33.NETWORK_PREFIX+'ssh','--inactive'],actual)]
+        t._write_receipts(partial,{
+            'r35_source_attestation.json':self.bundle['attestation'],
+            'r35_host_preflight.json':host_report,
+            'r35_deployment.json':old,
+            'r35_resume_attestation.json':previous,
+        },entries)
+        with mock.patch.object(t,'R352_PARTIAL_REPORT_SHA256',old['sha256']), \
+             mock.patch.object(t,'R352_ORIGINAL_PARTIAL_RAW_SHA256',first['original_receipt_sha256']), \
+             mock.patch.object(t,'R352_RESUME_ATTESTATION_SHA256',previous['sha256']):
+            verified=t.verify_second_partial_receipt(partial,self.bundle,first)
+            self.assertEqual(verified['existing_ssh_bridge_mac'],t.SSH_BRIDGE_MAC_R353)
+            # Even a re-sealed mutated history is not admitted.
+            bad=entries+[cmd(vir+['net-define','/tmp/ardrec-r35-source-abc/'+t.R33_DIR+'/network-ftp.xml'])]
+            t._write_receipts if False else None
+            lines=b''.join(t.canon(x)+b'\n' for x in bad)
+            (partial/'commands.jsonl').write_bytes(lines)
+            hashes=[]
+            for path in sorted(partial.iterdir()):
+                if path.name!='SHA256SUMS':
+                    hashes.append(t.sha(path.read_bytes())+'  '+path.name)
+            (partial/'SHA256SUMS').write_text('\n'.join(hashes)+'\n')
+            with self.assertRaises(t.R35Error):
+                t.verify_second_partial_receipt(partial,self.bundle,first)
+
+    def test_r353_partial_preflight_report_claim_is_strict(self):
+        _,fake=self.r353_fake()
+        pre,host=t.host_preflight(self.bundle,runner=fake,
+                    which=lambda n:BINARIES.get(n),existing_nft=True,
+                    existing_filter=True,existing_networks=('ssh',))
+        doc=t.deployment_report(self.bundle,pre,
+            status='RESUME_PREFLIGHT_PASS_EXISTING_NFT_FILTER_SSH',
+            nft_installed=True,table_verified=True,
+            filter_defined=True,filter_verified=True,
+            networks_defined=[t33.NETWORK_PREFIX+'ssh'],
+            networks_inactive=[t33.NETWORK_PREFIX+'ssh'],
+            network_bridge_macs={'ssh':t.SSH_BRIDGE_MAC_R353},
+            recovery_provenance={
+                'recovery_mode':'EXISTING_NFT_FILTER_SSH_VERIFIED',
+                'prior_partial_receipt_sha256':t.R352_ORIGINAL_PARTIAL_RAW_SHA256,
+                'second_partial_receipt_sha256':'b'*64,
+                'resume_attestation_sha256':'c'*64,
+                'recovery3_attestation_sha256':'d'*64})
+        t.verify_deployment_report(doc)
+        for key in ('nft_table_verified','nwfilter_verified'):
+            other=dict(doc);other[key]=False
+            other['sha256']=t.sha(t.canon({k:v for k,v in other.items() if k!='sha256'}))
+            with self.assertRaises(t.R35Error):t.verify_deployment_report(other)
 
 
 if __name__ == '__main__':

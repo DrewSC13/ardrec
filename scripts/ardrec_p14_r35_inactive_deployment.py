@@ -23,27 +23,39 @@ def main() -> int:
     modes.add_argument('--install-deny-first-inactive', action='store_true')
     modes.add_argument('--resume-verified-nft-partial', action='store_true')
     modes.add_argument('--preflight-verified-nft-partial', action='store_true')
+    modes.add_argument('--preflight-existing-nft-filter-ssh', action='store_true')
+    modes.add_argument('--resume-existing-nft-filter-ssh', action='store_true')
     parser.add_argument('--prior-partial-receipts', type=Path)
+    parser.add_argument('--second-partial-receipts', type=Path)
     parser.add_argument('--i-authorize-r35-installation', action='store_true')
     args = parser.parse_args()
 
-    if args.preflight_only and args.i_authorize_r35_installation:
-        parser.error('Preflight-only mode does not accept installation authorization')
-    if args.preflight_verified_nft_partial and args.i_authorize_r35_installation:
-        parser.error('Recovery preflight cannot authorize installation')
-    if (args.install_deny_first_inactive or args.resume_verified_nft_partial) and not args.i_authorize_r35_installation:
-        parser.error('Installation requires --i-authorize-r35-installation')
-    if (args.resume_verified_nft_partial or args.preflight_verified_nft_partial) != (args.prior_partial_receipts is not None):
-        parser.error('Resume flag requires --prior-partial-receipts, not used in other modes')
+    old_recovery = args.resume_verified_nft_partial or args.preflight_verified_nft_partial
+    new_recovery = args.resume_existing_nft_filter_ssh or args.preflight_existing_nft_filter_ssh
+    install_requested = (args.install_deny_first_inactive or args.resume_verified_nft_partial or
+                         args.resume_existing_nft_filter_ssh)
+    if install_requested != args.i_authorize_r35_installation:
+        parser.error('Installation requires explicit authorization; preflight forbids it')
+    if new_recovery:
+        if args.prior_partial_receipts is None or args.second_partial_receipts is None:
+            parser.error('R35.3 requires both prior partial receipt directories')
+    elif old_recovery:
+        if args.prior_partial_receipts is None or args.second_partial_receipts is not None:
+            parser.error('R35.2 requires only first partial receipt')
+    elif args.prior_partial_receipts is not None or args.second_partial_receipts is not None:
+        parser.error('Fresh installation does not accept prior receipts')
     if args.prior_partial_receipts is not None and not args.prior_partial_receipts.is_absolute():
-        parser.error('Prior partial receipt path must be absolute')
+        parser.error('First partial receipt path must be absolute')
+    if args.second_partial_receipts is not None and not args.second_partial_receipts.is_absolute():
+        parser.error('Second partial receipt path must be absolute')
     if not args.source_archive.is_absolute() or not args.receipt_dir.is_absolute():
         parser.error('Archive and receipt paths must be absolute')
 
     try:
         result = run(args.source_archive, args.receipt_dir,
-                     install=(args.install_deny_first_inactive or args.resume_verified_nft_partial),
-                     resume_partial_dir=args.prior_partial_receipts)
+                     install=install_requested,
+                     resume_partial_dir=args.prior_partial_receipts,
+                     resume_second_partial_dir=args.second_partial_receipts)
         verify_deployment_report(result)
     except (R35Error, OSError, ValueError, TypeError, KeyError) as exc:
         print('R35_RESULT=BLOCKED_NO_CHANGE_OR_REVIEW_REQUIRED')
@@ -60,10 +72,16 @@ def main() -> int:
         print('R352_RECOVERY_PREFLIGHT=PASS_EXISTING_NFT_VERIFIED')
         print('R35_INSTALLATION=NOT_PERFORMED')
         return 0
+    if result['status'] == 'RESUME_PREFLIGHT_PASS_EXISTING_NFT_FILTER_SSH':
+        print('R353_RECOVERY_PREFLIGHT=PASS_EXISTING_NFT_FILTER_SSH_VERIFIED')
+        print('R35_INSTALLATION=NOT_PERFORMED')
+        return 0
     if result['status'] == 'DEPLOYMENT_COMPLETE_INACTIVE':
         print('R35_INSTALLATION=PASS_DENY_FIRST_AND_LIBVIRT_INACTIVE')
         if result.get('recovery_mode') == 'EXISTING_NFT_VERIFIED_JSON':
             print('R352_RECOVERY=PASS_EXISTING_NFT_VERIFIED')
+        if result.get('recovery_mode') == 'EXISTING_NFT_FILTER_SSH_VERIFIED':
+            print('R353_RECOVERY=PASS_REUSED_NFT_FILTER_SSH')
         print('R35_NFT_TABLE=INSTALLED_AND_VERIFIED')
         print('R35_NWFILTER=DEFINED_DENY_ALL')
         print('R35_NETWORKS=3_DEFINED_INACTIVE')

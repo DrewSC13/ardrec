@@ -1,0 +1,20 @@
+{
+  "schema": "ardrec-p14-r353-partial-xml-recovery-traceability-v1",
+  "base_main": "c7bb54ab7d596c515b214008f4eef01be454683a",
+  "related_pull_requests": [101, 102, 103],
+  "source_archive_sha256": "58e7cf2f59dd97cab948c190d637b6ff8ee8f67b45400769fe0d97a9e8f2ea36",
+  "first_partial_report_sha256": "8a082fc006c9a588c3d2063972221c953f4b264a4c6a277f14e750660e3123f1",
+  "second_partial_report_sha256": "d582027739b71ccf7e8e280bb33217b1d4eb9eaf0596454a84e6489c831240e0",
+  "recovered_ssh_bridge_mac": "52:54:00:59:04:5a",
+  "source_of_truth": "authenticated R32-R34 archive and both verified physical partial receipts",
+  "existing_resources": ["bridge/ardrec_r34_guard", "ardrec-r33-block-until-containment", "ardrec-r33-dev-net-ssh"],
+  "definitions_permitted_on_resume": ["ardrec-r33-dev-net-ftp", "ardrec-r33-dev-net-smb", "ardrec-r33-dev-ssh", "ardrec-r33-dev-ftp", "ardrec-r33-dev-smb", "ardrec-r33-dev-runner"],
+  "controls": ["PIN_BOTH_PARTIAL_RECEIPTS", "NO_SECOND_NFT_WRITE", "NO_SECOND_NWFILTER_DEFINE", "NO_SECOND_SSH_DEFINE", "READONLY_EXISTING_RESOURCE_PREFLIGHT", "NORMALIZED_XML_ONLY", "DENY_UNEXPECTED_IPV6_FORWARD_IP_DHCP", "BRIDGE_MAC_PIN_AND_UNIQUENESS", "EXACT_NAME_UUID_BRIDGE_DNS", "QCOW2_REHASH_ALL_12", "NO_START_NO_AUTOSTART", "FAIL_CLOSED_NO_ROLLBACK"],
+  "patch_executes_host_mutation": false,
+  "network_started": false,
+  "vm_started": false,
+  "p8_operational": "NO-GO",
+  "system_functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN",
+  "open_findings": ["AL-06", "AL-07"]
+}

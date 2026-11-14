@@ -33,6 +33,10 @@ R34_HOST_FILE_SHA256 = 'd39a4e108c25851fa77dfa1538d62c6cdda8ffbc8fd83d81f4d220c8
 R34_SHA256SUMS_SHA256 = 'ec9fd09b28365fbc0279e502e86088c5312f566a3399e80c78da6905816eaafa'
 NFT_TABLE = 'ardrec_r34_guard'
 R35_PARTIAL_REPORT_SHA256 = '8a082fc006c9a588c3d2063972221c953f4b264a4c6a277f14e750660e3123f1'
+R352_PARTIAL_REPORT_SHA256 = 'd582027739b71ccf7e8e280bb33217b1d4eb9eaf0596454a84e6489c831240e0'
+R352_ORIGINAL_PARTIAL_RAW_SHA256 = 'd03e11a3f4dea2f87be94cf0b19edeb6490cb7ca4401474b3d17206b3d304265'
+R352_RESUME_ATTESTATION_SHA256 = '04c0eeb9bbb7ac4a6f30c074147c76473f4a2dc4739ca6ba6f844075eb85df7c'
+SSH_BRIDGE_MAC_R353 = '52:54:00:59:04:5a'
 FILTER_NAME = 'ardrec-r33-block-until-containment'
 QEMU_UID = 64055
 QEMU_GID = 64055
@@ -667,25 +671,71 @@ def _verify_nft_dump(raw: bytes, expected: bytes) -> None:
     need(normalize(actual) == normalize(wanted), 'installed_nft_table_semantics_mismatch')
 
 
-def _verify_network_dump(raw: bytes, expected: bytes, role: str) -> None:
-    got = ET.fromstring(raw)
-    want = ET.fromstring(expected)
-    bridge = got.find('bridge')
-    expected_bridge = want.find('bridge')
+def _network_bridge_mac(raw: bytes, expected: bytes, role: str) -> str | None:
+    """Verify exact isolated network semantics; allow only known libvirt defaults.
+
+    libvirt omits explicit ipv6=no (default) and generates an LAA bridge MAC.
+    Unexpected children, extra attributes and unsupported MACs remain failures.
+    """
+    try:
+        got = ET.fromstring(raw)
+        want = ET.fromstring(expected)
+    except ET.ParseError as exc:
+        raise R35Error('defined_network_xml_invalid_' + role) from exc
+    need(got.tag == want.tag == 'network' and
+         got.attrib in ({}, {'ipv6': 'no'}) and
+         want.attrib == {'ipv6': 'no'} and
+         len(got) in (4, 5), 'defined_network_root_invalid_' + role)
+    tags = [child.tag for child in got]
+    need(len(set(tags)) == len(tags) and
+         set(tags) in ({'name', 'uuid', 'bridge', 'dns'},
+                       {'name', 'uuid', 'bridge', 'mac', 'dns'}),
+         'defined_network_children_invalid_' + role)
+    for tag in ('name', 'uuid'):
+        child = got.find(tag)
+        desired = want.find(tag)
+        need(child is not None and desired is not None and
+             not child.attrib and len(child) == 0 and
+             (child.text or '').strip() == (desired.text or '').strip(),
+             'defined_network_identity_invalid_' + role)
+    bridge, expected_bridge = got.find('bridge'), want.find('bridge')
     need(bridge is not None and expected_bridge is not None and
-         all(bridge.get(key) == expected_bridge.get(key)
-             for key in ('name', 'stp', 'delay')) and
-         set(bridge.attrib) <= {'name', 'stp', 'delay', 'macTableManager'} and
-         bridge.get('macTableManager') in (None, 'kernel', 'libvirt'),
-         'defined_network_bridge_attributes_invalid_' + role)
-    need(got.tag == 'network' and got.findtext('name') == want.findtext('name') and
-         got.findtext('uuid') == want.findtext('uuid') and
-         got.get('ipv6') == 'no' and
-         got.find('dns') is not None and got.find('dns').attrib == {'enable': 'no'} and
-         got.find('forward') is None and got.find('ip') is None and
-         got.find('dhcp') is None and
-         {child.tag for child in got} == {'name', 'uuid', 'bridge', 'dns'},
-         'defined_network_xml_mismatch_' + role)
+         bridge.attrib == expected_bridge.attrib and len(bridge) == 0,
+         'defined_network_bridge_invalid_' + role)
+    dns = got.find('dns')
+    need(dns is not None and dns.attrib == {'enable': 'no'} and
+         len(dns) == 0 and (dns.text or '').strip() == '',
+         'defined_network_dns_invalid_' + role)
+    mac = got.find('mac')
+    if mac is None:
+        return None
+    need(not len(mac) and not (mac.text or '').strip() and
+         set(mac.attrib) == {'address'}, 'defined_network_mac_shape_invalid_' + role)
+    address = mac.get('address')
+    need(type(address) is str and
+         re.fullmatch(r'[0-9a-f]{2}(?::[0-9a-f]{2}){5}', address) is not None,
+         'defined_network_mac_format_invalid_' + role)
+    octets = bytes(int(part, 16) for part in address.split(':'))
+    need((octets[0] & 0x03) == 0x02 and address != 'ff:ff:ff:ff:ff:ff',
+         'defined_network_mac_not_local_unicast_' + role)
+    # Do not allow bridge MAC to collide with an authenticated VM NIC.
+    guest_macs = {mac for cfg in t33.RESOURCE.values() for _, _, mac, _ in cfg['nics']}
+    need(address not in guest_macs, 'defined_network_bridge_mac_guest_collision_' + role)
+    return address
+
+
+def _verify_network_dump(raw: bytes, expected: bytes, role: str) -> None:
+    _network_bridge_mac(raw, expected, role)
+
+
+def _verify_network_mac_inventory(macs: dict[str, str | None], *,
+                                  prior_ssh: bool = False) -> None:
+    need(set(macs) <= set(t33.NET_BRIDGE) and len(set(macs.values()) - {None}) ==
+         len([x for x in macs.values() if x is not None]),
+         'duplicate_network_bridge_mac')
+    if prior_ssh:
+        need(macs.get('ssh') == SSH_BRIDGE_MAC_R353,
+             'r353_existing_ssh_bridge_mac_changed')
 
 
 def _verify_domain_dump(raw: bytes, expected: bytes, role: str) -> None:
@@ -840,8 +890,12 @@ def _assert_reserved_interfaces_absent(host: Host) -> None:
 
 def host_preflight(bundle: dict[str, Any], *, runner: Callable[..., Any] = subprocess.run,
                    which: Callable[[str], str | None] = shutil.which,
-                   existing_nft: bool = False) -> tuple[dict[str, Any], Host]:
+                   existing_nft: bool = False, existing_filter: bool = False,
+                   existing_networks: tuple[str, ...] = ()) -> tuple[dict[str, Any], Host]:
     """Fresh, read-only host preflight. No nft/libvirt writes occur here."""
+    need((not existing_filter and not existing_networks) or
+         (existing_nft and existing_filter and existing_networks == ('ssh',)),
+         'unsupported_partial_resource_recovery')
     host = Host(runner=runner, which=which)
     host.sudo([host.bin['stat'], '--version'])
     domains = _lines(host.virsh_ro(['list', '--all', '--name']))
@@ -851,17 +905,35 @@ def host_preflight(bundle: dict[str, Any], *, runner: Callable[..., Any] = subpr
     network_uuids = _lines(host.virsh_ro(['net-list', '--all', '--uuid']))
     filters, filter_uuids = _nwfilter_inventory(host.virsh_ro(['nwfilter-list']))
 
-    need(not any(name.startswith(('ardrec-r33-', 'ardrec-dev-')) for name in domains | networks),
-         'ardrec_domain_or_network_collision')
-    need(not any(name.startswith('ardrec-r33-') for name in filters), 'ardrec_filter_collision')
+    existing_names = {t33.NETWORK_PREFIX + role for role in existing_networks}
+    existing_filters = {FILTER_NAME} if existing_filter else set()
+    need(not any(name.startswith(('ardrec-r33-', 'ardrec-dev-')) for name in domains),
+         'ardrec_domain_collision')
+    need({x for x in networks if x.startswith(('ardrec-r33-', 'ardrec-dev-'))} == existing_names,
+         'r353_network_inventory_unexpected')
+    need({x for x in filters if x.startswith('ardrec-r33-')} == existing_filters,
+         'r353_filter_inventory_unexpected')
     expected_domain_uuids = {_xml_uuid(bundle['root'] / R33_DIR / f'domain-{role}.xml')
                              for role in t33.ROLES}
     expected_network_uuids = {_xml_uuid(bundle['root'] / R33_DIR / f'network-{role}.xml')
                               for role in t33.NET_BRIDGE}
     expected_filter_uuid = _xml_uuid(bundle['root'] / R34_DIR / 'nwfilter-deny.xml')
+    expected_present_uuids = {_xml_uuid(bundle['root'] / R33_DIR / f'network-{role}.xml')
+                              for role in existing_networks}
     need(not (expected_domain_uuids & domain_uuids) and
-         not (expected_network_uuids & network_uuids) and
-         expected_filter_uuid not in filter_uuids, 'libvirt_uuid_collision')
+         (expected_network_uuids & network_uuids) == expected_present_uuids and
+         ((expected_filter_uuid in filter_uuids) == existing_filter),
+         'libvirt_uuid_collision')
+    if existing_filter:
+        t34.verify_filter(host.virsh_ro(['nwfilter-dumpxml', FILTER_NAME]))
+    existing_bridge_macs: dict[str, str | None] = {}
+    for role in existing_networks:
+        name = t33.NETWORK_PREFIX + role
+        xml = (bundle['root'] / R33_DIR / f'network-{role}.xml').read_bytes()
+        dumped = host.virsh_ro(['net-dumpxml', name, '--inactive'])
+        existing_bridge_macs[role] = _network_bridge_mac(dumped, xml, role)
+        _verify_inactive_info(host.virsh_ro(['net-info', name]), kind='network')
+    _verify_network_mac_inventory(existing_bridge_macs, prior_ssh=bool(existing_networks))
     need(not (set(DOMAINS) & active_domains), 'ardrec_domain_already_active')
 
     links_raw = host.run([host.bin['ip'], '-j', 'link', 'show'])
@@ -892,10 +964,12 @@ def host_preflight(bundle: dict[str, Any], *, runner: Callable[..., Any] = subpr
 
     storage = _verify_storage(host, bundle['r32'])
     report = {
-        'schema': ('ardrec-p14-r35-resume-host-preflight-v1' if existing_nft
-                   else 'ardrec-p14-r35-host-preflight-v1'),
-        'mode': ('READONLY_HOST_PREFLIGHT_EXISTING_NFT' if existing_nft
-                 else 'READONLY_HOST_PREFLIGHT'),
+        'schema': ('ardrec-p14-r353-host-preflight-v1' if existing_networks
+                   else ('ardrec-p14-r35-resume-host-preflight-v1' if existing_nft
+                   else 'ardrec-p14-r35-host-preflight-v1')),
+        'mode': ('READONLY_HOST_PREFLIGHT_EXISTING_NFT_FILTER_SSH' if existing_networks
+                 else ('READONLY_HOST_PREFLIGHT_EXISTING_NFT' if existing_nft
+                 else 'READONLY_HOST_PREFLIGHT')),
         'source_archive_sha256': ARCHIVE_SHA256,
         'source_r32_report_sha256': bundle['r32']['sha256'],
         'source_r33_report_sha256': bundle['r33']['sha256'],
@@ -906,6 +980,9 @@ def host_preflight(bundle: dict[str, Any], *, runner: Callable[..., Any] = subpr
         'tap_and_bridge_names_absent': True,
         'nft_table_absent': not existing_nft,
         'nft_existing_verified_json': existing_nft,
+        'existing_filter_verified': existing_filter,
+        'existing_networks_verified': [t33.NETWORK_PREFIX + r for r in existing_networks],
+        'existing_network_bridge_macs': existing_bridge_macs,
         'nft_syntax_validated': True,
         'libvirt_xml_schema_validated': 8,
         'qcow2_chain_verified_roles': storage['verified_roles'],
@@ -937,7 +1014,15 @@ def verify_host_report(report: dict[str, Any]) -> bool:
            (report.get('schema') == 'ardrec-p14-r35-resume-host-preflight-v1' and
               report.get('mode') == 'READONLY_HOST_PREFLIGHT_EXISTING_NFT' and
               report.get('nft_table_absent') is False and
-              report.get('nft_existing_verified_json') is True) ) and
+              report.get('nft_existing_verified_json') is True) or
+           (report.get('schema') == 'ardrec-p14-r353-host-preflight-v1' and
+              report.get('mode') == 'READONLY_HOST_PREFLIGHT_EXISTING_NFT_FILTER_SSH' and
+              report.get('nft_table_absent') is False and
+              report.get('nft_existing_verified_json') is True and
+              report.get('existing_filter_verified') is True and
+              report.get('existing_networks_verified') == [t33.NETWORK_PREFIX + 'ssh'] and
+              report.get('existing_network_bridge_macs') ==
+                {'ssh': SSH_BRIDGE_MAC_R353}) ) and
          report.get('source_archive_sha256') == ARCHIVE_SHA256 and
          all(type(report.get(key)) is str and DIGEST.fullmatch(report[key]) is not None
              for key in ('source_r32_report_sha256', 'source_r33_report_sha256',
@@ -954,6 +1039,11 @@ def verify_host_report(report: dict[str, Any]) -> bool:
              'network_started', 'vm_started', 'operational_dispatch', 'can_restore')) and
          report.get('p8_operational') == 'NO-GO' and report.get('final_risk') is None,
          'r35_host_report_semantics_invalid')
+    if report['schema'] != 'ardrec-p14-r353-host-preflight-v1':
+        need(report.get('existing_filter_verified', False) is False and
+             report.get('existing_networks_verified', []) == [] and
+             report.get('existing_network_bridge_macs', {}) == {},
+             'r353_existing_resources_in_legacy_report')
     assets = report.get('storage_assets')
     need(type(assets) is list and len(assets) == 4 and
          {row.get('role') for row in assets if type(row) is dict} == set(t33.ROLES),
@@ -1020,7 +1110,9 @@ def deployment_report(source: dict[str, Any], preflight: dict[str, Any] | None,
                       interfaces_absent_before_domains: bool = False,
                       table_verified: bool = False,
                       interfaces_absent_after: bool = False,
-                      runtime_only: bool = True) -> dict[str, Any]:
+                      runtime_only: bool = True,
+                      network_bridge_macs: dict[str, str | None] | None = None,
+                      recovery_provenance: dict[str, str] | None = None) -> dict[str, Any]:
     networks_defined = list(networks_defined or [])
     domains_defined = list(domains_defined or [])
     networks_inactive = list(networks_inactive or [])
@@ -1073,6 +1165,10 @@ def deployment_report(source: dict[str, Any], preflight: dict[str, Any] | None,
         'automatic_rollback': False,
         'activation_commands_invoked': False,
     }
+    if network_bridge_macs is not None:
+        doc['network_bridge_macs'] = dict(network_bridge_macs)
+    if recovery_provenance is not None:
+        doc.update(recovery_provenance)
     doc['sha256'] = sha(canon(doc))
     verify_deployment_report(doc)
     return doc
@@ -1123,14 +1219,38 @@ def verify_deployment_report(doc: dict[str, Any]) -> bool:
           (set(doc.get('networks_verified_inactive', [])) == set(NETWORKS) and
            set(doc.get('domains_verified_shut_off', [])) == set(DOMAINS))),
          'r35_resource_inventory_invalid')
+    bridge_macs = doc.get('network_bridge_macs', {})
+    need(type(bridge_macs) is dict and
+         set(bridge_macs) <= set(t33.NET_BRIDGE),
+         'r353_report_bridge_macs_invalid')
+    _verify_network_mac_inventory(bridge_macs,
+                                  prior_ssh=doc.get('recovery_mode') ==
+                                  'EXISTING_NFT_FILTER_SSH_VERIFIED' and
+                                  doc.get('status') == 'DEPLOYMENT_COMPLETE_INACTIVE')
+    if doc.get('status') == 'DEPLOYMENT_COMPLETE_INACTIVE' and 'network_bridge_macs' in doc:
+        need(set(bridge_macs) == set(t33.NET_BRIDGE),
+             'r353_success_mac_inventory_incomplete')
+    if doc.get('recovery_mode') == 'EXISTING_NFT_FILTER_SSH_VERIFIED':
+        need('network_bridge_macs' in doc and
+             bridge_macs.get('ssh') == SSH_BRIDGE_MAC_R353,
+             'r353_mac_inventory_missing_or_changed')
     if 'recovery_mode' in doc:
-        need(doc.get('recovery_mode') == 'EXISTING_NFT_VERIFIED_JSON' and
+        need(doc.get('recovery_mode') in
+             ('EXISTING_NFT_VERIFIED_JSON', 'EXISTING_NFT_FILTER_SSH_VERIFIED') and
              type(doc.get('prior_partial_receipt_sha256')) is str and
              DIGEST.fullmatch(doc['prior_partial_receipt_sha256']) is not None and
              type(doc.get('resume_attestation_sha256')) is str and
              DIGEST.fullmatch(doc['resume_attestation_sha256']) is not None and
              doc.get('status') != 'PREFLIGHT_PASS_NOT_INSTALLED',
              'r35_resume_provenance_invalid')
+        if doc['recovery_mode'] == 'EXISTING_NFT_FILTER_SSH_VERIFIED':
+            need(type(doc.get('second_partial_receipt_sha256')) is str and
+                 DIGEST.fullmatch(doc['second_partial_receipt_sha256']) is not None and
+                 type(doc.get('recovery3_attestation_sha256')) is str and
+                 DIGEST.fullmatch(doc['recovery3_attestation_sha256']) is not None and
+                 doc.get('prior_partial_receipt_sha256') ==
+                     R352_ORIGINAL_PARTIAL_RAW_SHA256,
+                 'r353_resume_provenance_invalid')
     if doc['status'] == 'PREFLIGHT_PASS_NOT_INSTALLED':
         need(doc.get('nft_table_installed') is False and
              doc.get('nft_table_verified') is False and
@@ -1138,6 +1258,17 @@ def verify_deployment_report(doc: dict[str, Any]) -> bool:
              doc.get('nwfilter_verified') is False and
              doc.get('networks_defined') == [] and doc.get('domains_defined') == [] and
              doc.get('failure_code') is None, 'r35_preflight_only_status_invalid')
+    elif doc['status'] == 'RESUME_PREFLIGHT_PASS_EXISTING_NFT_FILTER_SSH':
+        need(doc.get('recovery_mode') == 'EXISTING_NFT_FILTER_SSH_VERIFIED' and
+             doc.get('nft_table_installed') is True and
+             doc.get('nft_table_verified') is True and
+             doc.get('nwfilter_defined') is True and
+             doc.get('nwfilter_verified') is True and
+             doc.get('networks_defined') == [t33.NETWORK_PREFIX + 'ssh'] and
+             doc.get('networks_verified_inactive') == [t33.NETWORK_PREFIX + 'ssh'] and
+             doc.get('domains_defined') == [] and
+             doc.get('failure_code') is None,
+             'r353_preflight_status_invalid')
     elif doc['status'] == 'BLOCKED_NO_CHANGE':
         need(doc.get('nft_table_installed') is False and
              doc.get('nft_table_verified') is False and
@@ -1168,7 +1299,9 @@ def verify_deployment_report(doc: dict[str, Any]) -> bool:
              doc.get('failure_code') is None, 'r35_success_claim_invalid')
     else:
         need(doc['status'] in ('PREFLIGHT_PASS_NOT_INSTALLED',
-             'RESUME_PREFLIGHT_PASS_EXISTING_NFT', 'BLOCKED_NO_CHANGE', 'PARTIAL_NO_GO_REVIEW_REQUIRED'),
+             'RESUME_PREFLIGHT_PASS_EXISTING_NFT',
+             'RESUME_PREFLIGHT_PASS_EXISTING_NFT_FILTER_SSH',
+             'BLOCKED_NO_CHANGE', 'PARTIAL_NO_GO_REVIEW_REQUIRED'),
              'r35_status_invalid')
     return True
 
@@ -1284,17 +1417,159 @@ def verify_prior_partial_receipt(directory: Path, bundle: dict[str, Any]) -> dic
     }
 
 
+
+def verify_second_partial_receipt(directory: Path, bundle: dict[str, Any],
+                                  first: dict[str, Any]) -> dict[str, Any]:
+    """Authenticate exact R35.2 nft+filter+SSH partial, never trust receipt alone."""
+    need(isinstance(directory, Path) and directory.is_absolute() and
+         directory.name.startswith('recibos-recuperacion-r352-') and
+         not directory.is_symlink(), 'r353_prior_receipt_path_invalid')
+    need(all(not part.is_symlink() for part in (directory, *directory.parents)),
+         'r353_prior_receipt_symlink')
+    dstat = directory.stat()
+    need(stat.S_ISDIR(dstat.st_mode) and dstat.st_uid == os.geteuid() and
+         stat.S_IMODE(dstat.st_mode) == 0o700,
+         'r353_prior_receipt_owner_or_mode_invalid')
+    names = {'SHA256SUMS', 'commands.jsonl', 'r35_deployment.json',
+             'r35_host_preflight.json', 'r35_source_attestation.json',
+             'r35_resume_attestation.json'}
+    need({p.name for p in directory.iterdir()} == names,
+         'r353_prior_receipt_inventory_invalid')
+    sums = t34.secure_file(directory / 'SHA256SUMS').decode('ascii')
+    seen: set[str] = set()
+    for row in sums.splitlines():
+        match = re.fullmatch(r'([0-9a-f]{64})  ([A-Za-z0-9_.-]+)', row)
+        need(match is not None, 'r353_prior_receipt_hash_row_invalid')
+        value, name = match.groups()
+        need(name in names - {'SHA256SUMS'} and name not in seen,
+             'r353_prior_receipt_hash_inventory_invalid')
+        seen.add(name)
+        need(sha(t34.secure_file(directory / name)) == value,
+             'r353_prior_receipt_hash_changed_' + name)
+    need(seen == names - {'SHA256SUMS'}, 'r353_prior_receipt_hash_missing')
+    old, old_bytes = _read_json(directory / 'r35_deployment.json')
+    verify_deployment_report(old)
+    ssh = t33.NETWORK_PREFIX + 'ssh'
+    need(old['sha256'] == R352_PARTIAL_REPORT_SHA256 and
+         old['status'] == 'PARTIAL_NO_GO_REVIEW_REQUIRED' and
+         old['failure_code'] == 'defined_network_xml_mismatch_ssh' and
+         old['nft_table_installed'] is True and old['nft_table_verified'] is True and
+         old['nwfilter_defined'] is True and old['nwfilter_verified'] is True and
+         old['networks_defined'] == [ssh] and
+         old['networks_verified_inactive'] == [] and
+         old['domains_defined'] == [] and old['domains_verified_shut_off'] == [] and
+         old['active_networks_observed'] == [] and
+         old['active_domains_observed'] == [] and
+         old['network_started'] is False and old['vm_started'] is False and
+         old['recovery_mode'] == 'EXISTING_NFT_VERIFIED_JSON' and
+         old['source_attestation_sha256'] == bundle['attestation']['sha256'] and
+         old['prior_partial_receipt_sha256'] == R352_ORIGINAL_PARTIAL_RAW_SHA256 and
+         old['resume_attestation_sha256'] == R352_RESUME_ATTESTATION_SHA256,
+         'r353_prior_partial_state_invalid')
+    need(old['prior_partial_receipt_sha256'] == first['original_receipt_sha256'],
+         'r353_prior_chain_mismatch')
+    old_host, _ = _read_json(directory / 'r35_host_preflight.json')
+    verify_host_report(old_host)
+    need(old_host['schema'] == 'ardrec-p14-r35-resume-host-preflight-v1' and
+         old_host['nft_existing_verified_json'] is True and
+         old['host_preflight_sha256'] == old_host['sha256'],
+         'r353_prior_host_report_invalid')
+    att, _ = _read_json(directory / 'r35_source_attestation.json')
+    need(att == bundle['attestation'], 'r353_prior_source_changed')
+    previous, _ = _read_json(directory / 'r35_resume_attestation.json')
+    need(previous.get('sha256') == old['resume_attestation_sha256'] and
+         previous.get('original_receipt_sha256') == first['original_receipt_sha256'] and
+         previous.get('original_commands_sha256') == first['original_commands_sha256'] and
+         previous.get('original_sha256sums_sha256') == first['original_sha256sums_sha256'] and
+         previous.get('current_host_preflight_sha256') == old_host['sha256'] and
+         sha(canon({k:v for k,v in previous.items() if k != 'sha256'})) == previous['sha256'],
+         'r353_prior_resume_attestation_invalid')
+    records = []
+    raw_commands = t34.secure_file(directory / 'commands.jsonl')
+    for raw in raw_commands.splitlines():
+        try:
+            row = json.loads(raw, object_pairs_hook=_pairs)
+        except (ValueError, TypeError, UnicodeError) as exc:
+            raise R35Error('r353_prior_command_json_invalid') from exc
+        argv = row.get('argv')
+        need(type(argv) is list and all(type(x) is str for x in argv) and
+             type(row.get('returncode')) is int and
+             all(type(row.get(x)) is str and DIGEST.fullmatch(row[x])
+                 for x in ('stdout_sha256', 'stderr_sha256')),
+             'r353_prior_command_record_invalid')
+        for key in ('stdout', 'stderr'):
+            value = row.get(key)
+            if type(value) is str and len(value) < 4000:
+                need(sha(value.encode('utf-8')) == row[key + '_sha256'] or
+                     len(value) >= (4096 if key == 'stdout' else 2048),
+                     'r353_prior_command_output_hash_invalid')
+        records.append(row)
+    _check_activation_absent(records)
+    need(not any(row['argv'] and row['argv'][0] == '/usr/bin/virsh' and
+                 row['argv'][1:2] != ['--readonly'] for row in records),
+         'r353_unapproved_unprivileged_virsh_write')
+    virsh_write = ['/usr/bin/sudo', '-n', '--', '/usr/bin/virsh', '-c', 'qemu:///system']
+    nft_write = (['/usr/bin/sudo', '-n', '--', '/usr/sbin/nft'],
+                 ['/usr/bin/sudo', '-n', '--', '/usr/bin/nft'])
+    mutations = []
+    for row in records:
+        argv = row['argv']
+        if argv[:len(virsh_write)] == virsh_write:
+            mutations.append(row)
+        if argv[:4] in nft_write and argv[4:] == ['-f', '-']:
+            raise R35Error('r353_second_nft_write_in_history')
+    need(len(mutations) == 2, 'r353_prior_write_count_invalid')
+    # Historical path is a different /tmp extraction; authenticate the basename and exact role.
+    need([row['argv'][len(virsh_write)] for row in mutations] ==
+         ['nwfilter-define', 'net-define'] and
+         [Path(row['argv'][-1]).name for row in mutations] ==
+         ['nwfilter-deny.xml', 'network-ssh.xml'] and
+         all(row['returncode'] == 0 for row in mutations) and
+         all(row['argv'][-1].startswith('/tmp/ardrec-r35-source-') for row in mutations),
+         'r353_prior_write_scope_invalid')
+    readbacks = [row for row in records if row['argv'][:4] ==
+                 ['/usr/bin/virsh', '--readonly', '-c', 'qemu:///system'] and
+                 row['argv'][4:7] == ['net-dumpxml', ssh, '--inactive']]
+    need(len(readbacks) == 1 and readbacks[0]['returncode'] == 0 and
+         type(readbacks[0].get('stdout')) is str and
+         sha(readbacks[0]['stdout'].encode('utf-8')) == readbacks[0]['stdout_sha256'],
+         'r353_prior_ssh_readback_invalid')
+    expected = (bundle['root'] / R33_DIR / 'network-ssh.xml').read_bytes()
+    mac = _network_bridge_mac(readbacks[0]['stdout'].encode('utf-8'), expected, 'ssh')
+    need(mac == SSH_BRIDGE_MAC_R353, 'r353_original_ssh_mac_mismatch')
+    return {
+        'schema': 'ardrec-p14-r353-partial-chain-attestation-v1',
+        'first_receipt_sha256': first['original_receipt_sha256'],
+        'second_receipt_sha256': sha(old_bytes),
+        'second_commands_sha256': sha(raw_commands),
+        'second_sha256sums_sha256': sha((directory / 'SHA256SUMS').read_bytes()),
+        'second_failure_code': old['failure_code'],
+        'existing_resources_verified_as_recorded': ['nft', 'nwfilter', ssh],
+        'existing_ssh_bridge_mac': mac,
+        'p8_operational': 'NO-GO',
+    }
+
 def deploy(bundle: dict[str, Any], preflight: dict[str, Any], host: Host, *,
-           reuse_verified_nft: bool = False) -> dict[str, Any]:
+           reuse_verified_nft: bool = False,
+           reuse_verified_filter_ssh: bool = False) -> dict[str, Any]:
     """Install the exact R34 deny policy, then define filter/networks/domains inactive.
 
     No rollback is attempted after a partial write. Every next step is fail-closed.
     """
     policy = t34.policy_files()
     root = bundle['root']
+    need(not reuse_verified_filter_ssh or
+         (reuse_verified_nft and
+          preflight.get('schema') == 'ardrec-p14-r353-host-preflight-v1' and
+          preflight.get('existing_filter_verified') is True and
+          preflight.get('existing_networks_verified') == [t33.NETWORK_PREFIX + 'ssh']),
+         'r353_reuse_preflight_invalid')
     nft_installed = bool(reuse_verified_nft)
-    filter_defined = filter_verified = table_verified = False
-    networks_defined: list[str] = []
+    filter_defined = bool(reuse_verified_filter_ssh)
+    filter_verified = False
+    table_verified = False
+    networks_defined: list[str] = ([t33.NETWORK_PREFIX + 'ssh']
+                                   if reuse_verified_filter_ssh else [])
     domains_defined: list[str] = []
     networks_inactive: list[str] = []
     domains_shut_off: list[str] = []
@@ -1316,27 +1591,32 @@ def deploy(bundle: dict[str, Any], preflight: dict[str, Any], host: Host, *,
         _verify_installed_nft(host)
         table_verified = True
 
-        # 2. Define the deny-all libvirt filter before any domain can reference it.
+        # 2. Recover the already defined filter after current-state verification.
         filter_path = root / R34_DIR / 'nwfilter-deny.xml'
-        _assert_resource_absent(host, kind='nwfilter', name=FILTER_NAME,
-                                uuid=_xml_uuid(filter_path))
-        host.virsh_write(['nwfilter-define', str(filter_path)])
-        filter_defined = True
+        if not reuse_verified_filter_ssh:
+            _assert_resource_absent(host, kind='nwfilter', name=FILTER_NAME,
+                                    uuid=_xml_uuid(filter_path))
+            host.virsh_write(['nwfilter-define', str(filter_path)])
+            filter_defined = True
         filter_dump = host.virsh_ro(['nwfilter-dumpxml', FILTER_NAME])
         t34.verify_filter(filter_dump)
         filter_verified = True
 
-        # 3. Define the three isolated networks. net-define never starts them.
+        # 3. Recover existing SSH and define only absent FTP/SMB.
+        bridge_macs: dict[str, str | None] = {}
         for role in t33.NET_BRIDGE:
             name = t33.NETWORK_PREFIX + role
             xml_path = root / R33_DIR / f'network-{role}.xml'
             expected = xml_path.read_bytes()
-            _assert_resource_absent(host, kind='network', name=name,
-                                    uuid=_xml_uuid(xml_path))
-            host.virsh_write(['net-define', str(xml_path)])
-            networks_defined.append(name)
+            if not (reuse_verified_filter_ssh and role == 'ssh'):
+                _assert_resource_absent(host, kind='network', name=name,
+                                        uuid=_xml_uuid(xml_path))
+                host.virsh_write(['net-define', str(xml_path)])
+                networks_defined.append(name)
             dump = host.virsh_ro(['net-dumpxml', name, '--inactive'])
-            _verify_network_dump(dump, expected, role)
+            bridge_macs[role] = _network_bridge_mac(dump, expected, role)
+            _verify_network_mac_inventory(bridge_macs,
+                                          prior_ssh=reuse_verified_filter_ssh)
             info = host.virsh_ro(['net-info', name])
             _verify_inactive_info(info, kind='network')
             networks_inactive.append(name)
@@ -1383,6 +1663,14 @@ def deploy(bundle: dict[str, Any], preflight: dict[str, Any], host: Host, *,
              'final_network_or_filter_inventory_mismatch')
 
         # Final readback replaces the earlier per-resource observations.
+        # Detect MAC drift after definition, including the recovered SSH network.
+        for role in t33.NET_BRIDGE:
+            name = t33.NETWORK_PREFIX + role
+            expected_xml = (root / R33_DIR / f'network-{role}.xml').read_bytes()
+            current_mac = _network_bridge_mac(
+                host.virsh_ro(['net-dumpxml', name, '--inactive']), expected_xml, role)
+            need(current_mac == bridge_macs[role], 'network_bridge_mac_drift_' + role)
+        _verify_network_mac_inventory(bridge_macs, prior_ssh=reuse_verified_filter_ssh)
         filter_verified = False
         t34.verify_filter(host.virsh_ro(['nwfilter-dumpxml', FILTER_NAME]))
         filter_verified = True
@@ -1432,24 +1720,32 @@ def deploy(bundle: dict[str, Any], preflight: dict[str, Any], host: Host, *,
         autostart_disabled=autostart_disabled, storage_revalidated=storage_revalidated,
         collision_rechecks=collision_rechecks,
         interfaces_absent_before_domains=interfaces_absent_before_domains,
-        table_verified=table_verified, interfaces_absent_after=interfaces_absent_after)
+        table_verified=table_verified, interfaces_absent_after=interfaces_absent_after,
+        network_bridge_macs=bridge_macs if 'bridge_macs' in locals() else {})
     return report
 
 
 def run(archive: Path, receipt_dir: Path, *, install: bool,
         runner: Callable[..., Any] = subprocess.run,
         which: Callable[[str], str | None] = shutil.which,
-        resume_partial_dir: Path | None = None) -> dict[str, Any]:
+        resume_partial_dir: Path | None = None,
+        resume_second_partial_dir: Path | None = None) -> dict[str, Any]:
     _receipt_dir(receipt_dir)
     temp = tempfile.TemporaryDirectory(prefix='ardrec-r35-source-')
     try:
         root = Path(temp.name)
         root.chmod(0o700)
         bundle = verify_source_bundle(archive, root)
+        need(resume_second_partial_dir is None or resume_partial_dir is not None,
+             'r353_first_partial_receipt_required')
         prior = (verify_prior_partial_receipt(resume_partial_dir, bundle)
                  if resume_partial_dir is not None else None)
+        second = (verify_second_partial_receipt(resume_second_partial_dir, bundle, prior)
+                  if resume_second_partial_dir is not None else None)
         preflight, host = host_preflight(bundle, runner=runner, which=which,
-                                         existing_nft=prior is not None)
+              existing_nft=prior is not None,
+              existing_filter=second is not None,
+              existing_networks=('ssh',) if second is not None else ())
         records: dict[str, dict[str, Any]] = {
             'r35_source_attestation.json': bundle['attestation'],
             'r35_host_preflight.json': preflight,
@@ -1458,9 +1754,28 @@ def run(archive: Path, receipt_dir: Path, *, install: bool,
             prior['current_host_preflight_sha256'] = preflight['sha256']
             prior['sha256'] = sha(canon(prior))
             records['r35_resume_attestation.json'] = prior
+        if second is not None:
+            second['current_host_preflight_sha256'] = preflight['sha256']
+            second['sha256'] = sha(canon(second))
+            records['r35_recovery3_attestation.json'] = second
         if install:
             report = deploy(bundle, preflight, host,
-                            reuse_verified_nft=prior is not None)
+                            reuse_verified_nft=prior is not None,
+                            reuse_verified_filter_ssh=second is not None)
+        elif second is not None:
+            report = deployment_report(bundle, preflight,
+                status='RESUME_PREFLIGHT_PASS_EXISTING_NFT_FILTER_SSH',
+                nft_installed=True, table_verified=True,
+                filter_defined=True, filter_verified=True,
+                networks_defined=[t33.NETWORK_PREFIX + 'ssh'],
+                networks_inactive=[t33.NETWORK_PREFIX + 'ssh'],
+                network_bridge_macs={'ssh': SSH_BRIDGE_MAC_R353},
+                recovery_provenance={
+                    'recovery_mode': 'EXISTING_NFT_FILTER_SSH_VERIFIED',
+                    'prior_partial_receipt_sha256': prior['original_receipt_sha256'],
+                    'second_partial_receipt_sha256': second['second_receipt_sha256'],
+                    'resume_attestation_sha256': prior['sha256'],
+                    'recovery3_attestation_sha256': second['sha256']})
         elif prior is not None:
             report = deployment_report(bundle, preflight,
                 status='RESUME_PREFLIGHT_PASS_EXISTING_NFT',
@@ -1469,8 +1784,12 @@ def run(archive: Path, receipt_dir: Path, *, install: bool,
             report = deployment_report(bundle, preflight,
                 status='PREFLIGHT_PASS_NOT_INSTALLED')
         if prior is not None:
-            report['recovery_mode'] = 'EXISTING_NFT_VERIFIED_JSON'
+            report['recovery_mode'] = ('EXISTING_NFT_FILTER_SSH_VERIFIED' if second is not None
+                                       else 'EXISTING_NFT_VERIFIED_JSON')
             report['prior_partial_receipt_sha256'] = prior['original_receipt_sha256']
+            if second is not None:
+                report['second_partial_receipt_sha256'] = second['second_receipt_sha256']
+                report['recovery3_attestation_sha256'] = second['sha256']
             report['resume_attestation_sha256'] = prior['sha256']
             report['sha256'] = sha(canon({k: v for k, v in report.items() if k != 'sha256'}))
             verify_deployment_report(report)
