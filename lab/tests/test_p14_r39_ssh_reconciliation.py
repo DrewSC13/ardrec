@@ -126,7 +126,7 @@ class ReconciliationTests(unittest.TestCase):
             r39._calls_from_ledger(raw)
 
     def test_ledger_failed_start_rejected(self):
-        raw=(row(['/usr/bin/virsh','-c','qemu:///system','net-start',r365.SSH_NETWORK])+ 
+        raw=(row(['/usr/bin/virsh','-c','qemu:///system','net-start',r365.SSH_NETWORK])+
              row(['/usr/bin/virsh','-c','qemu:///system','start',r365.SSH_DOMAIN],1))
         with self.assertRaisesRegex(r39.R39Error,'boot_ledger_activation_failure'):
             r39._calls_from_ledger(raw)
