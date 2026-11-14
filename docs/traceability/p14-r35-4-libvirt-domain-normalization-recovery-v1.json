@@ -1,0 +1,62 @@
+{
+  "schema": "ardrec-p14-r354-domain-normalization-recovery-traceability-v1",
+  "base_main": "a8546f09d4e54c8b1699456fde5a55da03f1469c",
+  "related_pull_requests": [
+    101,
+    102,
+    103,
+    104
+  ],
+  "source_archive_sha256": "58e7cf2f59dd97cab948c190d637b6ff8ee8f67b45400769fe0d97a9e8f2ea36",
+  "prior_partial_report_digests": {
+    "r35": "8a082fc006c9a588c3d2063972221c953f4b264a4c6a277f14e750660e3123f1",
+    "r35_2": "d582027739b71ccf7e8e280bb33217b1d4eb9eaf0596454a84e6489c831240e0",
+    "r35_3": "d162b844c014a3db4b4692d5761596bbb86a9405b868eca8e9bca68ecfbd112f"
+  },
+  "existing_resources": [
+    "bridge/ardrec_r34_guard",
+    "ardrec-r33-block-until-containment",
+    "ardrec-r33-dev-net-ssh",
+    "ardrec-r33-dev-net-ftp",
+    "ardrec-r33-dev-net-smb",
+    "ardrec-r33-dev-ssh"
+  ],
+  "pinned_network_bridge_macs": {
+    "ssh": "52:54:00:59:04:5a",
+    "ftp": "52:54:00:2e:49:e8",
+    "smb": "52:54:00:6f:01:f5"
+  },
+  "only_permitted_new_definitions": [
+    "domain-ftp.xml",
+    "domain-smb.xml",
+    "domain-runner.xml"
+  ],
+  "controls": [
+    "PIN_THREE_PARTIAL_RECEIPTS",
+    "NO_SECOND_NFT_WRITE",
+    "NO_NWFILTER_REDEFINE",
+    "NO_NETWORK_REDEFINE",
+    "NO_SSH_DOMAIN_REDEFINE",
+    "VALIDATE_ALL_FOUR_DOMAIN_XML",
+    "STRICT_NORMALIZED_XML",
+    "PIN_BRIDGE_MACS",
+    "EXACT_STORAGE_BACKING_AND_FILTER",
+    "NO_UNEXPECTED_DEVICE",
+    "EXACT_INTEGER_MEMORY_KIB",
+    "PCI_ADDRESS_NO_DUPLICATE",
+    "QCOW2_REHASH_ALL_TWELVE",
+    "READONLY_PREFLIGHT_BEFORE_WRITE",
+    "NO_START_NO_AUTOSTART",
+    "FAIL_CLOSED_NO_ROLLBACK"
+  ],
+  "patch_executes_host_mutation": false,
+  "network_started": false,
+  "vm_started": false,
+  "p8_operational": "NO-GO",
+  "experimental_validation": "NOT_RUN",
+  "system_functional_acceptance": "PENDING",
+  "open_findings": [
+    "AL-06",
+    "AL-07"
+  ]
+}
