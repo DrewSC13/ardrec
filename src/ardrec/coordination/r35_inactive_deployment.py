@@ -32,6 +32,7 @@ R34_FILE_SHA256 = '1b5c316566d9023ca25d5a89f324909bdc33c2f397ab5a418b65db402ebbc
 R34_HOST_FILE_SHA256 = 'd39a4e108c25851fa77dfa1538d62c6cdda8ffbc8fd83d81f4d220c8f12f8cdd'
 R34_SHA256SUMS_SHA256 = 'ec9fd09b28365fbc0279e502e86088c5312f566a3399e80c78da6905816eaafa'
 NFT_TABLE = 'ardrec_r34_guard'
+R35_PARTIAL_REPORT_SHA256 = '8a082fc006c9a588c3d2063972221c953f4b264a4c6a277f14e750660e3123f1'
 FILTER_NAME = 'ardrec-r33-block-until-containment'
 QEMU_UID = 64055
 QEMU_GID = 64055
@@ -445,6 +446,7 @@ class Host:
         if executable == self.bin['nft']:
             valid = (args == [executable, '-j', 'list', 'tables'] or
                      args == [executable, 'list', 'table', 'bridge', NFT_TABLE] or
+                     args == [executable, '-j', '-a', 'list', 'table', 'bridge', NFT_TABLE] or
                      args == [executable, '-c', '-f', '-'] or
                      args == [executable, '-f', '-'])
             if args in ([executable, '-c', '-f', '-'], [executable, '-f', '-']):
@@ -556,6 +558,101 @@ def _nft_table_names(raw: bytes) -> set[tuple[str, str]]:
         return result
     except (ValueError, TypeError, KeyError, UnicodeError) as exc:
         raise R35Error('nft_inventory_invalid') from exc
+
+
+
+def _verify_nft_json(raw: bytes) -> None:
+    """Accept only the exact R34 table semantics from nft JSON readback.
+
+    nft displays numeric -200 as the textual priority alias "filter" on some
+    systems; this checker compares the *numeric* JSON priority. Handles,
+    counters and metainfo are observational, never permission grants.
+    """
+    try:
+        data = json.loads(raw, object_pairs_hook=_pairs,
+                          parse_constant=lambda _: (_ for _ in ()).throw(R35Error('nft_nonfinite')))
+    except (ValueError, TypeError, UnicodeError) as exc:
+        raise R35Error('nft_json_invalid') from exc
+    need(type(data) is dict and set(data) == {'nftables'} and
+         type(data['nftables']) is list, 'nft_json_shape_invalid')
+    rows = data['nftables']
+    # nft -j -a list table often includes a metainfo row. It is not a rule.
+    structural = [row for row in rows if not (type(row) is dict and set(row) == {'metainfo'})]
+    meta = [row for row in rows if type(row) is dict and set(row) == {'metainfo'}]
+    need(len(meta) <= 1 and all(type(row['metainfo']) is dict for row in meta),
+         'nft_metadata_invalid')
+    need(len(structural) == 8, 'nft_object_count_invalid')
+    actual_table = []
+    chains = {}
+    rules = {}
+    targets = set(TAPS)
+    expected_rules = {
+        ('input', 'iifname'), ('output', 'oifname'),
+        ('forward', 'iifname'), ('forward', 'oifname'),
+    }
+    for item in structural:
+        need(type(item) is dict and len(item) == 1, 'nft_object_kind_invalid')
+        kind, value = next(iter(item.items()))
+        need(kind in ('table', 'chain', 'rule') and type(value) is dict,
+             'nft_unexpected_object')
+        if 'handle' in value:
+            need(type(value['handle']) is int and value['handle'] >= 0,
+                 'nft_handle_invalid')
+        if kind == 'table':
+            need(set(value) <= {'family', 'name', 'handle'} and
+                 value.get('family') == 'bridge' and value.get('name') == NFT_TABLE,
+                 'nft_table_scope_invalid')
+            actual_table.append(value)
+        elif kind == 'chain':
+            need(set(value) <= {'family', 'table', 'name', 'type', 'hook',
+                                'prio', 'policy', 'handle'}, 'nft_extra_chain_fields')
+            name = value.get('name')
+            need(name in ('input', 'output', 'forward') and name not in chains and
+                 value.get('family') == 'bridge' and value.get('table') == NFT_TABLE and
+                 value.get('hook') == name and value.get('type') == 'filter' and
+                 type(value.get('prio')) is int and value['prio'] == -200 and
+                 value.get('policy') == 'accept', 'nft_chain_contract_invalid')
+            chains[name] = value
+        else:
+            need(set(value) <= {'family', 'table', 'chain', 'expr', 'handle'},
+                 'nft_extra_rule_fields')
+            need(value.get('family') == 'bridge' and value.get('table') == NFT_TABLE and
+                 value.get('chain') in ('input', 'output', 'forward'),
+                 'nft_rule_scope_invalid')
+            expr = value.get('expr')
+            need(type(expr) is list and len(expr) == 3 and
+                 all(type(x) is dict and len(x) == 1 for x in expr),
+                 'nft_expr_shape_invalid')
+            match, counter, verdict = expr
+            need(set(match) == {'match'} and type(match['match']) is dict and
+                 set(match['match']) == {'left', 'op', 'right'} and
+                 match['match']['op'] == '==', 'nft_match_invalid')
+            left = match['match']['left']
+            right = match['match']['right']
+            need(type(left) is dict and set(left) == {'meta'} and
+                 type(left['meta']) is dict and set(left['meta']) == {'key'} and
+                 left['meta']['key'] in ('iifname', 'oifname') and
+                 type(right) is dict and set(right) == {'set'} and
+                 type(right['set']) is list and len(right['set']) == len(targets) and
+                 all(type(x) is str for x in right['set']) and
+                 set(right['set']) == targets, 'nft_interface_set_invalid')
+            need(set(counter) == {'counter'} and type(counter['counter']) is dict and
+                 set(counter['counter']) == {'packets', 'bytes'} and
+                 all(type(n) is int and n >= 0 for n in counter['counter'].values()),
+                 'nft_counter_invalid')
+            need(verdict == {'drop': None}, 'nft_verdict_not_drop')
+            identity = (value['chain'], left['meta']['key'])
+            need(identity in expected_rules and identity not in rules,
+                 'nft_extra_or_duplicate_rule')
+            rules[identity] = value
+    need(len(actual_table) == 1 and set(chains) == {'input', 'output', 'forward'} and
+         set(rules) == expected_rules, 'nft_missing_or_extra_objects')
+
+
+def _verify_installed_nft(host: 'Host') -> None:
+    raw = host.sudo([host.bin['nft'], '-j', '-a', 'list', 'table',
+                     'bridge', NFT_TABLE])
+    _verify_nft_json(raw)
 
 
 def _verify_nft_dump(raw: bytes, expected: bytes) -> None:
@@ -742,7 +839,8 @@ def _assert_reserved_interfaces_absent(host: Host) -> None:
 
 
 def host_preflight(bundle: dict[str, Any], *, runner: Callable[..., Any] = subprocess.run,
-                   which: Callable[[str], str | None] = shutil.which) -> tuple[dict[str, Any], Host]:
+                   which: Callable[[str], str | None] = shutil.which,
+                   existing_nft: bool = False) -> tuple[dict[str, Any], Host]:
     """Fresh, read-only host preflight. No nft/libvirt writes occur here."""
     host = Host(runner=runner, which=which)
     host.sudo([host.bin['stat'], '--version'])
@@ -777,7 +875,11 @@ def host_preflight(bundle: dict[str, Any], *, runner: Callable[..., Any] = subpr
     need(not (link_names & (set(TAPS) | set(BRIDGES))), 'ardrec_interface_name_collision')
 
     nft_tables = _nft_table_names(host.sudo([host.bin['nft'], '-j', 'list', 'tables']))
-    need(('bridge', NFT_TABLE) not in nft_tables, 'nft_table_name_collision')
+    if existing_nft:
+        need(('bridge', NFT_TABLE) in nft_tables, 'r35_prior_nft_table_missing')
+        _verify_installed_nft(host)
+    else:
+        need(('bridge', NFT_TABLE) not in nft_tables, 'nft_table_name_collision')
     policy = t34.policy_files()['bridge-deny.nft']
     host.sudo([host.bin['nft'], '-c', '-f', '-'], input_bytes=policy)
 
@@ -790,8 +892,10 @@ def host_preflight(bundle: dict[str, Any], *, runner: Callable[..., Any] = subpr
 
     storage = _verify_storage(host, bundle['r32'])
     report = {
-        'schema': 'ardrec-p14-r35-host-preflight-v1',
-        'mode': 'READONLY_HOST_PREFLIGHT',
+        'schema': ('ardrec-p14-r35-resume-host-preflight-v1' if existing_nft
+                   else 'ardrec-p14-r35-host-preflight-v1'),
+        'mode': ('READONLY_HOST_PREFLIGHT_EXISTING_NFT' if existing_nft
+                 else 'READONLY_HOST_PREFLIGHT'),
         'source_archive_sha256': ARCHIVE_SHA256,
         'source_r32_report_sha256': bundle['r32']['sha256'],
         'source_r33_report_sha256': bundle['r33']['sha256'],
@@ -800,7 +904,8 @@ def host_preflight(bundle: dict[str, Any], *, runner: Callable[..., Any] = subpr
         'name_collisions_absent': True,
         'uuid_collisions_absent': True,
         'tap_and_bridge_names_absent': True,
-        'nft_table_absent': True,
+        'nft_table_absent': not existing_nft,
+        'nft_existing_verified_json': existing_nft,
         'nft_syntax_validated': True,
         'libvirt_xml_schema_validated': 8,
         'qcow2_chain_verified_roles': storage['verified_roles'],
@@ -825,8 +930,14 @@ def verify_host_report(report: dict[str, Any]) -> bool:
          DIGEST.fullmatch(report['sha256']) is not None and
          sha(canon({k: v for k, v in report.items() if k != 'sha256'})) == report['sha256'],
          'r35_host_report_digest_invalid')
-    need(report.get('schema') == 'ardrec-p14-r35-host-preflight-v1' and
-         report.get('mode') == 'READONLY_HOST_PREFLIGHT' and
+    need( ( (report.get('schema') == 'ardrec-p14-r35-host-preflight-v1' and
+              report.get('mode') == 'READONLY_HOST_PREFLIGHT' and
+              report.get('nft_table_absent') is True and
+              report.get('nft_existing_verified_json', False) is False) or
+           (report.get('schema') == 'ardrec-p14-r35-resume-host-preflight-v1' and
+              report.get('mode') == 'READONLY_HOST_PREFLIGHT_EXISTING_NFT' and
+              report.get('nft_table_absent') is False and
+              report.get('nft_existing_verified_json') is True) ) and
          report.get('source_archive_sha256') == ARCHIVE_SHA256 and
          all(type(report.get(key)) is str and DIGEST.fullmatch(report[key]) is not None
              for key in ('source_r32_report_sha256', 'source_r33_report_sha256',
@@ -834,7 +945,7 @@ def verify_host_report(report: dict[str, Any]) -> bool:
          all(report.get(key) is True for key in (
              'libvirt_readonly_queries_pass', 'name_collisions_absent',
              'uuid_collisions_absent', 'tap_and_bridge_names_absent',
-             'nft_table_absent', 'nft_syntax_validated')) and
+             'nft_syntax_validated')) and
          report.get('libvirt_xml_schema_validated') == 8 and
          report.get('qcow2_chain_verified_roles') == 4 and
          report.get('qcow2_assets_verified') == 12 and
@@ -1012,6 +1123,14 @@ def verify_deployment_report(doc: dict[str, Any]) -> bool:
           (set(doc.get('networks_verified_inactive', [])) == set(NETWORKS) and
            set(doc.get('domains_verified_shut_off', [])) == set(DOMAINS))),
          'r35_resource_inventory_invalid')
+    if 'recovery_mode' in doc:
+        need(doc.get('recovery_mode') == 'EXISTING_NFT_VERIFIED_JSON' and
+             type(doc.get('prior_partial_receipt_sha256')) is str and
+             DIGEST.fullmatch(doc['prior_partial_receipt_sha256']) is not None and
+             type(doc.get('resume_attestation_sha256')) is str and
+             DIGEST.fullmatch(doc['resume_attestation_sha256']) is not None and
+             doc.get('status') != 'PREFLIGHT_PASS_NOT_INSTALLED',
+             'r35_resume_provenance_invalid')
     if doc['status'] == 'PREFLIGHT_PASS_NOT_INSTALLED':
         need(doc.get('nft_table_installed') is False and
              doc.get('nft_table_verified') is False and
@@ -1049,7 +1168,7 @@ def verify_deployment_report(doc: dict[str, Any]) -> bool:
              doc.get('failure_code') is None, 'r35_success_claim_invalid')
     else:
         need(doc['status'] in ('PREFLIGHT_PASS_NOT_INSTALLED',
-             'BLOCKED_NO_CHANGE', 'PARTIAL_NO_GO_REVIEW_REQUIRED'),
+             'RESUME_PREFLIGHT_PASS_EXISTING_NFT', 'BLOCKED_NO_CHANGE', 'PARTIAL_NO_GO_REVIEW_REQUIRED'),
              'r35_status_invalid')
     return True
 
@@ -1064,14 +1183,117 @@ def _check_activation_absent(commands: list[dict[str, Any]]) -> None:
              'global_nft_flush_command_detected')
 
 
-def deploy(bundle: dict[str, Any], preflight: dict[str, Any], host: Host) -> dict[str, Any]:
+
+def verify_prior_partial_receipt(directory: Path, bundle: dict[str, Any]) -> dict[str, Any]:
+    """Pin exact R35 nft-only partial receipts before admitting a recovery.
+
+    This evidence authorizes no write. The existing nft table must separately
+    pass a fresh read-only structural JSON attestation.
+    """
+    need(isinstance(directory, Path) and directory.is_absolute() and
+         directory.name.startswith('recibos-instalacion-') and
+         not directory.is_symlink(), 'prior_receipt_directory_invalid')
+    for parent in (directory, *directory.parents):
+        need(not parent.is_symlink(), 'prior_receipt_symlink')
+    dstat = directory.stat()
+    need(stat.S_ISDIR(dstat.st_mode) and dstat.st_uid == os.geteuid() and
+         stat.S_IMODE(dstat.st_mode) == 0o700,
+         'prior_receipt_owner_or_mode_invalid')
+    names = {'SHA256SUMS', 'commands.jsonl', 'r35_deployment.json',
+             'r35_host_preflight.json', 'r35_source_attestation.json'}
+    need({p.name for p in directory.iterdir()} == names,
+         'prior_receipt_inventory_invalid')
+    sums = t34.secure_file(directory / 'SHA256SUMS').decode('ascii')
+    seen = set()
+    for row in sums.splitlines():
+        match = re.fullmatch(r'([0-9a-f]{64})  ([A-Za-z0-9_.-]+)', row)
+        need(match is not None, 'prior_sha256sum_row_invalid')
+        digest, name = match.groups()
+        need(name in names - {'SHA256SUMS'} and name not in seen,
+             'prior_sha256sum_inventory_invalid')
+        seen.add(name)
+        need(sha(t34.secure_file(directory / name)) == digest,
+             'prior_receipt_file_hash_invalid_' + name)
+    need(seen == names - {'SHA256SUMS'}, 'prior_receipt_missing_hash')
+    old, old_bytes = _read_json(directory / 'r35_deployment.json')
+    verify_deployment_report(old)
+    need(old.get('sha256') == R35_PARTIAL_REPORT_SHA256 and
+         old['status'] == 'PARTIAL_NO_GO_REVIEW_REQUIRED' and
+         old['failure_code'] == 'installed_nft_table_semantics_mismatch' and
+         old['nft_table_installed'] is True and
+         old['nft_table_verified'] is False and
+         old['nwfilter_defined'] is False and old['nwfilter_verified'] is False and
+         old['networks_defined'] == [] and old['domains_defined'] == [] and
+         old['network_started'] is False and old['vm_started'] is False and
+         old['source_archive_sha256'] == ARCHIVE_SHA256 and
+         old['source_attestation_sha256'] == bundle['attestation']['sha256'],
+         'prior_partial_state_invalid')
+    old_host, _ = _read_json(directory / 'r35_host_preflight.json')
+    verify_host_report(old_host)
+    need(old['host_preflight_sha256'] == old_host['sha256'] and
+         old_host['schema'] == 'ardrec-p14-r35-host-preflight-v1',
+         'prior_host_preflight_not_original')
+    old_source, _ = _read_json(directory / 'r35_source_attestation.json')
+    need(old_source == bundle['attestation'], 'prior_source_attestation_mismatch')
+    raw_commands = t34.secure_file(directory / 'commands.jsonl')
+    need(len(raw_commands) > 0, 'prior_command_log_empty')
+    commands = []
+    for line in raw_commands.splitlines():
+        try:
+            cmd = json.loads(line, object_pairs_hook=_pairs)
+        except (TypeError, ValueError, UnicodeError) as exc:
+            raise R35Error('prior_command_json_invalid') from exc
+        need(type(cmd) is dict and type(cmd.get('argv')) is list and
+             all(type(x) is str for x in cmd['argv']) and
+             type(cmd.get('returncode')) is int and
+             type(cmd.get('stdout_sha256')) is str and
+             type(cmd.get('stderr_sha256')) is str,
+             'prior_command_record_invalid')
+        commands.append(cmd)
+    _check_activation_absent(commands)
+    nft = ['/usr/bin/sudo', '-n', '--', '/usr/sbin/nft']
+    alternate = ['/usr/bin/sudo', '-n', '--', '/usr/bin/nft']
+    writes = [c for c in commands if c['argv'][:4] in (nft, alternate) and
+              c['argv'][4:] == ['-f', '-']]
+    need(len(writes) == 1 and writes[0]['returncode'] == 0,
+         'prior_nft_write_not_unique')
+    reads = [c for c in commands if c['argv'][:4] in (nft, alternate) and
+             c['argv'][4:] == ['list', 'table', 'bridge', NFT_TABLE]]
+    need(len(reads) == 1 and reads[0]['returncode'] == 0 and
+         type(reads[0].get('stdout')) is str and
+         sha(reads[0]['stdout'].encode('utf-8')) == reads[0]['stdout_sha256'] and
+         'table bridge ' + NFT_TABLE in reads[0]['stdout'],
+         'prior_nft_readback_not_authenticated')
+    need(not any(c['argv'][:4] in (nft, alternate) and
+                 c['argv'][4:] in (['flush', 'ruleset'], ['delete', 'table', 'bridge', NFT_TABLE])
+                 for c in commands), 'prior_firewall_write_outside_scope')
+    need(not any(c['argv'][:4] in (
+        ['/usr/bin/sudo', '-n', '--', '/usr/bin/virsh'],) for c in commands),
+         'prior_libvirt_write_forbidden')
+    return {
+        'schema': 'ardrec-p14-r352-prior-partial-attestation-v1',
+        'original_receipt_sha256': sha(old_bytes),
+        'original_commands_sha256': sha(raw_commands),
+        'original_sha256sums_sha256': sha((directory / 'SHA256SUMS').read_bytes()),
+        'original_status': old['status'],
+        'original_failure_code': old['failure_code'],
+        'old_nft_installed': True,
+        'old_libvirt_definitions_absent': True,
+        'source_attestation_sha256': bundle['attestation']['sha256'],
+        'p8_operational': 'NO-GO',
+    }
+
+
+def deploy(bundle: dict[str, Any], preflight: dict[str, Any], host: Host, *,
+           reuse_verified_nft: bool = False) -> dict[str, Any]:
     """Install the exact R34 deny policy, then define filter/networks/domains inactive.
 
     No rollback is attempted after a partial write. Every next step is fail-closed.
     """
     policy = t34.policy_files()
     root = bundle['root']
-    nft_installed = filter_defined = filter_verified = table_verified = False
+    nft_installed = bool(reuse_verified_nft)
+    filter_defined = filter_verified = table_verified = False
     networks_defined: list[str] = []
     domains_defined: list[str] = []
     networks_inactive: list[str] = []
@@ -1087,10 +1309,11 @@ def deploy(bundle: dict[str, Any], preflight: dict[str, Any], host: Host) -> dic
     status = 'PARTIAL_NO_GO_REVIEW_REQUIRED'
     try:
         # 1. Install only the new bridge-family table; never flush or replace rulesets.
-        host.sudo([host.bin['nft'], '-f', '-'], input_bytes=policy['bridge-deny.nft'])
-        nft_installed = True
-        dumped = host.sudo([host.bin['nft'], 'list', 'table', 'bridge', NFT_TABLE])
-        _verify_nft_dump(dumped, policy['bridge-deny.nft'])
+        if not reuse_verified_nft:
+            host.sudo([host.bin['nft'], '-f', '-'], input_bytes=policy['bridge-deny.nft'])
+            nft_installed = True
+        # Re-read kernel state for both paths. No textual alias comparisons.
+        _verify_installed_nft(host)
         table_verified = True
 
         # 2. Define the deny-all libvirt filter before any domain can reference it.
@@ -1190,8 +1413,7 @@ def deploy(bundle: dict[str, Any], preflight: dict[str, Any], host: Host) -> dic
         interfaces_absent_after = True
 
         table_verified = False
-        final_dump = host.sudo([host.bin['nft'], 'list', 'table', 'bridge', NFT_TABLE])
-        _verify_nft_dump(final_dump, policy['bridge-deny.nft'])
+        _verify_installed_nft(host)
         table_verified = True
         collision_rechecks = True
         status = 'DEPLOYMENT_COMPLETE_INACTIVE'
@@ -1216,23 +1438,42 @@ def deploy(bundle: dict[str, Any], preflight: dict[str, Any], host: Host) -> dic
 
 def run(archive: Path, receipt_dir: Path, *, install: bool,
         runner: Callable[..., Any] = subprocess.run,
-        which: Callable[[str], str | None] = shutil.which) -> dict[str, Any]:
+        which: Callable[[str], str | None] = shutil.which,
+        resume_partial_dir: Path | None = None) -> dict[str, Any]:
     _receipt_dir(receipt_dir)
     temp = tempfile.TemporaryDirectory(prefix='ardrec-r35-source-')
     try:
         root = Path(temp.name)
         root.chmod(0o700)
         bundle = verify_source_bundle(archive, root)
-        preflight, host = host_preflight(bundle, runner=runner, which=which)
+        prior = (verify_prior_partial_receipt(resume_partial_dir, bundle)
+                 if resume_partial_dir is not None else None)
+        preflight, host = host_preflight(bundle, runner=runner, which=which,
+                                         existing_nft=prior is not None)
         records: dict[str, dict[str, Any]] = {
             'r35_source_attestation.json': bundle['attestation'],
             'r35_host_preflight.json': preflight,
         }
+        if prior is not None:
+            prior['current_host_preflight_sha256'] = preflight['sha256']
+            prior['sha256'] = sha(canon(prior))
+            records['r35_resume_attestation.json'] = prior
         if install:
-            report = deploy(bundle, preflight, host)
+            report = deploy(bundle, preflight, host,
+                            reuse_verified_nft=prior is not None)
+        elif prior is not None:
+            report = deployment_report(bundle, preflight,
+                status='RESUME_PREFLIGHT_PASS_EXISTING_NFT',
+                nft_installed=True, table_verified=True)
         else:
             report = deployment_report(bundle, preflight,
                 status='PREFLIGHT_PASS_NOT_INSTALLED')
+        if prior is not None:
+            report['recovery_mode'] = 'EXISTING_NFT_VERIFIED_JSON'
+            report['prior_partial_receipt_sha256'] = prior['original_receipt_sha256']
+            report['resume_attestation_sha256'] = prior['sha256']
+            report['sha256'] = sha(canon({k: v for k, v in report.items() if k != 'sha256'}))
+            verify_deployment_report(report)
         records['r35_deployment.json'] = report
         _write_receipts(receipt_dir, records, host.commands)
         return report
