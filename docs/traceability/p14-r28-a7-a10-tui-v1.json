@@ -1,0 +1,30 @@
+{
+  "schema": "ardrec-p14-r28-traceability-v1",
+  "increment": "P14-R28",
+  "required_ancestor": "47af17db6bcc8dead7313829858244b6e4b79e4e",
+  "base_commit": "captured_from_origin_main_after_pr93_merge",
+  "objective": "A1-A10 development walk-through; mathematical A7, conservative A8, durable documentary A9 and live terminal A10",
+  "sources": [
+    "src/ardrec/coordination/demo_session.py",
+    "src/ardrec/coordination/benign_review.py",
+    "src/ardrec/benign_pipeline.py"
+  ],
+  "capabilities": [
+    {"algorithm": "A7", "module": "src/ardrec/analytics/exact_preview.py", "tests": "lab/tests/test_p14_r28_exact_stop.py", "oracle": "lab/p14-r28-oracles-v1/oracle.json", "acceptance": "EXACT_MATH_ONLY"},
+    {"algorithm": "A8", "module": "src/ardrec/stopping/development_stop.py", "tests": "lab/tests/test_p14_r28_exact_stop.py", "acceptance": "CONSERVATIVE_PREVIEW"},
+    {"algorithm": "A9", "module": "src/ardrec/persistence/development_receipt.py", "tests": "lab/tests/test_p14_r28_receipt_tui.py", "acceptance": "DURABLE_DEVELOPMENT_RECEIPT_ONLY"},
+    {"algorithm": "A10", "module": "src/ardrec/coordination/terminal_view.py", "tests": "lab/tests/test_p14_r28_receipt_tui.py", "acceptance": "TERMINAL_TUI_READ_ONLY"},
+    {"algorithm": "A1-A10", "module": "src/ardrec/coordination/development_cycle.py", "tests": "lab/tests/test_p14_r28_vertical.py", "acceptance": "DEVELOPMENT_STAGES_ONLY"}
+  ],
+  "entrypoint": "scripts/demo_p14_r28_a1_a10_tui.py",
+  "invariants": {
+    "no_vm_checks": true, "no_operational_dispatch": true,
+    "no_generation_published": true, "no_confirmed_rf": true,
+    "synthetic_oracle_not_fact": true, "single_local_benign_start": true,
+    "byte_identical_replay_required": true, "no_close_from_nd": true
+  },
+  "prerequisites": ["PR92_MERGED", "PR93_MERGED"],
+  "functional_acceptance": "PENDING_OPERATOR_TESTS",
+  "experimental_validation": "NOT_RUN",
+  "open_findings": ["AL-06", "AL-07"]
+}
