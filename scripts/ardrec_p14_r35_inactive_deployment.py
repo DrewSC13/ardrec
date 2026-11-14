@@ -25,18 +25,29 @@ def main() -> int:
     modes.add_argument('--preflight-verified-nft-partial', action='store_true')
     modes.add_argument('--preflight-existing-nft-filter-ssh', action='store_true')
     modes.add_argument('--resume-existing-nft-filter-ssh', action='store_true')
+    modes.add_argument('--preflight-existing-3networks-ssh-domain', action='store_true')
+    modes.add_argument('--resume-existing-3networks-ssh-domain', action='store_true')
     parser.add_argument('--prior-partial-receipts', type=Path)
     parser.add_argument('--second-partial-receipts', type=Path)
+    parser.add_argument('--third-partial-receipts', type=Path)
     parser.add_argument('--i-authorize-r35-installation', action='store_true')
     args = parser.parse_args()
 
     old_recovery = args.resume_verified_nft_partial or args.preflight_verified_nft_partial
     new_recovery = args.resume_existing_nft_filter_ssh or args.preflight_existing_nft_filter_ssh
+    third_recovery = (args.preflight_existing_3networks_ssh_domain or
+                      args.resume_existing_3networks_ssh_domain)
     install_requested = (args.install_deny_first_inactive or args.resume_verified_nft_partial or
-                         args.resume_existing_nft_filter_ssh)
+                         args.resume_existing_nft_filter_ssh or args.resume_existing_3networks_ssh_domain)
     if install_requested != args.i_authorize_r35_installation:
         parser.error('Installation requires explicit authorization; preflight forbids it')
-    if new_recovery:
+    if third_recovery:
+        if (args.prior_partial_receipts is None or args.second_partial_receipts is None or
+                args.third_partial_receipts is None):
+            parser.error('R35.4 requires all three prior partial receipt directories')
+    elif args.third_partial_receipts is not None:
+        parser.error('Third partial receipt requires R35.4 recovery mode')
+    elif new_recovery:
         if args.prior_partial_receipts is None or args.second_partial_receipts is None:
             parser.error('R35.3 requires both prior partial receipt directories')
     elif old_recovery:
@@ -48,6 +59,8 @@ def main() -> int:
         parser.error('First partial receipt path must be absolute')
     if args.second_partial_receipts is not None and not args.second_partial_receipts.is_absolute():
         parser.error('Second partial receipt path must be absolute')
+    if args.third_partial_receipts is not None and not args.third_partial_receipts.is_absolute():
+        parser.error('Third partial receipt path must be absolute')
     if not args.source_archive.is_absolute() or not args.receipt_dir.is_absolute():
         parser.error('Archive and receipt paths must be absolute')
 
@@ -55,7 +68,8 @@ def main() -> int:
         result = run(args.source_archive, args.receipt_dir,
                      install=install_requested,
                      resume_partial_dir=args.prior_partial_receipts,
-                     resume_second_partial_dir=args.second_partial_receipts)
+                     resume_second_partial_dir=args.second_partial_receipts,
+                     resume_third_partial_dir=args.third_partial_receipts)
         verify_deployment_report(result)
     except (R35Error, OSError, ValueError, TypeError, KeyError) as exc:
         print('R35_RESULT=BLOCKED_NO_CHANGE_OR_REVIEW_REQUIRED')
@@ -72,6 +86,10 @@ def main() -> int:
         print('R352_RECOVERY_PREFLIGHT=PASS_EXISTING_NFT_VERIFIED')
         print('R35_INSTALLATION=NOT_PERFORMED')
         return 0
+    if result['status'] == 'RESUME_PREFLIGHT_PASS_EXISTING_3NETWORKS_SSH_DOMAIN':
+        print('R354_RECOVERY_PREFLIGHT=PASS_EXISTING_3NETWORKS_SSH_DOMAIN')
+        print('R35_INSTALLATION=NOT_PERFORMED')
+        return 0
     if result['status'] == 'RESUME_PREFLIGHT_PASS_EXISTING_NFT_FILTER_SSH':
         print('R353_RECOVERY_PREFLIGHT=PASS_EXISTING_NFT_FILTER_SSH_VERIFIED')
         print('R35_INSTALLATION=NOT_PERFORMED')
@@ -82,6 +100,8 @@ def main() -> int:
             print('R352_RECOVERY=PASS_EXISTING_NFT_VERIFIED')
         if result.get('recovery_mode') == 'EXISTING_NFT_FILTER_SSH_VERIFIED':
             print('R353_RECOVERY=PASS_REUSED_NFT_FILTER_SSH')
+        if result.get('recovery_mode') == 'EXISTING_NFT_FILTER_3NETWORKS_SSH_DOMAIN_VERIFIED':
+            print('R354_RECOVERY=PASS_REUSED_NFT_FILTER_3NETWORKS_SSH_DOMAIN')
         print('R35_NFT_TABLE=INSTALLED_AND_VERIFIED')
         print('R35_NWFILTER=DEFINED_DENY_ALL')
         print('R35_NETWORKS=3_DEFINED_INACTIVE')

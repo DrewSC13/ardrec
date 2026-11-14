@@ -37,6 +37,12 @@ R352_PARTIAL_REPORT_SHA256 = 'd582027739b71ccf7e8e280bb33217b1d4eb9eaf0596454a84
 R352_ORIGINAL_PARTIAL_RAW_SHA256 = 'd03e11a3f4dea2f87be94cf0b19edeb6490cb7ca4401474b3d17206b3d304265'
 R352_RESUME_ATTESTATION_SHA256 = '04c0eeb9bbb7ac4a6f30c074147c76473f4a2dc4739ca6ba6f844075eb85df7c'
 SSH_BRIDGE_MAC_R353 = '52:54:00:59:04:5a'
+R353_PARTIAL_REPORT_SHA256 = 'd162b844c014a3db4b4692d5761596bbb86a9405b868eca8e9bca68ecfbd112f'
+R353_PARTIAL_DIRNAME = 'recibos-completacion-r353-20261114T181135Z-65714'
+R354_EXISTING_BRIDGE_MACS = {'ssh': '52:54:00:59:04:5a',
+                              'ftp': '52:54:00:2e:49:e8',
+                              'smb': '52:54:00:6f:01:f5'}
+R354_RECOVERY_MODE = 'EXISTING_NFT_FILTER_3NETWORKS_SSH_DOMAIN_VERIFIED'
 FILTER_NAME = 'ardrec-r33-block-until-containment'
 QEMU_UID = 64055
 QEMU_GID = 64055
@@ -738,36 +744,176 @@ def _verify_network_mac_inventory(macs: dict[str, str | None], *,
              'r353_existing_ssh_bridge_mac_changed')
 
 
+def _domain_canon(node: ET.Element) -> tuple[Any, ...]:
+    return (node.tag, tuple(sorted(node.attrib.items())),
+            (node.text or '').strip(), tuple(_domain_canon(c) for c in node))
+
+
+def _domain_kib(node: ET.Element | None, field: str) -> int:
+    need(node is not None and not list(node) and
+         set(node.attrib) <= {'unit'} and node.get('unit', 'KiB') in ('KiB', 'MiB'),
+         'defined_domain_memory_shape_invalid_' + field)
+    value = (node.text or '').strip()
+    need(re.fullmatch(r'[0-9]+', value) is not None,
+         'defined_domain_memory_value_invalid_' + field)
+    n = int(value) * (1024 if node.get('unit') == 'MiB' else 1)
+    need(n > 0, 'defined_domain_memory_nonpositive_' + field)
+    return n
+
+
+def _checked_generated_address(node: ET.Element, role: str) -> None:
+    need(node.tag == 'address' and not list(node) and not (node.text or '').strip(),
+         'defined_domain_generated_address_invalid_' + role)
+    if node.get('type') == 'pci':
+        need(set(node.attrib) == {'type', 'domain', 'bus', 'slot', 'function'} and
+             node.get('domain') == '0x0000' and
+             re.fullmatch(r'0x[0-9a-f]{2}', node.get('bus', '')) is not None and
+             re.fullmatch(r'0x[01][0-9a-f]', node.get('slot', '')) is not None and
+             re.fullmatch(r'0x[0-7]', node.get('function', '')) is not None,
+             'defined_domain_generated_pci_invalid_' + role)
+    elif node.get('type') == 'virtio-serial':
+        need(node.attrib == {'type': 'virtio-serial', 'controller': '0',
+                             'bus': '0', 'port': '1'},
+             'defined_domain_generated_virtio_address_invalid_' + role)
+    else:
+        raise R35Error('defined_domain_generated_address_kind_invalid_' + role)
+
+
 def _verify_domain_dump(raw: bytes, expected: bytes, role: str) -> None:
-    got = ET.fromstring(raw)
-    want = ET.fromstring(expected)
-    need(got.tag == 'domain' and got.get('type') == 'kvm' and
-         got.findtext('name') == want.findtext('name') and
-         got.findtext('uuid') == want.findtext('uuid') and
-         got.findtext('memory') == want.findtext('memory') and
-         got.findtext('currentMemory') == want.findtext('currentMemory') and
-         got.findtext('vcpu') == want.findtext('vcpu'), 'defined_domain_identity_mismatch_' + role)
-    gd = got.findall('devices/disk')
-    wd = want.findall('devices/disk')
-    need(len(gd) == len(wd) == 1 and gd[0].find('source').attrib == wd[0].find('source').attrib and
-         gd[0].find('driver').attrib == wd[0].find('driver').attrib,
-         'defined_domain_disk_mismatch_' + role)
-    gi = got.findall('devices/interface')
-    wi = want.findall('devices/interface')
-    need(len(gi) == len(wi), 'defined_domain_nic_count_mismatch_' + role)
-    for left, right in zip(gi, wi):
-        need(left.get('type') == 'network' and
-             left.find('mac').attrib == right.find('mac').attrib and
-             left.find('source').attrib == right.find('source').attrib and
-             left.find('target').attrib == right.find('target').attrib and
-             left.find('filterref').attrib == right.find('filterref').attrib,
-             'defined_domain_nic_mismatch_' + role)
-    for forbidden in ('hostdev', 'filesystem', 'redirdev', 'vsock', 'graphics'):
-        need(not got.findall('devices/' + forbidden),
+    """Validate libvirt's inactive XML against R33, admitting only observed defaults.
+
+    All safety-critical fields are compared, never dropped: domain identity,
+    backing disk, NIC/filter, guest configuration, lifecycle and forbidden devices.
+    """
+    try:
+        got, want = ET.fromstring(raw), ET.fromstring(expected)
+    except ET.ParseError as exc:
+        raise R35Error('defined_domain_xml_parse_invalid_' + role) from exc
+    need(got.tag == want.tag == 'domain' and got.attrib == want.attrib,
+         'defined_domain_root_mismatch_' + role)
+    need({c.tag for c in got} == {c.tag for c in want} and
+         len(got) == len(want) and
+         len(set(c.tag for c in got)) == len(got),
+         'defined_domain_top_level_invalid_' + role)
+    for field in ('memory', 'currentMemory'):
+        need(_domain_kib(got.find(field), field) ==
+             _domain_kib(want.find(field), field),
+             'defined_domain_memory_mismatch_' + role + '_' + field)
+    for field in ('name', 'uuid', 'vcpu', 'os', 'features', 'clock',
+                  'on_poweroff', 'on_reboot', 'on_crash', 'pm'):
+        actual, desired = got.find(field), want.find(field)
+        need(actual is not None and desired is not None and
+             _domain_canon(actual) == _domain_canon(desired),
+             'defined_domain_field_mismatch_' + role + '_' + field)
+    cpu, desired_cpu = got.find('cpu'), want.find('cpu')
+    need(cpu is not None and desired_cpu is not None and
+         desired_cpu.attrib == {'mode': 'host-model'} and
+         cpu.attrib in ({'mode': 'host-model'},
+                        {'mode': 'host-model', 'check': 'partial'}) and
+         not len(cpu) and not (cpu.text or '').strip(),
+         'defined_domain_cpu_mismatch_' + role)
+
+    actual_devices, wanted_devices = got.find('devices'), want.find('devices')
+    need(actual_devices is not None and wanted_devices is not None and
+         actual_devices.attrib == wanted_devices.attrib == {},
+         'defined_domain_devices_invalid_' + role)
+    required_tags = [x.tag for x in wanted_devices]
+    optional_tags = {'console', 'input', 'audio'}
+    got_tags = [x.tag for x in actual_devices]
+    need(set(got_tags) <= set(required_tags) | optional_tags and
+         all(got_tags.count(t) == required_tags.count(t) for t in
+             set(required_tags) - {'controller'}) and
+         len(actual_devices.findall('controller')) in (1, 3) and
+         got_tags.count('console') <= 1 and got_tags.count('audio') <= 1 and
+         got_tags.count('input') in (0, 2),
+         'defined_domain_device_inventory_invalid_' + role)
+    for forbidden in ('hostdev', 'filesystem', 'redirdev', 'vsock', 'graphics',
+                      'tpm', 'rng', 'shmem', 'smartcard', 'watchdog'):
+        need(not actual_devices.findall(forbidden),
              'defined_domain_forbidden_device_' + role + '_' + forbidden)
-    need(got.findtext('on_poweroff') == 'destroy' and
-         got.findtext('on_reboot') == 'destroy' and
-         got.findtext('on_crash') == 'destroy', 'defined_domain_lifecycle_mismatch_' + role)
+    for type_name in ('disk', 'interface'):
+        desired = wanted_devices.findall(type_name)
+        observed = actual_devices.findall(type_name)
+        need(len(desired) == len(observed) and
+             (len(desired) == 1 if type_name == 'disk' else True),
+             'defined_domain_count_mismatch_' + role + '_' + type_name)
+    # Compare all declared child nodes, including storage, filter and NIC MACs.
+    # The only accepted additions to an existing device are typed PCI addresses.
+    seen_pci: set[tuple[str, str, str, str]] = set()
+    for kind in set(required_tags):
+        desired_list = wanted_devices.findall(kind)
+        actual_list = actual_devices.findall(kind)
+        if kind == 'controller':
+            actual_list = [c for c in actual_list if c.get('type') == 'virtio-serial']
+        need(len(actual_list) == len(desired_list),
+             'defined_domain_required_device_missing_' + role + '_' + kind)
+        for actual, desired in zip(actual_list, desired_list):
+            shadow = ET.fromstring(ET.tostring(actual, encoding='utf-8'))
+            # Only precisely typed generated addresses, never new disks/NICs.
+            for child in list(shadow):
+                if child.tag == 'address':
+                    _checked_generated_address(child, role)
+                    if child.get('type') == 'pci':
+                        key = tuple(child.get(k) for k in ('domain','bus','slot','function'))
+                        need(key not in seen_pci,
+                             'defined_domain_pci_address_collision_' + role)
+                        seen_pci.add(key)
+                    shadow.remove(child)
+            if kind == 'serial':
+                target = shadow.find('target')
+                expected_target = desired.find('target')
+                if target is not None and expected_target is not None and \
+                        target.attrib == {'type': 'isa-serial', 'port': '0'}:
+                    need(len(target) == 1 and target[0].tag == 'model' and
+                         target[0].attrib == {'name': 'isa-serial'},
+                         'defined_domain_serial_default_invalid_' + role)
+                    target.attrib = {'port': '0'}
+                    target.remove(target[0])
+            need(_domain_canon(shadow) == _domain_canon(desired),
+                 'defined_domain_device_mismatch_' + role + '_' + kind)
+    # Accept exact libvirt-added controllers, preserving isolation.
+    optional_controllers = [c for c in actual_devices.findall('controller')
+                            if c.get('type') != 'virtio-serial']
+    if optional_controllers:
+        need(len(optional_controllers) == 2,
+             'defined_domain_extra_controllers_invalid_' + role)
+        items = {}
+        for ctrl in optional_controllers:
+            shadow = ET.fromstring(ET.tostring(ctrl, encoding='utf-8'))
+            for child in list(shadow):
+                need(child.tag == 'address' and child.get('type') == 'pci',
+                     'defined_domain_extra_controller_child_invalid_' + role)
+                _checked_generated_address(child, role)
+                key = tuple(child.get(k) for k in ('domain','bus','slot','function'))
+                need(key not in seen_pci,
+                     'defined_domain_pci_address_collision_' + role)
+                seen_pci.add(key)
+                shadow.remove(child)
+            items[shadow.get('type')] = _domain_canon(shadow)
+        expected_ctrl = {
+            'usb': _domain_canon(ET.fromstring('<controller type="usb" index="0" model="piix3-uhci"/>')),
+            'pci': _domain_canon(ET.fromstring('<controller type="pci" index="0" model="pci-root"/>')),
+        }
+        need(items == expected_ctrl,
+             'defined_domain_extra_controllers_invalid_' + role)
+    console = actual_devices.find('console')
+    if console is not None:
+        need(_domain_canon(console) == _domain_canon(ET.fromstring(
+            '<console type="pty"><target type="serial" port="0"/></console>')),
+            'defined_domain_extra_console_invalid_' + role)
+    inputs = actual_devices.findall('input')
+    if inputs:
+        expected_inputs = {
+            _domain_canon(ET.fromstring('<input type="mouse" bus="ps2"/>')),
+            _domain_canon(ET.fromstring('<input type="keyboard" bus="ps2"/>')),
+        }
+        need({_domain_canon(x) for x in inputs} == expected_inputs,
+             'defined_domain_extra_inputs_invalid_' + role)
+    audio = actual_devices.find('audio')
+    if audio is not None:
+        need(_domain_canon(audio) == _domain_canon(ET.fromstring(
+            '<audio id="1" type="none"/>')),
+            'defined_domain_extra_audio_invalid_' + role)
 
 
 def _verify_inactive_info(raw: bytes, *, kind: str) -> None:
@@ -776,16 +922,16 @@ def _verify_inactive_info(raw: bytes, *, kind: str) -> None:
     except UnicodeError as exc:
         raise R35Error('libvirt_info_encoding_invalid') from exc
     if kind == 'network':
-        need(re.search(r'^Active:\s+no$', text, re.M) is not None and
-             re.search(r'^Autostart:\s+no$', text, re.M) is not None,
+        need(re.search(r'^(?:Active|Activar):\s+no$', text, re.M) is not None and
+             re.search(r'^(?:Autostart|Autoinicio):\s+no$', text, re.M) is not None,
              'network_not_inactive_or_autostart_enabled')
     else:
-        need(text.strip().lower() == 'shut off', 'domain_not_shut_off')
+        need(text.strip().lower() in ('shut off', 'apagado'), 'domain_not_shut_off')
 
 
 def _verify_domain_autostart(raw: bytes) -> None:
     text = raw.decode('utf-8', 'strict')
-    need(re.search(r'^Autostart:\s+(?:disable|no)$', text, re.M) is not None,
+    need(re.search(r'^(?:Autostart|Autoinicio):\s+(?:disable|no|inhibe)$', text, re.M) is not None,
          'domain_autostart_not_disabled')
 
 
@@ -891,10 +1037,14 @@ def _assert_reserved_interfaces_absent(host: Host) -> None:
 def host_preflight(bundle: dict[str, Any], *, runner: Callable[..., Any] = subprocess.run,
                    which: Callable[[str], str | None] = shutil.which,
                    existing_nft: bool = False, existing_filter: bool = False,
-                   existing_networks: tuple[str, ...] = ()) -> tuple[dict[str, Any], Host]:
+                   existing_networks: tuple[str, ...] = (),
+                   existing_domains: tuple[str, ...] = ()) -> tuple[dict[str, Any], Host]:
     """Fresh, read-only host preflight. No nft/libvirt writes occur here."""
-    need((not existing_filter and not existing_networks) or
-         (existing_nft and existing_filter and existing_networks == ('ssh',)),
+    need((not existing_filter and not existing_networks and not existing_domains) or
+         (existing_nft and existing_filter and existing_networks == ('ssh',) and
+          not existing_domains) or
+         (existing_nft and existing_filter and
+          existing_networks == tuple(t33.NET_BRIDGE) and existing_domains == ('ssh',)),
          'unsupported_partial_resource_recovery')
     host = Host(runner=runner, which=which)
     host.sudo([host.bin['stat'], '--version'])
@@ -906,9 +1056,10 @@ def host_preflight(bundle: dict[str, Any], *, runner: Callable[..., Any] = subpr
     filters, filter_uuids = _nwfilter_inventory(host.virsh_ro(['nwfilter-list']))
 
     existing_names = {t33.NETWORK_PREFIX + role for role in existing_networks}
+    existing_domain_names = {t33.DOMAIN_PREFIX + role for role in existing_domains}
     existing_filters = {FILTER_NAME} if existing_filter else set()
-    need(not any(name.startswith(('ardrec-r33-', 'ardrec-dev-')) for name in domains),
-         'ardrec_domain_collision')
+    need({x for x in domains if x.startswith(('ardrec-r33-', 'ardrec-dev-'))} ==
+         existing_domain_names, 'ardrec_domain_collision')
     need({x for x in networks if x.startswith(('ardrec-r33-', 'ardrec-dev-'))} == existing_names,
          'r353_network_inventory_unexpected')
     need({x for x in filters if x.startswith('ardrec-r33-')} == existing_filters,
@@ -920,7 +1071,10 @@ def host_preflight(bundle: dict[str, Any], *, runner: Callable[..., Any] = subpr
     expected_filter_uuid = _xml_uuid(bundle['root'] / R34_DIR / 'nwfilter-deny.xml')
     expected_present_uuids = {_xml_uuid(bundle['root'] / R33_DIR / f'network-{role}.xml')
                               for role in existing_networks}
-    need(not (expected_domain_uuids & domain_uuids) and
+    expected_present_domain_uuids = {
+        _xml_uuid(bundle['root'] / R33_DIR / f'domain-{role}.xml')
+        for role in existing_domains}
+    need((expected_domain_uuids & domain_uuids) == expected_present_domain_uuids and
          (expected_network_uuids & network_uuids) == expected_present_uuids and
          ((expected_filter_uuid in filter_uuids) == existing_filter),
          'libvirt_uuid_collision')
@@ -934,6 +1088,15 @@ def host_preflight(bundle: dict[str, Any], *, runner: Callable[..., Any] = subpr
         existing_bridge_macs[role] = _network_bridge_mac(dumped, xml, role)
         _verify_inactive_info(host.virsh_ro(['net-info', name]), kind='network')
     _verify_network_mac_inventory(existing_bridge_macs, prior_ssh=bool(existing_networks))
+    if existing_domains:
+        need(existing_bridge_macs == R354_EXISTING_BRIDGE_MACS,
+             'r354_existing_bridge_mac_drift')
+    for role in existing_domains:
+        name = t33.DOMAIN_PREFIX + role
+        expected_xml = (bundle['root'] / R33_DIR / f'domain-{role}.xml').read_bytes()
+        _verify_domain_dump(host.virsh_ro(['dumpxml', name, '--inactive']), expected_xml, role)
+        _verify_inactive_info(host.virsh_ro(['domstate', name]), kind='domain')
+        _verify_domain_autostart(host.virsh_ro(['dominfo', name]))
     need(not (set(DOMAINS) & active_domains), 'ardrec_domain_already_active')
 
     links_raw = host.run([host.bin['ip'], '-j', 'link', 'show'])
@@ -964,12 +1127,14 @@ def host_preflight(bundle: dict[str, Any], *, runner: Callable[..., Any] = subpr
 
     storage = _verify_storage(host, bundle['r32'])
     report = {
-        'schema': ('ardrec-p14-r353-host-preflight-v1' if existing_networks
+        'schema': ('ardrec-p14-r354-host-preflight-v1' if existing_domains
+                   else ('ardrec-p14-r353-host-preflight-v1' if existing_networks
                    else ('ardrec-p14-r35-resume-host-preflight-v1' if existing_nft
-                   else 'ardrec-p14-r35-host-preflight-v1')),
-        'mode': ('READONLY_HOST_PREFLIGHT_EXISTING_NFT_FILTER_SSH' if existing_networks
+                   else 'ardrec-p14-r35-host-preflight-v1'))),
+        'mode': ('READONLY_HOST_PREFLIGHT_EXISTING_3NETWORKS_SSH' if existing_domains
+                 else ('READONLY_HOST_PREFLIGHT_EXISTING_NFT_FILTER_SSH' if existing_networks
                  else ('READONLY_HOST_PREFLIGHT_EXISTING_NFT' if existing_nft
-                 else 'READONLY_HOST_PREFLIGHT')),
+                 else 'READONLY_HOST_PREFLIGHT'))),
         'source_archive_sha256': ARCHIVE_SHA256,
         'source_r32_report_sha256': bundle['r32']['sha256'],
         'source_r33_report_sha256': bundle['r33']['sha256'],
@@ -982,6 +1147,7 @@ def host_preflight(bundle: dict[str, Any], *, runner: Callable[..., Any] = subpr
         'nft_existing_verified_json': existing_nft,
         'existing_filter_verified': existing_filter,
         'existing_networks_verified': [t33.NETWORK_PREFIX + r for r in existing_networks],
+        'existing_domains_verified': [t33.DOMAIN_PREFIX + r for r in existing_domains],
         'existing_network_bridge_macs': existing_bridge_macs,
         'nft_syntax_validated': True,
         'libvirt_xml_schema_validated': 8,
@@ -1021,8 +1187,17 @@ def verify_host_report(report: dict[str, Any]) -> bool:
               report.get('nft_existing_verified_json') is True and
               report.get('existing_filter_verified') is True and
               report.get('existing_networks_verified') == [t33.NETWORK_PREFIX + 'ssh'] and
+              report.get('existing_domains_verified', []) == [] and
               report.get('existing_network_bridge_macs') ==
-                {'ssh': SSH_BRIDGE_MAC_R353}) ) and
+                {'ssh': SSH_BRIDGE_MAC_R353}) or
+           (report.get('schema') == 'ardrec-p14-r354-host-preflight-v1' and
+              report.get('mode') == 'READONLY_HOST_PREFLIGHT_EXISTING_3NETWORKS_SSH' and
+              report.get('nft_table_absent') is False and
+              report.get('nft_existing_verified_json') is True and
+              report.get('existing_filter_verified') is True and
+              report.get('existing_networks_verified') == list(NETWORKS) and
+              report.get('existing_domains_verified') == [t33.DOMAIN_PREFIX + 'ssh'] and
+              report.get('existing_network_bridge_macs') == R354_EXISTING_BRIDGE_MACS) ) and
          report.get('source_archive_sha256') == ARCHIVE_SHA256 and
          all(type(report.get(key)) is str and DIGEST.fullmatch(report[key]) is not None
              for key in ('source_r32_report_sha256', 'source_r33_report_sha256',
@@ -1039,9 +1214,11 @@ def verify_host_report(report: dict[str, Any]) -> bool:
              'network_started', 'vm_started', 'operational_dispatch', 'can_restore')) and
          report.get('p8_operational') == 'NO-GO' and report.get('final_risk') is None,
          'r35_host_report_semantics_invalid')
-    if report['schema'] != 'ardrec-p14-r353-host-preflight-v1':
+    if report['schema'] not in ('ardrec-p14-r353-host-preflight-v1',
+                                'ardrec-p14-r354-host-preflight-v1'):
         need(report.get('existing_filter_verified', False) is False and
              report.get('existing_networks_verified', []) == [] and
+             report.get('existing_domains_verified', []) == [] and
              report.get('existing_network_bridge_macs', {}) == {},
              'r353_existing_resources_in_legacy_report')
     assets = report.get('storage_assets')
@@ -1230,20 +1407,21 @@ def verify_deployment_report(doc: dict[str, Any]) -> bool:
     if doc.get('status') == 'DEPLOYMENT_COMPLETE_INACTIVE' and 'network_bridge_macs' in doc:
         need(set(bridge_macs) == set(t33.NET_BRIDGE),
              'r353_success_mac_inventory_incomplete')
-    if doc.get('recovery_mode') == 'EXISTING_NFT_FILTER_SSH_VERIFIED':
+    if doc.get('recovery_mode') in ('EXISTING_NFT_FILTER_SSH_VERIFIED', R354_RECOVERY_MODE):
         need('network_bridge_macs' in doc and
              bridge_macs.get('ssh') == SSH_BRIDGE_MAC_R353,
              'r353_mac_inventory_missing_or_changed')
     if 'recovery_mode' in doc:
         need(doc.get('recovery_mode') in
-             ('EXISTING_NFT_VERIFIED_JSON', 'EXISTING_NFT_FILTER_SSH_VERIFIED') and
+             ('EXISTING_NFT_VERIFIED_JSON', 'EXISTING_NFT_FILTER_SSH_VERIFIED',
+              R354_RECOVERY_MODE) and
              type(doc.get('prior_partial_receipt_sha256')) is str and
              DIGEST.fullmatch(doc['prior_partial_receipt_sha256']) is not None and
              type(doc.get('resume_attestation_sha256')) is str and
              DIGEST.fullmatch(doc['resume_attestation_sha256']) is not None and
              doc.get('status') != 'PREFLIGHT_PASS_NOT_INSTALLED',
              'r35_resume_provenance_invalid')
-        if doc['recovery_mode'] == 'EXISTING_NFT_FILTER_SSH_VERIFIED':
+        if doc['recovery_mode'] in ('EXISTING_NFT_FILTER_SSH_VERIFIED', R354_RECOVERY_MODE):
             need(type(doc.get('second_partial_receipt_sha256')) is str and
                  DIGEST.fullmatch(doc['second_partial_receipt_sha256']) is not None and
                  type(doc.get('recovery3_attestation_sha256')) is str and
@@ -1251,6 +1429,13 @@ def verify_deployment_report(doc: dict[str, Any]) -> bool:
                  doc.get('prior_partial_receipt_sha256') ==
                      R352_ORIGINAL_PARTIAL_RAW_SHA256,
                  'r353_resume_provenance_invalid')
+        if doc['recovery_mode'] == R354_RECOVERY_MODE:
+            need(type(doc.get('third_partial_receipt_sha256')) is str and
+                 DIGEST.fullmatch(doc['third_partial_receipt_sha256']) is not None and
+                 type(doc.get('recovery4_attestation_sha256')) is str and
+                 DIGEST.fullmatch(doc['recovery4_attestation_sha256']) is not None and
+                 doc.get('network_bridge_macs') == R354_EXISTING_BRIDGE_MACS,
+                 'r354_resume_provenance_invalid')
     if doc['status'] == 'PREFLIGHT_PASS_NOT_INSTALLED':
         need(doc.get('nft_table_installed') is False and
              doc.get('nft_table_verified') is False and
@@ -1258,6 +1443,16 @@ def verify_deployment_report(doc: dict[str, Any]) -> bool:
              doc.get('nwfilter_verified') is False and
              doc.get('networks_defined') == [] and doc.get('domains_defined') == [] and
              doc.get('failure_code') is None, 'r35_preflight_only_status_invalid')
+    elif doc['status'] == 'RESUME_PREFLIGHT_PASS_EXISTING_3NETWORKS_SSH_DOMAIN':
+        need(doc.get('recovery_mode') == R354_RECOVERY_MODE and
+             doc.get('nft_table_verified') is True and
+             doc.get('nwfilter_verified') is True and
+             doc.get('networks_defined') == list(NETWORKS) and
+             doc.get('networks_verified_inactive') == list(NETWORKS) and
+             doc.get('domains_defined') == [t33.DOMAIN_PREFIX + 'ssh'] and
+             doc.get('domains_verified_shut_off') == [t33.DOMAIN_PREFIX + 'ssh'] and
+             doc.get('failure_code') is None,
+             'r354_preflight_status_invalid')
     elif doc['status'] == 'RESUME_PREFLIGHT_PASS_EXISTING_NFT_FILTER_SSH':
         need(doc.get('recovery_mode') == 'EXISTING_NFT_FILTER_SSH_VERIFIED' and
              doc.get('nft_table_installed') is True and
@@ -1301,6 +1496,7 @@ def verify_deployment_report(doc: dict[str, Any]) -> bool:
         need(doc['status'] in ('PREFLIGHT_PASS_NOT_INSTALLED',
              'RESUME_PREFLIGHT_PASS_EXISTING_NFT',
              'RESUME_PREFLIGHT_PASS_EXISTING_NFT_FILTER_SSH',
+             'RESUME_PREFLIGHT_PASS_EXISTING_3NETWORKS_SSH_DOMAIN',
              'BLOCKED_NO_CHANGE', 'PARTIAL_NO_GO_REVIEW_REQUIRED'),
              'r35_status_invalid')
     return True
@@ -1549,9 +1745,131 @@ def verify_second_partial_receipt(directory: Path, bundle: dict[str, Any],
         'p8_operational': 'NO-GO',
     }
 
+def verify_third_partial_receipt(directory: Path, bundle: dict[str, Any],
+                                 first: dict[str, Any],
+                                 second: dict[str, Any]) -> dict[str, Any]:
+    """Authenticate exactly the R35.3 stopped-after-SSH report and three writes."""
+    need(isinstance(directory, Path) and directory.is_absolute() and
+         directory.name == R353_PARTIAL_DIRNAME and not directory.is_symlink() and
+         all(not p.is_symlink() for p in directory.parents),
+         'r354_third_receipt_path_invalid')
+    st = directory.stat()
+    need(stat.S_ISDIR(st.st_mode) and st.st_uid == os.geteuid() and
+         stat.S_IMODE(st.st_mode) == 0o700,
+         'r354_third_receipt_directory_invalid')
+    names = {'SHA256SUMS', 'commands.jsonl', 'r35_deployment.json',
+             'r35_host_preflight.json', 'r35_source_attestation.json',
+             'r35_resume_attestation.json', 'r35_recovery3_attestation.json'}
+    need({p.name for p in directory.iterdir()} == names,
+         'r354_third_receipt_inventory_invalid')
+    manifest = t34.secure_file(directory / 'SHA256SUMS').decode('ascii')
+    sums = {}
+    for line in manifest.splitlines():
+        m = re.fullmatch(r'([0-9a-f]{64})  ([A-Za-z0-9_.-]+)', line)
+        need(m is not None and m.group(2) not in sums and
+             m.group(2) in names - {'SHA256SUMS'},
+             'r354_third_receipt_manifest_invalid')
+        sums[m.group(2)] = m.group(1)
+    need(set(sums) == names - {'SHA256SUMS'} and
+         all(sha(t34.secure_file(directory / n)) == h for n, h in sums.items()),
+         'r354_third_receipt_hash_invalid')
+    previous, raw_deployment = _read_json(directory / 'r35_deployment.json')
+    verify_deployment_report(previous)
+    need(previous['sha256'] == R353_PARTIAL_REPORT_SHA256 and
+         previous['status'] == 'PARTIAL_NO_GO_REVIEW_REQUIRED' and
+         previous['failure_code'] == 'defined_domain_identity_mismatch_ssh' and
+         previous['recovery_mode'] == 'EXISTING_NFT_FILTER_SSH_VERIFIED' and
+         previous['nft_table_verified'] is True and
+         previous['nwfilter_verified'] is True and
+         previous['networks_defined'] == list(NETWORKS) and
+         previous['networks_verified_inactive'] == list(NETWORKS) and
+         previous['domains_defined'] == [t33.DOMAIN_PREFIX + 'ssh'] and
+         previous['domains_verified_shut_off'] == [] and
+         previous.get('network_bridge_macs') == R354_EXISTING_BRIDGE_MACS and
+         previous['active_networks_observed'] == [] and
+         previous['active_domains_observed'] == [] and
+         previous['network_started'] is False and previous['vm_started'] is False and
+         previous['p8_operational'] == 'NO-GO' and
+         previous['source_attestation_sha256'] == bundle['attestation']['sha256'] and
+         previous['prior_partial_receipt_sha256'] == first['original_receipt_sha256'] and
+         previous['second_partial_receipt_sha256'] == second['second_receipt_sha256'],
+         'r354_third_report_state_invalid')
+    host, _ = _read_json(directory / 'r35_host_preflight.json')
+    verify_host_report(host)
+    need(host['schema'] == 'ardrec-p14-r353-host-preflight-v1' and
+         previous['host_preflight_sha256'] == host['sha256'],
+         'r354_third_host_preflight_invalid')
+    source, _ = _read_json(directory / 'r35_source_attestation.json')
+    need(source == bundle['attestation'], 'r354_third_source_invalid')
+    a, _ = _read_json(directory / 'r35_resume_attestation.json')
+    b, _ = _read_json(directory / 'r35_recovery3_attestation.json')
+    need(a.get('sha256') == previous['resume_attestation_sha256'] and
+         b.get('sha256') == previous['recovery3_attestation_sha256'] and
+         a.get('current_host_preflight_sha256') == host['sha256'] and
+         b.get('current_host_preflight_sha256') == host['sha256'] and
+         a.get('original_receipt_sha256') == first['original_receipt_sha256'] and
+         b.get('second_receipt_sha256') == second['second_receipt_sha256'] and
+         sha(canon({k:v for k,v in a.items() if k != 'sha256'})) == a['sha256'] and
+         sha(canon({k:v for k,v in b.items() if k != 'sha256'})) == b['sha256'],
+         'r354_third_attestation_chain_invalid')
+    raw_commands = t34.secure_file(directory / 'commands.jsonl')
+    records = []
+    for line in raw_commands.splitlines():
+        try:
+            record = json.loads(line, object_pairs_hook=_pairs)
+        except (TypeError, ValueError, UnicodeError) as exc:
+            raise R35Error('r354_third_commands_json_invalid') from exc
+        need(type(record) is dict and type(record.get('argv')) is list and
+             all(type(x) is str for x in record['argv']) and
+             type(record.get('returncode')) is int and
+             all(type(record.get(k)) is str and DIGEST.fullmatch(record[k])
+                 for k in ('stdout_sha256','stderr_sha256')),
+             'r354_third_command_record_invalid')
+        records.append(record)
+    _check_activation_absent(records)
+    need(not any(row['argv'] and row['argv'][0] == '/usr/bin/virsh' and
+                 row['argv'][1:2] != ['--readonly'] for row in records),
+         'r354_third_unprivileged_write_invalid')
+    prefix = ['/usr/bin/sudo','-n','--','/usr/bin/virsh','-c','qemu:///system']
+    writes = [r for r in records if r['argv'][:6] == prefix]
+    need(len(writes) == 3 and
+         [r['argv'][6] for r in writes] == ['net-define','net-define','define'] and
+         [Path(r['argv'][-1]).name for r in writes] ==
+           ['network-ftp.xml','network-smb.xml','domain-ssh.xml'] and
+         writes[2]['argv'][7] == '--validate' and
+         all(r['returncode'] == 0 and
+             r['argv'][-1].startswith('/tmp/ardrec-r35-source-') for r in writes),
+         'r354_third_write_scope_invalid')
+    for r in records:
+        argv = r['argv']
+        need(not (argv[:4] in (['/usr/bin/sudo','-n','--','/usr/bin/nft'],
+                                  ['/usr/bin/sudo','-n','--','/usr/sbin/nft']) and
+                  argv[4:] == ['-f','-']), 'r354_third_nft_write_forbidden')
+        need(not (argv[:6] == prefix and r not in writes),
+             'r354_third_virsh_write_forbidden')
+    readbacks = [r for r in records if r['argv'][:4] ==
+                 ['/usr/bin/virsh','--readonly','-c','qemu:///system'] and
+                 r['argv'][4:7] == ['dumpxml', t33.DOMAIN_PREFIX+'ssh', '--inactive']]
+    need(len(readbacks) == 1 and readbacks[0]['returncode'] == 0,
+         'r354_third_ssh_dump_missing')
+    # stdout for dom XML may exceed the 4 KiB receipt truncation threshold.
+    # Treat it as provenance only; current complete XML is freshly verified.
+    return {'schema': 'ardrec-p14-r354-partial-chain-attestation-v1',
+            'first_receipt_sha256': first['original_receipt_sha256'],
+            'second_receipt_sha256': second['second_receipt_sha256'],
+            'third_receipt_sha256': sha(raw_deployment),
+            'third_commands_sha256': sha(raw_commands),
+            'third_sha256sums_sha256': sha((directory / 'SHA256SUMS').read_bytes()),
+            'existing_resources_verified_as_recorded': [NFT_TABLE, FILTER_NAME,
+                 *NETWORKS, t33.DOMAIN_PREFIX + 'ssh'],
+            'bridge_macs': R354_EXISTING_BRIDGE_MACS,
+            'p8_operational': 'NO-GO'}
+
+
 def deploy(bundle: dict[str, Any], preflight: dict[str, Any], host: Host, *,
            reuse_verified_nft: bool = False,
-           reuse_verified_filter_ssh: bool = False) -> dict[str, Any]:
+           reuse_verified_filter_ssh: bool = False,
+           reuse_verified_all_networks_ssh_domain: bool = False) -> dict[str, Any]:
     """Install the exact R34 deny policy, then define filter/networks/domains inactive.
 
     No rollback is attempted after a partial write. Every next step is fail-closed.
@@ -1560,17 +1878,27 @@ def deploy(bundle: dict[str, Any], preflight: dict[str, Any], host: Host, *,
     root = bundle['root']
     need(not reuse_verified_filter_ssh or
          (reuse_verified_nft and
-          preflight.get('schema') == 'ardrec-p14-r353-host-preflight-v1' and
+          preflight.get('schema') in ('ardrec-p14-r353-host-preflight-v1',
+                                       'ardrec-p14-r354-host-preflight-v1') and
           preflight.get('existing_filter_verified') is True and
-          preflight.get('existing_networks_verified') == [t33.NETWORK_PREFIX + 'ssh']),
+          (preflight.get('existing_networks_verified') == [t33.NETWORK_PREFIX + 'ssh']
+           or preflight.get('existing_networks_verified') == list(NETWORKS))),
          'r353_reuse_preflight_invalid')
+    need(not reuse_verified_all_networks_ssh_domain or
+         (reuse_verified_filter_ssh and reuse_verified_nft and
+          preflight.get('schema') == 'ardrec-p14-r354-host-preflight-v1' and
+          preflight.get('existing_domains_verified') == [t33.DOMAIN_PREFIX + 'ssh'] and
+          preflight.get('existing_network_bridge_macs') == R354_EXISTING_BRIDGE_MACS),
+         'r354_reuse_preflight_invalid')
     nft_installed = bool(reuse_verified_nft)
     filter_defined = bool(reuse_verified_filter_ssh)
     filter_verified = False
     table_verified = False
-    networks_defined: list[str] = ([t33.NETWORK_PREFIX + 'ssh']
-                                   if reuse_verified_filter_ssh else [])
-    domains_defined: list[str] = []
+    networks_defined: list[str] = (list(NETWORKS) if reuse_verified_all_networks_ssh_domain else
+                                   ([t33.NETWORK_PREFIX + 'ssh']
+                                    if reuse_verified_filter_ssh else []))
+    domains_defined: list[str] = ([t33.DOMAIN_PREFIX + 'ssh']
+                                   if reuse_verified_all_networks_ssh_domain else [])
     networks_inactive: list[str] = []
     domains_shut_off: list[str] = []
     autostart_disabled = False
@@ -1608,7 +1936,8 @@ def deploy(bundle: dict[str, Any], preflight: dict[str, Any], host: Host, *,
             name = t33.NETWORK_PREFIX + role
             xml_path = root / R33_DIR / f'network-{role}.xml'
             expected = xml_path.read_bytes()
-            if not (reuse_verified_filter_ssh and role == 'ssh'):
+            if not (reuse_verified_all_networks_ssh_domain or
+                    (reuse_verified_filter_ssh and role == 'ssh')):
                 _assert_resource_absent(host, kind='network', name=name,
                                         uuid=_xml_uuid(xml_path))
                 host.virsh_write(['net-define', str(xml_path)])
@@ -1634,10 +1963,11 @@ def deploy(bundle: dict[str, Any], preflight: dict[str, Any], host: Host, *,
             name = t33.DOMAIN_PREFIX + role
             xml_path = root / R33_DIR / f'domain-{role}.xml'
             expected = xml_path.read_bytes()
-            _assert_resource_absent(host, kind='domain', name=name,
-                                    uuid=_xml_uuid(xml_path))
-            host.virsh_write(['define', '--validate', str(xml_path)])
-            domains_defined.append(name)
+            if not (reuse_verified_all_networks_ssh_domain and role == 'ssh'):
+                _assert_resource_absent(host, kind='domain', name=name,
+                                        uuid=_xml_uuid(xml_path))
+                host.virsh_write(['define', '--validate', str(xml_path)])
+                domains_defined.append(name)
             dump = host.virsh_ro(['dumpxml', name, '--inactive'])
             _verify_domain_dump(dump, expected, role)
             state = host.virsh_ro(['domstate', name])
@@ -1682,6 +2012,8 @@ def deploy(bundle: dict[str, Any], preflight: dict[str, Any], host: Host, *,
         domains_shut_off = []
         for role in t33.ROLES:
             name = t33.DOMAIN_PREFIX + role
+            expected = (root / R33_DIR / f'domain-{role}.xml').read_bytes()
+            _verify_domain_dump(host.virsh_ro(['dumpxml', name, '--inactive']), expected, role)
             _verify_inactive_info(host.virsh_ro(['domstate', name]), kind='domain')
             _verify_domain_autostart(host.virsh_ro(['dominfo', name]))
             domains_shut_off.append(name)
@@ -1729,7 +2061,8 @@ def run(archive: Path, receipt_dir: Path, *, install: bool,
         runner: Callable[..., Any] = subprocess.run,
         which: Callable[[str], str | None] = shutil.which,
         resume_partial_dir: Path | None = None,
-        resume_second_partial_dir: Path | None = None) -> dict[str, Any]:
+        resume_second_partial_dir: Path | None = None,
+        resume_third_partial_dir: Path | None = None) -> dict[str, Any]:
     _receipt_dir(receipt_dir)
     temp = tempfile.TemporaryDirectory(prefix='ardrec-r35-source-')
     try:
@@ -1738,14 +2071,20 @@ def run(archive: Path, receipt_dir: Path, *, install: bool,
         bundle = verify_source_bundle(archive, root)
         need(resume_second_partial_dir is None or resume_partial_dir is not None,
              'r353_first_partial_receipt_required')
+        need(resume_third_partial_dir is None or resume_second_partial_dir is not None,
+             'r354_second_partial_receipt_required')
         prior = (verify_prior_partial_receipt(resume_partial_dir, bundle)
                  if resume_partial_dir is not None else None)
         second = (verify_second_partial_receipt(resume_second_partial_dir, bundle, prior)
                   if resume_second_partial_dir is not None else None)
+        third = (verify_third_partial_receipt(resume_third_partial_dir, bundle, prior, second)
+                 if resume_third_partial_dir is not None else None)
         preflight, host = host_preflight(bundle, runner=runner, which=which,
               existing_nft=prior is not None,
               existing_filter=second is not None,
-              existing_networks=('ssh',) if second is not None else ())
+              existing_networks=tuple(t33.NET_BRIDGE) if third is not None else
+                                (('ssh',) if second is not None else ()),
+              existing_domains=('ssh',) if third is not None else ())
         records: dict[str, dict[str, Any]] = {
             'r35_source_attestation.json': bundle['attestation'],
             'r35_host_preflight.json': preflight,
@@ -1758,10 +2097,32 @@ def run(archive: Path, receipt_dir: Path, *, install: bool,
             second['current_host_preflight_sha256'] = preflight['sha256']
             second['sha256'] = sha(canon(second))
             records['r35_recovery3_attestation.json'] = second
+        if third is not None:
+            third['current_host_preflight_sha256'] = preflight['sha256']
+            third['sha256'] = sha(canon(third))
+            records['r35_recovery4_attestation.json'] = third
         if install:
             report = deploy(bundle, preflight, host,
                             reuse_verified_nft=prior is not None,
-                            reuse_verified_filter_ssh=second is not None)
+                            reuse_verified_filter_ssh=second is not None,
+                            reuse_verified_all_networks_ssh_domain=third is not None)
+        elif third is not None:
+            report = deployment_report(bundle, preflight,
+                status='RESUME_PREFLIGHT_PASS_EXISTING_3NETWORKS_SSH_DOMAIN',
+                nft_installed=True, table_verified=True,
+                filter_defined=True, filter_verified=True,
+                networks_defined=list(NETWORKS), networks_inactive=list(NETWORKS),
+                domains_defined=[t33.DOMAIN_PREFIX+'ssh'],
+                domains_shut_off=[t33.DOMAIN_PREFIX+'ssh'],
+                network_bridge_macs=R354_EXISTING_BRIDGE_MACS,
+                recovery_provenance={
+                    'recovery_mode': R354_RECOVERY_MODE,
+                    'prior_partial_receipt_sha256': prior['original_receipt_sha256'],
+                    'second_partial_receipt_sha256': second['second_receipt_sha256'],
+                    'third_partial_receipt_sha256': third['third_receipt_sha256'],
+                    'resume_attestation_sha256': prior['sha256'],
+                    'recovery3_attestation_sha256': second['sha256'],
+                    'recovery4_attestation_sha256': third['sha256']})
         elif second is not None:
             report = deployment_report(bundle, preflight,
                 status='RESUME_PREFLIGHT_PASS_EXISTING_NFT_FILTER_SSH',
@@ -1784,12 +2145,16 @@ def run(archive: Path, receipt_dir: Path, *, install: bool,
             report = deployment_report(bundle, preflight,
                 status='PREFLIGHT_PASS_NOT_INSTALLED')
         if prior is not None:
-            report['recovery_mode'] = ('EXISTING_NFT_FILTER_SSH_VERIFIED' if second is not None
-                                       else 'EXISTING_NFT_VERIFIED_JSON')
+            report['recovery_mode'] = (R354_RECOVERY_MODE if third is not None else
+                ('EXISTING_NFT_FILTER_SSH_VERIFIED' if second is not None
+                 else 'EXISTING_NFT_VERIFIED_JSON'))
             report['prior_partial_receipt_sha256'] = prior['original_receipt_sha256']
             if second is not None:
                 report['second_partial_receipt_sha256'] = second['second_receipt_sha256']
                 report['recovery3_attestation_sha256'] = second['sha256']
+            if third is not None:
+                report['third_partial_receipt_sha256'] = third['third_receipt_sha256']
+                report['recovery4_attestation_sha256'] = third['sha256']
             report['resume_attestation_sha256'] = prior['sha256']
             report['sha256'] = sha(canon({k: v for k, v in report.items() if k != 'sha256'}))
             verify_deployment_report(report)
