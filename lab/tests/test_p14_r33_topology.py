@@ -233,7 +233,8 @@ class TopologyTests(unittest.TestCase):
 
     def test_world_access_directory_rejected(self):
         with tempfile.TemporaryDirectory() as parent:
-            root=Path(parent)/'private';root.mkdir(mode=0o755)
+            root=Path(parent)/'private';root.mkdir(mode=0o700)
+            root.chmod(0o755)
             with self.assertRaises(t.TopologyError):
                 t.prepare_xml(root,self.src,t.R32_RECEIPT_FILE_SHA256)
 

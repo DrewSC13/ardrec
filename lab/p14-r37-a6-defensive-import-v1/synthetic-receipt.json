@@ -1,0 +1,14 @@
+{
+  "schema": "ardrec-p14-r37-a6-defensive-observation-v1",
+  "record_id": "DEV-SSH-0001",
+  "session_id": "DEV_TUTOR_001",
+  "service_id": "SSH_DEV",
+  "case_id": "CASE_REFERENCE",
+  "source_kind": "SYNTHETIC_FIXTURE",
+  "method_id": "SSH_EFFECTIVE_CONFIG_READONLY",
+  "captured_at_utc": "2026-11-14T19:59:00Z",
+  "configuration_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "support_sha256": "c9e966ffe64a36a3da1133cd09b84f4d93e38123a56d3569725782a40e27449b",
+  "support_bytes": 45,
+  "observed_claim": "INCONCLUSIVE"
+}
