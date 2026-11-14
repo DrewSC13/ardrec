@@ -1,0 +1,15 @@
+{
+  "schema": "ardrec-p14-r29-historical-vm-roles-v1",
+  "source": "lab/services-v1/evidence.json",
+  "provenance": "2026-11-04 historical development activation, not current VM state",
+  "host": "Prometheus",
+  "libvirt_uri": "qemu:///system",
+  "roles": [
+    {"role":"ssh", "domain":"ardrec-dev-ssh", "ip":"10.203.30.2", "port":22, "interfaces":[{"network":"ardrec-dev-ssh", "mac":"52:54:00:ad:30:02"}]},
+    {"role":"ftp", "domain":"ardrec-dev-ftp", "ip":"10.203.31.2", "port":21, "interfaces":[{"network":"ardrec-dev-ftp", "mac":"52:54:00:ad:31:02"}]},
+    {"role":"smb", "domain":"ardrec-dev-smb", "ip":"10.203.32.2", "port":445, "interfaces":[{"network":"ardrec-dev-smb", "mac":"52:54:00:ad:32:02"}]},
+    {"role":"runner", "domain":"ardrec-dev-runner", "ip":null, "port":null, "interfaces":[{"network":"ardrec-dev-ssh", "mac":"52:54:00:ad:30:01"},{"network":"ardrec-dev-ftp", "mac":"52:54:00:ad:31:01"},{"network":"ardrec-dev-smb", "mac":"52:54:00:ad:32:01"}]}
+  ],
+  "historic_cleanup": "ALL_TEMPORARY_DOMAINS_STOPPED_AND_NETWORKS_REMOVED",
+  "operational_authority": false
+}
