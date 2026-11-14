@@ -1,0 +1,41 @@
+{
+  "schema": "ardrec-p14-r26-a1-a3-session-traceability-v1",
+  "increment": "P14-R26 / paquete 1",
+  "base_commit": "f42083f42bf5c2bbff66a8163276ea69e6323c0b",
+  "thesis_revision": "Tesis ARDREC(20261114-012812).pdf",
+  "thesis_mapping": {
+    "A1": "3.6.1, Figuras 3.4-3.5",
+    "A2": "3.6.1, Figuras 3.6-3.9",
+    "A3": "3.6.1, Figuras 3.10-3.12"
+  },
+  "module": "src/ardrec/coordination/demo_session.py",
+  "reused_modules": [
+    "src/ardrec/rules/kernel.py",
+    "src/ardrec/initialization/rule_preflight.py",
+    "src/ardrec/initialization/initial_preview.py",
+    "src/ardrec/initialization/dependency_preview.py",
+    "src/ardrec/initialization/control_preview.py",
+    "src/ardrec/initialization/integrated_preview.py",
+    "src/ardrec/scheduling/guard_preview.py"
+  ],
+  "oracles": "lab/p14-r26-session-v1/oracle.json",
+  "fixture": "lab/p14-r26-session-v1/scenario.json",
+  "test": "lab/tests/test_p14_r26_session_a1_a3.py",
+  "demo": "scripts/demo_p14_r26_session_a1_a3.py",
+  "bounded_coverage": [
+    "A1: unique true, false, ND with typed logical fact",
+    "A2: three configured services, exact initial fractions, references and immutable assembly",
+    "A3: trivalent analytical diagnosis, explicit authority blocker, no control applied",
+    "events: nine content-addressed A1/A2/A3 decisions in a deterministic chain"
+  ],
+  "invariants": {
+    "synthetic_only": true,
+    "vm_access": false,
+    "operational_dispatch": false,
+    "generation_published": false,
+    "final_risk_computed": false,
+    "a4_to_a10_executed": false
+  },
+  "acceptance_level": "PENDING_OPERATOR_TEST_IN_FULL_CHECKOUT",
+  "open_obligations": ["A1_FULL", "A2_FULL", "A3_FULL", "A4_A10", "TUI", "VM_LIVE_PROOFS", "P8_OPERATIONAL"]
+}

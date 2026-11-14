@@ -1,0 +1,9 @@
+{
+  "format": "ardrec-p14-r26-fixed-three-service-scenario-v1",
+  "session_id": "DEV_TUTOR_001",
+  "services": [
+    {"id": "SSH_DEV", "protocol": "SSH", "fact": "VERDADERO", "initial_risk": "1/4", "normalized_criticality": "1/2"},
+    {"id": "FTP_DEV", "protocol": "FTP", "fact": "AUSENTE", "initial_risk": "1/4", "normalized_criticality": "1/2"},
+    {"id": "SMB_DEV", "protocol": "SMB", "fact": "FALSO", "initial_risk": "1/4", "normalized_criticality": "1/2"}
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "schema": "ardrec-p14-r26-oracle-v1",
+  "basis": "ESPERADO_DEFINIDO_ANTES_DEL_RECorrido",
+  "source_kind": "SYNTHETIC_FIXTURE",
+  "expected": {
+    "SSH_DEV": {"a1": "VERDADERO", "selected_rule": "ALLOW", "a3": "VERDADERO", "primary_blocker": "AUTORIDAD_OPERACIONAL_NO_ACREDITADA"},
+    "FTP_DEV": {"a1": "ND", "selected_rule": null, "a3": "ND", "primary_blocker": "GUARDA_ND"},
+    "SMB_DEV": {"a1": "VERDADERO", "selected_rule": "DENY", "a3": "VERDADERO", "primary_blocker": "GUARDA_FALSA"}
+  },
+  "common": {"initial_phase": "PREPARADO", "initial_risk": "1/4", "accumulated_evidence": "0", "published_generation": null, "operational_dispatch": false, "final_risk": null, "events": 9}
+}
