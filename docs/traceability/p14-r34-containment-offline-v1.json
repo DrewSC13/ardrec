@@ -1,0 +1,16 @@
+{
+  "schema":"ardrec-p14-r34-traceability-v1",
+  "base_main":"7e339d2b7fbcd0d657f923a513a65fd575725123",
+  "dependencies":["R32_FOUR_NEW_COW_OVERLAYS","R33_SEVEN_XML_VALIDATED"],
+  "source_receipt_sha256":"1b55caefef6808fbfddf32a66a19be7f23c3f63b226799b098380fd93627421c",
+  "controls":["SCOPE_EXACT_SIX_TAPS","DENY_ALL_NWFILTER","BRIDGE_INPUT_OUTPUT_FORWARD_DROP","NO_FLUSH_RULESET","REJECT_SYMLINKS_AND_XML_DRIFT","NO_HOST_MODIFICATION_IN_R34","HOST_SCHEMA_AND_NFT_SYNTAX_CHECK"],
+  "tests":"lab/tests/test_p14_r34_containment.py",
+  "operational_dispatch":false,
+  "network_activation":false,
+  "vm_start":false,
+  "p8_operational":"NO-GO",
+  "system_functional_acceptance":"PENDING",
+  "experimental_validation":"NOT_RUN",
+  "open_findings":["AL-06","AL-07"],
+  "next":"R35_EXPLICIT_CONTAINMENT_INSTALL_WITH_INACTIVE_DEFINITIONS"
+}
