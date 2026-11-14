@@ -10,6 +10,7 @@ sys.path.insert(0,str(ROOT/'src'))
 from ardrec.coordination.demo_session import read_fixed_scenario
 from ardrec.coordination.development_cycle import build_development_cycle,verify_development_cycle
 from ardrec.coordination.terminal_view import render_text,run_tui
+from ardrec.coordination.dashboard_tui import run_dashboard_tui
 from ardrec.analytics.exact_preview import canonical
 from ardrec.evidence.defensive_import import (
     read_observation,admit_defensive_observation)
@@ -27,7 +28,8 @@ def main() -> int:
     v=parser.add_mutually_exclusive_group(required=True)
     v.add_argument('--texto',action='store_true')
     v.add_argument('--json',action='store_true')
-    v.add_argument('--tui',action='store_true')
+    v.add_argument('--tui',action='store_true',help='dashboard R38')
+    v.add_argument('--tui-clasica',action='store_true',help='vista original R28/R37')
     opts=parser.parse_args()
     if opts.run_local_benign and opts.journal_root is None:
         parser.error('--run-local-benign exige --journal-root')
@@ -52,8 +54,10 @@ def main() -> int:
         sys.stdout.write(render_text(report))
     elif opts.json:
         sys.stdout.buffer.write(canonical(report)+b'\n')
-    else:
+    elif opts.tui_clasica:
         run_tui(report)
+    else:
+        run_dashboard_tui(report)
     return 0
 
 if __name__=='__main__':
