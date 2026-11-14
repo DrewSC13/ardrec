@@ -1,0 +1,23 @@
+{
+  "schema": "ardrec-p14-r362-observability-traceability-v1",
+  "base_main": "b9af5eb0669d19881b18cb78dee7878858fcb753",
+  "scope": "REAL_READONLY_HOST_OBSERVABILITY_PLUS_DISTINCT_SYNTHETIC_A1_A10_VIEW",
+  "source_contracts": [
+    "ardrec-p14-r35-inactive-deployment-v1",
+    "ardrec-r36-readonly-snapshot-v1",
+    "ardrec-p14-r28-a1-a10-tutor-development-cycle-v1"
+  ],
+  "stages_visible": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10"],
+  "real_host_fields": ["nft", "nwfilter", "three_inactive_networks", "four_shut_off_domains", "zero_reserved_taps", "cpu_from_proc", "ram_from_proc", "load_average"],
+  "algo_claim": "DEVELOPMENT_PREVIEW_NOT_OPERATIONAL",
+  "experiment_claim": "NOT_RUN",
+  "system_functional_acceptance": "PENDING",
+  "final_risk": null,
+  "host_mutations_allowed": false,
+  "network_calls_allowed": false,
+  "vm_start_allowed": false,
+  "service_pentest_allowed": false,
+  "operational_dispatch": false,
+  "p8_operational": "NO-GO",
+  "open_findings": ["AL-06", "AL-07"]
+}
