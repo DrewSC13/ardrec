@@ -6,6 +6,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -139,15 +140,20 @@ class FakeHostRunner:
                 elif (self.collision == 'network' or
                       (self.late_collision == 'network' and self.nft_installed)) and args == ['net-list', '--all', '--name']:
                     data = b'ardrec-r33-dev-net-ssh\n'
-                elif (self.collision == 'filter' or
-                      (self.late_collision == 'filter' and self.nft_installed)) and args == ['nwfilter-list', '--name']:
-                    data = (t.FILTER_NAME + '\n').encode()
+                elif args == ['nwfilter-list']:
+                    affected = (self.collision in ('filter', 'filter_uuid') or
+                                (self.late_collision == 'filter' and self.nft_installed) or
+                                self.filter_defined)
+                    data = b' UUID  Name\n----------------------------------------\n'
+                    if affected:
+                        ident = ET.fromstring(self.policy['nwfilter-deny.xml']).findtext('uuid')
+                        name = ('other-filter' if self.collision == 'filter_uuid'
+                                else t.FILTER_NAME)
+                        data += f' {ident}  {name}\n'.encode('ascii')
                 elif args == ['list', '--all', '--name'] and self.domains_defined:
                     data = ('\n'.join(self.domains_defined) + '\n').encode()
                 elif args == ['net-list', '--all', '--name'] and self.networks_defined:
                     data = ('\n'.join(self.networks_defined) + '\n').encode()
-                elif args == ['nwfilter-list', '--name'] and self.filter_defined:
-                    data = (t.FILTER_NAME + '\n').encode()
                 else:
                     data = b''
             elif verb == 'nwfilter-dumpxml':
@@ -294,6 +300,50 @@ class R35Tests(unittest.TestCase):
         self.assertFalse(report['vm_started'])
         self.assertFalse(any('define' in call[0] or 'start' in call[0]
                              for call in fake.calls))
+
+    def test_nwfilter_inventory_real_virsh_table(self):
+        empty = b' UUID    Name\n--------------------------------------\n'
+        self.assertEqual(t._nwfilter_inventory(empty), (set(), set()))
+        full = (empty +
+                b' 1A2B3C4D-0000-1111-2222-123456789abc  clean-traffic\n')
+        names, uuids = t._nwfilter_inventory(full)
+        self.assertEqual(names, {'clean-traffic'})
+        self.assertEqual(uuids, {'1a2b3c4d-0000-1111-2222-123456789abc'})
+
+    def test_nwfilter_inventory_rejects_malformed_and_duplicates(self):
+        head = b' UUID  Name\n------------------------\n'
+        for raw in (b'', b'unknown\n',
+                    head+b'invalid-uuid filter\n',
+                    head+b'00000000-0000-0000-0000-000000000001 name other\n',
+                    head+(b'00000000-0000-0000-0000-000000000001 same\n'*2)):
+            with self.subTest(raw=raw):
+                with self.assertRaises(t.R35Error):
+                    t._nwfilter_inventory(raw)
+
+    def test_nwfilter_preflight_uses_only_supported_options(self):
+        _, fake = self.host()
+        t.host_preflight(self.bundle, runner=fake,
+                         which=lambda name: BINARIES.get(name))
+        commands = [c[0] for c in fake.calls]
+        self.assertIn(['/usr/bin/virsh', '--readonly', '-c',
+                       'qemu:///system', 'nwfilter-list'], commands)
+        self.assertFalse(any('nwfilter-list' in cmd and
+                             any(x in cmd for x in ('--name', '--uuid'))
+                             for cmd in commands))
+
+    def test_nwfilter_collision_by_name_rejected(self):
+        _, fake = self.host(collision='filter')
+        with self.assertRaises(t.R35Error):
+            t.host_preflight(self.bundle, runner=fake,
+                             which=lambda name: BINARIES.get(name))
+        self.assertFalse(fake.nft_installed)
+
+    def test_nwfilter_collision_by_uuid_rejected(self):
+        _, fake = self.host(collision='filter_uuid')
+        with self.assertRaises(t.R35Error):
+            t.host_preflight(self.bundle, runner=fake,
+                             which=lambda name: BINARIES.get(name))
+        self.assertFalse(fake.nft_installed)
 
     def test_preflight_rejects_existing_network_collision(self):
         _, fake = self.host(collision='network')
