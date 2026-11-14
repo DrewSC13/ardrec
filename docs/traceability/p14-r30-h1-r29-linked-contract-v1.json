@@ -1,0 +1,28 @@
+{
+  "schema": "ardrec-p14-r30-h1-r29-linked-acceptance-v1",
+  "base_main": "8231b8da5db66f918d812d8305b6243c568c53ae",
+  "parent_increment": "P14-R30",
+  "scope": "CORRECT_R29_JSON_LINKED_VIEW_CONSUMPTION_ONLY",
+  "defect": "R30 read_r29 validated R29 linked CLI wrapper as bare vm_host_preflight",
+  "root_cause": "Unit fixture used bare R29 document while CLI serializes linked outer envelope",
+  "changes": [
+    "Recognize exact R29 linked schema and keys",
+    "Verify outer SHA-256, NO-GO and cycle reference format",
+    "Verify nested R29 preflight with existing verify_report",
+    "Preserve raw preflight compatibility for existing tests",
+    "Refuse host residual resources, network probes and authority as before"
+  ],
+  "unit_tests": "test_p14_r30_r29_linked.py",
+  "acceptance_expected": "R29_WRAPPER_REJECTS_TAMPER_AND_R30_HISTORICAL_AND_SCAN_READONLY_PASS",
+  "real_executor": "NOT_RUN",
+  "vm_observations": "NOT_RUN",
+  "p8_operational": "NO-GO",
+  "can_restore": false,
+  "actual_image_hashes_verified": false,
+  "known_gap": "R29 source cycle SHA is syntactically linked but external freshness custody remains unaccredited",
+  "requirements": [
+    "AL-07",
+    "FRESHNESS-CUSTODY"
+  ],
+  "acceptance": "PENDING_PROMETHEUS_RUN"
+}

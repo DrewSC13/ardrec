@@ -1,0 +1,42 @@
+{
+  "schema": "ardrec-p14-r30-restore-assets-expected-v1",
+  "origin": "lab/services-v1/procedures/activation-r8.py",
+  "origin_scope": "HISTORICAL_RECOVERY_PIN_NOT_CURRENT_ATTESTATION",
+  "host": "Prometheus",
+  "historical_base_root": "/var/lib/libvirt/images/ardrec-dev-point4-v4",
+  "historical_runtime_root": "/var/lib/libvirt/images/ardrec-dev-point4-v6",
+  "roles": [
+    {
+      "role": "ssh",
+      "base_path": "/var/lib/libvirt/images/ardrec-dev-point4-v4/ssh-base.qcow2",
+      "base_sha256_historical": "422aa101cc26463df4a9f651f9cc66ee3d646fd79fe1615a70de26e14efe0d62",
+      "runtime_path": "/var/lib/libvirt/images/ardrec-dev-point4-v6/ssh-runtime.qcow2",
+      "virtual_size_gib": 8
+    },
+    {
+      "role": "ftp",
+      "base_path": "/var/lib/libvirt/images/ardrec-dev-point4-v4/ftp-base.qcow2",
+      "base_sha256_historical": "7c7992c4446c550c1b98da93ebfbe2b0d133cd14bf5eb4b7bf7818164e2cb974",
+      "runtime_path": "/var/lib/libvirt/images/ardrec-dev-point4-v6/ftp-runtime.qcow2",
+      "virtual_size_gib": 8
+    },
+    {
+      "role": "smb",
+      "base_path": "/var/lib/libvirt/images/ardrec-dev-point4-v4/smb-base.qcow2",
+      "base_sha256_historical": "ffeedf326e41f4679ae8cdb7a803a25f41671eaebcd7063740f40fd4584fa475",
+      "runtime_path": "/var/lib/libvirt/images/ardrec-dev-point4-v6/smb-runtime.qcow2",
+      "virtual_size_gib": 12
+    },
+    {
+      "role": "runner",
+      "base_path": "/var/lib/libvirt/images/ardrec-dev-point4-v4/runner-base.qcow2",
+      "base_sha256_historical": "fc9244fe29917f9bbeab09604a5845506dc3ab222b5c53648b5b90b2b1bf2103",
+      "runtime_path": "/var/lib/libvirt/images/ardrec-dev-point4-v6/runner-runtime.qcow2",
+      "virtual_size_gib": 24
+    }
+  ],
+  "read_only": true,
+  "authorization_to_restore": false,
+  "operational_dispatch": false,
+  "p8_operational": "NO-GO"
+}

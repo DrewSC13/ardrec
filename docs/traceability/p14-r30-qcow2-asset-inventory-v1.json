@@ -1,0 +1,23 @@
+{
+  "schema": "ardrec-p14-r30-qcow2-asset-inventory-traceability-v1",
+  "increment": "P14-R30",
+  "dependency_main": "MERGE_PR95_EXPECTED",
+  "required_parent_1": "03db4d120a87a04a9487088b1ccc1da1fe165161",
+  "required_parent_2": "66c108aea3085ab18fab75d62b556a0b3880e34d",
+  "historical_origin": "lab/services-v1/procedures/activation-r8.py",
+  "implementation": "src/ardrec/coordination/restoration_inventory.py",
+  "entrypoint": "scripts/ardrec_p14_r30_qcow2_inventory.py",
+  "fixtures": "lab/p14-r30-restoration-inventory-v1/expected.json",
+  "tests": "lab/tests/test_p14_r30_restore_inventory.py",
+  "development_doc": "docs/development/p14-r30-qcow2-asset-inventory-v1.md",
+  "observations": "CURRENT_HOST_READONLY_PATH_AND_QCOW2_METADATA_ONLY",
+  "baseline_sha256_currently_verified": false,
+  "restoration_allowed": false,
+  "operational_dispatch": false,
+  "p8_operational": "NO-GO",
+  "test_scope": "ISOLATED_TESTS_PLUS_REPO_REGRESSION_REQUIRED",
+  "system_functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN",
+  "open_findings": ["AL-06", "AL-07"],
+  "next": "R31_CURRENT_CONTENT_HASH_CUSTODY_AND_ISOLATED_RESTORATION_AUTHORIZATION"
+}
