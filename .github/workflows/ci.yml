@@ -78,6 +78,9 @@ jobs:
       - name: Probar recuperador v2 con binding ausente R55.8 / Test R55.8 partial binding recovery
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r558*.py' -v
 
+      - name: Probar programa conjunto SSH FTPS SMB R56.0 / Test R56.0 three-service closure contract
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r560*.py' -v
+
       - name: Verificar trazabilidad vigente / Verify current traceability
         run: python3 scripts/verificar_trazabilidad_actual.py
 
