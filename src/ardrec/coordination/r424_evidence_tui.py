@@ -111,10 +111,27 @@ def make_bundle(physical:dict[str,Any], report:dict[str,Any]) -> dict[str,Any]:
          tuple(row['algorithm'] for row in stages) == STAGES and
          all(type(row.get(k)) is str for row in stages for k in ('source','status','detail')),
          'development_stages_invalid')
+    # R43: un intento benigno LOCAL confirmado no se etiqueta como 'solo
+    # sintetico'. Mantener intacta la identidad del bundle preview R42.4.
+    local = report.get('source_kind') == 'SYNTHETIC_AND_LOCAL_BENIGN_ONLY'
+    need(report.get('source_kind') in (None,'SYNTHETIC_FIXTURE_ONLY',
+             'SYNTHETIC_AND_LOCAL_BENIGN_ONLY'), 'development_source_unknown')
+    if local:
+        need(report['r27']['a5_state'] == 'RECORDED_LIMITED' and
+             report['r27']['a5_start_count'] == 1 and
+             report['a9']['durable_local_receipt'] is True and
+             stages[4]['source'] == 'LOCAL_BENIGN_FIXTURE' and
+             stages[4]['status'] == 'RECORDED_LIMITED' and
+             stages[5]['source'] == 'LOCAL_BENIGN_FIXTURE' and
+             stages[5]['status'] == 'ND' and
+             stages[8]['source'] == 'DEVELOPMENT_LOCAL_RECEIPT_ONLY',
+             'local_benign_provenance_invalid')
+    development_kind = ('SYNTHETIC_AND_LOCAL_BENIGN_A1_A10_DEVELOPMENT_ONLY'
+                        if local else 'SYNTHETIC_A1_A10_DEVELOPMENT_ONLY')
     doc={
         'schema':SCHEMA,'source_main':MAIN_PIN,
         'physical':dict(physical),
-        'development':{'source_kind':'SYNTHETIC_A1_A10_DEVELOPMENT_ONLY',
+        'development':{'source_kind':development_kind,
                        'session_id':report['session_id'],
                        'report_sha256':report['sha256'],
                        'stages':[dict(row) for row in stages]},
@@ -125,6 +142,11 @@ def make_bundle(physical:dict[str,Any], report:dict[str,Any]) -> dict[str,Any]:
         'published_generation':None,'final_risk':None,
         'p8_operational':'NO-GO',
     }
+    if local:
+        doc['development']['local_benign_attempt'] = {
+            'state':'RECORDED_LIMITED', 'start_count':1,
+            'source':'LOCAL_BENIGN_FIXTURE',
+            'technical_truth_accredited':False}
     return seal(doc)
 
 
@@ -159,7 +181,9 @@ def verify_bundle(doc:dict[str,Any])->bool:
          p.get('tap_frames_r422')==0 and p.get('bridge_frames_r422')==0 and
          p.get('guest_ping_reported_transmitted_r422')==1,
          'bundle_physical_invalid')
-    need(type(d) is dict and d.get('source_kind')=='SYNTHETIC_A1_A10_DEVELOPMENT_ONLY' and
+    need(type(d) is dict and d.get('source_kind') in (
+             'SYNTHETIC_A1_A10_DEVELOPMENT_ONLY',
+             'SYNTHETIC_AND_LOCAL_BENIGN_A1_A10_DEVELOPMENT_ONLY') and
          type(d.get('session_id')) is str and d['session_id']=='DEV_TUTOR_001' and
          type(d.get('report_sha256')) is str and len(d['report_sha256'])==64 and
          type(d.get('stages')) is list and len(d['stages'])==10 and
@@ -167,6 +191,20 @@ def verify_bundle(doc:dict[str,Any])->bool:
          all(type(x) is dict and all(type(x.get(k)) is str for k in
              ('source','status','detail')) for x in d['stages']),
          'bundle_development_invalid')
+    marker=d.get('local_benign_attempt')
+    if d['source_kind']=='SYNTHETIC_AND_LOCAL_BENIGN_A1_A10_DEVELOPMENT_ONLY':
+        need(marker == {'state':'RECORDED_LIMITED', 'start_count':1,
+                        'source':'LOCAL_BENIGN_FIXTURE',
+                        'technical_truth_accredited':False} and
+             d['stages'][4]['status']=='RECORDED_LIMITED' and
+             d['stages'][4]['source']=='LOCAL_BENIGN_FIXTURE' and
+             d['stages'][5]['status']=='ND' and
+             d['stages'][5]['source']=='LOCAL_BENIGN_FIXTURE' and
+             d['stages'][8]['source']=='DEVELOPMENT_LOCAL_RECEIPT_ONLY',
+             'bundle_local_benign_boundary_invalid')
+    else:
+        need(marker is None and 'local_benign_attempt' not in d,
+             'legacy_preview_cannot_claim_local_execution')
     return True
 
 
