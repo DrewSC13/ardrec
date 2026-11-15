@@ -179,12 +179,14 @@ P8_R53_R54_RUST_TESTS = {
 }
 
 
-# P9-R11-R02: extension explicita para las DOS pruebas de parsing del
+# P9-R11-R03: extension explicita para CUATRO pruebas de identidad del
 # sondeo read-only de testigos. No altera inventarios historicos ni autoriza P8.
 P9_R11_RUST_TESTS = {
     "crates/ardrec-executor/src/p9_r11_witness_probe.rs": frozenset({
         "parses_stat_with_inner_parentheses",
         "parses_uid_without_accepting_missing_data",
+        "process_scheduler_state_transition_preserves_verified_identity",
+        "changed_pid_parent_group_start_or_uid_still_rejected",
     }),
 }
 
@@ -236,8 +238,10 @@ def verify_p8_rust_inventory(observed, checks):
         ) == frozenset({
             "parses_stat_with_inner_parentheses",
             "parses_uid_without_accepting_missing_data",
+            "process_scheduler_state_transition_preserves_verified_identity",
+            "changed_pid_parent_group_start_or_uid_still_rejected",
         })
-        and len(r11_extension) == 2,
+        and len(r11_extension) == 4,
         "Extensión Rust P9-R11 incompleta"
     )
     require(
@@ -251,8 +255,8 @@ def verify_p8_rust_inventory(observed, checks):
     expected.update(r11_extension)
 
     require(
-        len(expected) == 99
-        and len(observed) == 99
+        len(expected) == 101
+        and len(observed) == 101
         and observed == expected,
         "Inventario Rust incompleto"
     )
@@ -260,8 +264,8 @@ def verify_p8_rust_inventory(observed, checks):
     return {
         "historical_rust_tests": 73,
         "p8_r53_r54_rust_tests": 24,
-        "p9_r11_rust_tests": 2,
-        "current_rust_lib_tests": 99,
+        "p9_r11_rust_tests": 4,
+        "current_rust_lib_tests": 101,
         "historical_inventory_changed": False,
     }
 

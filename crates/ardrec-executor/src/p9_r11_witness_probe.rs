@@ -92,6 +92,14 @@ fn read_identity(pid: u32) -> Option<ProcIdentity> {
     })
 }
 
+/// Compara identidad durable, no el estado transitorio de planificación.
+fn same_identity(before: &ProcIdentity, after: &ProcIdentity) -> bool {
+    before.ppid == after.ppid
+        && before.pgid == after.pgid
+        && before.start_ticks == after.start_ticks
+        && before.real_uid == after.real_uid
+}
+
 /// Verifica un solo testigo propio mediante un pidfd y dos lecturas de /proc.
 ///
 /// Se requiere que el padre esperado sea el proceso actual y que el UID
@@ -134,7 +142,10 @@ pub fn observe_owned_witness(claim: WitnessClaim) -> WitnessObservation {
         return WitnessObservation::AttributionNotProven;
     };
 
-    if before != after
+    // Linux process state (R/S/D/...) may change between consecutive /proc
+    // reads. State is not process identity: compare only stable identity fields.
+    // A pidfd is held across both reads, and start_ticks remains required.
+    if !same_identity(&before, &after)
         || before.ppid != claim.expected_parent_pid
         || before.pgid != claim.expected_pgid
         || before.real_uid != claim.expected_uid
@@ -143,7 +154,7 @@ pub fn observe_owned_witness(claim: WitnessClaim) -> WitnessObservation {
         return WitnessObservation::AttributionNotProven;
     }
 
-    if before.state == 'Z' || before.state == 'X' {
+    if matches!(before.state, 'Z' | 'X') || matches!(after.state, 'Z' | 'X') {
         return WitnessObservation::ZombieNotReaped;
     }
 
@@ -152,7 +163,60 @@ pub fn observe_owned_witness(claim: WitnessClaim) -> WitnessObservation {
 
 #[cfg(test)]
 mod tests {
-    use super::{parse_real_uid, parse_stat};
+    use super::{ProcIdentity, parse_real_uid, parse_stat, same_identity};
+
+    #[test]
+    fn process_scheduler_state_transition_preserves_verified_identity() {
+        let running = ProcIdentity {
+            ppid: 42,
+            pgid: 99,
+            start_ticks: 123456,
+            state: 'R',
+            real_uid: 1000,
+        };
+        let sleeping = ProcIdentity {
+            state: 'S',
+            ..running
+        };
+        let blocked = ProcIdentity {
+            state: 'D',
+            ..running
+        };
+        assert!(same_identity(&running, &sleeping));
+        assert!(same_identity(&sleeping, &blocked));
+        assert_ne!(running, sleeping);
+    }
+
+    #[test]
+    fn changed_pid_parent_group_start_or_uid_still_rejected() {
+        let baseline = ProcIdentity {
+            ppid: 42,
+            pgid: 99,
+            start_ticks: 123456,
+            state: 'S',
+            real_uid: 1000,
+        };
+        let wrong_parent = ProcIdentity {
+            ppid: 43,
+            ..baseline
+        };
+        let wrong_group = ProcIdentity {
+            pgid: 98,
+            ..baseline
+        };
+        let wrong_ticks = ProcIdentity {
+            start_ticks: 123457,
+            ..baseline
+        };
+        let wrong_uid = ProcIdentity {
+            real_uid: 1001,
+            ..baseline
+        };
+        assert!(!same_identity(&baseline, &wrong_parent));
+        assert!(!same_identity(&baseline, &wrong_group));
+        assert!(!same_identity(&baseline, &wrong_ticks));
+        assert!(!same_identity(&baseline, &wrong_uid));
+    }
 
     #[test]
     fn parses_stat_with_inner_parentheses() {
