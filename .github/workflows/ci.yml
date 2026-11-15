@@ -63,6 +63,9 @@ jobs:
       - name: Contrastar fichas DEV R51 / Validate R51 DEV manifests
         run: python3 -B lab/verify_p14_r51_dev_contract.py
 
+      - name: Probar guardia de transicion R55.3 / Test R55.3 transition guard
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r553*.py' -v
+
       - name: Verificar trazabilidad vigente / Verify current traceability
         run: python3 scripts/verificar_trazabilidad_actual.py
 
