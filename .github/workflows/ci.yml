@@ -43,6 +43,26 @@ jobs:
 
       - name: Verificar empaquetado / Verify packaging
         run: python scripts/verificar_ci.py python
+      - name: Descubrir y ejecutar R50-A R51 / Discover and run R50-A R51
+        run: |
+          PYTHONPATH=src python3 -B - <<'PY'
+          import unittest
+          checks = [('test_p14_r50a*.py', 41, 'R50A'),
+                    ('test_p14_r51*.py', 35, 'R51')]
+          for pattern, minimum, label in checks:
+              suite = unittest.defaultTestLoader.discover('lab/tests', pattern=pattern)
+              count = suite.countTestCases()
+              print(f'{label}_DISCOVERED={count}', flush=True)
+              if count < minimum:
+                  raise SystemExit(f'{label}_DISCOVERY_INSUFFICIENT:{count}<{minimum}')
+              result = unittest.TextTestRunner(verbosity=2).run(suite)
+              if not result.wasSuccessful():
+                  raise SystemExit(f'{label}_TEST_FAILURE')
+          PY
+
+      - name: Contrastar fichas DEV R51 / Validate R51 DEV manifests
+        run: python3 -B lab/verify_p14_r51_dev_contract.py
+
       - name: Verificar trazabilidad vigente / Verify current traceability
         run: python3 scripts/verificar_trazabilidad_actual.py
 

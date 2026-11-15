@@ -1,0 +1,381 @@
+{
+  "schema": "ardrec-p14-r51-dev-three-services-v1",
+  "baseline_git_head": "8719ab89d78876028c07186428a0b7044e5ca006",
+  "source_main": "f59d7ace03aa6ff296b3f425e14a38c005610ecc",
+  "environment": "dev",
+  "purpose": "OFFLINE_SOURCE_AND_COVERAGE_RECONCILIATION",
+  "source_status": "NOT_HOST_ATTESTATION",
+  "stage_manifest_v1_unchanged": true,
+  "catalog_path": "lab/operational-catalog-v1/catalog.json",
+  "topology_path": "lab/topology-v1.json",
+  "resource_path": "lab/services-v1/resources.json",
+  "version_path": "lab/services-v1/versions.json",
+  "evidence_path": "lab/services-v1/evidence.json",
+  "historical_service_receipt_sha256": "1af109e8d62277b5609c5b8db4535e2b8021b97381b50045b1cda27292787c86",
+  "frozen_experimental_units": 0,
+  "real_derived_cases": 0,
+  "operational_dispatch": false,
+  "p8_operational": "NO-GO",
+  "automated_host_changes": false,
+  "r34_live_containment": "NOT_VERIFIED",
+  "live_guest_configuration": "NOT_VERIFIED",
+  "lab_ssh_ftp_smb_fully_accepted": false,
+  "counts": {
+    "ssh": 8,
+    "ftp": 8,
+    "smb": 9,
+    "total": 25
+  },
+  "units": [
+    {
+      "unit_id": "DEV-SSH-001",
+      "protocol": "ssh",
+      "purpose": "DEVELOPMENT_ONLY_NOT_EXPERIMENTAL",
+      "environment": "dev",
+      "service_scenario_status": "PROVISIONAL_SOURCE_DERIVED_NOT_FROZEN",
+      "network_id": "ardrec-dev-ssh",
+      "libvirt_target_domain": "ardrec-r33-dev-ssh",
+      "libvirt_network_name": "ardrec-r33-dev-net-ssh",
+      "libvirt_runner_domain": "ardrec-r33-dev-runner",
+      "expected_network_cidr": "10.203.30.0/28",
+      "expected_runner_ip": "10.203.30.1",
+      "expected_target_ip": "10.203.30.2",
+      "server_tcp_port": 22,
+      "synthetic_username": "ardrec_ssh",
+      "expected_guest_package": "openssh-server",
+      "expected_guest_version": "1:10.0p1-7+deb13u4",
+      "config_source_path": "lab/services-v1/config/ssh.conf",
+      "config_source_sha256": "1b65472bfc96892fbb87a9d0496f92b751930f521a23a9a321d5e5fe410e6cae",
+      "historical_service_record": "lab/services-v1/evidence.json",
+      "historical_checks_only": true,
+      "effective_guest_state_now": "NOT_VERIFIED",
+      "r34_containment_now": "NOT_VERIFIED",
+      "runner_pair_now": "NOT_VERIFIED",
+      "cases": [],
+      "admitted_evidence": [],
+      "confirmed_generation": null,
+      "recalibrated_risk": null,
+      "case_families": [
+        {
+          "family_id": "SSH-T01",
+          "coverage": "PENDING",
+          "historical_smoke_checks": [],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        },
+        {
+          "family_id": "SSH-T02",
+          "coverage": "PENDING",
+          "historical_smoke_checks": [],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        },
+        {
+          "family_id": "SSH-T03",
+          "coverage": "PENDING",
+          "historical_smoke_checks": [],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        },
+        {
+          "family_id": "SSH-T04",
+          "coverage": "PARTIAL",
+          "historical_smoke_checks": [
+            "ssh-identity"
+          ],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        },
+        {
+          "family_id": "SSH-T05",
+          "coverage": "PARTIAL",
+          "historical_smoke_checks": [
+            "ssh-identity",
+            "ssh-limited-helper"
+          ],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        },
+        {
+          "family_id": "SSH-T06",
+          "coverage": "PARTIAL",
+          "historical_smoke_checks": [
+            "ssh-reference"
+          ],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        },
+        {
+          "family_id": "SSH-T07",
+          "coverage": "PARTIAL",
+          "historical_smoke_checks": [
+            "ssh-write",
+            "ssh-read-marker",
+            "ssh-cleanup"
+          ],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        },
+        {
+          "family_id": "SSH-T08",
+          "coverage": "PARTIAL",
+          "historical_smoke_checks": [
+            "ssh-limited-helper"
+          ],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        }
+      ]
+    },
+    {
+      "unit_id": "DEV-FTP-001",
+      "protocol": "ftp",
+      "purpose": "DEVELOPMENT_ONLY_NOT_EXPERIMENTAL",
+      "environment": "dev",
+      "service_scenario_status": "PROVISIONAL_SOURCE_DERIVED_NOT_FROZEN",
+      "network_id": "ardrec-dev-ftp",
+      "libvirt_target_domain": "ardrec-r33-dev-ftp",
+      "libvirt_network_name": "ardrec-r33-dev-net-ftp",
+      "libvirt_runner_domain": "ardrec-r33-dev-runner",
+      "expected_network_cidr": "10.203.31.0/28",
+      "expected_runner_ip": "10.203.31.1",
+      "expected_target_ip": "10.203.31.2",
+      "server_tcp_port": 21,
+      "synthetic_username": "ardrec_ftp",
+      "expected_guest_package": "vsftpd",
+      "expected_guest_version": "3.0.5-0.2",
+      "config_source_path": "lab/services-v1/config/ftp.conf",
+      "config_source_sha256": "299faa64aaf4181053441d2de69999a8ef9f07e28c504cfcbaf36a7070cf1ac8",
+      "historical_service_record": "lab/services-v1/evidence.json",
+      "historical_checks_only": true,
+      "effective_guest_state_now": "NOT_VERIFIED",
+      "r34_containment_now": "NOT_VERIFIED",
+      "runner_pair_now": "NOT_VERIFIED",
+      "cases": [],
+      "admitted_evidence": [],
+      "confirmed_generation": null,
+      "recalibrated_risk": null,
+      "case_families": [
+        {
+          "family_id": "FTP-T01",
+          "coverage": "PARTIAL",
+          "historical_smoke_checks": [
+            "ftp-cleartext-login-denied"
+          ],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        },
+        {
+          "family_id": "FTP-T02",
+          "coverage": "PARTIAL",
+          "historical_smoke_checks": [
+            "ftp-cleartext-login-denied",
+            "ftps-reference"
+          ],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        },
+        {
+          "family_id": "FTP-T03",
+          "coverage": "PENDING",
+          "historical_smoke_checks": [],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        },
+        {
+          "family_id": "FTP-T04",
+          "coverage": "PARTIAL",
+          "historical_smoke_checks": [
+            "ftps-reference"
+          ],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        },
+        {
+          "family_id": "FTP-T05",
+          "coverage": "PENDING",
+          "historical_smoke_checks": [],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        },
+        {
+          "family_id": "FTP-T06",
+          "coverage": "PARTIAL",
+          "historical_smoke_checks": [
+            "ftps-reference"
+          ],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        },
+        {
+          "family_id": "FTP-T07",
+          "coverage": "PARTIAL",
+          "historical_smoke_checks": [
+            "ftps-write",
+            "ftps-read-marker",
+            "ftps-cleanup"
+          ],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        },
+        {
+          "family_id": "FTP-T08",
+          "coverage": "PENDING",
+          "historical_smoke_checks": [],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        }
+      ]
+    },
+    {
+      "unit_id": "DEV-SMB-001",
+      "protocol": "smb",
+      "purpose": "DEVELOPMENT_ONLY_NOT_EXPERIMENTAL",
+      "environment": "dev",
+      "service_scenario_status": "PROVISIONAL_SOURCE_DERIVED_NOT_FROZEN",
+      "network_id": "ardrec-dev-smb",
+      "libvirt_target_domain": "ardrec-r33-dev-smb",
+      "libvirt_network_name": "ardrec-r33-dev-net-smb",
+      "libvirt_runner_domain": "ardrec-r33-dev-runner",
+      "expected_network_cidr": "10.203.32.0/28",
+      "expected_runner_ip": "10.203.32.1",
+      "expected_target_ip": "10.203.32.2",
+      "server_tcp_port": 445,
+      "synthetic_username": "ardrec_smb",
+      "expected_guest_package": "samba",
+      "expected_guest_version": "2:4.22.11+dfsg-0+deb13u1",
+      "config_source_path": "lab/services-v1/config/smb.conf",
+      "config_source_sha256": "7e6b14afc0b3cd01cfe8a4a0e48a2ed32b830f610f9e1144e43056dd96b87ee3",
+      "historical_service_record": "lab/services-v1/evidence.json",
+      "historical_checks_only": true,
+      "effective_guest_state_now": "NOT_VERIFIED",
+      "r34_containment_now": "NOT_VERIFIED",
+      "runner_pair_now": "NOT_VERIFIED",
+      "cases": [],
+      "admitted_evidence": [],
+      "confirmed_generation": null,
+      "recalibrated_risk": null,
+      "case_families": [
+        {
+          "family_id": "SMB-T01",
+          "coverage": "PARTIAL",
+          "historical_smoke_checks": [
+            "smb-reference"
+          ],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        },
+        {
+          "family_id": "SMB-T02",
+          "coverage": "PENDING",
+          "historical_smoke_checks": [],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        },
+        {
+          "family_id": "SMB-T03",
+          "coverage": "PARTIAL",
+          "historical_smoke_checks": [
+            "smb-encrypted-write"
+          ],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        },
+        {
+          "family_id": "SMB-T04",
+          "coverage": "PENDING",
+          "historical_smoke_checks": [],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        },
+        {
+          "family_id": "SMB-T05",
+          "coverage": "PARTIAL",
+          "historical_smoke_checks": [
+            "smb-reference"
+          ],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        },
+        {
+          "family_id": "SMB-T06",
+          "coverage": "PARTIAL",
+          "historical_smoke_checks": [
+            "smb-reference"
+          ],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        },
+        {
+          "family_id": "SMB-T07",
+          "coverage": "PARTIAL",
+          "historical_smoke_checks": [
+            "smb-reference"
+          ],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        },
+        {
+          "family_id": "SMB-T08",
+          "coverage": "PARTIAL",
+          "historical_smoke_checks": [
+            "smb-encrypted-write",
+            "smb-encrypted-read",
+            "smb-cleanup"
+          ],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        },
+        {
+          "family_id": "SMB-T09",
+          "coverage": "PARTIAL",
+          "historical_smoke_checks": [
+            "smb-restricted-denied"
+          ],
+          "case_executable": false,
+          "effective_case_verified": false,
+          "evidence_admitted_by_A6": false
+        }
+      ]
+    }
+  ],
+  "required_before_any_physical_run": [
+    "CURRENT_HOST_AND_GUEST_INVENTORY",
+    "R34_CURRENT_EFFECTIVE_CONTAINMENT_AND_NEGATIVE_EVIDENCE",
+    "INDIVIDUAL_LIBVIRT_NWFILTER_AND_QCOW2_VALIDATION",
+    "PER_ROLE_GUEST_CONFIG_AND_SECRET_REFERENCES",
+    "DEV_ONLY_SCENARIO_APPROVAL_AND_LIMITS",
+    "ACTOR_AND_EXECUTOR_AUTHORITY_AL_07",
+    "SOURCE_TIME_AND_RECEIPT_RECONCILIATION"
+  ],
+  "residual_findings": [
+    "AL-06",
+    "AL-07"
+  ],
+  "development_data_only": true,
+  "reference_note": "El catálogo P7 describe familias, no operaciones autorizadas; las pruebas de humo del 4/11 no constituyen cobertura de familia, A6 ni confirmación A9."
+}
