@@ -69,6 +69,9 @@ jobs:
       - name: Probar temporizador independiente sintetico R55.4 / Test R55.4 independent timer contract
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r554*.py' -v
 
+      - name: Probar restaurador deny-only R55.5 / Test R55.5 root recovery without host writes
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r555*.py' -v
+
       - name: Verificar trazabilidad vigente / Verify current traceability
         run: python3 scripts/verificar_trazabilidad_actual.py
 
