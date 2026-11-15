@@ -42,9 +42,25 @@ class P9R11InventoryTests(unittest.TestCase):
         result = CHECKER.verify_p8_rust_inventory(self.observed, self.checks)
         self.assertEqual(result['historical_rust_tests'], 73)
         self.assertEqual(result['p8_r53_r54_rust_tests'], 24)
-        self.assertEqual(result['p9_r11_rust_tests'], 2)
-        self.assertEqual(result['current_rust_lib_tests'], 99)
+        self.assertEqual(result['p9_r11_rust_tests'], 4)
+        self.assertEqual(result['current_rust_lib_tests'], 101)
         self.assertFalse(result['historical_inventory_changed'])
+
+    def test_missing_new_scheduler_method_fails_closed(self):
+        minus = dict(self.observed)
+        key = ('crates/ardrec-executor/src/p9_r11_witness_probe.rs::'
+               'process_scheduler_state_transition_preserves_verified_identity')
+        del minus[key]
+        with self.assertRaisesRegex(ValueError, 'Inventario Rust incompleto'):
+            CHECKER.verify_p8_rust_inventory(minus, self.checks)
+
+    def test_missing_new_identity_change_method_fails_closed(self):
+        minus = dict(self.observed)
+        key = ('crates/ardrec-executor/src/p9_r11_witness_probe.rs::'
+               'changed_pid_parent_group_start_or_uid_still_rejected')
+        del minus[key]
+        with self.assertRaisesRegex(ValueError, 'Inventario Rust incompleto'):
+            CHECKER.verify_p8_rust_inventory(minus, self.checks)
 
     def test_missing_r11_method_fails_closed(self):
         minus = dict(self.observed)

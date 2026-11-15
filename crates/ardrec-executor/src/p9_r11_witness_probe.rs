@@ -163,7 +163,7 @@ pub fn observe_owned_witness(claim: WitnessClaim) -> WitnessObservation {
 
 #[cfg(test)]
 mod tests {
-    use super::{parse_real_uid, parse_stat, same_identity, ProcIdentity};
+    use super::{ProcIdentity, parse_real_uid, parse_stat, same_identity};
 
     #[test]
     fn process_scheduler_state_transition_preserves_verified_identity() {
@@ -174,8 +174,14 @@ mod tests {
             state: 'R',
             real_uid: 1000,
         };
-        let sleeping = ProcIdentity { state: 'S', ..running };
-        let blocked = ProcIdentity { state: 'D', ..running };
+        let sleeping = ProcIdentity {
+            state: 'S',
+            ..running
+        };
+        let blocked = ProcIdentity {
+            state: 'D',
+            ..running
+        };
         assert!(same_identity(&running, &sleeping));
         assert!(same_identity(&sleeping, &blocked));
         assert_ne!(running, sleeping);
@@ -190,8 +196,14 @@ mod tests {
             state: 'S',
             real_uid: 1000,
         };
-        let wrong_parent = ProcIdentity { ppid: 43, ..baseline };
-        let wrong_group = ProcIdentity { pgid: 98, ..baseline };
+        let wrong_parent = ProcIdentity {
+            ppid: 43,
+            ..baseline
+        };
+        let wrong_group = ProcIdentity {
+            pgid: 98,
+            ..baseline
+        };
         let wrong_ticks = ProcIdentity {
             start_ticks: 123457,
             ..baseline
