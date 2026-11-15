@@ -72,6 +72,9 @@ jobs:
       - name: Probar restaurador deny-only R55.5 / Test R55.5 root recovery without host writes
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r555*.py' -v
 
+      - name: Probar instalacion root deny-only R55.6 / Test R55.6 no-host staging contract
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r556*.py' -v
+
       - name: Verificar trazabilidad vigente / Verify current traceability
         run: python3 scripts/verificar_trazabilidad_actual.py
 
