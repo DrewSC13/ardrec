@@ -22,7 +22,7 @@ jobs:
   python:
     name: Python - empaquetado / packaging
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - name: Obtener código / Check out code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -203,6 +203,12 @@ jobs:
 
       - name: Demostrar R58-W A5 sin reserva ni evidencia A6 / Check model no-start replay
         run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58w_a5_model_intent_demo.py --synthetic-offline
+
+      - name: Probar R58-X A5 sin inicio A6 ND y A7 exacto / Test no-start uncertainty bridge
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58x_*.py' -v
+
+      - name: Demostrar R58-X 29 intervalos sin Rf acreditado / Check exact no-start envelope
+        run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58x_no_start_a6_a7_demo.py --synthetic-offline
 
       - name: Verificar diseño del laboratorio / Verify laboratory design
         run: python3 lab/verify_design.py
