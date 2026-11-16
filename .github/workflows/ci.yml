@@ -186,6 +186,12 @@ jobs:
       - name: Demostrar R58-T dos T1 sinteticos sin autoridad / Check offline state replay
         run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58t_counterfactual_t1_demo.py --synthetic-offline
 
+      - name: Probar R58-U pausas reanudaciones y detenciones sinteticas / Test offline state overlay
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58u_*.py' -v
+
+      - name: Demostrar R58-U T8 T9 T10 sin autoridad / Check private replay and terminal state
+        run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58u_pause_recovery_demo.py --synthetic-offline
+
       - name: Verificar diseño del laboratorio / Verify laboratory design
         run: python3 lab/verify_design.py
 
