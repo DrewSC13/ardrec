@@ -16,7 +16,9 @@ import stat
 import subprocess
 import sys
 
-REPO = Path('/home/cicada/Development/GitHub/ardrec')
+REPO = Path(__file__).resolve().parents[1]
+# Absolute host identity is deliberately required ONLY for host inspection.
+HOST_REPO = Path('/home/cicada/Development/GitHub/ardrec')
 BASE = '0153c8513efe10192ff0704a2132756a4517ed54'
 SOURCE = {
     '00-ardrec-r33-deny': '8bad829fa029d78375f28f6978669721dc934481a97ee867449f45a1662dbc38',
@@ -142,6 +144,9 @@ def package_plan(sources: dict[str, str], *, inventory: dict[str,str] | None = N
 
 
 def host_audit() -> dict:
+    # Never inspect Prometheus host state from CI, clones or alternate checkouts.
+    require(REPO == HOST_REPO and Path.cwd().resolve() == HOST_REPO,
+            'HOST_CANONICAL_REPOSITORY_REQUIRED')
     source = check_source()
     git_check()
     from importlib.machinery import SourceFileLoader
