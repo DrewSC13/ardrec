@@ -1,0 +1,25 @@
+{
+  "base_commit": "be7bc497bbbb45b585ac308066d6ff08b07775bd",
+  "files": [
+    {
+      "bytes": 13339,
+      "path": "scripts/ardrec_p14_r58a_ftp_nic_preflight.py",
+      "sha256": "9b778d8414241d2f69dd53c8a90b944441d82b17b365378edc38ca53a3adad6d"
+    },
+    {
+      "bytes": 11772,
+      "path": "lab/tests/test_p14_r58a_ftp_runner_readiness.py",
+      "sha256": "933a37018c6f90b28fd29d059680c5672ba34971f6173c7edf7714a70423500e"
+    },
+    {
+      "bytes": 4128,
+      "path": "docs/development/p14-r58a-ftp-nic-readonly.md",
+      "sha256": "abc9e8b8940598a5320e5d096a1a87ab17c47f85d5dcbd9940e4eb6a3db9ce8c"
+    }
+  ],
+  "host_execution": "NOT_EXECUTED_IN_CHAT_ENVIRONMENT",
+  "mode": "HOST_READONLY_NO_AUTHORITY",
+  "p8": "NO-GO",
+  "schema": "ardrec-r58a-ftp-nic-source-bundle-v1",
+  "test_status": "22_TESTS_PASSED_LOCAL_OFFLINE_ONLY"
+}
