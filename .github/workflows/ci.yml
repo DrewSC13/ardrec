@@ -90,6 +90,9 @@ jobs:
       - name: Probar F11 R58-B barreras de arranque offline / Test source-only boot guard candidates
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58b_f11_*.py' -v
 
+      - name: Probar integracion R58-C F11 y A6-A9 offline / Test F11 plan and documentary chain
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58c_*.py' -v
+
       - name: Verificar trazabilidad vigente / Verify current traceability
         run: python3 scripts/verificar_trazabilidad_actual.py
 
