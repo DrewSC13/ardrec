@@ -1,0 +1,26 @@
+{
+  "base_commit": "be7bc497bbbb45b585ac308066d6ff08b07775bd",
+  "candidate_xml_written": false,
+  "entries": [
+    {
+      "bytes": 9660,
+      "file": "scripts/ardrec_p14_r58a_ftp_runner_candidate.py",
+      "sha256": "97c8d8552ffa16702b9e2c8379ae25fa92ef3a00f5e762ea1581ed448ebf30a2"
+    },
+    {
+      "bytes": 9952,
+      "file": "lab/tests/test_p14_r58a_ftp_runner_candidate.py",
+      "sha256": "d2dbf1907e28ead2f49df94904d811e5804a47f9d3ea3c7ef5a66b214150c887"
+    },
+    {
+      "bytes": 4749,
+      "file": "docs/development/p14-r58a-ftp-runner-candidate-readonly.md",
+      "sha256": "3b6eff50dedcf275caa88ef8b8c01b3d2ebf926ee597506174c933e5661cf1d2"
+    }
+  ],
+  "guest_traffic": false,
+  "p8": "NO-GO",
+  "physical_writes": false,
+  "prior_checker_sha256": "9b778d8414241d2f69dd53c8a90b944441d82b17b365378edc38ca53a3adad6d",
+  "schema": "ardrec-r58a-ftp-runner-candidate-source-manifest-v1"
+}
