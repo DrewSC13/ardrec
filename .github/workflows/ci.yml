@@ -198,6 +198,12 @@ jobs:
       - name: Demostrar R58-V estado T1 U sin A5 real / Check immutable A6 ND report
         run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58v_a5_a6_handoff_demo.py --synthetic-offline
 
+      - name: Probar R58-W A5 intenciones sinteticas sin inicio / Test private model intent ledger
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58w_*.py' -v
+
+      - name: Demostrar R58-W A5 sin reserva ni evidencia A6 / Check model no-start replay
+        run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58w_a5_model_intent_demo.py --synthetic-offline
+
       - name: Verificar diseño del laboratorio / Verify laboratory design
         run: python3 lab/verify_design.py
 
