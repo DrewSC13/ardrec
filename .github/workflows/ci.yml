@@ -150,6 +150,12 @@ jobs:
       - name: Demostrar R58-N recibo declarado e idempotente / Check immutable no-dispatch receipt
         run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58n_durable_binding_demo.py --synthetic-offline
 
+      - name: Probar R58-O trazabilidad A1 A10 / Test cross-contract trace
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58o_*.py' -v
+
+      - name: Demostrar R58-O cadena A1 A10 / Check offline audit ledger
+        run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58o_a1_a10_trace_demo.py --synthetic-offline
+
       - name: Verificar diseño del laboratorio / Verify laboratory design
         run: python3 lab/verify_design.py
 
