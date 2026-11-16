@@ -117,6 +117,12 @@ jobs:
       - name: Demostrar R58-I FTP CONTROL DATA READ WRITE / Check pinned FTP preview
         run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58i_ftp_family_demo.py --synthetic-offline
 
+      - name: Evaluar A6 R58-J familias SMB en modo sintetico / Test SMB family variants
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58j_*.py' -v
+
+      - name: Demostrar R58-J SMB SIGNING ENCRYPTION READ WRITE / Check pinned SMB preview
+        run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58j_smb_family_demo.py --synthetic-offline
+
       - name: Verificar trazabilidad vigente / Verify current traceability
         run: python3 scripts/verificar_trazabilidad_actual.py
 
