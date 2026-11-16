@@ -105,6 +105,12 @@ jobs:
       - name: Probar registro R58-G A6 de confianza y vigencia offline / Test pinned registry trust policy
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58g_*.py' -v
 
+      - name: Evaluar A6 R58-H familias SSH en modo sintetico / Test eight SSH family classifications
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58h_*.py' -v
+
+      - name: Demostrar R58-H sobre catalogo fijado / Check pinned SSH demo
+        run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58h_ssh_family_demo.py --synthetic-offline
+
       - name: Verificar trazabilidad vigente / Verify current traceability
         run: python3 scripts/verificar_trazabilidad_actual.py
 
