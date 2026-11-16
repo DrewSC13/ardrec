@@ -156,6 +156,12 @@ jobs:
       - name: Demostrar R58-O cadena A1 A10 / Check offline audit ledger
         run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58o_a1_a10_trace_demo.py --synthetic-offline
 
+      - name: Probar R58-P referencias A2 y guardas A3 por caso / Test typed family control projection
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58p_*.py' -v
+
+      - name: Demostrar R58-P guardas de 29 casos / Check A3 A4 discrepancies without dispatch
+        run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58p_a3_family_demo.py --synthetic-offline
+
       - name: Verificar diseño del laboratorio / Verify laboratory design
         run: python3 lab/verify_design.py
 
