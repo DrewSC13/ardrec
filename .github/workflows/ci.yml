@@ -123,6 +123,12 @@ jobs:
       - name: Demostrar R58-J SMB SIGNING ENCRYPTION READ WRITE / Check pinned SMB preview
         run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58j_smb_family_demo.py --synthetic-offline
 
+      - name: Probar coordinador R58-K A6 A7 A8 de 25 familias / Test unified family coordination
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58k_*.py' -v
+
+      - name: Demostrar R58-K 29 casos SSH FTP SMB sin ejecucion / Test unified synthetic preview
+        run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58k_unified_family_demo.py --synthetic-offline
+
       - name: Verificar trazabilidad vigente / Verify current traceability
         run: python3 scripts/verificar_trazabilidad_actual.py
 
