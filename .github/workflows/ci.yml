@@ -168,6 +168,12 @@ jobs:
       - name: Demostrar R58-Q doble seleccion A4 / Check zero actual and eight hypothetical SSH
         run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58q_a3_a4_transition_demo.py --synthetic-offline
 
+      - name: Probar R58-R recibo inmutable de propuesta A3 A4 / Test immutable transition proposal
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58r_*.py' -v
+
+      - name: Demostrar R58-R persistencia declarada sin transicion / Check private idempotent proposal receipt
+        run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58r_durable_transition_demo.py --synthetic-offline
+
       - name: Verificar diseño del laboratorio / Verify laboratory design
         run: python3 lab/verify_design.py
 
