@@ -192,6 +192,12 @@ jobs:
       - name: Demostrar R58-U T8 T9 T10 sin autoridad / Check private replay and terminal state
         run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58u_pause_recovery_demo.py --synthetic-offline
 
+      - name: Probar R58-V entrega A5 A6 solo lectura / Test offline handoff with no starts
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58v_*.py' -v
+
+      - name: Demostrar R58-V estado T1 U sin A5 real / Check immutable A6 ND report
+        run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58v_a5_a6_handoff_demo.py --synthetic-offline
+
       - name: Verificar diseño del laboratorio / Verify laboratory design
         run: python3 lab/verify_design.py
 
