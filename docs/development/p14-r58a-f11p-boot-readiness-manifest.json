@@ -1,0 +1,26 @@
+{
+  "base_main": "c238f44a7f8cb9f8c251424fa7b5d9c9e9c7e94d",
+  "bundle_source_commit": "be7bc497bbbb45b585ac308066d6ff08b07775bd",
+  "files": [
+    {
+      "path": "scripts/ardrec_p14_r58a_f11p_boot_readiness.py",
+      "sha256": "a7e99b8a92134505e64c568c70c7402fdc2ecb72b9e20bc12ebaa51623b51dc1"
+    },
+    {
+      "path": "lab/tests/test_p14_r58a_f11p_boot_readiness.py",
+      "sha256": "5d4930de3ccfc4db209e6f1e171c48c74468202d0837b33da24e1d812ad2ceec"
+    },
+    {
+      "path": "docs/development/p14-r58a-f11p-boot-readiness-readonly.md",
+      "sha256": "804b0e08ad3ede5ffa856ad6f9bb4208b658a39cf698a101fc602507c3b60258"
+    }
+  ],
+  "mode": "SOURCE_ONLY_NO_HOST_MUTATIONS",
+  "p8": "NO-GO",
+  "runtime_approval": false,
+  "schema": "ardrec-r58a-f11p-readonly-package-v1",
+  "patch": "F11P_ROOT_STAT_FIX_F1",
+  "root_directory_nlink": "POSITIVE_ANY_FILES_SINGLE_HARDLINK",
+  "synthetic_tests": 43,
+  "host_execution": "NOT_RUN"
+}

@@ -84,6 +84,9 @@ jobs:
       - name: Probar interfaz y candidata FTP R58-A / Test read-only FTP NIC and candidate
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58a_ftp_*.py' -v
 
+      - name: Probar auditoria F11-P R58-A / Test read-only boot readiness
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58a_f11p_*.py' -v
+
       - name: Verificar trazabilidad vigente / Verify current traceability
         run: python3 scripts/verificar_trazabilidad_actual.py
 
