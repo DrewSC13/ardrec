@@ -144,6 +144,12 @@ jobs:
       - name: Demostrar R58-M diario A5 temporal / Check zero-start durable audit
         run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58m_durable_a5_demo.py --synthetic-offline
 
+      - name: Probar R58-N vinculacion durable A4 A5 / Test immutable case binding
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58n_*.py' -v
+
+      - name: Demostrar R58-N recibo declarado e idempotente / Check immutable no-dispatch receipt
+        run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58n_durable_binding_demo.py --synthetic-offline
+
       - name: Verificar diseño del laboratorio / Verify laboratory design
         run: python3 lab/verify_design.py
 
