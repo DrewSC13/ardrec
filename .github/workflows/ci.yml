@@ -87,6 +87,9 @@ jobs:
       - name: Probar auditoria F11-P R58-A / Test read-only boot readiness
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58a_f11p_*.py' -v
 
+      - name: Probar F11 R58-B barreras de arranque offline / Test source-only boot guard candidates
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58b_f11_*.py' -v
+
       - name: Verificar trazabilidad vigente / Verify current traceability
         run: python3 scripts/verificar_trazabilidad_actual.py
 

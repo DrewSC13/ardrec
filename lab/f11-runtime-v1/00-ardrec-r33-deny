@@ -1,0 +1,50 @@
+#!/usr/bin/python3 -I
+"""QEMU hook deny-only for ARDREC R33 DEV guests.
+
+Intended for /etc/libvirt/hooks/qemu.d/00-ardrec-r33-deny, after separate
+operator-authorized installation and libvirt restart. NO permit path exists.
+Does not call libvirt, nft, systemd or read host files. P8 remains NO-GO.
+"""
+from __future__ import annotations
+
+import sys
+
+PREFIX = "ardrec-r33-dev-"
+SCOPED = frozenset((
+    "ardrec-r33-dev-runner",
+    "ardrec-r33-dev-ssh",
+    "ardrec-r33-dev-ftp",
+    "ardrec-r33-dev-smb",
+))
+STOP_EVENTS = frozenset(("stopped", "release"))
+
+
+def decision(argv: list[str]) -> tuple[int, str]:
+    """Only shutdown hooks pass for ARDREC DEV; non-ARDREC domains are unaffected.
+
+    Libvirt calls: qemu guest_name prepare begin - (and start/started,
+    migrate, restore, reconnect, attach). A nonzero return aborts pre-start.
+    """
+    if len(argv) != 4 or not all(isinstance(v, str) for v in argv):
+        return 79, "BAD_HOOK_ARGUMENTS"
+    guest, operation, stage, extra = argv
+    if not guest or not operation or not stage or not extra:
+        return 79, "BAD_HOOK_ARGUMENTS"
+    if not guest.startswith(PREFIX):
+        return 0, "OUT_OF_SCOPE"
+    if guest not in SCOPED:
+        return 79, "UNKNOWN_ARDREC_DEV_GUEST"
+    if operation in STOP_EVENTS and stage == "end":
+        return 0, "ALLOW_SHUTDOWN_ONLY"
+    return 79, "DENY_R33_DEV_START_NO_AUTHORITY"
+
+
+def main() -> int:
+    code, reason = decision(sys.argv[1:])
+    if code:
+        print("ARDREC_F11_QEMU_HOOK=" + reason, file=sys.stderr)
+    return code
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
