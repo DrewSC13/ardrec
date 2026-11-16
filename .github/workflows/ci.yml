@@ -180,6 +180,12 @@ jobs:
       - name: Demostrar R58-S 29 denegaciones sin transicion / Check immutable no-commit gate
         run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58s_transition_deny_demo.py --synthetic-offline
 
+      - name: Probar R58-T simulador SQLite T1 aislado / Test atomic counterfactual state store
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58t_*.py' -v
+
+      - name: Demostrar R58-T dos T1 sinteticos sin autoridad / Check offline state replay
+        run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58t_counterfactual_t1_demo.py --synthetic-offline
+
       - name: Verificar diseño del laboratorio / Verify laboratory design
         run: python3 lab/verify_design.py
 
