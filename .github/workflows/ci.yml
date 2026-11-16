@@ -81,6 +81,9 @@ jobs:
       - name: Probar programa conjunto SSH FTPS SMB R56.0 / Test R56.0 three-service closure contract
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r560*.py' -v
 
+      - name: Probar interfaz y candidata FTP R58-A / Test read-only FTP NIC and candidate
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58a_ftp_*.py' -v
+
       - name: Verificar trazabilidad vigente / Verify current traceability
         run: python3 scripts/verificar_trazabilidad_actual.py
 
