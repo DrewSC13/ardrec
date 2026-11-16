@@ -93,6 +93,9 @@ jobs:
       - name: Probar integracion R58-C F11 y A6-A9 offline / Test F11 plan and documentary chain
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58c_*.py' -v
 
+      - name: Probar A7 R58-D intervalos exactos / Test exact risk intervals
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58d_*.py' -v
+
       - name: Verificar trazabilidad vigente / Verify current traceability
         run: python3 scripts/verificar_trazabilidad_actual.py
 
