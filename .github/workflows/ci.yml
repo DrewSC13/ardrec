@@ -132,6 +132,12 @@ jobs:
       - name: Verificar trazabilidad vigente / Verify current traceability
         run: python3 scripts/verificar_trazabilidad_actual.py
 
+      - name: Probar R58-L A4 A5 revision sin despacho / Test selection and attempt review
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58l_*.py' -v
+
+      - name: Demostrar R58-L seleccion A4 y A5 sintetico / Check offline no-dispatch review
+        run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58l_a4_a5_review_demo.py --synthetic-offline
+
       - name: Verificar diseño del laboratorio / Verify laboratory design
         run: python3 lab/verify_design.py
 
