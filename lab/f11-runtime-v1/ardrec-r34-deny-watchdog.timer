@@ -1,0 +1,13 @@
+# Source-only candidate, NOT INSTALLED.
+[Unit]
+Description=ARDREC R34 independent deny-only supervisor timer
+
+[Timer]
+Unit=ardrec-r34-deny-watchdog.service
+OnBootSec=20s
+OnUnitInactiveSec=10s
+AccuracySec=1s
+RandomizedDelaySec=0
+
+[Install]
+WantedBy=timers.target
