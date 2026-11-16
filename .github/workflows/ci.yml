@@ -102,6 +102,9 @@ jobs:
       - name: Probar A6 R58-F testigos Ed25519 offline / Test signed witness evidence bindings
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58f_*.py' -v
 
+      - name: Probar registro R58-G A6 de confianza y vigencia offline / Test pinned registry trust policy
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58g_*.py' -v
+
       - name: Verificar trazabilidad vigente / Verify current traceability
         run: python3 scripts/verificar_trazabilidad_actual.py
 
