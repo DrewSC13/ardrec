@@ -138,6 +138,12 @@ jobs:
       - name: Demostrar R58-L seleccion A4 y A5 sintetico / Check offline no-dispatch review
         run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58l_a4_a5_review_demo.py --synthetic-offline
 
+      - name: Probar R58-M auditoria durable A5 offline / Test read-only journal contract
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58m_*.py' -v
+
+      - name: Demostrar R58-M diario A5 temporal / Check zero-start durable audit
+        run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58m_durable_a5_demo.py --synthetic-offline
+
       - name: Verificar diseño del laboratorio / Verify laboratory design
         run: python3 lab/verify_design.py
 
