@@ -1,0 +1,25 @@
+{
+  "schema":"ardrec-p14-r64-a1-contextual-decision-trace-v1",
+  "base_sha":"4ba53db366bd461f4b79ef9ad53fce3c2c3c1162",
+  "thesis_sha256":"6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "thesis_section":"3.6.1",
+  "figure":"3.4",
+  "printed_page":105,
+  "pdf_page":120,
+  "criteria":[
+    {"id":"A1-R64-CONTEXT-SEVEN", "description":"seven context fields emitted with actual table result", "oracle":"test_true_receipt_all_seven_fields_and_selected_output"},
+    {"id":"A1-R64-CONFIG-FROZEN", "description":"bound to frozen R17 source SHA and replay", "oracle":"test_configuration_mutation_does_not_change_receipt"},
+    {"id":"A1-R64-REPLAY", "description":"compare recomputed canonical output, not just claimed hash", "oracle":"test_rehashed_forgery_rejected_by_recomputation"},
+    {"id":"A1-R64-ND", "description":"ND on no match; preserve individual false", "oracle":"test_false_individual_no_match_is_nd_without_selected_output"},
+    {"id":"A1-R64-UNTRUSTED-ORIGIN", "description":"unattested caller origin explicitly unaccredited", "oracle":"test_origin_declared_not_attested_by_hash"},
+    {"id":"A1-R64-NO-P8", "description":"no dispatch or published generation", "oracle":"test_p8_and_publication_are_always_denied"}
+  ],
+  "implementation":"src/ardrec/rules/contextual.py",
+  "consumer":"src/ardrec/initialization/rule_preflight.py",
+  "tests":"lab/tests/test_p14_r64_a1_contextual_decision.py",
+  "acceptance":"PENDING_PROMETHEUS_AND_PR",
+  "a1_100":"NOT_CLAIMED",
+  "p8":"NO-GO",
+  "physical_services":"NOT_VERIFIED",
+  "experimental_54":"NOT_RUN"
+}

@@ -84,6 +84,17 @@ class FrozenRulePreview:
                                decision.selected, decision.evaluations,
                                guard_allows(decision.status), decision.output)
 
+    def evaluate_service_contextual(self, service_id: str,
+                                    environment: dict[str, Any], *,
+                                    current_state: Any, origin: str, case_id: str,
+                                    condition_id: str, context_id: str):
+        """Resultado A1 con contexto declarado, no autoridad operacional."""
+        from ardrec.rules.contextual import evaluate_contextual
+        return evaluate_contextual(
+            self, service_id, environment, current_state=current_state,
+            origin=origin, case_id=case_id, condition_id=condition_id,
+            context_id=context_id)
+
 
 @dataclass(frozen=True, slots=True)
 class PreviewDecision:

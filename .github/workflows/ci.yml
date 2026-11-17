@@ -515,6 +515,9 @@ jobs:
       - name: Probar campos obligatorios y opcionales A1-R63 / Test A1 required and optional fields
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r63_a1_field_presence.py -v
 
+      - name: Probar recibo contextual A1-R64 / Test contextual decision oracle
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r64_a1_contextual_decision.py -v
+
       - name: Demostrar nucleo tipado A1-R16 / Demonstrate A1 rule kernel
         run: python3 -B scripts/demo_p14_r16_a1.py
 
