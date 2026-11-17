@@ -210,7 +210,7 @@ jobs:
       - name: Demostrar R58-X 29 intervalos sin Rf acreditado / Check exact no-start envelope
         run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58x_no_start_a6_a7_demo.py --synthetic-offline
 
-      - name: Probar R58-Y registro SSH durable y TUI multieservicio / Test observation register
+      - name: Probar R58-Y registro durable de observaciones DEV y TUI multieservicio / Test observation register
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58y_*.py' -v
 
       - name: Probar R58-Z vistas A10 y persistencia de observaciones / Test verified workspace
