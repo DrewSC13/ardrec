@@ -121,11 +121,18 @@ def compile_expression(expr: dict, schema: dict[str, str]) -> Node:
                     raise A1Error("tipo_invalido")
                 return Node(op, raw["tipo"], data=_literal(raw["tipo"], raw["valor"]))
             if op == "CAMPO":
-                _keys(raw, {"op", "nombre"})
+                # Ausencia opcional -> ND; ausencia obligatoria -> error explícito.
+                if set(raw) not in ({"op", "nombre"},
+                                    {"op", "nombre", "opcional"}):
+                    raise A1Error("estructura_invalida")
                 name = raw["nombre"]
                 if type(name) is not str or name not in schema:
                     raise A1Error("campo_no_autorizado")
-                return Node(op, schema[name], data=name)
+                optional = raw.get("opcional", True)
+                if type(optional) is not bool:
+                    raise A1Error("opcional_invalido")
+                return Node("CAMPO" if optional else "CAMPO_REQUERIDO",
+                            schema[name], data=name)
             if op == "NO":
                 _keys(raw, {"op", "arg"})
                 child = visit(raw["arg"], depth + 1)
@@ -205,8 +212,12 @@ def _trivalent(op: str, args: tuple[Truth, ...]) -> Truth:
 def _run(node: Node, env: dict[str, Any]) -> Any:
     if node.kind == "CONSTANTE":
         return node.data
-    if node.kind == "CAMPO":
-        return env.get(node.data, Truth.ND if node.domain == "LOGICO" else None)
+    if node.kind in ("CAMPO", "CAMPO_REQUERIDO"):
+        if node.data not in env:
+            if node.kind == "CAMPO_REQUERIDO":
+                raise A1Error("campo_obligatorio_ausente")
+            return Truth.ND if node.domain == "LOGICO" else None
+        return env[node.data]
     if node.kind in ("NO", "Y", "O"):
         return _trivalent(node.kind, tuple(_run(c, env) for c in node.children))
     left, right = (_run(c, env) for c in node.children)
@@ -227,7 +238,7 @@ def _run(node: Node, env: dict[str, Any]) -> Any:
 
 
 def evaluate(expr: dict, schema: dict[str, str], env: dict[str, Any]) -> Truth:
-    """Evalúa una expresión LOGICA; falta de un campo declarado produce ND."""
+    """Evalúa una expresión LOGICA; campo opcional ausente es ND, obligatorio falla."""
     node = compile_expression(expr, schema)
     if node.domain != "LOGICO":
         raise A1Error("resultado_no_logico")
