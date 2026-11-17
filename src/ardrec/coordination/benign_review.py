@@ -108,7 +108,8 @@ def execute_local_review(scenario: dict[str, Any], root: Path) -> dict[str, Any]
     # El A4 proyectado NO habilita ejecucion tecnica: esta ejecucion local
     # solo puede producirla una invocacion CLI explicita --run-local-benign.
     pipeline = BenignPipeline(root)
-    pipeline.submit(RID, 'ok', deadline_ms=1000, output_cap=4096)
+    # R69: tolerancia al arranque frio de Python; sigue acotado a 3000 ms.
+    pipeline.submit(RID, 'ok', deadline_ms=3000, output_cap=4096)
     pipeline.accept(RID)
     pipeline.execute(RID)  # Idempotente; no inicia dos veces el mismo request.
     record=pipeline.read(RID)

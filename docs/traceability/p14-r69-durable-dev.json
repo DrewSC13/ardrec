@@ -1,0 +1,32 @@
+{
+  "algorithms": {
+    "A1": {
+      "acceptance": "21 R69 oracles plus existing R68 acceptance",
+      "closed_completely": false,
+      "scope": "R68 consumed from confirmed generation 0"
+    },
+    "A2": {
+      "closed_completely": false,
+      "scope": "three-service DEV frozen fixture"
+    },
+    "A9": {
+      "closed_completely": false,
+      "scope": "durable initialize/open generation 0 only"
+    }
+  },
+  "analytical_publication_attested": false,
+  "base_commit": "58c482bc3c3b9df833d25fe95778f3473e5d6d38",
+  "date": "2026-11-17",
+  "entrypoints": [
+    "scripts/demo_p14_r28_a1_a10_tui.py --durable-dev-root",
+    "python -m ardrec --durable-dev-root"
+  ],
+  "expected_case_count": 21,
+  "final_risk": null,
+  "next": "R70 A3-A10 analytic cycle and TUI from confirmed generation",
+  "p8_operational": "NO-GO",
+  "physical_attested": false,
+  "schema": "ardrec-p14-r69-traceability-v1",
+  "source": "SYNTHETIC_FIXTURE",
+  "test_file": "lab/tests/test_p14_r69_durable_dev.py"
+}

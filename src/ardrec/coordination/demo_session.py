@@ -182,10 +182,12 @@ class DevelopmentSession:
         return _canonical(self.document)
 
 
-def build_development_session(candidate: dict[str, Any]) -> DevelopmentSession:
-    """Una invocación encadena A1 -> A2 -> A3 de verdad, sin despacho técnico."""
+def prepare_frozen_development_sources(candidate: dict[str, Any]):
+    """Contrato R17-R21 exactamente compartido por R26 y sesión durable R69.
+
+    No crea una generación ni concede autoridad de laboratorio.
+    """
     fixture = normalize_scenario(candidate)
-    fixture_sha = _sha(_canonical(fixture))
     services = fixture['services']
     ids = [s['id'] for s in services]
     rule_configuration = {
@@ -229,6 +231,17 @@ def build_development_session(candidate: dict[str, Any]) -> DevelopmentSession:
     _need(integrated.verify(rules, initial, deps, controls), 'a2_invalid')
     environments = {s['id']: ({} if s['fact'] == 'AUSENTE' else
                               {'FACT': Truth[s['fact']]}) for s in services}
+    return rules, initial, deps, controls, integrated, environments
+
+
+def build_development_session(candidate: dict[str, Any]) -> DevelopmentSession:
+    """Una invocación encadena A1 -> A2 -> A3 de verdad, sin despacho técnico."""
+    fixture = normalize_scenario(candidate)
+    fixture_sha = _sha(_canonical(fixture))
+    services = fixture['services']
+    ids = [s['id'] for s in services]
+    rules, initial, deps, controls, integrated, environments = (
+        prepare_frozen_development_sources(fixture))
     decisions = {sid: rules.evaluate_service(sid, environments[sid])
                  for sid in ids}
     guard = diagnose_guards(rules, initial, deps, controls,

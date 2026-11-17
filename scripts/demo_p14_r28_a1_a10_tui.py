@@ -7,11 +7,13 @@ import sys
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'src'))
-from ardrec.coordination.demo_session import read_fixed_scenario
+from ardrec.coordination.demo_session import SessionError, read_fixed_scenario
 from ardrec.coordination.development_cycle import build_development_cycle,verify_development_cycle
 from ardrec.coordination.terminal_view import render_text,run_tui
 from ardrec.coordination.dashboard_tui import run_dashboard_tui
 from ardrec.analytics.exact_preview import canonical
+from ardrec.persistence.codec import StorageError
+from ardrec.rules.kernel import A1Error
 from ardrec.evidence.defensive_import import (
     read_observation,admit_defensive_observation)
 
@@ -20,17 +22,39 @@ def main() -> int:
     parser=argparse.ArgumentParser()
     m=parser.add_mutually_exclusive_group(required=True)
     m.add_argument('--preview',action='store_true',help='sin proceso local ni escritura')
+    m.add_argument('--durable-dev-root',type=Path,help='R69 A2-A1-A9 durable, solo DEV sintético')
     m.add_argument('--run-local-benign',action='store_true',help='solo fixture benigno local')
     parser.add_argument('--journal-root',type=Path)
     parser.add_argument('--import-defensive-receipt',type=Path)
     parser.add_argument('--import-defensive-support',type=Path)
     parser.add_argument('--as-of-utc',type=str)
+    parser.add_argument('--expected-config-sha256',type=str)
+    parser.add_argument('--expected-head-sha256',type=str)
     v=parser.add_mutually_exclusive_group(required=True)
     v.add_argument('--texto',action='store_true')
     v.add_argument('--json',action='store_true')
     v.add_argument('--tui',action='store_true',help='dashboard R38')
     v.add_argument('--tui-clasica',action='store_true',help='vista original R28/R37')
     opts=parser.parse_args()
+    if opts.durable_dev_root is not None:
+        if any(x is not None for x in (opts.journal_root, opts.import_defensive_receipt,
+                                      opts.import_defensive_support, opts.as_of_utc)):
+            parser.error('--durable-dev-root no permite datos de ejecución ni importación')
+        from ardrec.coordination.durable_dev import DurableDevError, open_or_create_dev, render_dev_text, run_dev_tui
+        try:
+            fixture=read_fixed_scenario(ROOT/'lab/p14-r26-session-v1/scenario.json')
+            doc=open_or_create_dev(opts.durable_dev_root, fixture,
+                expected_config_sha256=opts.expected_config_sha256,
+                expected_head_sha256=opts.expected_head_sha256)
+        except (DurableDevError, SessionError, StorageError, A1Error) as exc:
+            print('R69_FAIL=' + getattr(exc, 'code', str(exc)), file=sys.stderr)
+            return 2
+        if opts.json: sys.stdout.buffer.write(canonical(doc)+b'\n')
+        elif opts.tui or opts.tui_clasica: run_dev_tui(doc)
+        else: sys.stdout.write(render_dev_text(doc))
+        return 0
+    if opts.expected_config_sha256 is not None or opts.expected_head_sha256 is not None:
+        parser.error('los pines externos requieren --durable-dev-root')
     if opts.run_local_benign and opts.journal_root is None:
         parser.error('--run-local-benign exige --journal-root')
     if opts.preview and opts.journal_root is not None:
