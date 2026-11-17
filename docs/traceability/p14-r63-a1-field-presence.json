@@ -1,0 +1,20 @@
+{
+  "schema":"ardrec-p14-r63-a1-field-presence-trace-v1",
+  "base_sha":"4aef1a0dfee0a24e7d280f5e0b4e0122f1026490",
+  "thesis_sha256":"6a6d2d7889a683e459da46559c03dcd62616141b39f0e744c46c72",
+  "thesis_figure":"3.5",
+  "pdf_page":121,
+  "printed_page":106,
+  "criteria":[
+    {"id":"A1-FIELD-REQUIRED-MISSING", "expected":"campo_obligatorio_ausente", "implementation":"src/ardrec/rules/kernel.py"},
+    {"id":"A1-FIELD-OPTIONAL-MISSING", "expected":"ND", "implementation":"src/ardrec/rules/kernel.py"},
+    {"id":"A1-FIELD-LEGACY-COMPAT", "expected":"legacy defaults optional unchanged", "implementation":"src/ardrec/rules/kernel.py"},
+    {"id":"A1-FIELD-R17-R22-FAIL-CLOSED", "expected":"explicit rejection; no P8", "implementation":"src/ardrec/scheduling/guard_preview.py"}
+  ],
+  "oracle":"lab/tests/test_p14_r63_a1_field_presence.py",
+  "pr_ci":"required before merge",
+  "a1_100":"NOT_CLAIMED",
+  "p8":"NO-GO",
+  "physical_services":"NOT_VERIFIED",
+  "experimental_54":"NOT_VERIFIED"
+}
