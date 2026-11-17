@@ -525,6 +525,9 @@ jobs:
           PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r67_a1_global_binding.py -v
           PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r68_a1_final.py -v
 
+      - name: Probar sesion R69 A2-A1-A9 durable / Test R69 durable entrypoint
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r69_durable_dev.py -v
+
       - name: Probar vinculo A1-R65 al modelo confirmado / Test confirmed-state model binding
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r65_a1_confirmed_context.py -v
 
