@@ -84,6 +84,16 @@ class FrozenRulePreview:
                                decision.selected, decision.evaluations,
                                guard_allows(decision.status), decision.output)
 
+    def evaluate_service_confirmed(self, service_id: str,
+                                   environment: dict[str, Any],
+                                   confirmed: Any, *, case_id: str,
+                                   condition_id: str, context_id: str):
+        """Deriva la fase del modelo ConfirmedState, sin acreditación física."""
+        from ardrec.rules.confirmed_context import evaluate_confirmed_context
+        return evaluate_confirmed_context(
+            self, confirmed, service_id, environment, case_id=case_id,
+            condition_id=condition_id, context_id=context_id)
+
     def evaluate_service_contextual(self, service_id: str,
                                     environment: dict[str, Any], *,
                                     current_state: Any, origin: str, case_id: str,

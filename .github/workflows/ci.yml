@@ -518,6 +518,9 @@ jobs:
       - name: Probar recibo contextual A1-R64 / Test contextual decision oracle
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r64_a1_contextual_decision.py -v
 
+      - name: Probar vinculo A1-R65 al modelo confirmado / Test confirmed-state model binding
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r65_a1_confirmed_context.py -v
+
       - name: Demostrar nucleo tipado A1-R16 / Demonstrate A1 rule kernel
         run: python3 -B scripts/demo_p14_r16_a1.py
 
