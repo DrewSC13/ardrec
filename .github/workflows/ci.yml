@@ -237,6 +237,32 @@ jobs:
       - name: Probar R59-H vista R38 con caso A5 v2 verificado
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r59h_*.py' -v
 
+      - name: Probar R60-E1 integracion offline / Test offline reconciliation
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYTEST'
+          import unittest
+          suite = unittest.defaultTestLoader.discover('lab/tests', pattern='test_p14_r60e1_*.py')
+          count = suite.countTestCases()
+          print('R60E1_CI_DISCOVERED=' + str(count), flush=True)
+          if count != 45:
+              raise RuntimeError('R60E1_CI_TEST_COUNT_MISMATCH')
+          if not unittest.TextTestRunner(verbosity=1).run(suite).wasSuccessful():
+              raise RuntimeError('R60E1_CI_TEST_FAILURE')
+          PYTEST
+
+      - name: Probar R60-E2 identidad de 29 casos / Test individual synthetic links
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYTEST'
+          import unittest
+          suite = unittest.defaultTestLoader.discover('lab/tests', pattern='test_p14_r60e2_*.py')
+          count = suite.countTestCases()
+          print('R60E2_CI_DISCOVERED=' + str(count), flush=True)
+          if count != 60:
+              raise RuntimeError('R60E2_CI_TEST_COUNT_MISMATCH')
+          if not unittest.TextTestRunner(verbosity=1).run(suite).wasSuccessful():
+              raise RuntimeError('R60E2_CI_TEST_FAILURE')
+          PYTEST
+
       - name: Verificar diseño del laboratorio / Verify laboratory design
         run: python3 lab/verify_design.py
 
