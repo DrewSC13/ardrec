@@ -1,0 +1,66 @@
+{
+  "schema": "ardrec-p14-r65-a1-confirmed-model-binding-trace-v1",
+  "base_sha": "c07c355f3282e10f10043dc3d11479b38329d21f",
+  "thesis_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "thesis_ref": {
+    "section": "3.6.1",
+    "figure": "3.4",
+    "printed_page": 105,
+    "pdf_page": 120
+  },
+  "scope": "READONLY_CONFIRMEDSTATE_MODEL_NOT_EXTERNAL_ATTESTATION",
+  "criteria": [
+    {
+      "id": "A1-R65-STATE-FROM-MODEL",
+      "oracle": "test_01_phase_from_confirmed_model"
+    },
+    {
+      "id": "A1-R65-GENERATION-IDENTITY",
+      "oracle": "test_03_model_contains_generation_identity_and_config"
+    },
+    {
+      "id": "A1-R65-SEPARATE-CONFIG-SOURCES",
+      "oracle": "test_04_independent_config_digests_not_auto_attested"
+    },
+    {
+      "id": "A1-R65-REPLAY",
+      "oracle": "test_05_integrity_and_reproducibility"
+    },
+    {
+      "id": "A1-R65-NONWINNING-ND",
+      "oracle": "test_07_all_false_is_nd"
+    },
+    {
+      "id": "A1-R65-FAIL-CLOSED",
+      "oracle": "test_09_required_absent_fails_closed"
+    },
+    {
+      "id": "A1-R65-NO-UNDECLARED-SERVICE",
+      "oracle": "test_11_absent_confirmed_service_rejected"
+    },
+    {
+      "id": "A1-R65-ORIGINAL-SOURCE-MISMATCH",
+      "oracle": "test_19_change_rule_source_invalidates_replay"
+    },
+    {
+      "id": "A1-R65-EXTERNAL-SOURCE-NOT-ATTESTED",
+      "oracle": "test_23_foreign_origin_never_attested_by_snapshot"
+    },
+    {
+      "id": "A1-R65-P8-NOGO",
+      "oracle": "test_24_no_dispatch_no_publication"
+    }
+  ],
+  "files": {
+    "implementation": "src/ardrec/rules/confirmed_context.py",
+    "consumer": "src/ardrec/initialization/rule_preflight.py",
+    "oracle": "lab/tests/test_p14_r65_a1_confirmed_context.py"
+  },
+  "acceptance_state": "PENDING_PROMETHEUS_CI_AND_MERGE",
+  "algorithm_a1_full": "NOT_CLAIMED",
+  "external_origin": "NOT_ATTESTED",
+  "normal_coordinator_path": "NOT_INTEGRATED",
+  "physical_services": "NOT_VALIDATED",
+  "experimental_54": "NOT_RUN",
+  "p8": "NO-GO"
+}

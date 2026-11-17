@@ -1,0 +1,28 @@
+{
+  "schema": "ardrec-p14-r66-a1-source-recovery-trace-v1",
+  "base_commit": "1714e96edb2d63216c004fdbb34361f7d7907c2e",
+  "thesis_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "source": "section 3.6.1, figure 3.4, printed page 105",
+  "implementation": "src/ardrec/rules/persisted_context.py",
+  "oracles": "lab/tests/test_p14_r66_a1_persisted_context.py",
+  "requirements": [
+    {"id": "A1-R66-CANONICAL-RECONSTRUCTION", "expected": "ConfirmedState using native codec.parse and unpack"},
+    {"id": "A1-R66-SHA-EXTERNAL-PIN", "expected": "SHA-256 exact match; pin does not self-attest authority"},
+    {"id": "A1-R66-READONLY-PRIVATE-FILE", "expected": "no symlinks, hardlinks, shared mode or writes"},
+    {"id": "A1-R66-CONTEXTUAL-REPLAY", "expected": "R65/R64/A1 recomputed from decoded confirmed state"},
+    {"id": "A1-R66-NO-AUTHORITY", "expected": "P8 NO-GO and no published generation"}
+  ],
+  "independent_tests": 30,
+  "local_only": true,
+  "push": false,
+  "pr": false,
+  "merge": false,
+  "a1_full": false,
+  "trusted_pin_origin": "UNATTESTED",
+  "a9_durable_generation": "UNATTESTED",
+  "global_configuration_rule_binding": "UNATTESTED",
+  "production_coordinator_wiring": "PENDING",
+  "physical_services": "NOT_EVALUATED",
+  "experimental_54": "NOT_EVALUATED",
+  "p8": "NO-GO"
+}

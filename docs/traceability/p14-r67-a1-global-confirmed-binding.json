@@ -1,0 +1,26 @@
+{
+  "schema": "ardrec-p14-r67-a1-global-confirmed-trace-v1",
+  "base_local_sha": "4d4774f6b38003cb101ce26e8463497e0a4837d4",
+  "thesis_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "thesis_section": "3.6.1",
+  "figures": ["3.4", "3.5"],
+  "implementation": "src/ardrec/rules/global_binding.py",
+  "oracle": "lab/tests/test_p14_r67_a1_global_binding.py",
+  "criteria": [
+    {"id": "A1-R67-GLOBAL-CODEC", "expected": "restore real typed GlobalState from exact canonical bytes and pinned SHA"},
+    {"id": "A1-R67-CONFIRMED-IDENTITY", "expected": "match GlobalState.confirmed to separately pinned ConfirmedState"},
+    {"id": "A1-R67-NO-CANDIDATE", "expected": "fail closed on unconfirmed candidate service states or pending attempts"},
+    {"id": "A1-R67-ENGINE-REUSE", "expected": "recompute effective A1 through R66; preserve ND and declared output"},
+    {"id": "A1-R67-READONLY", "expected": "private regular file read-only access, no untrusted links"},
+    {"id": "A1-R67-REPLAY", "expected": "recompute full canonical receipt to detect rehashed tampering"},
+    {"id": "A1-R67-NO-AUTHORITY", "expected": "external authority, A9 publication, config binding and P8 never claimed"}
+  ],
+  "new_oracle_count": 32,
+  "test_environment": "isolated smoke with minimal state and codec stand-ins",
+  "prometheus_tests": "PENDING",
+  "full_p14": "DEFERRED_TO_FINAL_A1_ACCEPTANCE",
+  "push_pr_merge": "NOT_REQUESTED",
+  "a1_100_percent": "NOT_CLAIMED",
+  "p8": "NO-GO",
+  "r60e5_wip": "PRESERVE_334e68a3d8bca1577b76572271a8a23d8b66ccb7"
+}
