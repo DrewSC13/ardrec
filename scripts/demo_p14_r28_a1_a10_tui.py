@@ -50,7 +50,10 @@ def main() -> int:
             print('R69_FAIL=' + getattr(exc, 'code', str(exc)), file=sys.stderr)
             return 2
         if opts.json: sys.stdout.buffer.write(canonical(doc)+b'\n')
-        elif opts.tui or opts.tui_clasica: run_dev_tui(doc)
+        elif opts.tui:
+            from ardrec.coordination.durable_dashboard_bridge import build_durable_dashboard
+            run_dashboard_tui(build_durable_dashboard(doc, fixture))
+        elif opts.tui_clasica: run_dev_tui(doc)
         else: sys.stdout.write(render_dev_text(doc))
         return 0
     if opts.expected_config_sha256 is not None or opts.expected_head_sha256 is not None:
