@@ -1,0 +1,131 @@
+{
+  "schema": "ardrec-p14-r68-a1-final-acceptance-matrix-v1",
+  "thesis_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "figures": [
+    "3.4",
+    "3.5"
+  ],
+  "printed_pages": [
+    105,
+    106
+  ],
+  "base_main_sha": "c07c355f3282e10f10043dc3d11479b38329d21f",
+  "base_local_r67_sha": "7449dce583142e485a74bc489922729b2de1429b",
+  "scope": "A1_ALGORITHMIC_ONLY",
+  "required_criteria_count": 18,
+  "criteria": [
+    {
+      "id": "A1-01",
+      "implementation": "R16",
+      "contract": "constantes y dominio lógico",
+      "oracle": "test_p14_r16_a1_kernel.py"
+    },
+    {
+      "id": "A1-02",
+      "implementation": "R61",
+      "contract": "cero coincidencias, ND, ambigüedad, salida",
+      "oracle": "test_p14_r61_a1_decision_contract.py"
+    },
+    {
+      "id": "A1-03",
+      "implementation": "R62",
+      "contract": "PERTENECE/SUBCONJUNTO y tipos",
+      "oracle": "test_p14_r62_a1_set_and_session.py"
+    },
+    {
+      "id": "A1-04",
+      "implementation": "R63",
+      "contract": "campos obligatorios y opcionales",
+      "oracle": "test_p14_r63_a1_field_presence.py"
+    },
+    {
+      "id": "A1-05",
+      "implementation": "R68",
+      "contract": "tablas exhaustivas de verdad",
+      "oracle": "test_p14_r68_a1_final.py"
+    },
+    {
+      "id": "A1-06",
+      "implementation": "R68",
+      "contract": "lógica trivalente y comparaciones exactas",
+      "oracle": "test_p14_r68_a1_final.py"
+    },
+    {
+      "id": "A1-07",
+      "implementation": "R17",
+      "contract": "validación de tablas y referencias",
+      "oracle": "test_p14_r17_a1_a2_preflight.py"
+    },
+    {
+      "id": "A1-08",
+      "implementation": "R18",
+      "contract": "previsualización inicial del consumidor",
+      "oracle": "test_p14_r18_a2_initial_preview.py"
+    },
+    {
+      "id": "A1-09",
+      "implementation": "R22",
+      "contract": "diagnósticos de guarda A3",
+      "oracle": "test_p14_r22_a3_guard_preview.py"
+    },
+    {
+      "id": "A1-10",
+      "implementation": "R26",
+      "contract": "ruta auténtica sintética A1→A2→A3",
+      "oracle": "test_p14_r26_session_a1_a3.py"
+    },
+    {
+      "id": "A1-11",
+      "implementation": "R58-P",
+      "contract": "29 casos de 25 familias, fuente idéntica",
+      "oracle": "test_p14_r62_r3_r58p_binding.py"
+    },
+    {
+      "id": "A1-12",
+      "implementation": "R64",
+      "contract": "siete campos contextualizados",
+      "oracle": "test_p14_r64_a1_contextual_decision.py"
+    },
+    {
+      "id": "A1-13",
+      "implementation": "R65",
+      "contract": "estado derivado de ConfirmedState",
+      "oracle": "test_p14_r65_a1_confirmed_context.py"
+    },
+    {
+      "id": "A1-14",
+      "implementation": "R66",
+      "contract": "recuperación de estado y SHA canónicos",
+      "oracle": "test_p14_r66_a1_persisted_context.py"
+    },
+    {
+      "id": "A1-15",
+      "implementation": "R67",
+      "contract": "concordancia GlobalState/ConfirmedState",
+      "oracle": "test_p14_r67_a1_global_binding.py"
+    },
+    {
+      "id": "A1-16",
+      "implementation": "R68",
+      "contract": "decisión cruzada de fuentes y replay",
+      "oracle": "test_p14_r68_a1_final.py"
+    },
+    {
+      "id": "A1-17",
+      "implementation": "R68",
+      "contract": "ausencia de autoridad P8 y A9",
+      "oracle": "test_p14_r68_a1_final.py"
+    },
+    {
+      "id": "A1-18",
+      "implementation": "FINAL",
+      "contract": "regresión completa, CI/merge y preservación R60-E5",
+      "oracle": "SCRIPT:ARDREC_P14_R68_A1_CIERRE_FINAL_R1.zsh"
+    }
+  ],
+  "untested_at_delivery": true,
+  "percentage_claim_before_full_ci": "NOT_ACCEPTED",
+  "full_system_a1_to_a10": "NOT_ACCEPTED",
+  "a9_published_generation_attested": false,
+  "p8_operational": "NO-GO"
+}
