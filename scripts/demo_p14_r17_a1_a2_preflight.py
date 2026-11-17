@@ -44,7 +44,8 @@ def main() -> int:
               'configuration_sha256': frozen.sha256, 'services': list(frozen.service_ids),
               'cases': results, 'a1_complete': False, 'a2_complete': False,
               'operational_dispatch': False, 'p8_operational': 'NO-GO'}
-    assert [r['status'] for r in results] == ['ND', 'FALSO', 'VERDADERO', 'VERDADERO']
+    assert [r['status'] for r in results] == ['ND', 'ND', 'VERDADERO', 'VERDADERO']
+    assert choices[1].evaluations == (('permiso', Truth.FALSO),)
     assert all(r['operationally_authorized'] is False for r in results)
     print(json.dumps(output, ensure_ascii=True, sort_keys=True))
     return 0

@@ -32,9 +32,12 @@ def main()->int:
     view=prepare_initial_preview(rules,initial)
     assert view.verify(rules)
     cases=[]
-    for name,env in [('ND',{}),('FALSO',{'permiso':Truth.FALSO}),
+    for name,env in [('ND',{}),('ND',{'permiso':Truth.FALSO}),
                      ('VERDADERO',{'permiso':Truth.VERDADERO})]:
         seen=view.evaluate_guard(rules,'SSH_LAB',env)
+        assert seen.status.value == name
+        if env.get('permiso') is Truth.FALSO:
+            assert seen.evaluations == (('R1', Truth.FALSO),)
         cases.append({'expected':name,'observed':seen.status.value,
                       'logical_guard_satisfied':seen.logical_guard_satisfied,
                       'operationally_authorized':seen.operationally_authorized})
