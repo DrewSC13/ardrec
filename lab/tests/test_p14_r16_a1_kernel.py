@@ -164,7 +164,8 @@ class KernelA1Tests(unittest.TestCase):
 
     def test_decide_all_false(self):
         d=decide([{"id":"a","condicion":logical(Truth.FALSO)}],{}, {})
-        self.assertIs(d.status,Truth.FALSO);self.assertFalse(d.authorized)
+        self.assertIs(d.status,Truth.ND);self.assertFalse(d.authorized)
+        self.assertEqual(d.evaluations,(("a",Truth.FALSO),))
 
     def test_decide_multiple_true_rejected(self):
         rows=[{"id":"a","condicion":logical(Truth.VERDADERO)},

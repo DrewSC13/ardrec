@@ -99,7 +99,8 @@ class RulePreflightTests(unittest.TestCase):
 
     def test_false_guard_does_not_authorize(self):
         result=preflight_rule_configuration(source()).evaluate_service('SSH01',{'control':Truth.FALSO})
-        self.assertEqual(result.status,Truth.FALSO)
+        self.assertEqual(result.status,Truth.ND)
+        self.assertEqual(result.evaluations,(("R1",Truth.FALSO),))
         self.assertFalse(result.logical_guard_satisfied)
         self.assertFalse(result.operationally_authorized)
 
@@ -135,7 +136,7 @@ class RulePreflightTests(unittest.TestCase):
         a=source();a['services'][0]['rules']=[row('R1',{'op':'COMPARAR','relacion':'MAYOR_IGUAL',
           'izq':field('riesgo'),'der':{'op':'CONSTANTE','tipo':'RACIONAL','valor':'1/2'}})]
         f=preflight_rule_configuration(a)
-        for value,truth in [(Fraction(1,3),Truth.FALSO),(Fraction(1,2),Truth.VERDADERO),
+        for value,truth in [(Fraction(1,3),Truth.ND),(Fraction(1,2),Truth.VERDADERO),
                             (Fraction(2,3),Truth.VERDADERO)]:
             self.assertEqual(f.evaluate_service('SSH01',{'riesgo':value}).status,truth)
 

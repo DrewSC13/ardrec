@@ -111,7 +111,7 @@ class InitialPreviewTests(unittest.TestCase):
 
     def test_guard_links_to_a1_and_does_not_change_init(self):
         p=prepare_initial_preview(self.rules,self.inp)
-        for env,result in [({},Truth.ND),({'permiso':Truth.FALSO},Truth.FALSO),
+        for env,result in [({},Truth.ND),({'permiso':Truth.FALSO},Truth.ND),
                            ({'permiso':Truth.VERDADERO},Truth.VERDADERO)]:
             seen=p.evaluate_guard(self.rules,'SSH_LAB',env)
             self.assertIs(seen.status,result)

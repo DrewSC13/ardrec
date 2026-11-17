@@ -50,7 +50,11 @@ def main() -> int:
     view=diagnose_guards(rules,initial,deps,controls,integrated,environment)
     assert view.verify(rules,initial,deps,controls,integrated,environment)
     counts={t.name:sum(u.table_status is t for u in view.units) for t in Truth}
-    assert counts=={'VERDADERO':18,'FALSO':18,'ND':18}
+    assert counts=={'VERDADERO':18,'FALSO':0,'ND':36}
+    false_units=[u for u in view.units if environment[u.service_id].get('FACT') is Truth.FALSO]
+    assert len(false_units)==18 and all(
+        u.table_status is Truth.ND and dict(u.evaluations)['ALLOW'] is Truth.FALSO
+        for u in false_units)
     result={
         'schema':'ardrec-p14-r22-a3-guard-diagnostic-demo-v1',
         'scope':'SYNTHETIC_TRIVALENT_DIAGNOSTICS_ONLY',
