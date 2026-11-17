@@ -91,6 +91,7 @@ class UnitGuardDiagnostic:
     evaluations: tuple[tuple[str, Truth], ...]
     cases: tuple[CaseDiagnostic, ...]
     controls: tuple[ControlDiagnostic, ...]
+    table_output: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -200,7 +201,8 @@ def _compose(rules: FrozenRulePreview, initial: InitialPreview,
                                                    tuple(blockers)))
         outputs.append(UnitGuardDiagnostic(sid, unit.protocol, verdict.status,
                                            verdict.selected, verdict.evaluations,
-                                           tuple(case_items), tuple(controls_out)))
+                                           tuple(case_items), tuple(controls_out),
+                                           verdict.output))
         env_records.append({'id': sid, 'fields': {k: _freeze_field(env[k]) for k in sorted(env)}})
     record = {
         'format': FORMAT,
@@ -211,6 +213,8 @@ def _compose(rules: FrozenRulePreview, initial: InitialPreview,
             {'id': u.service_id, 'protocol': u.protocol,
              'table_status': u.table_status.name,
              'table_selected': u.table_selected,
+             **({'table_output': u.table_output}
+                if u.table_output is not None else {}),
              'evaluations': [{'id': rid, 'truth': value.name} for rid, value in u.evaluations],
              'cases': [{'id': c.case_id, 'requires': list(c.requires),
                         'diagnostic': c.reason} for c in u.cases],

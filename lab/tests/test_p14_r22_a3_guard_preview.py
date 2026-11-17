@@ -121,7 +121,8 @@ class GuardR22Tests(unittest.TestCase):
     def test_false_guard_from_explicit_fact(self):
         p=diagnose_guards(*custom(),{'SSH_01':{'FACT':Truth.FALSO}})
         self.assertIs(p.units[0].controls[0].truth,Truth.FALSO)
-        self.assertIs(p.units[0].table_status,Truth.FALSO)
+        self.assertIs(p.units[0].table_status,Truth.ND)
+        self.assertIn('TABLA_NO_ACREDITADA',p.units[0].controls[0].blockers)
 
     def test_ambiguity_denied(self):
         true={'op':'CONSTANTE','tipo':'LOGICO','valor':'VERDADERO'}

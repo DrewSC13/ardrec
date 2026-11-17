@@ -82,7 +82,7 @@ class FrozenRulePreview:
         decision = decide(table, data['fields'], environment)
         return PreviewDecision(self.sha256, service_id, decision.status,
                                decision.selected, decision.evaluations,
-                               guard_allows(decision.status))
+                               guard_allows(decision.status), decision.output)
 
 
 @dataclass(frozen=True, slots=True)
@@ -93,6 +93,7 @@ class PreviewDecision:
     selected_rule: str | None
     evaluations: tuple[tuple[str, Truth], ...]
     logical_guard_satisfied: bool
+    selected_output: str | None = None
 
     @property
     def operationally_authorized(self) -> bool:
@@ -131,11 +132,15 @@ def preflight_rule_configuration(candidate: dict[str, Any]) -> FrozenRulePreview
         seen_rules: set[str] = set()
         frozen_rules = []
         for row in rules:
-            _keys(row, {'id', 'condicion'}, 'fila_invalida')
+            _need(type(row) is dict and set(row) in (
+                {'id', 'condicion'}, {'id', 'condicion', 'salida'}), 'fila_invalida')
             rid = row['id']
             _need(_id(rid) and rid not in seen_rules,
                   'identidad_regla_invalida_o_duplicada')
             seen_rules.add(rid)
+            if 'salida' in row:
+                _need(type(row['salida']) is str and 0 < len(row['salida']) <= 128,
+                      'salida_invalida')
             # Toda regla se comprueba antes de ordenar y congelar, sin ejecución.
             node = compile_expression(row['condicion'], schema)
             _need(node.domain == 'LOGICO', 'condicion_no_logica')

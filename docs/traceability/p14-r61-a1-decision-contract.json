@@ -1,0 +1,37 @@
+{
+  "schema": "ardrec-p14-r61-a1-figure34-trace-v1",
+  "repository": "DrewSC13/ardrec",
+  "base_commit": "32c6f22d9578930f692dad6e69a1aa3ddbb1fd13",
+  "thesis_pdf_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "thesis_section": "3.6.1",
+  "thesis_figure": "3.4",
+  "printed_page": 105,
+  "pdf_page": 120,
+  "algorithm": "A1",
+  "criterion": "A1-DECIDIR-NO-MATCH-IS-ND-OUTPUT-PROPAGATED",
+  "input": "nonempty bounded decision table, typed environment",
+  "expected": {
+    "all_false_individual_evaluations": "FALSO",
+    "all_false_table_status": "ND",
+    "unique_true_with_nd": "ND",
+    "multiple_true": "reglas_ambiguas",
+    "one_determined_true": "VERDADERO and selected id and optional declared output"
+  },
+  "implementation": [
+    "src/ardrec/rules/kernel.py",
+    "src/ardrec/initialization/rule_preflight.py",
+    "src/ardrec/scheduling/guard_preview.py"
+  ],
+  "test": [
+    "lab/tests/test_p14_r61_a1_decision_contract.py",
+    "lab/tests/test_p14_r16_a1_kernel.py",
+    "lab/tests/test_p14_r17_a1_a2_preflight.py",
+    "lab/tests/test_p14_r18_a2_initial_preview.py",
+    "lab/tests/test_p14_r22_a3_guard_preview.py"
+  ],
+  "status_at_delivery": "PATCH_READY_NOT_APPLIED_ON_PROMETHEUS",
+  "verification_required": "local signed commit, checks, protected PR, merged main CI",
+  "p8_operational": "NO-GO",
+  "physical_three_services": "NOT_VERIFIED_BY_THIS_INCREMENT",
+  "experimental_54": "NOT_STARTED_BY_THIS_INCREMENT"
+}

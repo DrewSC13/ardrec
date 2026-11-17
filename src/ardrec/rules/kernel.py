@@ -40,6 +40,8 @@ class Decision:
     status: Truth
     selected: str | None
     evaluations: tuple[tuple[str, Truth], ...]
+    # Salida declarativa de la fila ganadora; no equivale a permiso P8.
+    output: str | None = None
 
     @property
     def authorized(self) -> bool:
@@ -213,30 +215,38 @@ def decide(rows: list[dict], schema: dict[str, str], env: dict[str, Any]) -> Dec
     _schema(schema)
     if type(rows) is not list or not 1 <= len(rows) <= MAX_RULES:
         raise A1Error("tabla_invalida")
-    compiled: list[tuple[str, Node]] = []
+    compiled: list[tuple[str, Node, str | None]] = []
     seen: set[str] = set()
     for row in rows:
         if type(row) is not dict:
             raise A1Error("fila_invalida")
-        _keys(row, {"id", "condicion"})
+        if set(row) not in ({"id", "condicion"}, {"id", "condicion", "salida"}):
+            raise A1Error("estructura_invalida")
         rid = row["id"]
         if type(rid) is not str or not ID.fullmatch(rid) or rid in seen:
             raise A1Error("id_fila_invalida_o_duplicada")
         seen.add(rid)
+        if "salida" in row and (type(row["salida"]) is not str
+                                or not 0 < len(row["salida"]) <= 128):
+            raise A1Error("salida_invalida")
         node = compile_expression(row["condicion"], schema)
         if node.domain != "LOGICO":
             raise A1Error("condicion_no_logica")
-        compiled.append((rid, node))
+        compiled.append((rid, node, row.get("salida")))
     _environment(schema, env)
-    observations = tuple(sorted(((rid, _run(node, env)) for rid, node in compiled), key=lambda p: p[0]))
+    observations = tuple(sorted(((rid, _run(node, env)) for rid, node, _ in compiled), key=lambda p: p[0]))
+    declared_outputs = {rid: output for rid, _, output in compiled}
     winners = [rid for rid, truth in observations if truth is Truth.VERDADERO]
     if len(winners) > 1:
         raise A1Error("reglas_ambiguas")
     if any(truth is Truth.ND for _, truth in observations):
         return Decision(Truth.ND, None, observations)
     if winners:
-        return Decision(Truth.VERDADERO, winners[0], observations)
-    return Decision(Truth.FALSO, None, observations)
+        return Decision(Truth.VERDADERO, winners[0], observations,
+                        declared_outputs[winners[0]])
+    # Figura 3.4: sin coincidencias la TABLA es ND, no FALSO.
+    # El FALSO de cada condicion individual permanece en `evaluations`.
+    return Decision(Truth.ND, None, observations)
 
 
 def guard_allows(value: Truth) -> bool:
