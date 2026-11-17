@@ -12,11 +12,13 @@ from typing import Any
 
 from ardrec.state import Truth
 
-TYPES = frozenset({"LOGICO", "RACIONAL", "TEXTO"})
-RELATIONS = frozenset({"IGUAL", "DISTINTO", "MENOR", "MENOR_IGUAL", "MAYOR", "MAYOR_IGUAL"})
+SET_TYPES = frozenset({"CONJUNTO_TEXTO", "CONJUNTO_RACIONAL"})
+TYPES = frozenset({"LOGICO", "RACIONAL", "TEXTO", *SET_TYPES})
+RELATIONS = frozenset({"IGUAL", "DISTINTO", "MENOR", "MENOR_IGUAL", "MAYOR", "MAYOR_IGUAL", "PERTENECE", "SUBCONJUNTO"})
 ID = re.compile(r"[A-Za-z][A-Za-z0-9_]{0,63}\Z", re.ASCII)
 RATIONAL = re.compile(r"(?:0|-?[1-9][0-9]*)(?:/[1-9][0-9]*)?\Z", re.ASCII)
 MAX_DEPTH, MAX_NODES, MAX_RULES = 20, 256, 128
+MAX_SET_MEMBERS = 64
 
 
 class A1Error(ValueError):
@@ -82,6 +84,15 @@ def _literal(domain: str, raw: Any) -> Any:
         if type(raw) is not str or not 0 < len(raw) <= 128:
             raise A1Error("constante_texto_invalida")
         return raw
+    if domain in SET_TYPES:
+        # Codificación congelable: lista JSON ordenada, única y acotada.
+        if type(raw) is not list or len(raw) > MAX_SET_MEMBERS:
+            raise A1Error("conjunto_invalido")
+        subtype = "TEXTO" if domain == "CONJUNTO_TEXTO" else "RACIONAL"
+        values = tuple(_literal(subtype, member) for member in raw)
+        if raw != sorted(raw) or len(frozenset(values)) != len(values):
+            raise A1Error("conjunto_no_canonico")
+        return frozenset(values)
     raise A1Error("tipo_invalido")
 
 
@@ -136,10 +147,19 @@ def compile_expression(expr: dict, schema: dict[str, str]) -> Node:
                 if type(relation) is not str or relation not in RELATIONS:
                     raise A1Error("relacion_no_autorizada")
                 left, right = visit(raw["izq"], depth + 1), visit(raw["der"], depth + 1)
-                if left.domain != right.domain:
-                    raise A1Error("tipos_incompatibles")
-                if relation not in ("IGUAL", "DISTINTO") and left.domain != "RACIONAL":
-                    raise A1Error("relacion_tipo_incompatible")
+                if relation == "PERTENECE":
+                    expected = {"TEXTO": "CONJUNTO_TEXTO",
+                                "RACIONAL": "CONJUNTO_RACIONAL"}.get(left.domain)
+                    if expected is None or right.domain != expected:
+                        raise A1Error("tipos_incompatibles")
+                elif relation == "SUBCONJUNTO":
+                    if left.domain not in SET_TYPES or left.domain != right.domain:
+                        raise A1Error("tipos_incompatibles")
+                else:
+                    if left.domain != right.domain:
+                        raise A1Error("tipos_incompatibles")
+                    if relation not in ("IGUAL", "DISTINTO") and left.domain != "RACIONAL":
+                        raise A1Error("relacion_tipo_incompatible")
                 return Node(op, "LOGICO", (left, right), data=relation)
             raise A1Error("operador_no_autorizado")
         finally:
@@ -159,6 +179,13 @@ def _environment(schema: dict[str, str], env: dict[str, Any]) -> None:
             raise A1Error("ambiente_tipo_invalido")
         if domain == "TEXTO" and (type(value) is not str or not 0 < len(value) <= 128):
             raise A1Error("ambiente_tipo_invalido")
+        if domain in SET_TYPES:
+            subtype = str if domain == "CONJUNTO_TEXTO" else Fraction
+            if (type(value) is not frozenset or len(value) > MAX_SET_MEMBERS
+                or any(type(v) is not subtype for v in value)):
+                raise A1Error("ambiente_tipo_invalido")
+            if subtype is str and any(not 0 < len(v) <= 128 for v in value):
+                raise A1Error("ambiente_tipo_invalido")
 
 
 def _trivalent(op: str, args: tuple[Truth, ...]) -> Truth:
@@ -193,6 +220,8 @@ def _run(node: Node, env: dict[str, Any]) -> Any:
         "MENOR_IGUAL": lambda: left <= right,
         "MAYOR": lambda: left > right,
         "MAYOR_IGUAL": lambda: left >= right,
+        "PERTENECE": lambda: left in right,
+        "SUBCONJUNTO": lambda: left.issubset(right),
     }[relation]()
     return Truth.VERDADERO if verdict else Truth.FALSO
 

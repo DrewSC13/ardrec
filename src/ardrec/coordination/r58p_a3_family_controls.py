@@ -119,8 +119,9 @@ def build_family_a3_projection(scenario: dict[str, Any],
         'format': RULE_FORMAT,
         'fields': {'FACT': 'LOGICO'},
         'services': [{'id': sid, 'initial_state': 'PREPARADO', 'rules': [
-            {'id': 'ALLOW', 'condicion': {'op': 'CAMPO', 'nombre': 'FACT'}},
-            {'id': 'DENY', 'condicion': {
+            {'id': 'ALLOW', 'salida': 'CASE_POLICY',
+             'condicion': {'op': 'CAMPO', 'nombre': 'FACT'}},
+            {'id': 'DENY', 'salida': 'CASE_REFERENCE', 'condicion': {
                 'op': 'NO', 'arg': {'op': 'CAMPO', 'nombre': 'FACT'}}},
         ]} for sid in sorted(SERVICES)],
     })
@@ -178,7 +179,9 @@ def build_family_a3_projection(scenario: dict[str, Any],
         reference = r26_by_service[sid]
         need(g.table_status.name == reference['a3']['table_status'] and
              g.table_selected == reference['a3']['table_selected'] and
-             g.table_status.name == reference['a1']['status'],
+              g.table_status.name == reference['a1']['status'] and
+              getattr(g, 'table_output', None) == reference['a1'].get('selected_output') and
+              getattr(g, 'table_output', None) == reference['a3'].get('table_output'),
              'R26_A3_TABLE_DISAGREEMENT')
         need(initial_by_service[sid].phase.value == 'PREPARADO' and
              all(c.starts_confirmed == 0 for c in initial_by_service[sid].cases),

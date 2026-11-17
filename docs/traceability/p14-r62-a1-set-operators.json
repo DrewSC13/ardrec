@@ -1,0 +1,85 @@
+{
+  "schema": "ardrec-p14-r62-a1-set-semantics-v1",
+  "thesis_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "thesis": {
+    "section": "3.6.1",
+    "figures": [
+      "3.4",
+      "3.5"
+    ],
+    "printed_pages": [
+      105,
+      106
+    ]
+  },
+  "base_sha": "35de55626726959e050113bfdd3e0d96f101f0e6",
+  "requirements": [
+    {
+      "id": "A1-SET-MEMBER",
+      "reference": "figure 3.5",
+      "implementation": "src/ardrec/rules/kernel.py",
+      "oracle": "A1SetOperatorIndependentOracle.test_membership_text_true_false"
+    },
+    {
+      "id": "A1-SET-SUBSET",
+      "reference": "figure 3.5",
+      "implementation": "src/ardrec/rules/kernel.py",
+      "oracle": "A1SetOperatorIndependentOracle.test_subset_proper_equal_empty"
+    },
+    {
+      "id": "A1-SET-TYPE",
+      "reference": "figure 3.5",
+      "implementation": "src/ardrec/rules/kernel.py",
+      "oracle": "A1SetOperatorIndependentOracle.test_membership_rejects_nonmatching_domains"
+    },
+    {
+      "id": "A1-SET-UNKNOWN",
+      "reference": "figure 3.5",
+      "implementation": "src/ardrec/rules/kernel.py",
+      "oracle": "A1SetOperatorIndependentOracle.test_missing_field_is_nd_even_when_other_operand_empty"
+    },
+    {
+      "id": "A1-SET-CANONICAL",
+      "reference": "figure 3.5",
+      "implementation": "src/ardrec/rules/kernel.py",
+      "oracle": "A1SetOperatorIndependentOracle.test_constant_sets_reject_duplicates_noncanonical_and_invalid_values"
+    },
+    {
+      "id": "A1-DECISION-TRUTH",
+      "reference": "figure 3.4",
+      "implementation": "src/ardrec/rules/kernel.py",
+      "oracle": "A1SetOperatorIndependentOracle.test_deterministic_decision_table_all_three_value_combinations"
+    },
+    {
+      "id": "A1-OUTPUT-A3",
+      "reference": "figure 3.4",
+      "implementation": "src/ardrec/coordination/demo_session.py",
+      "oracle": "A1R26IntegrationOracle.test_selected_row_output_reaches_a1_and_a3_in_session"
+    },
+    {
+      "id": "A1-EVENT-TRACE",
+      "reference": "figure 3.4",
+      "implementation": "src/ardrec/coordination/demo_session.py",
+      "oracle": "A1R26IntegrationOracle.test_a1_and_a3_events_include_output_and_digest"
+    },
+    {
+      "id": "A1-R26-R58P-CANONICAL-RULE-SOURCE",
+      "reference": "figures 3.4 and 3.5, downstream typed case projection",
+      "implementation": "src/ardrec/coordination/r58p_a3_family_controls.py",
+      "oracle": "R26R58PBindingOracle.test_rule_source_identity_and_29_family_case_controls"
+    },
+    {
+      "id": "A1-R26-R58P-DECLARED-OUTPUT",
+      "reference": "figure 3.4, source and output identity in downstream consumers",
+      "implementation": "src/ardrec/coordination/r58p_a3_family_controls.py",
+      "oracle": "R26R58PBindingOracle.test_declared_outputs_agree_across_r26_and_r58p_diagnostics"
+    }
+  ],
+  "test_file": "lab/tests/test_p14_r62_a1_set_and_session.py",
+  "operational_authority": "NO-GO",
+  "validation_state_at_delivery": "PATCH_NOT_APPLIED_OR_TESTED_ON_PROMETHEUS",
+  "algorithmic_100_percent": "NOT_CLAIMED",
+  "physical_services": "NOT_VERIFIED",
+  "experimental_54": "NOT_VERIFIED",
+  "downstream_oracle_file": "lab/tests/test_p14_r62_r3_r58p_binding.py"
+}
