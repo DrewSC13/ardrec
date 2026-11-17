@@ -1,0 +1,16 @@
+{
+  "schema": "ardrec-r59f-a5-variant-origin-trace-v1",
+  "increment": "R59-F",
+  "source": "R59-D/R59-E and P7 catalogue pinned",
+  "a5_intent_version": "v2 variant declared at origin",
+  "legacy_projection": "R59-D v1, unchanged and explicitly identified",
+  "family_count": 25,
+  "variant_case_count": 29,
+  "physical_start_accredited": false,
+  "a6_classification": "ND",
+  "confirmed_rf": null,
+  "generation_published": null,
+  "tui_r38_modified": false,
+  "host_mutations": 0,
+  "p8_operational": "NO-GO"
+}

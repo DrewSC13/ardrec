@@ -1,0 +1,27 @@
+{
+  "a5_physical_start_attested": false,
+  "a6_classification": "ND",
+  "case_count": 1,
+  "confirmed_rf": null,
+  "example": {
+    "declared_outcome": "NO_START",
+    "family": "FTP-T02",
+    "service": "FTP_DEV",
+    "variant": "DATA"
+  },
+  "existing_engine": "R38",
+  "host_mutations": 0,
+  "increment": "R59-H",
+  "input_sources": [
+    "R58Y/R58Z real private historical SQLite",
+    "R59F A5 v2 private receipt",
+    "R59D A5 candidate",
+    "R59E P7 family bridge"
+  ],
+  "modified_existing_engine": false,
+  "p8_operational": "NO-GO",
+  "published_generation": null,
+  "schema": "ardrec-p14-r59h-traceability-v1",
+  "tests": 38,
+  "view": "read-only-three-panels-A1-A10"
+}

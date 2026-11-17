@@ -1,0 +1,15 @@
+{
+  "schema": "ardrec-p14-r58y-traceability-v1",
+  "base_commit": "930866989b8343d14dbe5a76b1719d0e6239c182",
+  "thesis_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "requirements": [
+    {"section": "3.6 / A5-A6", "capability": "SSH historical R42.2-R42.3 observations imported under R42.4 verification; A5 binding absent and A6 ND", "source": "src/ardrec/coordination/r58y_observation_register.py", "test": "lab/tests/test_p14_r58y_observation_register.py", "acceptance": "SOFTWARE_ONLY"},
+    {"section": "3.6 / A7", "capability": "No confirmed final risk from nonadmitted evidence", "source": "src/ardrec/coordination/r58y_observation_register.py", "test": "test_ssh_not_counted_as_a6_or_a5", "acceptance": "UNCONFIRMED"},
+    {"section": "3.6 / A9-A10", "capability": "Durable private observation projection; no A9 generation publication", "source": "scripts/ardrec_p14_r58y_observations.py", "test": "test_import_and_reopen", "acceptance": "PRIVATE_DURABLE_PROJECTION_ONLY"},
+    {"section": "3.7 / P7", "capability": "SSH, FTPS, SMB selectable without inventing absent protocol evidence", "source": "src/ardrec/coordination/r58y_observation_register.py", "test": "test_no_fake_ftp_smb_records", "acceptance": "DISPLAY_ONLY"}
+  ],
+  "operational_dispatch": false,
+  "p8_operational": "NO-GO",
+  "a6_admitted_count": 0,
+  "a9_confirmed_generation_count": 0
+}

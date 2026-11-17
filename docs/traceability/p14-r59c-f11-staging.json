@@ -1,0 +1,20 @@
+{
+  "cli": "scripts/ardrec_p14_r59c_f11_stage.py",
+  "expected_host_mutations": 0,
+  "f11_accepted": false,
+  "implementation": "src/ardrec/coordination/r59c_f11_stage.py",
+  "increment": "R59-C",
+  "interface": "R38_UNCHANGED",
+  "manual_boot_attested": false,
+  "operational_dispatch": false,
+  "p8": "NO-GO",
+  "schema": "ardrec-p14-r59c-source-traceability-v1",
+  "scope": "F11_SOURCE_ONLY_PRIVATE_SANDBOX_TRANSACTION",
+  "source_modules": [
+    "lab/f11-runtime-v1/00-ardrec-r33-deny",
+    "lab/f11-runtime-v1/libvirtd-f11-guard.conf",
+    "lab/f11-runtime-v1/ardrec-r34-deny-watchdog.service",
+    "lab/f11-runtime-v1/ardrec-r34-deny-watchdog.timer"
+  ],
+  "tests": "lab/tests/test_p14_r59c_f11_stage.py"
+}

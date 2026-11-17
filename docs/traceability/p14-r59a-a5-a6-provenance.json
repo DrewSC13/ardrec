@@ -1,0 +1,40 @@
+{
+  "schema": "ardrec-p14-r59a-source-a5-a6-traceability-v1",
+  "increment": "R59-A",
+  "base_commit": "5a477100a8c754d6c307357c9091b751725d448d",
+  "thesis_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "thesis_figures": [
+    "3.14 Registro durable de decisiones",
+    "3.15 Conciliación de intentos",
+    "3.17 Validación de soportes",
+    "3.18 Determinación de resoluciones admisibles"
+  ],
+  "source_components": [
+    "src/ardrec/coordination/r58m_durable_a5_audit.py",
+    "src/ardrec/coordination/r58y_observation_register.py",
+    "src/ardrec/coordination/r58z_verified_workspace.py"
+  ],
+  "new_components": [
+    "src/ardrec/coordination/r59a_a5_a6_provenance.py",
+    "scripts/ardrec_p14_r59a_reconcile.py",
+    "lab/tests/test_p14_r59a_provenance.py"
+  ],
+  "test_pattern": "test_p14_r59a_*.py",
+  "tests_local_with_r58m_test_stub": 27,
+  "semantics": {
+    "p8_operational": "NO-GO",
+    "a5_operational_starts": 0,
+    "a6_accredited_count": 0,
+    "a6": "ND",
+    "confirmed_final_risk": null,
+    "a9_published_generation": null,
+    "r58y_historical_case_binding": false,
+    "r58m_local_benign_case_binding": false,
+    "tui_original_preserved": true
+  },
+  "limitations": [
+    "No se acredita vínculo A5→A6 con estas fuentes históricas",
+    "No habilita una prueba SSH/FTPS/SMB, ni modifica VM o F11",
+    "La fuente física y auditor R58-M se verificarán en Prometheus"
+  ]
+}

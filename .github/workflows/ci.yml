@@ -210,6 +210,33 @@ jobs:
       - name: Demostrar R58-X 29 intervalos sin Rf acreditado / Check exact no-start envelope
         run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58x_no_start_a6_a7_demo.py --synthetic-offline
 
+      - name: Probar R58-Y registro durable de observaciones DEV y TUI multieservicio / Test observation register
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58y_*.py' -v
+
+      - name: Probar R58-Z vistas A10 y persistencia de observaciones / Test verified workspace
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58z_*.py' -v
+
+      - name: Probar R59-A conciliación fuentes A5 y A6 / Test A5-A6 source provenance
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r59a_*.py' -v
+
+      - name: Probar R59-C F11 transaccion en caja privada / Test private F11 staging rollback
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r59c_*.py' -v
+
+      - name: Probar R59-D recepción tipada A5 y soporte A6 / Test case-bound A5 result intake
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r59d_*.py' -v
+
+      - name: Probar R59-E puente A5/A6 y familias P7 (source-only)
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r59e_*.py' -v
+
+      - name: Probar R59-F identidad A5 v2 y variante desde origen (sin despacho)
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r59f_*.py' -v
+
+      - name: Probar R59-G firmas A5 v2 sin autoridad operativa
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r59g_*.py' -v
+
+      - name: Probar R59-H vista R38 con caso A5 v2 verificado
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r59h_*.py' -v
+
       - name: Verificar diseño del laboratorio / Verify laboratory design
         run: python3 lab/verify_design.py
 
