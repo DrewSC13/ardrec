@@ -1,0 +1,18 @@
+{
+  "schema": "ardrec-p14-r59g-signed-review-source-trace-v1",
+  "increment": "R59-G",
+  "parent": "R59-F",
+  "source_r58f": "src/ardrec/evidence/r58f_signed_witness.py",
+  "source_r58g": "src/ardrec/evidence/r58g_trust_registry.py",
+  "source_r59f": "src/ardrec/coordination/r59f_variant_origin.py",
+  "service_families": 25,
+  "original_case_variants": 29,
+  "signature_roles": ["observer", "reviewer"],
+  "external_registry_pin_required": true,
+  "a5_physical_start_accredited": false,
+  "a6_classification": "ND",
+  "published_generation": null,
+  "p8_operational": "NO-GO",
+  "host_mutations": 0,
+  "tui_modified": false
+}

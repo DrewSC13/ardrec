@@ -1,0 +1,17 @@
+{
+  "schema": "ardrec-p14-r58z-traceability-v1",
+  "increment": "R58-Z",
+  "base_commit": "5a477100a8c754d6c307357c9091b751725d448d",
+  "thesis_sha256": "6a6d2d7889a683e459da46559c03dcd62616141b39f0d2680542f0e744c46c72",
+  "thesis_sections": ["3.6.1 (algoritmo 5, figuras 3.14-3.16)", "3.6.1 (algoritmo 6, figuras 3.17-3.20)", "3.6.1 (algoritmo 7, figuras 3.21-3.23)", "3.6.1 (algoritmo 9, figuras 3.26-3.29)", "3.6.1 (algoritmo 10)"],
+  "source": "src/ardrec/coordination/r58z_verified_workspace.py",
+  "cli": "scripts/ardrec_p14_r58z_workspace.py",
+  "test": "lab/tests/test_p14_r58z_workspace.py",
+  "observed_input": "R58-Y real historical SSH receipts R42.2/R42.3 revalidated on each reopen",
+  "denominators": {"catalog_families": 25, "synthetic_variants": 29, "future_experiment_units": 54},
+  "claims": {"A5_operational_starts": 0, "A6_accredited": 0, "A6": "ND", "A7_confirmed_rf": null, "A9_published_generation": null, "P8": "NO-GO"},
+  "output_type": "DOCUMENTARY_READONLY_SNAPSHOT_NOT_A9",
+  "new_tests_offline": 19,
+  "operational_acceptance": "PENDING",
+  "limitations": ["No VM execution", "No physical FTPS/SMB", "No actual A5 to A6 admission", "GitHub SSH signature verification of base branch pending"]
+}

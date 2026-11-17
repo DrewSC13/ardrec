@@ -1,0 +1,23 @@
+{
+  "increment": "R58-Z-R2",
+  "base_local_commit": "5a477100a8c754d6c307357c9091b751725d448d",
+  "previous_increment": "R58-Z",
+  "scope": "presentation_only_adapter",
+  "approved_tui": "R38_R42_5_THREE_PANELS",
+  "engine": "src/ardrec/coordination/dashboard_tui.py",
+  "entrypoint": "scripts/ardrec_p14_r58z_workspace.py --tui",
+  "new_adapter": "src/ardrec/coordination/r58z_r38_dashboard_adapter.py",
+  "new_tests": "lab/tests/test_p14_r58z_r38_adapter.py",
+  "service_keys": "v,V",
+  "stage_keys": "1..9,0",
+  "source": "R58-Y_verified_HISTORICAL_SSH_SQLite",
+  "physical_VM_execution": false,
+  "a5_operational": false,
+  "a6_classification": "ND",
+  "a7_confirmed_rf": null,
+  "a9_published_generation": null,
+  "p8_operational": "NO-GO",
+  "source_dashboard_modified": false,
+  "ci_step_modified": false,
+  "merge_performed": false
+}

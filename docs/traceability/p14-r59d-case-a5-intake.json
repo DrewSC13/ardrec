@@ -1,0 +1,18 @@
+{
+  "schema": "ardrec-p14-r59d-traceability-v1",
+  "increment": "R59-D",
+  "scope": "A5 typed case identity, result candidate, bounded support and private readback",
+  "source_files": [
+    "src/ardrec/coordination/r59d_a5_result_intake.py",
+    "scripts/ardrec_p14_r59d_a5_intake.py",
+    "lab/tests/test_p14_r59d_a5_result_intake.py"
+  ],
+  "physical_authority": false,
+  "technical_truth_accredited": false,
+  "a6_classification": "ND",
+  "a7_confirmed_rf": null,
+  "a9_generation": null,
+  "host_mutations": 0,
+  "p8_operational": "NO-GO",
+  "tui_r38_modified": false
+}

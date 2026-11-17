@@ -1,0 +1,14 @@
+{
+  "schema":"ardrec-r59e-traceability-source-only-v1",
+  "p8_operational":"NO-GO",
+  "physical_a5_attempts_started":0,
+  "technical_a6_admissions":0,
+  "published_a9_generations":0,
+  "catalogue_families":{"SSH":8,"FTP":8,"SMB":9,"total":25},
+  "source":"persisted_r59d_candidate_and_support_reverified",
+  "rule_engines":["R58-H","R58-I","R58-J"],
+  "variant_attested_by_original_a5_intent":false,
+  "external_review_trust":"UNATTESTED",
+  "tui_r38_modified":false,
+  "host_mutations":0
+}
