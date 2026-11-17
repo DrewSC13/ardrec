@@ -137,6 +137,11 @@ def verify_session_document(document: dict[str, Any]) -> bool:
     _need(type(events) is list and len(events) == 9 and type(units) is list
           and len(units) == 3 and {u['service_id'] for u in units} == set(REQUIRED),
           'session_event_units')
+    for unit in units:
+        _need(unit['a1']['status'] == unit['a3']['table_status']
+              and unit['a1']['selected_rule'] == unit['a3']['table_selected']
+              and unit['a1'].get('selected_output') == unit['a3'].get('table_output'),
+              'a1_a3_output_disagreement')
     previous = None
     for number, event in enumerate(events, 1):
         _need(type(event) is dict and event.get('ordinal') == number
@@ -186,8 +191,9 @@ def build_development_session(candidate: dict[str, Any]) -> DevelopmentSession:
     rule_configuration = {
         'format': RULE_FORMAT, 'fields': {'FACT': 'LOGICO'},
         'services': [{'id': sid, 'initial_state': 'PREPARADO', 'rules': [
-            {'id': 'ALLOW', 'condicion': {'op': 'CAMPO', 'nombre': 'FACT'}},
-            {'id': 'DENY', 'condicion': {
+            {'id': 'ALLOW', 'salida': 'CASE_POLICY',
+             'condicion': {'op': 'CAMPO', 'nombre': 'FACT'}},
+            {'id': 'DENY', 'salida': 'CASE_REFERENCE', 'condicion': {
                 'op': 'NO', 'arg': {'op': 'CAMPO', 'nombre': 'FACT'}}},
         ]} for sid in ids],
     }
@@ -242,7 +248,8 @@ def build_development_session(candidate: dict[str, Any]) -> DevelopmentSession:
         d, u, c, i = (decisions[sid], guard_by_id[sid],
                        contract_by_id[sid], init_by_id[sid])
         _need(d.status is u.table_status and d.selected_rule == u.table_selected
-              and d.evaluations == u.evaluations, 'a1_a3_disagreement')
+              and d.evaluations == u.evaluations
+              and d.selected_output == u.table_output, 'a1_a3_disagreement')
         _need(i.phase.value == 'PREPARADO'
               and str(i.initial_risk) == s['initial_risk']
               and i.recalibrated_risk == i.initial_risk
@@ -255,6 +262,7 @@ def build_development_session(candidate: dict[str, Any]) -> DevelopmentSession:
             'source_reference': 'FIXTURE:' + fixture['session_id'] + ':' + sid,
             'fact_declared': s['fact'],
             'a1': {'status': d.status.name, 'selected_rule': d.selected_rule,
+                   'selected_output': d.selected_output,
                    'evaluations': [{'rule_id': rid, 'truth': truth.name}
                                    for rid, truth in d.evaluations]},
             'a2': {'initial_phase': i.phase.value, 'initial_risk': str(i.initial_risk),
@@ -266,6 +274,7 @@ def build_development_session(candidate: dict[str, Any]) -> DevelopmentSession:
                    'integrated_sha256': integrated.sha256},
             'a3': {'table_status': u.table_status.name,
                    'table_selected': u.table_selected,
+                   'table_output': u.table_output,
                    'controls': [{'id': ctrl.control_id,
                                  'truth': ctrl.truth.name,
                                  'blockers': list(ctrl.blockers)}
@@ -277,11 +286,13 @@ def build_development_session(candidate: dict[str, Any]) -> DevelopmentSession:
         units.append(unit)
         stages = [
             ('A1', rules.sha256, {'status': d.status.name,
-                                 'selected_rule': d.selected_rule}),
+                                 'selected_rule': d.selected_rule,
+                                 'selected_output': d.selected_output}),
             ('A2', integrated.sha256, {'phase': i.phase.value,
                                       'initial_risk': str(i.initial_risk),
                                       'cases': list(c.case_order)}),
             ('A3', guard.sha256, {'table_status': u.table_status.name,
+                                 'table_output': u.table_output,
                                  'blocked_controls': [ctrl.control_id
                                     for ctrl in u.controls if ctrl.blockers],
                                  'operational_dispatch': False}),

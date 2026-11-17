@@ -55,14 +55,18 @@ def _strict_pairs(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     return result
 
 
-def _freeze_field(value: Any) -> dict[str, str]:
-    # Preserva el dominio sin confundir racionales y cadenas, ni usar float.
-    if type(value) is Truth:
+def _freeze_field(value: Any, domain: str) -> dict[str, Any]:
+    # Etiqueta la fuente según el esquema incluso cuando el conjunto es vacío.
+    if domain == 'LOGICO' and type(value) is Truth:
         return {'type': 'LOGICO', 'value': value.name}
-    if type(value) is Fraction:
+    if domain == 'RACIONAL' and type(value) is Fraction:
         return {'type': 'RACIONAL', 'value': str(value)}
-    if type(value) is str:
+    if domain == 'TEXTO' and type(value) is str:
         return {'type': 'TEXTO', 'value': value}
+    if domain == 'CONJUNTO_TEXTO' and type(value) is frozenset:
+        return {'type': domain, 'value': sorted(value)}
+    if domain == 'CONJUNTO_RACIONAL' and type(value) is frozenset:
+        return {'type': domain, 'value': sorted(str(v) for v in value)}
     raise GuardPreviewError('ambiente_tipo_invalido')
 
 
@@ -203,7 +207,7 @@ def _compose(rules: FrozenRulePreview, initial: InitialPreview,
                                            verdict.selected, verdict.evaluations,
                                            tuple(case_items), tuple(controls_out),
                                            verdict.output))
-        env_records.append({'id': sid, 'fields': {k: _freeze_field(env[k]) for k in sorted(env)}})
+        env_records.append({'id': sid, 'fields': {k: _freeze_field(env[k], fields[k]) for k in sorted(env)}})
     record = {
         'format': FORMAT,
         'scope': 'SYNTHETIC_DIAGNOSTIC_ONLY',

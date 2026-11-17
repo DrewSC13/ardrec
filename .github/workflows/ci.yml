@@ -505,6 +505,13 @@ jobs:
       - name: Probar nucleo tipado A1-R16 / Test A1 typed rule kernel
         run: python3 -B -m unittest discover -s lab/tests -p test_p14_r16_a1_kernel.py -v
 
+      - name: Probar contrato A1 R61 y conjuntos R62 / Test A1 decision and set semantics
+        run: |
+          PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r61_a1_decision_contract.py -v
+          PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r62_a1_set_and_session.py -v
+          PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r26_session_a1_a3.py -v
+          PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r62_r3_r58p_binding.py -v
+
       - name: Demostrar nucleo tipado A1-R16 / Demonstrate A1 rule kernel
         run: python3 -B scripts/demo_p14_r16_a1.py
 
