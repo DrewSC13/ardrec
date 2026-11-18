@@ -698,7 +698,23 @@ jobs:
 
       - name: Comparar Python-Rust P8 R7 / Compare P8 R7 deny-only diagnostics
         run: |
+          set -eu
           cargo build --locked --offline --package ardrec-executor --example p8_diagnostic_probe
           python3 scripts/verificar_p8_diagnostico.py --probe target/debug/examples/p8_diagnostic_probe
-          PYTHONPATH=src python3 -B scripts/ardrec_p14_r88_vertical.py --verify-rust-only --rust-probe "$(pwd)/target/debug/examples/p8_diagnostic_probe" --rust-sha256 "$(sha256sum target/debug/examples/p8_diagnostic_probe | cut -d' ' -f1)"
+          # Cargo puede publicar un hardlink (nlink=2). El gate R88 exige nlink=1.
+          # Reubicar bytes idénticos en directorio privado, sin debilitar rust_deny_probe.
+          umask 077
+          probe_src='target/debug/examples/p8_diagnostic_probe'
+          probe_dir="$(mktemp -d "${RUNNER_TEMP:-/tmp}/ardrec-r88-p8-probe.XXXXXXXX")"
+          trap 'rm -f -- "$probe_dir/p8_diagnostic_probe"; rmdir -- "$probe_dir"' EXIT
+          probe_copy="$probe_dir/p8_diagnostic_probe"
+          install -m 0700 -- "$probe_src" "$probe_copy"
+          test "$(stat -c '%h' "$probe_copy")" = '1'
+          test "$(stat -c '%a' "$probe_copy")" = '700'
+          cmp -s -- "$probe_src" "$probe_copy"
+          original_sha="$(sha256sum "$probe_src" | cut -d' ' -f1)"
+          copy_sha="$(sha256sum "$probe_copy" | cut -d' ' -f1)"
+          test "$original_sha" = "$copy_sha"
+          echo 'R88_CI_PRIVATE_PROBE=PASS_IDENTICAL_BYTES_ONE_INODE'
+          PYTHONPATH=src python3 -B scripts/ardrec_p14_r88_vertical.py --verify-rust-only --rust-probe "$probe_copy" --rust-sha256 "$original_sha"
 
