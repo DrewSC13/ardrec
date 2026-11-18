@@ -1,0 +1,18 @@
+{
+  "schema": "ardrec-p14-r76-a5-a8-offline-bridge-traceability-v1",
+  "base_merge": "2e2b153407fd8480dd17decdaf2d430a7e151867",
+  "entrypoint": "scripts/ardrec_p14_r76_a5_a8_offline_bridge.py",
+  "tests": "lab/tests/test_p14_r76_a5_a8_offline_bridge.py",
+  "docs": "docs/development/p14-r76-a5-a8-candidate-risk-bridge.md",
+  "inherited_a5": "src/ardrec/coordination/r59d_a5_result_intake.py",
+  "inherited_a6_a8": "src/ardrec/coordination/r58e_evidence_risk_bridge.py",
+  "families": {"SSH": 8, "FTP": 8, "SMB": 9},
+  "a5_physical_attempts_accredited": 0,
+  "a6_technical_truth_accredited": false,
+  "a7_confirmed_rf": null,
+  "a8_applied_transition": null,
+  "a9_new_generations": 0,
+  "operational_dispatch": false,
+  "host_mutations": 0,
+  "p8": "NO-GO"
+}
