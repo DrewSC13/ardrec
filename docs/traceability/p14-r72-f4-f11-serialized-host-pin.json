@@ -1,0 +1,15 @@
+{
+  "schema": "ardrec-p14-r72-f4-host-observed-f11-audit-pin-v1",
+  "base_main_sha": "705ed30e32bd7a6a15e1ff3c28cd5b18da39eaa4",
+  "host_source": "operator-r72-f3-readback-not-a-signed-install-receipt",
+  "unit": "ardrec-r34-boot-deny.service",
+  "dropin": "/etc/systemd/system/ardrec-r34-boot-deny.service.d/90-ardrec-r34-serialized.conf",
+  "dropin_sha256_observed": "39c4c472481428328decc3ffd3a44e98d49077bcd2166f9f4ad08105d95c3634",
+  "semantics": "verify-unique-pinned-root-owned-dropin-via-readonly-auditor",
+  "host_mutations": 0,
+  "runtime_hook_loaded_attested": false,
+  "manual_vm_boot_block_attested": false,
+  "independent_runtime_watchdog_attested": false,
+  "physical_authority": false,
+  "p8": "NO-GO"
+}
