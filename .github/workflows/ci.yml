@@ -564,6 +564,9 @@ jobs:
       - name: R83 conciliacion catalogo 25 familias con 29 variantes y estados / Test fail-closed cross-population integrity
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r83_cross_population_integrity.py -v
 
+      - name: R84 matriz de aceptacion DEV A5 A8 de 25 intentos 29 denegaciones / Test conservative software gate
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r84_dev_acceptance_gate.py -v
+
       - name: Probar lectura R72-F4 del drop-in F11 fijado / Test pinned read-only F11 unit
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r72_f11_serialized_pin.py' -v
 
