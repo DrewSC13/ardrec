@@ -12,6 +12,7 @@ import json
 import os
 from pathlib import Path
 import re
+import stat
 import subprocess
 from xml.etree import ElementTree as ET
 
@@ -29,6 +30,15 @@ BUNDLE = {
 }
 UNIT_PATH = '/etc/systemd/system/ardrec-r34-boot-deny.service'
 LINK = Path('/etc/systemd/system/multi-user.target.wants/ardrec-r34-boot-deny.service')
+# Pinned from operator's R72-F3 readback on 2026-11-17 (NOT source-authority).
+# This exact host-observed drop-in is permitted for read-only audit ONLY.
+SERIALIZED_DROPIN_PATH = Path('/etc/systemd/system/ardrec-r34-boot-deny.service.d/90-ardrec-r34-serialized.conf')
+SERIALIZED_DROPIN_SHA256 = '39c4c472481428328decc3ffd3a44e98d49077bcd2166f9f4ad08105d95c3634'
+SERIALIZED_EXECSTART = ('ExecStart=/usr/bin/flock --exclusive --timeout 30 '
+                        '/var/lib/ardrec/r58a-r34-boot /usr/bin/python3 -I -B '
+                        '/var/lib/ardrec/r58a-r34-boot/boot-guard.py')
+SERIALIZED_HEADER = ('# ' + str(SERIALIZED_DROPIN_PATH) + '\n').encode('utf-8')
+
 BOOT_PROPERTIES = ('LoadState', 'UnitFileState', 'ActiveState', 'SubState', 'NeedDaemonReload',
                    'ExecMainStartTimestamp', 'ExecMainExitTimestamp', 'InvocationID',
                    'Result', 'FragmentPath', 'Type', 'RemainAfterExit')
@@ -173,16 +183,92 @@ def audit_root_permissions(raw: bytes):
     return 'ROOT_700_FILES_600_ALL_ROOT_SINGLE_LINK'
 
 
-def audit_unit_text(raw: bytes):
+def read_pinned_serialized_dropin(path: Path = SERIALIZED_DROPIN_PATH) -> bytes:
+    """Read only exact root-owned file, never follow path symlinks or change host.
+
+    This is NOT proof that libvirt has loaded hooks or operational P8 authority.
+    """
+    need(path == SERIALIZED_DROPIN_PATH, 'SERIALIZED_DROPIN_PATH_CHANGED')
+    for parent in path.parents:
+        need(not parent.is_symlink(), 'SERIALIZED_DROPIN_PARENT_SYMLINK')
+    before = path.lstat()
+    need(stat.S_ISREG(before.st_mode) and before.st_uid == 0 and before.st_gid == 0
+         and stat.S_IMODE(before.st_mode) == 0o644 and before.st_nlink == 1
+         and 0 < before.st_size <= 4096, 'SERIALIZED_DROPIN_METADATA_DRIFT')
+    flags = os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_CLOEXEC', 0)
+    fd = os.open(path, flags)
+    try:
+        opened = os.fstat(fd)
+        need(stat.S_ISREG(opened.st_mode) and opened.st_dev == before.st_dev
+             and opened.st_ino == before.st_ino and opened.st_size == before.st_size,
+             'SERIALIZED_DROPIN_REPLACED')
+        raw = os.read(fd, 4097)
+        after = os.fstat(fd)
+        need(after.st_size == before.st_size and len(raw) == before.st_size
+             and after.st_dev == before.st_dev and after.st_ino == before.st_ino,
+             'SERIALIZED_DROPIN_CHANGED_DURING_READ')
+    finally:
+        os.close(fd)
+    need(sha(raw) == SERIALIZED_DROPIN_SHA256, 'SERIALIZED_DROPIN_SHA_DRIFT')
+    return raw
+
+
+def audit_effective_serialized_unit(raw: bytes) -> str:
+    """Authenticate systemd's loaded unit as well as its on-disk fragment."""
+    need(0 < len(raw) <= 10000, 'SERIALIZED_EFFECTIVE_SHOW_SIZE')
+    rows = {}
+    for line in raw.decode('utf-8', 'strict').splitlines():
+        need('=' in line, 'SERIALIZED_EFFECTIVE_SHOW_FORMAT')
+        key, value = line.split('=', 1)
+        need(key in {'DropInPaths', 'NeedDaemonReload', 'ExecStart'}
+             and key not in rows, 'SERIALIZED_EFFECTIVE_SHOW_FIELDS')
+        rows[key] = value
+    need(set(rows) == {'DropInPaths', 'NeedDaemonReload', 'ExecStart'},
+         'SERIALIZED_EFFECTIVE_SHOW_FIELDS')
+    need(rows['DropInPaths'] == str(SERIALIZED_DROPIN_PATH) and
+         rows['NeedDaemonReload'] == 'no', 'SERIALIZED_EFFECTIVE_DROPIN_DRIFT')
+    expected = ('{ path=/usr/bin/flock ; argv[]=' + SERIALIZED_EXECSTART.split('=', 1)[1]
+                + ' ; ignore_errors=no ;')
+    actual = rows['ExecStart']
+    need(actual.startswith(expected) and actual.count('{') == 1 and
+         actual.count('}') == 1 and actual.endswith(' }'),
+         'SERIALIZED_EFFECTIVE_EXECSTART_DRIFT')
+    return 'PINNED_SERIALIZED_EFFECTIVE_UNIT_READONLY'
+
+
+def audit_unit_text(raw: bytes, *, serialized_raw: bytes | None = None):
+    """Reject all unpinned drop-ins; retain R58-A legacy exact-unit checks."""
     need(0<len(raw)<20_000,'UNIT_TEXT_SIZE')
     text=raw.decode('utf-8','strict')
-    need(text.startswith('# '+UNIT_PATH+'\n') and
-         text.count('\n[Unit]\n')==1 and
-         text.count('\n[Service]\n')==1 and
-         text.count('\n[Install]\n')==1 and
-         not ('\n# /etc/systemd/system/ardrec-r34-boot-deny.service.d/' in text),
+    marker = b'\n' + SERIALIZED_HEADER
+    if marker in raw:
+        need(raw.count(marker) == 1 and serialized_raw is not None,
+             'UNIT_OR_DROPIN_DRIFT')
+        original, effective_dropin = raw.split(marker, 1)
+        # systemctl cat may add one visual newline after a fragment.
+        need(effective_dropin in (serialized_raw, serialized_raw + b'\n'),
+             'SERIALIZED_DROPIN_SYSTEMCTL_MISMATCH')
+        need(sha(serialized_raw) == SERIALIZED_DROPIN_SHA256,
+             'SERIALIZED_DROPIN_SHA_DRIFT')
+        noncomments = [line.strip() for line in serialized_raw.decode('utf-8','strict').splitlines()
+                       if line.strip() and not line.lstrip().startswith('#')]
+        need(noncomments == ['[Service]', 'ExecStart=', SERIALIZED_EXECSTART],
+             'SERIALIZED_DROPIN_EXECSTART_DRIFT')
+        # Never accept a second fragment or sections in the original file.
+        need(original.count(b'\n# /etc/') == 0 and
+             original.count(b'\n[Service]\n') == 1,
+             'UNIT_OR_DROPIN_DRIFT')
+        main_text = original.decode('utf-8','strict')
+    else:
+        need(serialized_raw is None, 'SERIALIZED_DROPIN_NOT_ACTIVE')
+        main_text = text
+    need(main_text.startswith('# '+UNIT_PATH+'\n') and
+         main_text.count('\n[Unit]\n')==1 and
+         main_text.count('\n[Service]\n')==1 and
+         main_text.count('\n[Install]\n')==1 and
+         not ('\n# /etc/' in main_text),
          'UNIT_OR_DROPIN_DRIFT')
-    lines=[s.strip() for s in text.splitlines()]
+    lines=[s.strip() for s in main_text.splitlines()]
     expected={
         'Type=oneshot', 'User=root','Group=root','RemainAfterExit=yes',
         'ExecStart=/usr/bin/python3 -I -B /var/lib/ardrec/r58a-r34-boot/boot-guard.py',
@@ -193,17 +279,19 @@ def audit_unit_text(raw: bytes):
         'RequiresMountsFor=/var/lib/ardrec/r58a-r34-boot'
     }
     need(expected <= set(lines),'UNIT_CONTRACT_DRIFT')
-    return 'EXACT_EXPECTED_BOOT_EXECSTART_AND_ROOT_CONTRACT'
+    # Pinning the source does not prove first boot, hook activation or P8 clearance.
+    return 'PINNED_SERIALIZED_DROPIN_READONLY' if serialized_raw is not None else 'EXACT_EXPECTED_BOOT_EXECSTART_AND_ROOT_CONTRACT'
 
 
 def assess(*, hashes: bytes, root_stat: bytes, boot_show: bytes, libvirt_show: bytes,
            unit_text: bytes, nft_first: bytes, nft_second: bytes,
            filter_xml: bytes, vm_states: dict[str,str], active_networks: set[str],
-           link_target: str | None, source_head: str) -> dict:
+           link_target: str | None, source_head: str,
+           serialized_raw: bytes | None = None) -> dict:
     need(re.fullmatch(r'[0-9a-f]{40}',source_head) is not None,'GIT_HEAD_INVALID')
     boot=parse_properties(boot_show,BOOT_PROPERTIES)
     libvirt=parse_properties(libvirt_show,LIBVIRT_PROPERTIES)
-    audit_unit_text(unit_text)
+    unit_contract = audit_unit_text(unit_text, serialized_raw=serialized_raw)
     parse_hashes(hashes)
     audit_root_permissions(root_stat)
     audit_nft(nft_first); audit_nft(nft_second)
@@ -228,6 +316,8 @@ def assess(*, hashes: bytes, root_stat: bytes, boot_show: bytes, libvirt_show: b
     # Even Requires would not independently cover manual VM boot paths.
     return {
         'schema':'ardrec-r58a-f11p-readonly-boot-gate-v1',
+        'boot_unit_source_contract': unit_contract,
+        'boot_serialized_dropin_sha256': (SERIALIZED_DROPIN_SHA256 if serialized_raw is not None else None),
         'decision':('BLOCKED_F11_BOOT_GUARD_UNSTARTED'
                     if not first_start else 'BLOCKED_F11_NO_INDEPENDENT_BOOT_ATTESTATION'),
         'baseline_main_merge':ANCESTOR,
@@ -262,7 +352,9 @@ def run_readonly(argv):
     paths=[str(STAGE/name) for name in ('boot-guard.py','manifest.json','r34-deny.nft')]
     sha_cmd=['/usr/bin/sudo','-n','--','/usr/bin/sha256sum',*paths]
     stat_cmd=['/usr/bin/sudo','-n','--','/usr/bin/stat','-c','%u|%g|%a|%h|%F',str(STAGE),*paths]
-    allowed=[
+    serialized_show=['systemctl','show',BOOT,'--no-pager',
+                     '-pExecStart','-pDropInPaths','-pNeedDaemonReload']
+    allowed=[serialized_show,
         exe_git+['rev-parse','HEAD'],
         exe_git+['merge-base','--is-ancestor',ANCESTOR,'HEAD'],
         ['systemctl','show',BOOT,'--no-pager',*[f'-p{x}' for x in BOOT_PROPERTIES]],
@@ -293,6 +385,12 @@ def host_readonly():
     boot=run_readonly(['systemctl','show',BOOT,'--no-pager',*[f'-p{x}' for x in BOOT_PROPERTIES]])
     libvirt=run_readonly(['systemctl','show','libvirtd.service','--no-pager',*[f'-p{x}' for x in LIBVIRT_PROPERTIES]])
     unit_text=run_readonly(['systemctl','cat',BOOT,'--no-pager'])
+    serialized_raw = (read_pinned_serialized_dropin()
+                      if (b'\n' + SERIALIZED_HEADER) in unit_text else None)
+    if serialized_raw is not None:
+        audit_effective_serialized_unit(run_readonly(
+            ['systemctl','show',BOOT,'--no-pager',
+             '-pExecStart','-pDropInPaths','-pNeedDaemonReload']))
     sha_cmd=['/usr/bin/sudo','-n','--','/usr/bin/sha256sum',*[str(STAGE/name)
                   for name in ('boot-guard.py','manifest.json','r34-deny.nft')]]
     hashes=run_readonly(sha_cmd)
@@ -314,7 +412,8 @@ def host_readonly():
     return assess(hashes=hashes,root_stat=root_stat,boot_show=boot,libvirt_show=libvirt,
                   unit_text=unit_text,nft_first=first,nft_second=second,
                   filter_xml=filt,vm_states=vm,active_networks=active_nets,
-                  link_target=link_target,source_head=source_head)
+                  link_target=link_target,source_head=source_head,
+                  serialized_raw=serialized_raw)
 
 
 def main():
