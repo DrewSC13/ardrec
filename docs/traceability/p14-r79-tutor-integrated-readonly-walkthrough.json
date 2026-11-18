@@ -1,0 +1,18 @@
+{
+  "schema": "ardrec-p14-r79-tutor-readonly-traceability-v1",
+  "base_sha": "9f18ee6cda972acc9714a03734b9dba95b332cab",
+  "algorithms": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10"],
+  "sources": ["R75", "R76", "R77_DOCUMENTARY_BOUNDARY", "R78", "R38"],
+  "source_code": "scripts/ardrec_p14_r79_tutor_walkthrough.py",
+  "tests": "lab/tests/test_p14_r79_tutor_walkthrough.py",
+  "documentation": "docs/development/p14-r79-tutor-integrated-readonly-walkthrough.md",
+  "coverage": {"synthetic_units": 54, "family_count": 25, "ssh": 8, "ftp": 8, "smb": 9, "whatif_levels": ["0", "1/2", "1"]},
+  "r77_external_pin_present": false,
+  "technical_truth_accredited": false,
+  "confirmed_final_risk": null,
+  "operational_dispatch": false,
+  "physical_executions": 0,
+  "p8": "NO-GO",
+  "system_functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN"
+}
