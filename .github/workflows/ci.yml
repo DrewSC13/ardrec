@@ -87,9 +87,6 @@ jobs:
       - name: Probar auditoria F11-P R58-A / Test read-only boot readiness
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58a_f11p_*.py' -v
 
-      - name: Probar lectura R72-F4 del drop-in F11 fijado / Test pinned read-only F11 unit
-        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r72_f11_serialized_pin.py' -v
-
       - name: Probar F11 R58-B barreras de arranque offline / Test source-only boot guard candidates
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r58b_f11_*.py' -v
 
@@ -539,6 +536,9 @@ jobs:
 
       - name: R71 A4 hipotetica, A5 benigno local y TUI R38 / Test shadow positive and local benign
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r71_shadow_benign_cycle.py -v
+
+      - name: Probar lectura R72-F4 del drop-in F11 fijado / Test pinned read-only F11 unit
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r72_f11_serialized_pin.py' -v
 
       - name: Probar vinculo A1-R65 al modelo confirmado / Test confirmed-state model binding
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r65_a1_confirmed_context.py -v
