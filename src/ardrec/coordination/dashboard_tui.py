@@ -58,6 +58,37 @@ def validate_dashboard_report(report: dict[str, Any]) -> None:
         raise DashboardError('session_missing')
     if type(report.get('sha256')) is not str or not re.fullmatch(r'[0-9a-f]{64}', report['sha256']):
         raise DashboardError('report_digest_missing')
+    if 'r70_safe' in report:
+        r70 = report['r70_safe']
+        hashes = ('configuration_sha256', 'r69_receipt_sha256',
+                  'original_head_sha256', 'store_head_sha256', 'analytical_snapshot_sha256')
+        if (report.get('schema') != 'ardrec-p14-r70-r38-safe-analytical-view-v1' or
+                report.get('source_kind') != 'SYNTHETIC_R70_ANALYTICAL_NO_DISPATCH' or
+                type(r70) is not dict or type(r70.get('generation')) is not int or
+                r70['generation'] != 1 or r70.get('original_generation') != 0 or
+                r70.get('analytical_validation') != 'structural_only' or
+                r70.get('store_recovery_action') != 'NONE' or
+                any(type(r70.get(k)) is not str or
+                    not re.fullmatch(r'[0-9a-f]{64}', r70[k]) for k in hashes) or
+                report['a9'].get('structural_analytical_generation') != 1 or
+                report['a9'].get('technical_generation_published') is not False or
+                report['a9'].get('receipt_sha256') != report['session_sha256'] or
+                report['r27'].get('a5_state') != 'NO_ATTEMPT' or
+                report['r27'].get('a5_start_count') != 0 or
+                report['r27'].get('a6_classification') != 'ND' or
+                report['a8'].get('applied_transition') != 'DETENER' or
+                report['a7'].get('confirmed_rf') is not None or
+                [x['status'] for x in stages] != [
+                    'R68_CONFIRMED_GEN0','INITIALIZED_GEN0','DEV_DISPATCH_BLOCKED',
+                    'NO_ELIGIBLE_CANDIDATE','NO_ATTEMPT_NO_START',
+                    'ND_NO_TECH_EVIDENCE','RF_ND_NO_EVIDENCE','DEV_STOP_APPLIED',
+                    'STRUCTURAL_GEN1_ONLY','R38_READ_ONLY_GEN1'] or
+                type(r70.get('a1_decisions')) is not dict or
+                set(r70['a1_decisions']) != {
+                    unit['service_id'] for unit in report.get('r26_units', [])} or
+                report.get('sha256') != digest(canonical({
+                    k:v for k,v in report.items() if k != 'sha256'}))):
+            raise DashboardError('invalid_r70_safe_binding')
     if 'r69_durable' in report:
         anchored = report['r69_durable']
         if (report.get('schema') != DURABLE_VIEW_SCHEMA or
@@ -193,6 +224,38 @@ def detail_rows(report: dict[str, Any], selected: int) -> list[str]:
     stage = report['a10']['stages'][selected]
     out = [f"{stage['algorithm']} / {stage['status']}",
            f"ORIGEN: {stage['source']}", stage['detail'], '']
+    if 'r70_safe' in report:
+        d = report['r70_safe']
+        if selected == 0:
+            out += ['A1 R68 / GEN 0 / REPRODUCCION ORIGINAL']
+            for sid, choice in sorted(d['a1_decisions'].items()):
+                out += [f"{sid}: {choice['status']}",
+                        '  REGLA: ' + _flat(choice['rule']),
+                        '  SALIDA: ' + _flat(choice['output']),
+                        '  SHA R68: ' + choice['r68_sha256'],
+                        '  CONTEXTO (7): ' + _flat(choice['context'])]
+        elif selected == 1:
+            out += ['A2 GEN INICIAL 0 / CONFIGURACION CONGELADA',
+                    'SHA CONFIG: ' + d['configuration_sha256']]
+            for unit in report['r26_units']:
+                out += [unit['service_id'] + ' R0=' + unit['initial_risk']]
+        elif selected == 8:
+            out += ['A9: GEN 1 PUBLICADA / SOLO ESTRUCTURAL DEV',
+                    'GEN REF: ' + d['generation_reference'],
+                    'VALIDACION: ' + d['analytical_validation'],
+                    'SNAPSHOT: ' + d['analytical_snapshot_sha256'],
+                    'HEAD: ' + d['store_head_sha256'],
+                    'RF: ND / NO EVIDENCIA TECNICA ACREDITADA']
+        elif selected == 9:
+            out += ['A10: MONITOR ORIGINAL R38 / SOLO LECTURA',
+                    'GEN 1 DURABLE RECUPERADA',
+                    'HEAD: ' + d['store_head_sha256'],
+                    'SHA VISTA: ' + report['sha256']]
+        else:
+            out += ['POLITICA DEV / NO DESPACHO',
+                    'FUENTE: ' + stage['source'],
+                    'SIN INICIO FISICO NI RF FINAL']
+        return out
     if 'r69_durable' in report:
         durable = report['r69_durable']
         if selected == 0:
@@ -277,6 +340,18 @@ def detail_rows(report: dict[str, Any], selected: int) -> list[str]:
 
 def summary_rows(report: dict[str, Any]) -> list[str]:
     validate_dashboard_report(report)
+    if 'r70_safe' in report:
+        d = report['r70_safe']
+        return ['SESION: ' + report['session_id'],
+                'P8: NO-GO', 'DESPACHO: NO', 'RF FINAL: ND',
+                'VM: NO VERIFICADAS', 'VISTAS: 10/10',
+                'ORIGEN: DEV SINTETICO', 'A1: GEN 0', 'A2: PREPARADO',
+                'A3: NO AUTORIZADO', 'A4: SIN ELEGIBLES',
+                'A5: 0 INTENTOS', 'A6/A7: ND', 'A8: DETENIDO DEV',
+                'A9: GEN 1 ESTRUCTURAL', 'TECNICA: NO',
+                'REPLAY: ' + d['store_recovery_action'],
+                'HEAD SHA256:', '  ' + _short(d['store_head_sha256'], 20),
+                'SNAPSHOT:', '  ' + _short(d['analytical_snapshot_sha256'], 20)]
     if 'r69_durable' in report:
         d = report['r69_durable']
         return [
@@ -355,6 +430,8 @@ def render_dashboard_frame(report: dict[str, Any], state: DashboardState,
     height = max(6, min(int(height), 100))
     active = report['a10']['stages'][state.selected]
     title = ' ARDREC / MONITOR  ' + report['session_id'] + '  [DESARROLLO]'
+    if 'r70_safe' in report:
+        title += '  [GEN 1 ANALITICA DEV]'
     if 'r69_durable' in report:
         title += '  [GEN 0 RECUPERADA]'
     flags = (' P8:NO-GO  DESPACHO:NO  RF:ND  VM:NO  '

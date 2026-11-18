@@ -16,6 +16,8 @@ def main(argv=None) -> int:
     ap.add_argument('--durable-dev-root', type=Path, required=True,
                     help='directorio privado absoluto para sesion sintética')
     ap.add_argument('--scenario', type=Path, default=Path('lab/p14-r26-session-v1/scenario.json'))
+    ap.add_argument('--safe-cycle', action='store_true',
+                    help='R70: parada sintética DEV y generación analítica estructural 1')
     ap.add_argument('--expected-config-sha256')
     ap.add_argument('--expected-head-sha256')
     mode = ap.add_mutually_exclusive_group(required=True)
@@ -25,20 +27,43 @@ def main(argv=None) -> int:
     args = ap.parse_args(argv)
     try:
         fixture = read_fixed_scenario(args.scenario)
-        doc = open_or_create_dev(args.durable_dev_root, fixture,
-                                 expected_config_sha256=args.expected_config_sha256,
-                                 expected_head_sha256=args.expected_head_sha256)
-    except (DurableDevError, SessionError, StorageError, A1Error) as exc:
+        from ardrec.coordination.safe_generation import open_or_publish_safe
+        archive_exists = (args.durable_dev_root / 'analytical-archive').exists()
+        if args.safe_cycle and not archive_exists:
+            open_or_create_dev(args.durable_dev_root, fixture,
+                               expected_config_sha256=args.expected_config_sha256,
+                               expected_head_sha256=args.expected_head_sha256)
+        if args.safe_cycle or archive_exists:
+            doc = open_or_publish_safe(args.durable_dev_root, fixture,
+                      publish=args.safe_cycle,
+                      expected_config_sha256=args.expected_config_sha256,
+                      expected_head_sha256=args.expected_head_sha256)
+        else:
+            doc = open_or_create_dev(args.durable_dev_root, fixture,
+                      expected_config_sha256=args.expected_config_sha256,
+                      expected_head_sha256=args.expected_head_sha256)
+    except (DurableDevError, SessionError, StorageError, A1Error, ValueError, OSError, KeyError) as exc:
         print('R69_FAIL=' + getattr(exc, 'code', str(exc)), file=sys.stderr)
         return 2
     if args.json:
         sys.stdout.buffer.write(canonical(doc) + b'\n')
     elif args.tui:
-        from ardrec.coordination.durable_dashboard_bridge import build_durable_dashboard
         from ardrec.coordination.dashboard_tui import run_dashboard_tui
-        run_dashboard_tui(build_durable_dashboard(doc, fixture))
+        if doc['generation'] == 1:
+            from ardrec.coordination.safe_dashboard_bridge import build_safe_dashboard
+            run_dashboard_tui(build_safe_dashboard(doc, fixture))
+        else:
+            from ardrec.coordination.durable_dashboard_bridge import build_durable_dashboard
+            run_dashboard_tui(build_durable_dashboard(doc, fixture))
     else:
-        sys.stdout.write(render_dev_text(doc))
+        if doc['generation'] == 1:
+            sys.stdout.write('ARDREC R70 / GEN 1 ANALITICA DEV ESTRUCTURAL\n'
+                 'A3 SIN DESPACHO | A4 SIN ELEGIBLES | A5 0 INTENTOS\n'
+                 'A6/A7 ND | A8 DETENER DEV | P8 NO-GO\n'
+                 f"SNAPSHOT={doc['analytical_snapshot_sha256']}\n"
+                 f"HEAD={doc['head_sha256']}\n")
+        else:
+            sys.stdout.write(render_dev_text(doc))
     return 0
 
 
