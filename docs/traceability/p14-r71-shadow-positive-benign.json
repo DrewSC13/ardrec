@@ -1,0 +1,19 @@
+{
+  "schema": "ardrec-p14-r71-shadow-traceability-v1",
+  "base_commit": "74e7501618bde4c51839fb5e8b88fdc4c6967da8",
+  "source": "SYNTHETIC_PROJECTION_AND_LOCAL_BENIGN_ONLY",
+  "entrypoint": "python -m ardrec --shadow-cycle --shadow-journal-root <private> --durable-dev-root <r70> --tui",
+  "reuse": ["R69_GEN0", "R70_GEN1", "R27_SELECTION", "BENIGN_PIPELINE", "R58D_INTERVAL", "R38_TUI"],
+  "acceptance": [
+    "R70_GEN1_UNMODIFIED",
+    "SHADOW_SELECTION_SSH_REFERENCE",
+    "ONE_LOCAL_BENIGN_START_VERIFIED",
+    "A6_ND_NO_VM_EVIDENCE",
+    "A7_HYPOTHETICAL_5_12_RF_CONFIRMED_ND",
+    "R38_THREE_PANELS_REUSED",
+    "CORRUPT_OR_STALE_SOURCE_FAIL_CLOSED"
+  ],
+  "not_claimed": ["physical_pentesting", "operational_dispatch", "true_technical_evidence", "confirmed_risk", "A9_new_generation", "P8_GO"],
+  "new_test": "lab/tests/test_p14_r71_shadow_benign_cycle.py",
+  "state": "LOCAL_TESTED_PENDING_PROMETHEUS_AND_CI"
+}
