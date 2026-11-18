@@ -1,0 +1,34 @@
+{
+  "schema": "ardrec-p14-r80-terminal-readonly-traceability-v1",
+  "base_main_merge": "6e5047b7d13cd3e4060febd67db3edb7eb26aa1d",
+  "code": "scripts/ardrec_p14_r80_terminal_presentation.py",
+  "tests": "lab/tests/test_p14_r80_terminal_presentation.py",
+  "documentation": "docs/development/p14-r80-terminal-presentation.md",
+  "validated_sources": [
+    "R75",
+    "R76",
+    "R78",
+    "R79",
+    "R38_ORIGINAL"
+  ],
+  "views": [
+    "resumen",
+    "etapas",
+    "etapa",
+    "familias",
+    "familia",
+    "evidencias",
+    "r38",
+    "todo"
+  ],
+  "algorithm_count": 10,
+  "synthetic_units": 54,
+  "synthetic_families": 25,
+  "technical_truth_accredited": false,
+  "confirmed_rf": null,
+  "physical_executions": 0,
+  "operational_dispatch": false,
+  "p8": "NO-GO",
+  "system_functional_acceptance": "PENDING",
+  "experimental_validation": "NOT_RUN"
+}
