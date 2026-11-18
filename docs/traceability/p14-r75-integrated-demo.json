@@ -1,0 +1,15 @@
+{
+  "schema": "ardrec-p14-r75-integrated-demo-traceability-v1",
+  "scope": "synthetic A1-A10 54 unit 25 family 29 case receipt no authority",
+  "software_entrypoint": "scripts/ardrec_p14_r75_integrated_demo.py",
+  "test_file": "lab/tests/test_p14_r75_integrated_demo.py",
+  "document": "docs/development/p14-r75-demo-integrada-reproducible.md",
+  "r38_original_preserved": true,
+  "p7_execution_enabled": false,
+  "a6_technical_truth_accredited": false,
+  "a7_confirmed_rf": null,
+  "gen1_structural_only": true,
+  "gen2_published": false,
+  "p8": "NO-GO",
+  "physical_mutations": 0
+}
