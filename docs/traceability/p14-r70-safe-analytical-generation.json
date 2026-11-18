@@ -1,0 +1,22 @@
+{
+  "schema": "ardrec-p14-r70-traceability-v1",
+  "base_main": "31206b7cef258d17e4e0042736de5e9499ad4c75",
+  "status": "LOCAL_DEV_VALIDATION_REQUIRED_ON_PROMETHEUS",
+  "scope": "synthetic_dev_safe_stop_and_structural_analytical_generation_1",
+  "algorithms": {
+    "A1": "gen0_R68_replayed_no_reinterpretation",
+    "A2": "frozen_initial_generation_0",
+    "A3": "no_physical_dispatch_authority",
+    "A4": "no_eligible_candidates",
+    "A5": "zero_reservations_zero_starts",
+    "A6": "ND_no_technical_evidence",
+    "A7": "ND_final_risk_not_computed",
+    "A8": "real_state_transition_DETENER_DEV_CONTROL",
+    "A9": "structural_only_publish_analytical_generation_1",
+    "A10": "original_R38_dashboard_from_recovered_generation_1"
+  },
+  "provenance": "SYNTHETIC_DEV_STOP_WITHOUT_DISPATCH",
+  "p8": "NO-GO",
+  "not_claimed": ["physical_execution", "evidence_accreditation", "rf_confirmed", "full_a1_a10_operational_cycle", "F11", "54_experimental_observations"],
+  "tests": ["lab/tests/test_p14_r70_safe_analytical_cycle.py"]
+}
