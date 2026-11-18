@@ -561,6 +561,9 @@ jobs:
       - name: R82 transacciones T1 T8 T9 T10 y recuperacion SQLite sin autoridad / Test offline model rollback replay
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r82_model_transition_recovery.py -v
 
+      - name: R83 conciliacion catalogo 25 familias con 29 variantes y estados / Test fail-closed cross-population integrity
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r83_cross_population_integrity.py -v
+
       - name: Probar lectura R72-F4 del drop-in F11 fijado / Test pinned read-only F11 unit
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r72_f11_serialized_pin.py' -v
 
