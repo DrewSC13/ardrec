@@ -543,6 +543,9 @@ jobs:
       - name: R76 puente A5 A6 A7 A8 de 25 familias sintéticas sin autoridad / Test conservative offline candidate bridge
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r76_a5_a8_offline_bridge.py -v
 
+      - name: R77 testigos Ed25519 y pin R58-G sobre A5 R76 sin verdad tecnica / Test signed documentary intake
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r77_signed_a5_a8_bridge.py -v
+
       - name: Probar lectura R72-F4 del drop-in F11 fijado / Test pinned read-only F11 unit
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r72_f11_serialized_pin.py' -v
 
