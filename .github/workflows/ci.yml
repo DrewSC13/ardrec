@@ -528,6 +528,9 @@ jobs:
       - name: Probar sesion R69 A2-A1-A9 durable / Test R69 durable entrypoint
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r69_durable_dev.py -v
 
+      - name: R69.1 enlazar la TUI R38 con la generacion inicial A9 / Test durable R38 monitor
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r691_r38_durable_dashboard.py -v
+
       - name: Probar vinculo A1-R65 al modelo confirmado / Test confirmed-state model binding
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r65_a1_confirmed_context.py -v
 

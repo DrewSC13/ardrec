@@ -12,6 +12,10 @@ import sys
 import textwrap
 from typing import Any
 
+from ardrec.persistence.codec import canonical, digest
+
+DURABLE_VIEW_SCHEMA = 'ardrec-p14-r691-r69-durable-r38-view-v1'
+
 
 class DashboardError(ValueError):
     """El reporte o la navegación del monitor no son admisibles."""
@@ -54,6 +58,31 @@ def validate_dashboard_report(report: dict[str, Any]) -> None:
         raise DashboardError('session_missing')
     if type(report.get('sha256')) is not str or not re.fullmatch(r'[0-9a-f]{64}', report['sha256']):
         raise DashboardError('report_digest_missing')
+    if 'r69_durable' in report:
+        anchored = report['r69_durable']
+        if (report.get('schema') != DURABLE_VIEW_SCHEMA or
+                type(anchored) is not dict or
+                anchored.get('generation') != 0 or
+                type(anchored.get('generation')) is not int or
+                anchored.get('a9_initialization_durable') is not True or
+                anchored.get('a9_subsequent_publication_attested') is not False or
+                anchored.get('store_recovery_action') != 'NONE' or
+                report['a9'].get('technical_generation_published') is not False or
+                report.get('source_kind') != 'SYNTHETIC_FIXTURE_R69_DURABLE_ONLY' or
+                report['a10']['stages'][8]['status'] != 'INITIAL_GEN0_ONLY' or
+                type(anchored.get('a1_decisions')) is not dict or
+                set(anchored['a1_decisions']) !=
+                {u['service_id'] for u in report.get('r26_units', [])} or
+                any(type(anchored.get(x)) is not str or
+                    not re.fullmatch(r'[0-9a-f]{64}', anchored[x]) for x in
+                    ('configuration_sha256', 'rules_sha256',
+                     'store_head_sha256', 'receipt_sha256')) or
+                anchored.get('receipt_sha256') != report.get('session_sha256') or
+                anchored.get('receipt_sha256') != report['a9'].get('receipt_sha256') or
+                report.get('sha256') != digest(canonical({
+                    k: v for k, v in report.items() if k != 'sha256'
+                }))):
+            raise DashboardError('invalid_durable_view_binding')
     if 'a6_import' in report:
         imp = report['a6_import']
         if (type(imp) is not dict or imp.get('admission') != 'ACCEPTED_FOR_DOCUMENTARY_REVIEW' or
@@ -164,6 +193,39 @@ def detail_rows(report: dict[str, Any], selected: int) -> list[str]:
     stage = report['a10']['stages'][selected]
     out = [f"{stage['algorithm']} / {stage['status']}",
            f"ORIGEN: {stage['source']}", stage['detail'], '']
+    if 'r69_durable' in report:
+        durable = report['r69_durable']
+        if selected == 0:
+            out += ['A1 R68 / GEN 0 / DECISIONES REPRODUCIDAS']
+            for sid, choice in sorted(durable['a1_decisions'].items()):
+                out += [f"{sid}: {choice['status']}",
+                        '  REGLA: ' + _flat(choice['rule']),
+                        '  SALIDA: ' + _flat(choice['output']),
+                        '  SHA R68: ' + choice['r68_sha256'],
+                        '  CONTEXTO (7): ' + _flat(choice['context'])]
+        elif selected == 1:
+            out += ['GEN INICIAL: 0 / PREPARADO',
+                    'REFERENCIA: ' + durable['generation_reference'],
+                    'CONFIG SHA256: ' + durable['configuration_sha256'],
+                    'REGLAS SHA256: ' + durable['rules_sha256']]
+            for unit in report['r26_units']:
+                out += [unit['service_id'] + '  R0=' + unit['initial_risk']]
+        elif selected == 8:
+            out += ['A9: GENERACION 0 INICIALIZADA DURABLEMENTE',
+                    'PUBLICACION ANALITICA POSTERIOR: NO',
+                    'HEAD SHA256: ' + durable['store_head_sha256'],
+                    'RECUPERACION: ' + durable['store_recovery_action'],
+                    'RECIBO R69 SHA256: ' + durable['receipt_sha256']]
+        elif selected == 9:
+            out += ['MONITOR ORIGINAL R38 / SOLO LECTURA',
+                    'FUENTE: RECUPERACION DURABLE R69',
+                    'SHA DOCUMENTO R69: ' + durable['receipt_sha256'],
+                    'SHA VISTA: ' + report['sha256']]
+        else:
+            out += ['PENDIENTE EN ESTA RUTA R69',
+                    'No equivale a la vista historica R28',
+                    'SIN EJECUCION FISICA NI RF FINAL']
+        return out
     if selected in (0, 1, 2):
         out += ['SERVICIOS DEV']
         for u in report.get('r26_units', []):
@@ -215,6 +277,19 @@ def detail_rows(report: dict[str, Any], selected: int) -> list[str]:
 
 def summary_rows(report: dict[str, Any]) -> list[str]:
     validate_dashboard_report(report)
+    if 'r69_durable' in report:
+        d = report['r69_durable']
+        return [
+            'SESION: ' + report['session_id'],
+            'P8: NO-GO', 'DESPACHO: NO', 'RF FINAL: ND',
+            'VM: NO VERIFICADAS', 'VISTAS: 10/10',
+            'ORIGEN: DEV SINTETICO', 'A1 R68: GEN 0',
+            'A2: PREPARADO', 'A5: NO EJECUTADO', 'A6: ND',
+            'A9: GEN 0 DURABLE', 'PUBLICACION+: NO',
+            'REPLAY: ' + d['store_recovery_action'],
+            'HEAD SHA256:', '  ' + _short(d['store_head_sha256'], 20),
+            'RECIBO R69:', '  ' + _short(d['receipt_sha256'], 20),
+        ]
     return [
         'SESIÓN: ' + report['session_id'],
         'P8: NO-GO',
@@ -280,6 +355,8 @@ def render_dashboard_frame(report: dict[str, Any], state: DashboardState,
     height = max(6, min(int(height), 100))
     active = report['a10']['stages'][state.selected]
     title = ' ARDREC / MONITOR  ' + report['session_id'] + '  [DESARROLLO]'
+    if 'r69_durable' in report:
+        title += '  [GEN 0 RECUPERADA]'
     flags = (' P8:NO-GO  DESPACHO:NO  RF:ND  VM:NO  '
              + ('A6:DOCUMENTAL' if 'a6_import' in report else 'A6:SIN IMPORTAR')
              + f"  VISTA:{active['algorithm']}")

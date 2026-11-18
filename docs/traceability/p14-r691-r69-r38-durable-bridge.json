@@ -1,0 +1,13 @@
+{
+  "schema": "ardrec-p14-r691-r38-durable-bridge-trace-v1",
+  "base_merge": "08415a83fdc0b21491881d4234790c017ac35773",
+  "source_record": "R69 confirmed generation 0, fully replayed",
+  "ui_engine": "src/ardrec/coordination/dashboard_tui.py (R38/R42.5)",
+  "adapter": "src/ardrec/coordination/durable_dashboard_bridge.py",
+  "entrypoints": ["python -m ardrec --durable-dev-root ... --tui", "scripts/demo_p14_r28_a1_a10_tui.py --durable-dev-root ... --tui"],
+  "tests": "lab/tests/test_p14_r691_r38_durable_dashboard.py",
+  "new_test_count": 14,
+  "attested": {"a1_decisions_from_confirmed_generation": true, "a2_initialization_visible": true, "a9_durable_generation_zero_visible": true, "a9_subsequent_analytical_publication": false, "a5_physical_start": false, "final_risk": false, "p8_operational_go": false},
+  "visual_contract": "ALGORITMOS / DETALLE / ESTADO-AUDITORIA, F1-F5, q, F2 compact, F3 search, F4 filter",
+  "next": "R70 actual analytical generation cycle A3-A10, recovery and R38 view from confirmed evidence"
+}

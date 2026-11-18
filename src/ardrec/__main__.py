@@ -24,7 +24,8 @@ def main(argv=None) -> int:
     mode.add_argument('--tui', action='store_true')
     args = ap.parse_args(argv)
     try:
-        doc = open_or_create_dev(args.durable_dev_root, read_fixed_scenario(args.scenario),
+        fixture = read_fixed_scenario(args.scenario)
+        doc = open_or_create_dev(args.durable_dev_root, fixture,
                                  expected_config_sha256=args.expected_config_sha256,
                                  expected_head_sha256=args.expected_head_sha256)
     except (DurableDevError, SessionError, StorageError, A1Error) as exc:
@@ -33,7 +34,9 @@ def main(argv=None) -> int:
     if args.json:
         sys.stdout.buffer.write(canonical(doc) + b'\n')
     elif args.tui:
-        run_dev_tui(doc)
+        from ardrec.coordination.durable_dashboard_bridge import build_durable_dashboard
+        from ardrec.coordination.dashboard_tui import run_dashboard_tui
+        run_dashboard_tui(build_durable_dashboard(doc, fixture))
     else:
         sys.stdout.write(render_dev_text(doc))
     return 0
