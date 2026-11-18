@@ -1,0 +1,23 @@
+{
+  "schema": "ardrec-p14-r78-a7-whatif-sensitivity-traceability-v1",
+  "base_main_merge": "11c26f882164515ee78305eed5adbfe2768c1252",
+  "entrypoint": "scripts/ardrec_p14_r78_a7_whatif_sensitivity.py",
+  "tests": "lab/tests/test_p14_r78_a7_whatif_sensitivity.py",
+  "docs": "docs/development/p14-r78-a7-counterfactual-25-families.md",
+  "source_r75": "scripts/ardrec_p14_r75_integrated_demo.py",
+  "source_r76": "scripts/ardrec_p14_r76_a5_a8_offline_bridge.py",
+  "source_r77_private_reader": "scripts/ardrec_p14_r77_signed_a5_a8_bridge.py",
+  "exact_math_kernel": "src/ardrec/analytics/r58d_interval_kernel.py",
+  "families": {"SSH": 8, "FTP": 8, "SMB": 9},
+  "point_levels": ["0", "1/2", "1"],
+  "scenario_kind": "SYNTHETIC_FIXED_MATHEMATICAL_ONLY",
+  "a6_classification": "ND",
+  "technical_truth_accredited": false,
+  "confirmed_rf": null,
+  "a8_transitions_applied": 0,
+  "a9_new_generations": 0,
+  "physical_executions": 0,
+  "host_mutations": 0,
+  "operational_dispatch": false,
+  "p8": "NO-GO"
+}
