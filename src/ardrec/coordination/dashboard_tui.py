@@ -58,6 +58,46 @@ def validate_dashboard_report(report: dict[str, Any]) -> None:
         raise DashboardError('session_missing')
     if type(report.get('sha256')) is not str or not re.fullmatch(r'[0-9a-f]{64}', report['sha256']):
         raise DashboardError('report_digest_missing')
+    if 'r71_shadow' in report:
+        d = report['r71_shadow']
+        hashes = ('r70_receipt_sha256', 'r70_head_sha256',
+                  'r70_snapshot_sha256', 'a4_sha256',
+                  'a5_event_head_sha256', 'a5_review_sha256',
+                  'a7_oracle_sha256')
+        if (report.get('schema') != 'ardrec-p14-r71-shadow-r38-v1' or
+            report.get('source_kind') != 'R71_LOCAL_BENIGN_WITH_SHADOW_SELECTION' or
+            'r70_safe' in report or 'r69_durable' in report or
+            type(d) is not dict or type(d.get('r70_generation')) is not int or
+            d['r70_generation'] != 1 or
+            any(type(d.get(k)) is not str or
+                re.fullmatch(r'[0-9a-f]{64}', d[k]) is None for k in hashes) or
+            d.get('a4_selected') != {
+                'service_id':'SSH_DEV','case_id':'CASE_REFERENCE',
+                'priority':'1/4','precedence':10} or
+            d.get('a5_request') != 'r27.dev_tutor_001.ssh_case_reference' or
+            d.get('a7_hypothetical_rf') != '5/12' or
+            type(d.get('a1_decisions')) is not dict or
+            set(d['a1_decisions']) != {u['service_id'] for u in report.get('r26_units',[])} or
+            report.get('r27',{}).get('selected_actual') is not None or
+            report['r27'].get('selected_hypothetical') != d['a4_selected'] or
+            report['r27'].get('a5_state') != 'RECORDED_LIMITED_LOCAL_BENIGN' or
+            type(report['r27'].get('a5_start_count')) is not int or
+            report['r27']['a5_start_count'] != 1 or
+            report['r27'].get('a6_classification') != 'ND' or
+            report.get('a7',{}).get('hypothetical_rf') != '5/12' or
+            report['a7'].get('confirmed_rf') is not None or
+            report.get('a8',{}).get('applied_transition') != 'DETENER_R70_UNCHANGED' or
+            report['a9'].get('structural_analytical_generation') != 1 or
+            report['a9'].get('technical_generation_published') is not False or
+            report['a9'].get('receipt_sha256') != report.get('session_sha256') or
+            [x['status'] for x in stages] != [
+                'R68_GEN0_REPLAY','R70_GEN1_FROZEN','SHADOW_TRUE_NO_GO',
+                'SHADOW_SSH_SELECTED','LOCAL_BENIGN_ONE_START',
+                'ND_NOT_VM_EVIDENCE','HYPOTHETICAL_5_12','R70_STOP_UNCHANGED',
+                'GEN1_NO_NEW_PUBLICATION','R38_READ_ONLY_SHADOW'] or
+            report.get('sha256') != digest(canonical({
+                k:v for k,v in report.items() if k != 'sha256'}))):
+            raise DashboardError('invalid_r71_shadow_binding')
     if 'r70_safe' in report:
         r70 = report['r70_safe']
         hashes = ('configuration_sha256', 'r69_receipt_sha256',
@@ -224,6 +264,52 @@ def detail_rows(report: dict[str, Any], selected: int) -> list[str]:
     stage = report['a10']['stages'][selected]
     out = [f"{stage['algorithm']} / {stage['status']}",
            f"ORIGEN: {stage['source']}", stage['detail'], '']
+    if 'r71_shadow' in report:
+        d = report['r71_shadow']
+        if selected == 0:
+            out += ['A1 GEN0 VERIFICADA / REPRODUCCION ORIGINAL']
+            for sid, choice in sorted(d['a1_decisions'].items()):
+                out += [sid + ': ' + choice['status'],
+                        '  REGLA: ' + _flat(choice['rule']),
+                        '  SHA R68: ' + choice['r68_sha256']]
+        elif selected == 1:
+            out += ['R70 GEN1 RECUPERADA / SIN MODIFICAR',
+                    'HEAD R70: ' + d['r70_head_sha256'],
+                    'SNAPSHOT: ' + d['r70_snapshot_sha256']]
+        elif selected == 2:
+            out += ['A3: GUARDA VERDADERA SOLO HIPOTETICA',
+                    'AUTORIZACION OPERACIONAL: NO-GO',
+                    'SIN DESPACHO A SSH / FTP / SMB']
+        elif selected == 3:
+            out += ['A4: SELECCION SHADOW: ' + _flat(d['a4_selected']),
+                    'SHA R27: ' + d['a4_sha256'],
+                    'ESTADO REAL R70: DETENIDO / NO ELEGIBLE']
+        elif selected == 4:
+            out += ['A5: EJECUCION BENIGNA LOCAL (NO SSH)',
+                    'REQUEST: ' + d['a5_request'],
+                    'UN SOLO INICIO REGISTRADO: 1',
+                    'SHA EVENTOS: ' + d['a5_event_head_sha256'],
+                    'SHA REVISION: ' + d['a5_review_sha256']]
+        elif selected == 5:
+            out += ['A6: ND / NINGUNA CONDICION TECNICA ACREDITADA',
+                    'INTEGRIDAD DEL FIXTURE LOCAL NO ES VERDAD DE SERVICIO']
+        elif selected == 6:
+            out += ['A7: ORACULO SINTETICO (NO RESULTADO DE A5)',
+                    'RF HIPOTETICO: ' + d['a7_hypothetical_rf'],
+                    'RF CONFIRMADO: ND',
+                    'SHA ORACULO: ' + d['a7_oracle_sha256']]
+        elif selected == 7:
+            out += ['A8: DETENER R70 PERMANECE CONFIRMADO',
+                    'EL RECORRIDO DE SOMBRA NO REABRE LA SESION']
+        elif selected == 8:
+            out += ['A9: GEN1 ESTRUCTURAL RECUPERADA, NO GEN2',
+                    'HEAD INMUTABLE: ' + d['r70_head_sha256']]
+        else:
+            out += ['A10: MONITOR R38 ORIGINAL / SOLO LECTURA',
+                    'FUENTE R70: ' + d['r70_receipt_sha256'],
+                    'FUENTE R71: ' + report['session_sha256'],
+                    'SHA VISTA: ' + report['sha256']]
+        return out
     if 'r70_safe' in report:
         d = report['r70_safe']
         if selected == 0:
@@ -340,6 +426,18 @@ def detail_rows(report: dict[str, Any], selected: int) -> list[str]:
 
 def summary_rows(report: dict[str, Any]) -> list[str]:
     validate_dashboard_report(report)
+    if 'r71_shadow' in report:
+        d = report['r71_shadow']
+        return ['SESION: ' + report['session_id'],
+                'P8: NO-GO', 'DESPACHO: NO', 'RF CONFIRMADO: ND',
+                'VM: NO VERIFICADAS', 'VISTAS: 10/10',
+                'R70: GEN1 RECUPERADA', 'A3: SHADOW TRUE',
+                'A4: SSH HIPOTETICO', 'A5: BENIGNO LOCAL 1',
+                'A6: ND SIN VERDAD VM', 'A7 ORACULO: 5/12',
+                'A8: DETENIDO R70', 'A9: GEN1 SIN CAMBIO',
+                'TECNICA: NO',
+                'SHA ORACULO:', '  ' + _short(d['a7_oracle_sha256'],20),
+                'HEAD R70:', '  ' + _short(d['r70_head_sha256'],20)]
     if 'r70_safe' in report:
         d = report['r70_safe']
         return ['SESION: ' + report['session_id'],
@@ -430,6 +528,8 @@ def render_dashboard_frame(report: dict[str, Any], state: DashboardState,
     height = max(6, min(int(height), 100))
     active = report['a10']['stages'][state.selected]
     title = ' ARDREC / MONITOR  ' + report['session_id'] + '  [DESARROLLO]'
+    if 'r71_shadow' in report:
+        title += '  [R71 SOMBRA BENIGNA]'
     if 'r70_safe' in report:
         title += '  [GEN 1 ANALITICA DEV]'
     if 'r69_durable' in report:
