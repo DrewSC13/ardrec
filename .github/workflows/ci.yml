@@ -573,6 +573,9 @@ jobs:
       - name: R86 trazas A1-A10 de 25 evaluaciones en una sesion DEV / Verify typed session trails
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r86_single_session_trace.py -v
 
+      - name: R87 oraculos de aceptacion funcional DEV por A1-A10 / Test conservative golden DEV acceptance
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r87_dev_golden_acceptance.py -v
+
       - name: Probar lectura R72-F4 del drop-in F11 fijado / Test pinned read-only F11 unit
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r72_f11_serialized_pin.py' -v
 
