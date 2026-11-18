@@ -555,6 +555,9 @@ jobs:
       - name: R80 presentacion de terminal R79 R38 sin ejecucion / Test read-only selective terminal presenter
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r80_terminal_presentation.py -v
 
+      - name: R81 prueba funcional integrada DEV desde cero sin VM / Test fresh bounded offline software smoke
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_p14_r81_functional_smoke.py -v
+
       - name: Probar lectura R72-F4 del drop-in F11 fijado / Test pinned read-only F11 unit
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r72_f11_serialized_pin.py' -v
 
