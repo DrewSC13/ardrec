@@ -653,6 +653,9 @@ jobs:
       - name: Probar R100 enlace SSH Rust y A5-A6 / Test R100 durable observation bridge
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r100_*.py' -v
 
+      - name: Probar R101 autoridad SSH deny-only / Test R101 case-bound authority boundary
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r101_*.py' -v
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
