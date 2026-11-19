@@ -129,6 +129,9 @@ jobs:
       - name: Demostrar R58-K 29 casos SSH FTP SMB sin ejecucion / Test unified synthetic preview
         run: PYTHONPATH=src python3 -B scripts/ardrec_p14_r58k_unified_family_demo.py --synthetic-offline
 
+      - name: Probar R100 enlace SSH Rust y A5-A6 / Test R100 durable observation bridge
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r100_*.py' -v
+
       - name: Verificar trazabilidad vigente / Verify current traceability
         run: python3 scripts/verificar_trazabilidad_actual.py
 
