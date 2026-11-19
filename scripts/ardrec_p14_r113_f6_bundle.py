@@ -7,6 +7,8 @@ from pathlib import Path
 import stat
 import sys
 
+# Repository src-layout: keep the operator independent of PYTHONPATH.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
 from ardrec.coordination import r113_f6_six_binding_guard as g
 
 ROOT=Path('/home/cicada/ardrec-lab/r113-f6-six-deny-v1')
@@ -14,9 +16,15 @@ RECOVER=Path(__file__).resolve().parent/'ardrec_p14_r113_f6_root_recover.py'
 
 def private_file(path):
     st=path.lstat()
+    # Successful F5 probes produce authentic zero-byte stderr files. Only
+    # those F5 .stderr captures may be empty; all bytes are later authenticated
+    # against the pinned F5 manifest, including SHA256(empty).
+    f5_stderr = path.parent == g.F5 and path.name.endswith('.stderr')
+    valid_size = ((0 <= st.st_size < 524288) if f5_stderr
+                  else (0 < st.st_size < 524288))
     g.need(stat.S_ISREG(st.st_mode) and st.st_uid==os.geteuid() and
            st.st_nlink==1 and stat.S_IMODE(st.st_mode)==0o600 and
-           0<st.st_size<524288,'PRIVATE_FILE_INVALID_'+path.name)
+           valid_size,'PRIVATE_FILE_INVALID_'+path.name)
     return path.read_bytes()
 
 def source():
