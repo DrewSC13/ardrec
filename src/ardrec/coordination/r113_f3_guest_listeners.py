@@ -80,13 +80,20 @@ def listening_sockets(raw: bytes) -> tuple[dict, ...]:
         need(re.fullmatch(r'\d{1,5}',port) is not None, 'SS_PORT_INVALID')
         port_int = int(port)
         need(1 <= port_int <= 65535, 'SS_PORT_RANGE')
-        # Con -4, ss puede imprimir el comodín IPv4 como '*:PUERTO'.
-        # No se aceptan ámbitos %interfaz ni tokens IPv6 ambiguos.
+        # Linux ss -4 puede añadir %interfaz a una dirección IPv4 concreta,
+        # p. ej. 127.0.0.53%lo:53. El ámbito no transforma una dirección
+        # de loopback en accesibilidad externa. Nunca se admite *%interfaz.
         if host == '*':
             address = ipaddress.IPv4Address('0.0.0.0')
         else:
+            address_text = host
+            if '%' in host:
+                need(host.count('%') == 1, 'SS_IPV4_SCOPE_INVALID')
+                address_text, iface = host.split('%', 1)
+                need(re.fullmatch(r'[A-Za-z][A-Za-z0-9_.-]{0,15}', iface)
+                     is not None, 'SS_IPV4_SCOPE_INVALID')
             try:
-                address = ipaddress.IPv4Address(host)
+                address = ipaddress.IPv4Address(address_text)
             except ipaddress.AddressValueError as exc:
                 raise GuardError('SS_ADDRESS_NOT_IPV4') from exc
         sockets.append({'address':str(address),'port':port_int})
