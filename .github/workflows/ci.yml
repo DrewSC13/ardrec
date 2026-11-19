@@ -656,6 +656,9 @@ jobs:
       - name: Probar R101 autoridad SSH deny-only / Test R101 case-bound authority boundary
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r101_*.py' -v
 
+      - name: Probar R104 prototipo sintetico 54 unidades / Test 54-unit offline prototype
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r104_*.py' -v
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
@@ -681,6 +684,9 @@ jobs:
         run: python3 scripts/verificar_ci.py rust
       - name: Ejecutar pruebas Rust / Run Rust tests
         run: cargo test --workspace --all-targets --locked --offline
+      - name: Probar R105 intercambio SSHv2 local / Check R105 loopback KEXINIT
+        run: python3 -B scripts/ardrec_p14_r105_loopback_demo.py --offline-local-fixture
+
       - name: Probar transporte Python-Rust / Test Python-Rust transport
         run: python3 scripts/verificar_transporte.py
 
