@@ -21,7 +21,7 @@ from ardrec.coordination import r112_f10_targets_boot as core
 from ardrec.coordination import r112_f9_runner_boot as f9
 from ardrec.coordination import r112_f8_ssh_positive_boot as f8
 from ardrec.coordination import r112_runner_nic_definition as nic
-import ardrec_p14_r112_f9_runner_boot as f9cli
+import ardrec_p14_r112_f12_postreboot_boot as f12cli
 import ardrec_p14_r112_f6_hook_lifecycle as f6
 import ardrec_p14_r111_legacy_host_snapshot as legacy
 import ardrec_p14_r112_f4_isolated_networks as f4
@@ -29,9 +29,13 @@ import ardrec_p14_r112_runner_nic_definition as prior
 
 ROOT=Path('/home/cicada/ardrec-lab/r112-f10-real-ftp-smb-boot-v1')
 BRANCH='feat/p14-r111-r114-real-lab'
-F9_PLAN=Path('/home/cicada/ardrec-lab/r112-f9-real-runner-boot-v1/plan-vg4nsc2d')
-F9_BOOT=Path('/home/cicada/ardrec-lab/r112-f9-real-runner-boot-v1/boot-cx9ri8bs')
-F9_RECEIPT_SHA='88bda990407c0902ff44c731ed8333a52e0adeca533f5d6f93348b2412d9af36'
+F12_BASE=Path('/home/cicada/ardrec-lab/r112-f12-postreboot-ssh-runner-v1')
+F12_SSH_PLAN=F12_BASE/'plan-p_d18xuz'
+F12_SSH_BOOT=F12_BASE/'boot-z87d2uaq'
+F12_SSH_RECEIPT_SHA='3a19519eadb17120a473247f3aedc6e232de56026da3b6048cf1cbe017ad3924'
+F12_RUNNER_PLAN=F12_BASE/'plan-c_9jb1os'
+F12_RUNNER_BOOT=F12_BASE/'boot-1_efqr9q'
+F12_RUNNER_RECEIPT_SHA='7c18d2e07710e92d8f37bdd214a68c84c0004f0d84e333202f099618562a80b5'
 SOURCE_PIN={
   'src/ardrec/coordination/r112_f10_targets_boot.py':
     '1137c75d181d8130a88b830553cf701e3fe0e77a9e8751a6b63648cb38cb8100',
@@ -93,17 +97,32 @@ def source(descendant=False):
              'PINNED_SOURCE_CHANGED_'+rel)
 
 def previous_runner():
-    receipt=F9_BOOT/'receipt.json'
-    need(receipt.is_file() and not receipt.is_symlink() and
-         core.digest(receipt.read_bytes())==F9_RECEIPT_SHA,
-         'F9_PHYSICAL_RECEIPT_MISSING_OR_CHANGED')
-    rec=f9cli.replay(F9_PLAN,F9_BOOT)
-    need(rec==json.loads(receipt.read_bytes()) and
-         rec['guest']==f9.GUEST and rec['runner_running'] is True and
-         rec['ssh_running'] is True and rec['ftp_smb_shutoff'] is True and
-         rec['traffic_authorized'] is False and rec['p8_operational']=='NO-GO',
-         'F9_PHYSICAL_REPLAY_NOT_ATTESTED')
-    return core.digest(receipt.read_bytes())
+    # Both reboots are durable physical records. Never substitute historical F9.
+    ssh_receipt=F12_SSH_BOOT/'receipt.json'
+    runner_receipt=F12_RUNNER_BOOT/'receipt.json'
+    need(all(p.is_dir() and not p.is_symlink() for p in
+             (F12_SSH_PLAN,F12_RUNNER_PLAN,F12_SSH_BOOT,F12_RUNNER_BOOT)),
+         'F12_PRIVATE_PREDECESSOR_MISSING')
+    for path,digest in ((ssh_receipt,F12_SSH_RECEIPT_SHA),
+                        (runner_receipt,F12_RUNNER_RECEIPT_SHA)):
+        need(path.is_file() and not path.is_symlink() and
+             core.digest(path.read_bytes())==digest,
+             'F12_PHYSICAL_PREDECESSOR_CHANGED')
+    ssh=f12cli.replay(F12_SSH_PLAN,F12_SSH_BOOT,expected_role='ssh')
+    runner=f12cli.replay(F12_RUNNER_PLAN,F12_RUNNER_BOOT,expected_role='runner')
+    from ardrec.coordination import r112_f12_postreboot_boot as f12core
+    need(ssh==json.loads(ssh_receipt.read_bytes()) and
+         runner==json.loads(runner_receipt.read_bytes()) and
+         ssh['guest_states']==f12core.expected('ssh',True) and
+         runner['guest_states']==f12core.expected('runner',True) and
+         runner['predecessor_sha256']==F12_SSH_RECEIPT_SHA and
+         ssh['traffic_authorized'] is False and
+         runner['traffic_authorized'] is False and
+         ssh['p8_operational']=='NO-GO' and
+         runner['p8_operational']=='NO-GO' and
+         runner['protocol_tested'] is False,
+         'F12_PHYSICAL_PREDECESSOR_REPLAY_INVALID')
+    return core.digest(runner_receipt.read_bytes())
 
 def private(folder,prefix):
     need(folder.is_absolute() and folder.parent==ROOT and
@@ -121,10 +140,11 @@ def previous_receipt(role,ftp_plan=None,ftp_receipt=None):
     core.target_ok(role)
     anchor=previous_runner()
     if role=='ftp':
-        need(ftp_plan is None and ftp_receipt is None,'FTP_MUST_LINK_F9_ONLY')
-        return {'type':'F9_RUNNER','plan':str(F9_PLAN),'receipt':str(F9_BOOT/'receipt.json'),
+        need(ftp_plan is None and ftp_receipt is None,'FTP_MUST_LINK_F12_ONLY')
+        return {'type':'F12_RUNNER','plan':str(F12_RUNNER_PLAN),
+                'receipt':str(F12_RUNNER_BOOT/'receipt.json'),
                 'receipt_sha256':anchor}
-    need(type(ftp_plan) is Path and type(ftp_receipt) is Path,
+    need(isinstance(ftp_plan, Path) and isinstance(ftp_receipt, Path),
          'SMB_REQUIRES_FTP_PLAN_AND_RECEIPT')
     private(ftp_plan,'plan-')
     need(ftp_receipt.name=='receipt.json','FTP_RECEIPT_FILENAME')
