@@ -662,6 +662,9 @@ jobs:
       - name: Probar R106 procedencia SSH R103-R105 / Test deny-only provenance bridge
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r106_*.py' -v
 
+      - name: Probar R107 trazas A1-A10 54 casos / Test offline A1-A10 orchestration
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r107_*.py' -v
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
