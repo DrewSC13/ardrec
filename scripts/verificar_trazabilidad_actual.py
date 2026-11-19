@@ -191,6 +191,21 @@ P9_R11_RUST_TESTS = {
 }
 
 
+# R99: siete pruebas de transporte SSH loopback, sin autoridad P8.
+# La línea base histórica de 73 pruebas sigue congelada.
+R99_RUST_TESTS = {
+    "crates/ardrec-executor/src/r99_ssh_loopback.rs": frozenset({
+        "r99_valid_ssh_2_identification",
+        "r99_valid_legacy_compatibility_identification",
+        "r99_non_ssh_banner_rejected",
+        "r99_nonprintable_banner_rejected",
+        "r99_oversized_banner_rejected",
+        "r99_eof_rejected",
+        "r99_zero_port_never_connects",
+    }),
+}
+
+
 def verify_p8_rust_inventory(observed, checks):
     """Concilia línea base congelada y extensión revisada; fail-closed."""
     historical = {
@@ -210,6 +225,29 @@ def verify_p8_rust_inventory(observed, checks):
         for path, symbols in P9_R11_RUST_TESTS.items()
         for symbol in symbols
     }
+
+    r99_extension = {
+        path + "::" + symbol: symbol
+        for path, symbols in R99_RUST_TESTS.items()
+        for symbol in symbols
+    }
+
+    require(
+        len(R99_RUST_TESTS) == 1
+        and R99_RUST_TESTS.get(
+            "crates/ardrec-executor/src/r99_ssh_loopback.rs"
+        ) == frozenset({
+            "r99_valid_ssh_2_identification",
+            "r99_valid_legacy_compatibility_identification",
+            "r99_non_ssh_banner_rejected",
+            "r99_nonprintable_banner_rejected",
+            "r99_oversized_banner_rejected",
+            "r99_eof_rejected",
+            "r99_zero_port_never_connects",
+        })
+        and len(r99_extension) == 7,
+        "Extensión Rust R99 incompleta"
+    )
 
     require(
         len(historical) == 73,
@@ -255,8 +293,19 @@ def verify_p8_rust_inventory(observed, checks):
     expected.update(r11_extension)
 
     require(
-        len(expected) == 101
-        and len(observed) == 101
+        len(expected) == 101,
+        "Inventario Rust previo alterado"
+    )
+    require(
+        not (set(expected) & set(r99_extension)),
+        "Colisión con inventario Rust previo R99"
+    )
+
+    expected.update(r99_extension)
+
+    require(
+        len(expected) == 108
+        and len(observed) == 108
         and observed == expected,
         "Inventario Rust incompleto"
     )
@@ -265,7 +314,8 @@ def verify_p8_rust_inventory(observed, checks):
         "historical_rust_tests": 73,
         "p8_r53_r54_rust_tests": 24,
         "p9_r11_rust_tests": 4,
-        "current_rust_lib_tests": 101,
+        "current_rust_lib_tests": 108,
+        "r99_rust_tests": 7,
         "historical_inventory_changed": False,
     }
 
