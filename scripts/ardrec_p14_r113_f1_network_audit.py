@@ -120,7 +120,7 @@ def gather():
         name = 'ardrec-r33-dev-' + role
         guest[role] = {
             'live_xml': cmd(*common, 'dumpxml', name),
-            'agent': cmd(*common, 'domifaddr', name, '--source', 'agent', timeout=12),
+            'agent': cmd('virsh', '-c', 'qemu:///system', 'domifaddr', name, '--source', 'agent', timeout=12),
             'domiflist': cmd(*common, 'domiflist', name),
         }
     bridges = {}
