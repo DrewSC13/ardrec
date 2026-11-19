@@ -674,6 +674,9 @@ jobs:
       - name: Probar R110 control de sesiones A1-A3 / Test 54-case offline guard control
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r110_*.py' -v
 
+      - name: Probar R111 reconciliacion de observacion fisica / Test real host inventory interpretation
+        run: PYTHONPATH=src:scripts python3 -B -m unittest discover -s lab/tests -p 'test_p14_r111_*.py' -v
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
