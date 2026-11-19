@@ -671,6 +671,9 @@ jobs:
       - name: Probar R109 decisiones ejecutables offline / Test R109 decision kernels
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r109_*.py' -v
 
+      - name: Probar R110 control de sesiones A1-A3 / Test 54-case offline guard control
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r110_*.py' -v
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
