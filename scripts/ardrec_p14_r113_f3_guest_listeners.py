@@ -16,6 +16,7 @@ import time
 
 REPO = Path('/home/cicada/Development/GitHub/ardrec')
 ROOT = Path('/home/cicada/ardrec-lab/r113-f3-guest-listeners-v1')
+INCIDENT = ROOT / 'inspect-gccubwyi'
 BRANCH = 'feat/p14-r111-r114-real-lab'
 PARENT = '7e4c7b48cdccdc36df499919bb511469ea02096e'
 F2_PROOF = Path('/home/cicada/ardrec-lab/r113-f2-agent-ip-identity-v1/proof-c40akbko')
@@ -24,7 +25,8 @@ URI = 'qemu:///system'
 ROLES = ('ssh','ftp','smb')
 FILES = ('intent.json','before.json','after.json','agent_preflight.json','exec.json',
          'classification.json','receipt.json', 'started-ssh.once',
-         'started-ftp.once','started-smb.once','manifest.json')
+         'started-ftp.once','started-smb.once',
+         'capture-ssh.json','capture-ftp.json','capture-smb.json','manifest.json')
 sys.path[:0] = [str(REPO/'src'),str(REPO/'scripts')]
 from ardrec.coordination import r113_f3_guest_listeners as core
 from ardrec.coordination import r113_f2_agent_ip_identity as f2core
@@ -113,6 +115,22 @@ def endpoints():
         answers[role]={'agent_output_sha256':sha(raw.encode()),'verified':parsed}
     return answers
 
+def previous_incident():
+    """Auditoría inmutable del intento incompleto anterior (sin reejecutarlo)."""
+    private(ROOT)
+    private(INCIDENT)
+    expected={'intent.json','before.json','agent_preflight.json','started-ssh.once'}
+    actual={p.name for p in INCIDENT.iterdir()}
+    need(actual==expected, 'PREVIOUS_INCIDENT_FILE_SCOPE_DRIFT')
+    hashes={name:sha((INCIDENT/name).read_bytes()) for name in sorted(expected)}
+    for name in expected:
+        get(INCIDENT/name)
+    marker=get(INCIDENT/'started-ssh.once')
+    need(marker.get('role')=='ssh' and type(marker.get('intent_sha256')) is str,
+         'PREVIOUS_INCIDENT_MARKER_CHANGED')
+    return {'session':str(INCIDENT), 'files':hashes,
+            'fingerprint_sha256':sha(canon(hashes))}
+
 def verify(folder):
     need(folder.is_absolute() and folder.parent==ROOT and
          folder.name.startswith('inspect-'),'INSPECTION_SCOPE')
@@ -128,8 +146,28 @@ def verify(folder):
          for name in FILES if name!='manifest.json'},'MANIFEST_HASH_MISMATCH')
     classification=get(folder/'classification.json')
     records=get(folder/'exec.json')
+    predecessor=previous_incident()
+    intent=get(folder/'intent.json')
+    need(intent.get('previous_incident')==predecessor,
+         'PREVIOUS_INCIDENT_INTENT_DRIFT')
+    need(man.get('previous_incident_fingerprint')==predecessor['fingerprint_sha256'],
+         'PREVIOUS_INCIDENT_MANIFEST_DRIFT')
+    receipt=get(folder/'receipt.json')
+    need(receipt.get('previous_incident_fingerprint')==predecessor['fingerprint_sha256'],
+         'PREVIOUS_INCIDENT_RECEIPT_DRIFT')
     need(set(records)==set(ROLES) and set(classification)==set(ROLES),'ROLE_SCOPE_DRIFT')
     for role in ROLES:
+        capture=get(folder/('capture-'+role+'.json'))
+        need(capture.get('role')==role and
+             capture.get('command')==['/usr/bin/ss','-H','-ltn4'],
+             'CAPTURE_SCOPE_DRIFT_'+role)
+        need(core.started(capture['start'])==records[role]['pid'],
+             'CAPTURE_PID_DRIFT_'+role)
+        exited, code, stdout, stderr=core.status(capture['completion'])
+        need(exited and code==records[role]['status'] and
+             capture['completion']['return'].get('out-data','')==records[role]['stdout_b64'] and
+             capture['completion']['return'].get('err-data','')==records[role]['stderr_b64'],
+             'CAPTURE_RESULT_DRIFT_'+role)
         need(core.classify(role,records[role])==classification[role],
              'CLASSIFICATION_REPLAY_DRIFT_'+role)
     intent=get(folder/'intent.json')
@@ -145,6 +183,7 @@ def verify(folder):
 
 def inspect():
     parent();origin()
+    predecessor=previous_incident()
     before=live()
     ips=endpoints()
     # No guest-exec hasta que los tres agentes declaren soporte explícito.
@@ -159,7 +198,8 @@ def inspect():
         'schema':core.SCHEMA+'-intent','created_utc':datetime.now(timezone.utc).isoformat(),
         'scope':list(ROLES),'allowed_guest_binary':'/usr/bin/ss',
         'allowed_guest_argv':['-H','-ltn4'],
-        'approved_guest_process_count':3,'p8_operational':'NO-GO'})
+        'approved_guest_process_count':3,'p8_operational':'NO-GO',
+        'previous_incident':predecessor})
     put(folder/'before.json',before)
     put(folder/'agent_preflight.json',{'ip_identities':ips,'guest_info':agents})
     print('R113_F3_GUEST_INFO=PASS_3',flush=True)
@@ -174,12 +214,18 @@ def inspect():
         completed=None
         for poll in range(12):
             item=qga(role,{'execute':'guest-exec-status','arguments':{'pid':pid}})
-            exited,rc,out,err=core.status(item)
-            if exited:
+            # Conservamos hasta la respuesta anómala, antes de validarla.
+            if type(item.get('return')) is dict and item['return'].get('exited') is True:
                 completed=item
                 break
+            exited,rc,out,err=core.status(item)
             time.sleep(0.2)
         need(completed is not None,'GUEST_EXEC_NOT_FINISHED_'+role)
+        put(folder/('capture-'+role+'.json'),{
+            'role':role, 'command':['/usr/bin/ss','-H','-ltn4'],
+            'start':response, 'completion':completed})
+        # Al rechazar cualquier salida, el capture-*.json permanece como evidencia.
+        exited,rc,out,err=core.status(completed)
         ret=completed['return']
         result={'pid':pid,'status':ret['exitcode'],
                 'command':['/usr/bin/ss','-H','-ltn4'],
@@ -200,7 +246,8 @@ def inspect():
         'after_sha256':sha((folder/'after.json').read_bytes()),
         'classification_sha256':sha((folder/'classification.json').read_bytes()),
         'guest_processes_started':3,'firewall_changes':0,'network_connections':0,
-        'traffic_authorized':False,'protocol_tested':False,'p8_operational':'NO-GO'})
+        'traffic_authorized':False,'protocol_tested':False,'p8_operational':'NO-GO',
+        'previous_incident_fingerprint':predecessor['fingerprint_sha256']})
     put(folder/'manifest.json',{
         'schema':core.SCHEMA+'-manifest','created_utc':datetime.now(timezone.utc).isoformat(),
         'source_commit':command(['git','rev-parse','HEAD']),
@@ -208,6 +255,7 @@ def inspect():
         'files':{name:sha((folder/name).read_bytes())
                  for name in FILES if name!='manifest.json'},
         'traffic_authorized':False,'protocol_connection_count':0,
+        'previous_incident_fingerprint':predecessor['fingerprint_sha256'],
         'p8_operational':'NO-GO'})
     verify(folder)
     print('R113_F3_RECEIPT='+str(folder),flush=True)

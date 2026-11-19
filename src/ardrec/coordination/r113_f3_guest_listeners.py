@@ -5,7 +5,7 @@ import binascii
 import ipaddress
 import re
 
-SCHEMA = 'ardrec-p14-r113-f3-guest-listeners-v1'
+SCHEMA = 'ardrec-p14-r113-f3-guest-listeners-v2'
 TARGETS = {
     'ssh': ('10.203.30.2',22),
     'ftp': ('10.203.31.2',21),
@@ -80,10 +80,15 @@ def listening_sockets(raw: bytes) -> tuple[dict, ...]:
         need(re.fullmatch(r'\d{1,5}',port) is not None, 'SS_PORT_INVALID')
         port_int = int(port)
         need(1 <= port_int <= 65535, 'SS_PORT_RANGE')
-        try:
-            address = ipaddress.IPv4Address(host)
-        except ipaddress.AddressValueError as exc:
-            raise GuardError('SS_ADDRESS_NOT_IPV4') from exc
+        # Con -4, ss puede imprimir el comodín IPv4 como '*:PUERTO'.
+        # No se aceptan ámbitos %interfaz ni tokens IPv6 ambiguos.
+        if host == '*':
+            address = ipaddress.IPv4Address('0.0.0.0')
+        else:
+            try:
+                address = ipaddress.IPv4Address(host)
+            except ipaddress.AddressValueError as exc:
+                raise GuardError('SS_ADDRESS_NOT_IPV4') from exc
         sockets.append({'address':str(address),'port':port_int})
     return tuple(sockets)
 
