@@ -668,6 +668,9 @@ jobs:
       - name: Probar R108 maquina de estados contrafactual / Test offline T8-T9-T10 execution
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r108_*.py' -v
 
+      - name: Probar R109 decisiones ejecutables offline / Test R109 decision kernels
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r109_*.py' -v
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
