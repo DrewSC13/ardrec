@@ -665,6 +665,9 @@ jobs:
       - name: Probar R107 trazas A1-A10 54 casos / Test offline A1-A10 orchestration
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r107_*.py' -v
 
+      - name: Probar R108 maquina de estados contrafactual / Test offline T8-T9-T10 execution
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r108_*.py' -v
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
