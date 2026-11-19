@@ -677,6 +677,9 @@ jobs:
       - name: Probar R111 reconciliacion de observacion fisica / Test real host inventory interpretation
         run: PYTHONPATH=src:scripts python3 -B -m unittest discover -s lab/tests -p 'test_p14_r111_*.py' -v
 
+      - name: Probar R112 definicion NIC real con controles falsables / Test fail-closed real NIC definition
+        run: PYTHONPATH=src:scripts python3 -B -m unittest discover -s lab/tests -p 'test_p14_r112_*.py' -v
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
