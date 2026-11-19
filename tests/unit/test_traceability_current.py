@@ -100,4 +100,70 @@ class CurrentTraceabilityTests(unittest.TestCase):
     def test_rendered_document_matches_registry(self):
         self.assertEqual((ROOT/checker.NOTE).read_text(),checker.render(self.registry))
 
+
+    def test_r99_rust_inventory_exact(self):
+        path = ROOT / "crates/ardrec-executor/src/r99_ssh_loopback.rs"
+        symbols = checker.re.findall(
+            r"#\[test\]\s*fn\s+(\w+)\s*\(",
+            path.read_text(encoding="utf-8")
+        )
+        declared = checker.R99_RUST_TESTS[
+            "crates/ardrec-executor/src/r99_ssh_loopback.rs"
+        ]
+        self.assertEqual(len(symbols), 7)
+        self.assertEqual(frozenset(symbols), declared)
+
+    def test_r99_rust_inventory_rejects_missing_and_extra(self):
+        checks = checker.indexed(self.registry["test_inventory"])
+        observed = {}
+
+        for path in (
+            ROOT / "crates/ardrec-executor/src"
+        ).rglob("*.rs"):
+            for name in checker.re.findall(
+                r"#\[test\]\s*fn\s+(\w+)\s*\(",
+                path.read_text(encoding="utf-8")
+            ):
+                test_id = (
+                    path.relative_to(ROOT).as_posix()
+                    + "::" + name
+                )
+                self.assertNotIn(test_id, observed)
+                observed[test_id] = name
+
+        report = checker.verify_p8_rust_inventory(
+            observed, checks
+        )
+        self.assertEqual(
+            report["current_rust_lib_tests"], 108
+        )
+        self.assertEqual(report["r99_rust_tests"], 7)
+        self.assertFalse(report["historical_inventory_changed"])
+
+        missing = dict(observed)
+        missing.pop(
+            "crates/ardrec-executor/src/"
+            "r99_ssh_loopback.rs::r99_eof_rejected"
+        )
+
+        with self.assertRaisesRegex(
+            ValueError, "Inventario Rust incompleto"
+        ):
+            checker.verify_p8_rust_inventory(
+                missing, checks
+            )
+
+        extra = dict(observed)
+        extra[
+            "crates/ardrec-executor/src/"
+            "r99_ssh_loopback.rs::r99_unregistered_test"
+        ] = "r99_unregistered_test"
+
+        with self.assertRaisesRegex(
+            ValueError, "Inventario Rust incompleto"
+        ):
+            checker.verify_p8_rust_inventory(
+                extra, checks
+            )
+
 if __name__=='__main__':unittest.main()

@@ -43,7 +43,16 @@ class P9R11InventoryTests(unittest.TestCase):
         self.assertEqual(result['historical_rust_tests'], 73)
         self.assertEqual(result['p8_r53_r54_rust_tests'], 24)
         self.assertEqual(result['p9_r11_rust_tests'], 4)
-        self.assertEqual(result['current_rust_lib_tests'], 101)
+        # Las 101 pruebas previas permanecen intactas.
+        self.assertEqual(
+            result['historical_rust_tests']
+            + result['p8_r53_r54_rust_tests']
+            + result['p9_r11_rust_tests'],
+            101,
+        )
+        # R99 agrega exactamente siete pruebas nuevas.
+        self.assertEqual(result['r99_rust_tests'], 7)
+        self.assertEqual(result['current_rust_lib_tests'], 108)
         self.assertFalse(result['historical_inventory_changed'])
 
     def test_missing_new_scheduler_method_fails_closed(self):
