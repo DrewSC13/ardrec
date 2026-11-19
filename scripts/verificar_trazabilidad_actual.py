@@ -206,6 +206,24 @@ R99_RUST_TESTS = {
 }
 
 
+# R105: diez pruebas SSHv2 loopback revisadas, sin despacho ni
+# acreditacion de ejecucion contra invitado.
+R105_RUST_TESTS = {
+    "crates/ardrec-executor/src/r105_ssh_kexinit_loopback.rs": frozenset({
+        "r105_real_local_handshake_and_kexinit",
+        "r105_rejects_non_ssh",
+        "r105_rejects_legacy_id",
+        "r105_rejects_wrong_packet_type",
+        "r105_rejects_wrong_alignment",
+        "r105_rejects_invalid_padding",
+        "r105_rejects_truncated_packet",
+        "r105_rejects_oversized_packet_before_read",
+        "r105_rejects_empty_required_algorithms",
+        "r105_rejects_port_zero",
+    }),
+}
+
+
 def verify_p8_rust_inventory(observed, checks):
     """Concilia línea base congelada y extensión revisada; fail-closed."""
     historical = {
@@ -229,6 +247,12 @@ def verify_p8_rust_inventory(observed, checks):
     r99_extension = {
         path + "::" + symbol: symbol
         for path, symbols in R99_RUST_TESTS.items()
+        for symbol in symbols
+    }
+
+    r105_extension = {
+        path + "::" + symbol: symbol
+        for path, symbols in R105_RUST_TESTS.items()
         for symbol in symbols
     }
 
@@ -302,10 +326,32 @@ def verify_p8_rust_inventory(observed, checks):
     )
 
     expected.update(r99_extension)
+    require(len(expected) == 108, "Inventario Rust previo R105 alterado")
 
     require(
-        len(expected) == 108
-        and len(observed) == 108
+        len(R105_RUST_TESTS) == 1
+        and R105_RUST_TESTS.get("crates/ardrec-executor/src/r105_ssh_kexinit_loopback.rs")
+            == frozenset({
+                "r105_real_local_handshake_and_kexinit",
+                "r105_rejects_non_ssh",
+                "r105_rejects_legacy_id",
+                "r105_rejects_wrong_packet_type",
+                "r105_rejects_wrong_alignment",
+                "r105_rejects_invalid_padding",
+                "r105_rejects_truncated_packet",
+                "r105_rejects_oversized_packet_before_read",
+                "r105_rejects_empty_required_algorithms",
+                "r105_rejects_port_zero",
+            })
+        and len(r105_extension) == 10
+        and not (set(expected) & set(r105_extension)),
+        "Extension Rust R105 incompleta o con colisiones"
+    )
+    expected.update(r105_extension)
+
+    require(
+        len(expected) == 118
+        and len(observed) == 118
         and observed == expected,
         "Inventario Rust incompleto"
     )
@@ -314,7 +360,8 @@ def verify_p8_rust_inventory(observed, checks):
         "historical_rust_tests": 73,
         "p8_r53_r54_rust_tests": 24,
         "p9_r11_rust_tests": 4,
-        "current_rust_lib_tests": 108,
+        "current_rust_lib_tests": 118,
+        "r105_rust_tests": 10,
         "r99_rust_tests": 7,
         "historical_inventory_changed": False,
     }

@@ -135,9 +135,10 @@ class CurrentTraceabilityTests(unittest.TestCase):
             observed, checks
         )
         self.assertEqual(
-            report["current_rust_lib_tests"], 108
+            report["current_rust_lib_tests"], 118
         )
         self.assertEqual(report["r99_rust_tests"], 7)
+        self.assertEqual(report["r105_rust_tests"], 10)
         self.assertFalse(report["historical_inventory_changed"])
 
         missing = dict(observed)
@@ -165,5 +166,43 @@ class CurrentTraceabilityTests(unittest.TestCase):
             checker.verify_p8_rust_inventory(
                 extra, checks
             )
+
+    def test_r105_rust_inventory_exact(self):
+        path = ROOT / "crates/ardrec-executor/src/r105_ssh_kexinit_loopback.rs"
+        symbols = checker.re.findall(
+            r"#\[test\]\s*fn\s+(\w+)\s*\(",
+            path.read_text(encoding="utf-8")
+        )
+        self.assertEqual(len(symbols), 10)
+        self.assertEqual(
+            frozenset(symbols),
+            checker.R105_RUST_TESTS["crates/ardrec-executor/src/r105_ssh_kexinit_loopback.rs"]
+        )
+
+    def test_r105_rust_inventory_rejects_missing_and_extra(self):
+        checks = checker.indexed(self.registry["test_inventory"])
+        observed = {}
+        for path in (ROOT / "crates/ardrec-executor/src").rglob("*.rs"):
+            for name in checker.re.findall(
+                r"#\[test\]\s*fn\s+(\w+)\s*\(",
+                path.read_text(encoding="utf-8")
+            ):
+                identity = path.relative_to(ROOT).as_posix() + "::" + name
+                self.assertNotIn(identity, observed)
+                observed[identity] = name
+        self.assertEqual(
+            checker.verify_p8_rust_inventory(observed, checks)[
+                "current_rust_lib_tests"
+            ], 118
+        )
+        target = "crates/ardrec-executor/src/r105_ssh_kexinit_loopback.rs::r105_rejects_non_ssh"
+        missing = dict(observed)
+        missing.pop(target)
+        with self.assertRaisesRegex(ValueError, "Inventario Rust incompleto"):
+            checker.verify_p8_rust_inventory(missing, checks)
+        extra = dict(observed)
+        extra["crates/ardrec-executor/src/r105_ssh_kexinit_loopback.rs::r105_unregistered"] = "r105_unregistered"
+        with self.assertRaisesRegex(ValueError, "Inventario Rust incompleto"):
+            checker.verify_p8_rust_inventory(extra, checks)
 
 if __name__=='__main__':unittest.main()

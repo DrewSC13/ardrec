@@ -52,8 +52,18 @@ class P9R11InventoryTests(unittest.TestCase):
         )
         # R99 agrega exactamente siete pruebas nuevas.
         self.assertEqual(result['r99_rust_tests'], 7)
-        self.assertEqual(result['current_rust_lib_tests'], 108)
+        # R105 incorpora diez pruebas SSHv2, sin modificar las 108 anteriores.
+        self.assertEqual(result['r105_rust_tests'], 10)
+        self.assertEqual(result['current_rust_lib_tests'], 118)
         self.assertFalse(result['historical_inventory_changed'])
+
+    def test_missing_r105_ssh_method_fails_closed(self):
+        minus = dict(self.observed)
+        key = ('crates/ardrec-executor/src/r105_ssh_kexinit_loopback.rs::'
+               'r105_real_local_handshake_and_kexinit')
+        del minus[key]
+        with self.assertRaisesRegex(ValueError, 'Inventario Rust incompleto'):
+            CHECKER.verify_p8_rust_inventory(minus, self.checks)
 
     def test_missing_new_scheduler_method_fails_closed(self):
         minus = dict(self.observed)

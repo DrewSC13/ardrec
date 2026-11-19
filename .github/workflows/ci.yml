@@ -656,6 +656,21 @@ jobs:
       - name: Probar R101 autoridad SSH deny-only / Test R101 case-bound authority boundary
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r101_*.py' -v
 
+      - name: Probar R104 prototipo sintetico 54 unidades / Test 54-unit offline prototype
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r104_*.py' -v
+
+      - name: Probar R106 procedencia SSH R103-R105 / Test deny-only provenance bridge
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r106_*.py' -v
+
+      - name: Probar R107 trazas A1-A10 54 casos / Test offline A1-A10 orchestration
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r107_*.py' -v
+
+      - name: Probar R108 maquina de estados contrafactual / Test offline T8-T9-T10 execution
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r108_*.py' -v
+
+      - name: Probar R109 decisiones ejecutables offline / Test R109 decision kernels
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r109_*.py' -v
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
@@ -681,6 +696,9 @@ jobs:
         run: python3 scripts/verificar_ci.py rust
       - name: Ejecutar pruebas Rust / Run Rust tests
         run: cargo test --workspace --all-targets --locked --offline
+      - name: Probar R105 intercambio SSHv2 local / Check R105 loopback KEXINIT
+        run: python3 -B scripts/ardrec_p14_r105_loopback_demo.py --offline-local-fixture
+
       - name: Probar transporte Python-Rust / Test Python-Rust transport
         run: python3 scripts/verificar_transporte.py
 
