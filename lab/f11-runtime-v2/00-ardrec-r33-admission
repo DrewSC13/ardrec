@@ -1,0 +1,140 @@
+#!/usr/bin/python3 -I
+"""F11 v2: root-owned, one-start scoped QEMU hook; DENY without valid lease.
+
+Installed path retains /etc/libvirt/hooks/qemu.d/00-ardrec-r33-deny.
+NO lease is installed with R112-F5A; the installed default remains DENY.
+QEMU hook NEVER calls libvirt/systemd/nft/network or a subprocess.
+"""
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import stat
+import sys
+import time
+
+PREFIX = 'ardrec-r33-dev-'
+GUESTS = frozenset(PREFIX + x for x in ('runner', 'ssh', 'ftp', 'smb'))
+BOOTABLE = GUESTS
+TRUST_ROOT = Path('/run/ardrec-f11-boot-v1')
+TRUST_UID = 0
+BOOT_PHASES = frozenset((('prepare', 'begin'), ('start', 'begin'), ('started', 'begin')))
+SCHEMA = 'ardrec-r112-f11-one-start-root-lease-v1'
+LIFETIME_SECONDS = 600
+MAX_TICKET = 2048
+ALLOW_KEYS = frozenset(('schema', 'guest', 'issued_at', 'expires_at', 'nonce',
+                        'mode', 'p8_operational', 'r34_policy', 'scope', 'phases'))
+
+
+def _pairs(pairs):
+    d = {}
+    for key, value in pairs:
+        if key in d:
+            raise ValueError('DUPLICATE_LEASE_KEY')
+        d[key] = value
+    return d
+
+
+def _trusted_file(path):
+    """Read root-owned fixed file using no-follow and exact mode."""
+    fd = os.open(path, os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0) |
+                 getattr(os, 'O_CLOEXEC', 0))
+    try:
+        info = os.fstat(fd)
+        if (not stat.S_ISREG(info.st_mode) or info.st_uid != TRUST_UID or
+                info.st_nlink != 1 or stat.S_IMODE(info.st_mode) != 0o600 or
+                info.st_size < 1 or info.st_size > MAX_TICKET):
+            raise ValueError('UNTRUSTED_LEASE_FILE')
+        data = os.read(fd, MAX_TICKET + 1)
+        if len(data) > MAX_TICKET or len(data) != info.st_size:
+            raise ValueError('LEASE_READ_CHANGED')
+        return data
+    finally:
+        os.close(fd)
+
+
+def _ticket(guest, now):
+    parent = os.lstat(TRUST_ROOT)
+    if (not stat.S_ISDIR(parent.st_mode) or parent.st_uid != TRUST_UID or
+            stat.S_IMODE(parent.st_mode) != 0o700):
+        raise ValueError('LEASE_DIR_UNTRUSTED')
+    data = _trusted_file(TRUST_ROOT / ('allow-' + guest + '.json'))
+    obj = json.loads(data, object_pairs_hook=_pairs,
+                     parse_constant=lambda _: (_ for _ in ()).throw(ValueError('NONFINITE')))
+    if type(obj) is not dict or set(obj) != ALLOW_KEYS:
+        raise ValueError('LEASE_SCHEMA')
+    if (obj['schema'] != SCHEMA or obj['guest'] != guest or guest not in BOOTABLE or
+            obj['mode'] != 'ONE_START_ONLY_NO_TRAFFIC_AUTHORITY' or
+            obj['p8_operational'] != 'NO-GO' or obj['r34_policy'] != 'DENY_PRESERVED' or
+            obj['scope'] != 'R112_LAB_BOOT_PREAUTHORIZATION_ONLY' or
+            obj['phases'] != ['prepare', 'start', 'started'] or
+            type(obj['nonce']) is not str or
+            re.fullmatch('[0-9a-f]{64}', obj['nonce']) is None or
+            type(obj['issued_at']) is not int or type(obj['expires_at']) is not int or
+            not 0 < obj['expires_at'] - obj['issued_at'] <= LIFETIME_SECONDS or
+            not obj['issued_at'] <= now < obj['expires_at']):
+        raise ValueError('LEASE_INVALID_OR_EXPIRED')
+    return hashlib.sha256(data).hexdigest()
+
+
+def _claim_path(guest):
+    return TRUST_ROOT / ('used-' + guest + '.sha256')
+
+
+def _claim_once(guest, digest):
+    fd = os.open(_claim_path(guest),
+                 os.O_WRONLY | os.O_CREAT | os.O_EXCL |
+                 getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_CLOEXEC', 0),
+                 0o600)
+    try:
+        os.write(fd, (digest + '\n').encode('ascii'))
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+    # Failure after this point is fail-closed: never silently reuse a lease.
+
+
+def _claim_matches(guest, digest):
+    return _trusted_file(_claim_path(guest)) == (digest + '\n').encode('ascii')
+
+
+def decision(argv, *, now=None):
+    if len(argv) != 4 or not all(type(v) is str and v for v in argv):
+        return 79, 'DENY_BAD_HOOK_ARGUMENTS'
+    guest, operation, stage, extra = argv
+    if not guest.startswith(PREFIX):
+        return 0, 'OUT_OF_SCOPE'
+    if guest not in GUESTS or extra != '-':
+        return 79, 'DENY_UNKNOWN_GUEST_OR_ARGS'
+    if operation in ('stopped', 'release') and stage == 'end':
+        return 0, 'ALLOW_SHUTDOWN_ONLY'
+    if (operation, stage) not in BOOT_PHASES:
+        return 79, 'DENY_OPERATION_OR_RECONNECT'
+    if guest not in BOOTABLE:
+        return 79, 'DENY_NO_LEASE_SCOPE'
+    try:
+        now = int(time.time()) if now is None else now
+        if type(now) is not int:
+            raise ValueError('INVALID_CLOCK')
+        digest = _ticket(guest, now)
+        if operation == 'prepare':
+            _claim_once(guest, digest)
+        elif not _claim_matches(guest, digest):
+            raise ValueError('UNCLAIMED_BOOT_STAGE')
+    except (OSError, ValueError, TypeError, KeyError, OverflowError):
+        return 79, 'DENY_UNATTESTED_OR_ALREADY_USED_LEASE'
+    return 0, 'ALLOW_SINGLE_BOUND_BOOT_STAGE_NO_TRAFFIC_AUTHORITY'
+
+
+def main():
+    code, reason = decision(sys.argv[1:])
+    if code:
+        print('ARDREC_F11_QEMU_HOOK=' + reason, file=sys.stderr)
+    return code
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())
