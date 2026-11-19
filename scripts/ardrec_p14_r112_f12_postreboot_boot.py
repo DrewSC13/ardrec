@@ -114,7 +114,7 @@ def write(path,obj):
 def read(path): return prior.read_json(path)
 
 def previous_ssh(plan_dir,receipt_path):
-    need(type(plan_dir) is Path and type(receipt_path) is Path,
+    need(isinstance(plan_dir, Path) and isinstance(receipt_path, Path),
          'SSH_PREDECESSOR_REQUIRED')
     need(receipt_path.name=='receipt.json','SSH_RECEIPT_FILE_NAME')
     private(plan_dir,'plan');private(receipt_path.parent,'boot')
