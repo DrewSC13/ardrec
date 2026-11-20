@@ -726,6 +726,20 @@ jobs:
           print('CI_R115_SOURCE_GATE=PASS_440_WITH_NO_OPERATIONAL_GO', flush=True)
           PY
 
+      - name: R116 F3 ventana FTP-T01 con guardas raiz y prueba aislada / Test pilot root session contract
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYTEST'
+          import unittest
+          suite=unittest.defaultTestLoader.discover('lab/tests',pattern='test_p14_r116_f3*.py')
+          count=suite.countTestCases()
+          print('CI_R116_F3_DISCOVERED='+str(count),flush=True)
+          if count!=47:raise SystemExit('CI_R116_F3_UNEXPECTED_TEST_COUNT')
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped or result.testsRun!=47:
+              raise SystemExit('CI_R116_F3_FAILED_OR_SKIPPED')
+          print('CI_R116_F3=PASS_47_NO_ROOT_STAGING_NO_TRAFFIC',flush=True)
+          PYTEST
+
       - name: R116 F2 alcance firmado HEAD actual y preflight 5/1 / Test current-head P7 pilot gate
         run: |
           PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYTEST'
