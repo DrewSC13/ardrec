@@ -674,6 +674,42 @@ jobs:
       - name: Probar R110 control de sesiones A1-A3 / Test 54-case offline guard control
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p 'test_p14_r110_*.py' -v
 
+      - name: Probar R111 reconciliacion de observacion fisica / Test real host inventory interpretation
+        run: PYTHONPATH=src:scripts python3 -B -m unittest discover -s lab/tests -p 'test_p14_r111_*.py' -v
+
+      - name: Probar R112 definicion NIC real con controles falsables / Test fail-closed real NIC definition
+        run: PYTHONPATH=src:scripts python3 -B -m unittest discover -s lab/tests -p 'test_p14_r112_*.py' -v
+
+      - name: R113 contratos offline / Test R113 without physical host
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PY'
+          import unittest
+          pattern = 'test_p14_r113_*.py'
+          suite = unittest.defaultTestLoader.discover('lab/tests', pattern=pattern)
+          count = suite.countTestCases()
+          print('CI_R113_DISCOVERED=' + str(count), flush=True)
+          if count != 350:
+              raise SystemExit('FAIL_EXPECTED_350_DISCOVERED_' + str(count))
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit('FAIL_UNIT_TESTS')
+          PY
+
+      - name: R114 evidencia real offline / Test R114 real evidence guards
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PY'
+          import unittest
+          pattern = 'test_p14_r114_*.py'
+          suite = unittest.defaultTestLoader.discover('lab/tests', pattern=pattern)
+          count = suite.countTestCases()
+          print('CI_R114_DISCOVERED=' + str(count), flush=True)
+          if count != 250:
+              raise SystemExit('FAIL_EXPECTED_250_DISCOVERED_' + str(count))
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit('FAIL_UNIT_TESTS')
+          PY
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
