@@ -830,6 +830,20 @@ jobs:
           print('CI_R117_F1=PASS_22_NO_HOST_WRITES',flush=True)
           PY
 
+      - name: R117 F2 temporizador DENY 45 s sin acceso a host / Test safe monotonic watchdog contract
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYTEST'
+          import unittest
+          suite=unittest.defaultTestLoader.discover('lab/tests',pattern='test_p14_r117_f2_deny45_one_shot.py')
+          n=suite.countTestCases()
+          print('CI_R117_F2_DISCOVERED='+str(n),flush=True)
+          if n != 28:raise SystemExit('CI_R117_F2_DISCOVERY_CHANGED')
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped or result.testsRun != n:
+              raise SystemExit('CI_R117_F2_TEST_FAILED_OR_SKIPPED')
+          print('CI_R117_F2=PASS_28_NO_TIMER_NO_HOST_WRITES',flush=True)
+          PYTEST
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
