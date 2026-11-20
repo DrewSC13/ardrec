@@ -844,6 +844,20 @@ jobs:
           print('CI_R117_F2=PASS_28_NO_TIMER_NO_HOST_WRITES',flush=True)
           PYTEST
 
+      - name: R117 F3 cadena arranque vigente y pins F3 / Test current signed boot gate
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PY'
+          import unittest
+          suite=unittest.defaultTestLoader.discover('lab/tests',pattern='test_p14_r117_f3_boot_chain_release.py')
+          n=suite.countTestCases()
+          print('CI_R117_F3_DISCOVERED='+str(n),flush=True)
+          if n != 30: raise SystemExit('CI_R117_F3_TEST_DISCOVERY_CHANGED')
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped or result.testsRun != n:
+              raise SystemExit('CI_R117_F3_TEST_FAILED_OR_SKIPPED')
+          print('CI_R117_F3=PASS_30_SIGNED_SOURCE_NO_BOOT',flush=True)
+          PY
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
