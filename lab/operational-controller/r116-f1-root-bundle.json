@@ -1,0 +1,9 @@
+{
+  "guard_sha256": "a4fb93ad4e1630aae965451f62ec964e3252e65d6888857ad88e72ef83d98b95",
+  "helper_sha256": "3a9c2d0e70d7b6b808ee2eaf7382b11715c2e2d8e0f777ff627a1ed084a8bb05",
+  "opens_ports": false,
+  "p8": "NO-GO",
+  "schema": "ARDREC-R116-F1-FIVE-ONE-DENY-GUARD-v1-root-bundle",
+  "scope": "DENY_ONLY_FIVE_ACTIVE_ONE_OFF_LIFECYCLE",
+  "window_seconds": 60
+}
