@@ -2,7 +2,7 @@
   "base": "e193b1dcf97f72ba4245fc7dfc6d0d4b9814eecc",
   "catalog_sha256": "5161cdfc3c88281adbf21b839b40b12f92298d5a58f650ad761c0c6dbe16f88e",
   "files": {
-    "root-pilot.py": "00778755dd4448a99a1e13303715f472a8a8929983fc7d0c09197df53da94f74",
+    "root-pilot.py": "24aac2a7b2b54743fb1114e788da1bbbeeb9b2ae5447b08dca6eacb1d7b67664",
     "runtime/ardrec/coordination/r111_real_host_reconciliation.py": "e567ee214e085067ce019aa23cf3ba8b83598864d7528d033a7d359b07ad3664",
     "runtime/ardrec/coordination/r112_f10_targets_boot.py": "1137c75d181d8130a88b830553cf701e3fe0e77a9e8751a6b63648cb38cb8100",
     "runtime/ardrec/coordination/r112_f12_postreboot_boot.py": "610764ebc23cc412e738ecc9a7e2746038c0f0c7f53e173d836bd865950160a0",

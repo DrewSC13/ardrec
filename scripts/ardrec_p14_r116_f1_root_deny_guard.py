@@ -15,7 +15,7 @@ from __future__ import annotations
 import argparse
 import fcntl
 import hashlib
-import importlib.util
+import types
 import json
 import os
 from pathlib import Path
@@ -137,11 +137,13 @@ def protect_root():
 
 def historical():
     """Only source of historical original/candidate XML and exact nft DENY."""
-    need(sha(safe_file(HELPER))==HELPER_SHA,'HISTORICAL_HELPER_DRIFT')
-    spec=importlib.util.spec_from_file_location('ardrec_r116_pinned_r113_root',HELPER)
-    need(spec is not None and spec.loader is not None,'HELPER_LOAD_FAILED')
-    module=importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+    # Compile exact signed bytes in memory: SourceFileLoader would write
+    # __pycache__ into R113's immutable root bundle before root_bundle().
+    source=safe_file(HELPER)
+    need(sha(source)==HELPER_SHA,'HISTORICAL_HELPER_DRIFT')
+    module=types.ModuleType('ardrec_r116_pinned_r113_root')
+    module.__file__=str(HELPER)
+    exec(compile(source,str(HELPER),'exec'),module.__dict__)
     raw=module.root_bundle()
     need(raw['r34-deny-restore.nft']==module.expected_nft(),'R34_SOURCE_NOT_PINNED')
     return module,raw

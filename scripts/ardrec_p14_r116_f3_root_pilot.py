@@ -12,7 +12,7 @@ import base64
 from datetime import datetime,timezone
 import fcntl
 import hashlib
-import importlib.util
+import types
 import json
 import os
 from pathlib import Path
@@ -22,6 +22,9 @@ import stat
 import subprocess
 import sys
 import time
+
+# Never materialize bytecode beside root-owned signed runtime files.
+sys.dont_write_bytecode=True
 
 ROOT=Path('/var/lib/ardrec/r116-f3-ftp-pilot-root-v1')
 SRC=ROOT/'runtime'
@@ -33,6 +36,7 @@ VIRSH=('/usr/bin/virsh','-c','qemu:///system')
 SYSENV={'LC_ALL':'C','LANG':'C','PATH':'/usr/sbin:/usr/bin:/bin'}
 DOCS=('contract.json','scope-authorization.json','pilot-permit.json')
 ONE='pilot-attempted.once'
+R114_ROOT_SHA256='904083c970411a16d388e6f4dd73afc843267f58c4395e43c3469b7cad6db67b'
 SCHEMA='ARDREC-R116-F3-ROOT-FTP-PILOT-v1'
 MAX_READ=524288
 
@@ -172,11 +176,12 @@ def old_ftp_material(policy):
     # Only read older root-owned *data*, do not invoke its 120s dispatcher.
     valid_dir(F114.parent,0o700)
     raw=safe(F114,limit=200000)
-    spec=importlib.util.spec_from_file_location('ardrec_r116_pinned_r114_ftp',F114)
-    need(spec is not None and spec.loader is not None,'R114_SOURCE_LOADER_UNAVAILABLE')
-    module=importlib.util.module_from_spec(spec)
-    # Its own auth_bundle strictly validates all historical root data.
-    spec.loader.exec_module(module)
+    need(sha(raw)==R114_ROOT_SHA256,'R114_HISTORICAL_SOURCE_DRIFT')
+    # In-memory compile prevents SourceFileLoader creating __pycache__ in
+    # R114 before auth_bundle() checks its exact signed directory scope.
+    module=types.ModuleType('ardrec_r116_pinned_r114_ftp')
+    module.__file__=str(F114)
+    exec(compile(raw,str(F114),'exec'),module.__dict__)
     bundle=module.auth_bundle()
     need(raw==safe(F114,limit=200000),'R114_SOURCE_CHANGED')
     policy.candidate_rules(bundle['r34-ftp-only.nft'])
@@ -319,10 +324,16 @@ def execute_one_guest_probe(folder, check_time, *, budget, case_id):
 
 def root_guard_library():
     need(F1.is_file(),'F1_ROOT_GUARD_NOT_STAGED')
-    sp=importlib.util.spec_from_file_location('ardrec_r116_root_f1',F1)
-    need(sp is not None and sp.loader is not None,'F1_ROOT_SOURCE_MISSING')
-    module=importlib.util.module_from_spec(sp);sp.loader.exec_module(module)
-    module.protect_root()  # verifies its own manifest and source SHA
+    raw=safe(F1)
+    manifest=json.loads(safe(F1.parent/'manifest.json',limit=8192))
+    need(type(manifest) is dict and
+         manifest.get('guard_sha256')==sha(raw),
+         'F1_ROOT_GUARD_PIN_MISMATCH')
+    # Loading root F1 via importlib would itself create forbidden bytecode.
+    module=types.ModuleType('ardrec_r116_root_f1')
+    module.__file__=str(F1)
+    exec(compile(raw,str(F1),'exec'),module.__dict__)
+    module.protect_root()  # re-verifies own manifest and exact source SHA
     return module
 
 def lock_file():
