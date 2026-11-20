@@ -128,7 +128,7 @@ def f1_arm(token):
     need(re.fullmatch('[0-9a-f]{16}',token), 'TOKEN_INVALID')
     doc=json.loads(run(('/usr/bin/python3',str(F1),'--arm-deny',token),timeout=25))
     need(doc.get('timer_verified') is True and
-         doc.get('duration_seconds')==60 and
+         doc.get('duration_seconds')==60 and doc.get('backup_delay_seconds')==45 and
          doc.get('opens_ports') is False,'DENY_TIMER_ARM_NOT_VERIFIED')
     return doc
 
@@ -198,7 +198,7 @@ def review_boot_provenance(m):
     doc=json.loads(safe(path,limit=8192))
     need(type(doc) is dict and set(doc)=={'schema','plan','boot'} and
          doc['schema']==SCHEMA+'-f8-boot-reference', 'F8_BOOT_REFERENCE_INVALID')
-    root=Path('/home/cicada/ardrec-lab/r115-f8-runner-ftp-deny-v1')
+    root=Path('/home/cicada/ardrec-lab/r116-f12-runner-ftp-deny-v1')
     plan,boot=Path(doc['plan']),Path(doc['boot'])
     need(plan.is_absolute() and boot.is_absolute() and
          plan.parent==root and boot.parent==root and
@@ -210,8 +210,8 @@ def review_boot_provenance(m):
           "from pathlib import Path\n"
           "sys.path.insert(0,'/home/cicada/Development/GitHub/ardrec/src')\n"
           "sys.path.insert(0,'/home/cicada/Development/GitHub/ardrec/scripts')\n"
-          "from ardrec.coordination import r115_f16_physical_pilot_controller as f16\n"
-          "proof=f16.boot_chain(Path(sys.argv[1]),Path(sys.argv[2]))\n"
+          "from ardrec.coordination import r116_f12_runner_ftp_boot as f8\n"
+          "proof=f8.replay(Path(sys.argv[1]),Path(sys.argv[2]))\n"
           "print(json.dumps(proof,sort_keys=True,separators=(',',':')))\n")
     cmd=['/usr/sbin/runuser','-u','cicada','--','/usr/bin/python3',
          '-B','-c',code,str(plan),str(boot)]
@@ -220,13 +220,13 @@ def review_boot_provenance(m):
     need(p.returncode==0 and len(p.stdout)<8192 and len(p.stderr)<8192,
          'UNPRIVILEGED_F8_REPLAY_FAILED')
     result=json.loads(p.stdout)
-    need(result.get('ftp_boot_attributed_to_ssh_runner_ftp_replay') is True and
+    need(result.get('role')=='ftp' and
+         result.get('state')=='FTP_RUNNING_DENY_ATTESTED' and
          result.get('traffic_authorized') is False and
-         result.get('p8')=='NO-GO' and
-         re.fullmatch('[0-9a-f]{64}',result.get('boot_receipt_sha256','')),
+         result.get('a6')=='ND' and result.get('p8')=='NO-GO',
          'F8_BOOT_REPLAY_NOT_PROVEN')
-    return {'boot_receipt_sha256':result['boot_receipt_sha256'],
-            'traceability_only':True,'root_verified_physical_deny_separately':True}
+    return {'boot_receipt_sha256':sha(canon(result)),
+            'traceability_only':True,'root_verified_physical_deny_separately':True,'version':'R116-F12'}
 
 def save(folder,name,raw):
     need(re.fullmatch('[a-z0-9._-]{1,100}',name) and type(raw) is bytes and

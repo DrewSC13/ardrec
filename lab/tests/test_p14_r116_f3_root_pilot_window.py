@@ -220,7 +220,7 @@ class RootHarness(unittest.TestCase):
             source=(REPO/'scripts/ardrec_p14_r116_f3_root_pilot.py' if dest=='root-pilot.py'
                 else REPO/'src'/dest.removeprefix('runtime/'))
             self.assertEqual(hashlib.sha256(source.read_bytes()).hexdigest(),digest)
-        self.assertEqual(len(doc['files']),31)
+        self.assertEqual(len(doc['files']),33)
     def test_stage_no_implicit(self):
         self.assertNotIn('--stage-root',r.main.__code__.co_consts)
     def test_stage_reject_nonroot(self):

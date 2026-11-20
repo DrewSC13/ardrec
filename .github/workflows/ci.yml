@@ -740,6 +740,20 @@ jobs:
           print('CI_R116_F4=PASS_30_READONLY_NO_OPERATIONAL_GO',flush=True)
           PYTEST
 
+      - name: R116 F12 arranque HEAD actual y respaldo DENY anticipado / Test deny-only boot rebase
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYTEST'
+          import unittest
+          suite=unittest.defaultTestLoader.discover('lab/tests',pattern='test_p14_r116_f12*.py')
+          n=suite.countTestCases()
+          print('CI_R116_F12_DISCOVERED='+str(n),flush=True)
+          if n!=25:raise SystemExit('CI_R116_F12_TEST_COUNT_DRIFT')
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped or result.testsRun!=n:
+              raise SystemExit('CI_R116_F12_FAILED_OR_SKIPPED')
+          print('CI_R116_F12=PASS_REBASED_NO_ROOT_NO_TRAFFIC',flush=True)
+          PYTEST
+
       - name: R116 F3 ventana FTP-T01 con guardas raiz y prueba aislada / Test pilot root session contract
         run: |
           PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYTEST'

@@ -35,6 +35,7 @@ MANIFEST = ROOT/'manifest.json'
 SCHEMA = 'ARDREC-R116-F1-FIVE-ONE-DENY-GUARD-v1'
 MANIFEST_SCHEMA = SCHEMA+'-root-bundle'
 DURATION = 60
+BACKUP_DELAY_SECONDS = 45
 VM = ('ssh', 'runner', 'ftp', 'smb')
 KEYS = ('runner_ssh','ssh','runner_ftp','ftp','runner_smb','smb')
 VM_KEYS = {'ssh':('ssh',),'runner':('runner_ssh','runner_ftp','runner_smb'),
@@ -275,7 +276,7 @@ def arm(session, *, f6, bundle, host=invoke):
                             'ordinary_p8':'NO-GO'}))
     unit='ardrec-r116-f1-deny-'+session
     host(('/usr/bin/systemd-run','--system','--unit='+unit,
-          '--on-active=60s','--timer-property=AccuracySec=1s',
+          '--on-active=45s','--timer-property=AccuracySec=1s',
           '--description=ARDREC R116 5-1 DENY only autonomous recovery',
           '/usr/bin/python3',str(GUARD),'--restore-deny'),timeout=15)
     timer=host(('/usr/bin/systemctl','show',unit+'.timer','--no-pager',
@@ -287,7 +288,7 @@ def arm(session, *, f6, bundle, host=invoke):
          props.get('NextElapseUSecMonotonic') not in ('0','','infinity'),
          'AUTONOMOUS_TIMER_NOT_CONFIRMED')
     document={'schema':SCHEMA+'-arm','session':session,'unit':unit,
-              'duration_seconds':60,'deny_at_arm':'MATCH',
+              'duration_seconds':60,'backup_delay_seconds':45,'deny_at_arm':'MATCH',
               'p8':'NO-GO','opens_ports':False,'timer_verified':True}
     exclusive('arm-'+session+'.json',canon(document))
     return document
@@ -306,7 +307,7 @@ def main(argv=None):
                      'root_staging_required':True,'opens_socket':False,
                      'permits_traffic':False,'guest_starts':False,
                      'restore_deny':True,'five_one_lifecycle':True,
-                     'autonomous_timer_seconds':60,'p8':'NO-GO'}).decode().strip())
+                     'autonomous_timer_seconds':45,'pilot_window_max_seconds':60,'p8':'NO-GO'}).decode().strip())
         return 0
     try:
         protect_root()

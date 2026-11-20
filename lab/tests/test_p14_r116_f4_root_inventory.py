@@ -54,7 +54,7 @@ class Inventory(unittest.TestCase):
     def test_never_reports_true_a6(self):self.assertEqual(m.inventory(stat_reader=s_file)['a6'],'ND')
     def test_never_reports_p8_go(self):self.assertEqual(m.inventory(stat_reader=s_file)['p8'],'NO-GO')
     def test_no_commands_invoked(self):self.assertEqual(m.inventory(stat_reader=s_file)['root_commands_invoked'],0)
-    def test_pin_count(self):self.assertEqual(m.check_source_lock(repo=REPO,source_lock=LOCK),31)
+    def test_pin_count(self):self.assertEqual(m.check_source_lock(repo=REPO,source_lock=LOCK),33)
     def test_pin_mutation(self):
         fake=copy.deepcopy(LOCK);fake['files']['root-pilot.py']='0'*64
         with self.assertRaisesRegex(m.Stop,'SOURCE_HASH_MISMATCH'):m.check_source_lock(repo=REPO,source_lock=fake)
@@ -73,7 +73,7 @@ class Inventory(unittest.TestCase):
         with self.assertRaisesRegex(m.Stop,'SOURCE_LOCK_PATH_INVALID'):m.check_source_lock(repo=REPO,source_lock=fake)
     def test_report(self):
         doc=m.report(repo=REPO,stat_reader=s_missing)
-        self.assertEqual(doc['source_pins_verified'],31)
+        self.assertEqual(doc['source_pins_verified'],33)
         self.assertFalse(doc['signature_verified_by_this_module'])
     def test_canonical(self):self.assertEqual(m.canonical({'b':2,'a':1}),b'{"a":1,"b":2}\n')
     def test_receipt_sha(self):self.assertEqual(len(m.sha(m.canonical(m.inventory(stat_reader=s_missing)))),64)

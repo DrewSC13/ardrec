@@ -88,7 +88,7 @@ def check_source_lock(*,repo:Path,source_lock:dict):
     if type(source_lock) is not dict or source_lock.get('p8')!='NO-GO' or not source_lock.get('root_source_only') is True or source_lock.get('window_seconds')!=60:
         raise Stop('ROOT_LOCK_SCHEMA_INVALID')
     files=source_lock.get('files')
-    if type(files) is not dict or len(files)!=31:
+    if type(files) is not dict or len(files)!=33:
         raise Stop('ROOT_LOCK_FILE_COUNT')
     if source_lock.get('catalog_sha256')!='5161cdfc3c88281adbf21b839b40b12f92298d5a58f650ad761c0c6dbe16f88e':
         raise Stop('CATALOG_LOCK_INVALID')

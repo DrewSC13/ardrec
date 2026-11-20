@@ -233,7 +233,7 @@ class Timer(unittest.TestCase):
                     m.arm('2'*16,f6=Six(),bundle=BUNDLE,host=h)
             units=[x for x in h.commands if x[0][0]=='/usr/bin/systemd-run']
             self.assertEqual(len(units),1)
-            self.assertIn('--on-active=60s',units[0][0])
+            self.assertIn('--on-active=45s',units[0][0])
             self.assertNotIn('--restore-deny',str(h.commands[:-2]))
     def test_arm_offline_rejected_before_marker(self):
         with tempfile.TemporaryDirectory() as td:
