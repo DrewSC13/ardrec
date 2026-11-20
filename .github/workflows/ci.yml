@@ -800,6 +800,22 @@ jobs:
           print('CI_R116_F1=PASS_35_NO_ROOT_STAGING_NO_TRAFFIC', flush=True)
           PY
 
+      - name: R116 F13 cierre fuente NO-GO / Test signed source closure
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B scripts/ardrec_p14_r116_f13_merge_gate.py --verify
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PY'
+          import unittest
+          suite = unittest.defaultTestLoader.discover('lab/tests', pattern='test_p14_r116_f13*.py')
+          count = suite.countTestCases()
+          print('CI_R116_F13_DISCOVERED=' + str(count), flush=True)
+          if count != 17:
+              raise SystemExit('CI_R116_F13_TEST_COUNT_DRIFT')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped or result.testsRun != 17:
+              raise SystemExit('CI_R116_F13_FAILED_OR_SKIPPED')
+          print('CI_R116_F13=PASS_SOURCE_ONLY_NO_GO', flush=True)
+          PY
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
