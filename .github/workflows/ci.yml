@@ -789,7 +789,7 @@ jobs:
         run: |
           PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PY'
           import unittest
-          suite = unittest.defaultTestLoader.discover('lab/tests', pattern='test_p14_r116_f1*.py')
+          suite = unittest.defaultTestLoader.discover('lab/tests', pattern='test_p14_r116_f1_five_one_deny_root.py')
           count = suite.countTestCases()
           print('CI_R116_F1_DISCOVERED=' + str(count), flush=True)
           if count != 35:
