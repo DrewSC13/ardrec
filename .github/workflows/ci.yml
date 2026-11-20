@@ -710,6 +710,22 @@ jobs:
               raise SystemExit('FAIL_UNIT_TESTS')
           PY
 
+      - name: R115 F1-F17 cierre trazable NO-GO / Validate R115 source-only merge boundary
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 python3 -B scripts/ardrec_p14_r115_f17_merge_gate.py --verify
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PY'
+          import unittest
+          suite = unittest.defaultTestLoader.discover('lab/tests', pattern='test_p14_r115_*.py')
+          count = suite.countTestCases()
+          print('CI_R115_DISCOVERED=' + str(count), flush=True)
+          if count != 440:
+              raise SystemExit('CI_R115_UNEXPECTED_TEST_COUNT_' + str(count))
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('CI_R115_TEST_FAILURE_OR_SKIP')
+          print('CI_R115_SOURCE_GATE=PASS_440_WITH_NO_OPERATIONAL_GO', flush=True)
+          PY
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
