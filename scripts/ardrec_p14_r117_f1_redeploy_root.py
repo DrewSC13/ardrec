@@ -40,6 +40,11 @@ PIN_R113 = '3a9c2d0e70d7b6b808ee2eaf7382b11715c2e2d8e0f777ff627a1ed084a8bb05'
 PIN_R114 = '904083c970411a16d388e6f4dd73afc843267f58c4395e43c3469b7cad6db67b'
 PIN_R114_RECEIPT = 'e80e6f33d7a82ac6e3c76bb70a262d0e65d2b4be0a7feb3558d0d2cd0711a742'
 PIN_R114_MARKER = 'd403312ae9af24b99c2f0babb99491f30027a82e0a6f9c661699f9cebf4e6b0e'
+# Pinned on Prometheus via R116-F11 real autonomous deny reapplication + forensic read-only scan.
+F11_RECEIPT = ROOT / 'r116-f11-deny-idempotent-60s-v1' / 'result.json'
+PIN_F11_RECEIPT = 'f0edb262a81c8a0581b63df3d388836751136cad5b666be5c5326efa1232a122'
+F1_RESTORE_NAME = 'restore-be34354d31c4656d.json'
+PIN_F1_RESTORE = 'be34354d31c4656dbeb7c447cab42f52b0ee631df5c4e6347d9986c4297e3ec7'
 PIN_CATALOG = '5161cdfc3c88281adbf21b839b40b12f92298d5a58f650ad761c0c6dbe16f88e'
 SCHEMA = 'ARDREC-R117-F1-F12-ROOT-REDEPLOY-v1'
 
@@ -97,6 +102,43 @@ def payload(p, limit=524288):
         return raw
     finally: os.close(fd)
 
+def no_duplicate_keys(pairs):
+    doc={}
+    for key,value in pairs:
+        need(key not in doc,'F1_RESTORE_DUPLICATE_JSON_KEY')
+        doc[key]=value
+    return doc
+
+def validated_restore_receipt(raw):
+    """Accept only the actual F11-generated F1 restore receipt; never arbitrary extras."""
+    need(type(raw) is bytes and digest(raw)==PIN_F1_RESTORE,
+         'F1_RESTORE_HASH_MISMATCH')
+    doc=json.loads(raw,object_pairs_hook=no_duplicate_keys,
+                   parse_constant=lambda _: (_ for _ in ()).throw(Halt('F1_RESTORE_NONFINITE_JSON')))
+    need(type(doc) is dict and canon(doc)==raw,'F1_RESTORE_NOT_CANONICAL')
+    need(doc.get('schema')=='ARDREC-R116-F1-FIVE-ONE-DENY-GUARD-v1-restore' and
+         doc.get('status')=='DENY_RESTORED' and doc.get('p8')=='NO-GO' and
+         doc.get('traffic_allowed') is False and
+         doc.get('host_writes')=='NFT_DENY_AND_KNOWN_BINDING_RESTORE_ONLY' and
+         doc.get('states')=={'ssh':'OFF','runner':'OFF','ftp':'OFF','smb':'OFF'} and
+         type(doc.get('policy')) is dict and
+         doc['policy'].get('active_count')==0 and
+         doc['policy'].get('absent_count')==6 and
+         doc['policy'].get('allow_traffic') is False and
+         doc['policy'].get('p8')=='NO-GO',
+         'F1_RESTORE_SEMANTICS_INVALID')
+    return PIN_F1_RESTORE
+
+def f1_restore_history():
+    """The only admissible F8 extra is the precisely pinned F11 restore receipt."""
+    expected={'root-guard.py','manifest.json',F1_RESTORE_NAME}
+    need({p.name for p in F1.iterdir()}==expected,'F1_OLD_SCOPE_CHANGED')
+    directory(F11_RECEIPT.parent,0o700)
+    need(digest(payload(F11_RECEIPT,65536))==PIN_F11_RECEIPT,
+         'F11_RECEIPT_HASH_MISMATCH')
+    validated_restore_receipt(payload(F1/F1_RESTORE_NAME,65536))
+    return PIN_F1_RESTORE
+
 def rootwrite(p, raw):
     need(type(raw) is bytes and 0<len(raw)<524288, 'WRITE_BYTES_INVALID')
     fd=os.open(p,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW|os.O_CLOEXEC,0o600)
@@ -151,7 +193,7 @@ def preflight():
 
 def check_old():
     directory(F1,0o700);directory(F3,0o700)
-    need({p.name for p in F1.iterdir()}=={'root-guard.py','manifest.json'},'F1_OLD_SCOPE_CHANGED')
+    f1_restore_history()
     need(digest(payload(F1/'root-guard.py'))==PIN_OLD_F1 and
          payload(F1/'root-guard.py')==signed(F1_CODE,OLD) and
          payload(F1/'manifest.json')==signed(F1_LOCK,OLD),'F1_OLD_VERSION_MISMATCH')
@@ -265,10 +307,13 @@ def apply(doc):
         rootwrite(dossier/'preflight.json',canon({'schema':SCHEMA,'new_head':head,
             'previous_source':OLD,'new_f1_sha256':PIN_NEW_F1,'new_f3_sha256':PIN_NEW_F3,
             'old_f1_sha256':PIN_OLD_F1,'old_f3_sha256':PIN_OLD_F3,
-            'r114_receipt_sha256':PIN_R114_RECEIPT,'authority':'NOT_PROVISIONED','p8':'NO-GO'}))
+            'r114_receipt_sha256':PIN_R114_RECEIPT,'f11_receipt_sha256':PIN_F11_RECEIPT,
+            'f1_restore_receipt_sha256':PIN_F1_RESTORE,'authority':'NOT_PROVISIONED','p8':'NO-GO'}))
         moved=[]
         try:
             os.rename(F1,old1);moved.append('f1')
+            need(digest(payload(old1/F1_RESTORE_NAME,65536))==PIN_F1_RESTORE,
+                 'ARCHIVED_F1_RECEIPT_CHANGED')
             os.rename(F3,old3);moved.append('f3')
             sync(ROOT);sync(dossier)
             new_tree(F1,{'root-guard.py':f1,'manifest.json':signed(F1_LOCK)})
@@ -299,9 +344,12 @@ def apply(doc):
                  'POST_MIGRATION_DENY_NOT_ATTESTED')
             rootwrite(dossier/'result.json',canon({'schema':SCHEMA,'result':'PASS',
                 'source_head':head,'f3_sources':len(sources),'old_preserved':True,
+                'archived_f1_restore_sha256':PIN_F1_RESTORE,
+                'f11_receipt_sha256':PIN_F11_RECEIPT,
                 'nft_changes':0,'guest_starts':0,'network_connections':0,'p8':'NO-GO'}))
             sync(dossier);sync(ROOT)
             emit('ARCHIVE',str(dossier))
+            emit('F11_RESTORE_ARCHIVED','PASS_PINNED_SHA256_'+PIN_F1_RESTORE)
             emit('NEW_F1_INTEGRITY','PASS_F12_SIGNED_SOURCE_BYTES')
             emit('NEW_F3_INTEGRITY','PASS_33_SIGNED_SOURCE_BYTES')
             emit('HOST_DENY','PASS_R34_MATCH_0_ACTIVE_6_ABSENT')

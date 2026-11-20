@@ -99,6 +99,50 @@ class R117MigrationTests(unittest.TestCase):
     def test_historical_marker_sha_pinned(self):
         self.assertEqual(len(m.PIN_R114_MARKER),64)
         self.assertEqual(len(m.PIN_R114_RECEIPT),64)
+        self.assertEqual(m.PIN_F1_RESTORE,'be34354d31c4656dbeb7c447cab42f52b0ee631df5c4e6347d9986c4297e3ec7')
+        self.assertEqual(m.PIN_F11_RECEIPT,'f0edb262a81c8a0581b63df3d388836751136cad5b666be5c5326efa1232a122')
+        self.assertEqual(m.F1_RESTORE_NAME,'restore-'+m.PIN_F1_RESTORE[:16]+'.json')
+        # Synthetic fixture: the pinned hash is temporarily replaced ONLY in isolated tests,
+        # to exercise correct semantics, tampering and unexpected files without host access.
+        doc={'schema':'ARDREC-R116-F1-FIVE-ONE-DENY-GUARD-v1-restore',
+             'status':'DENY_RESTORED','p8':'NO-GO','traffic_allowed':False,
+             'host_writes':'NFT_DENY_AND_KNOWN_BINDING_RESTORE_ONLY',
+             'states':{'ssh':'OFF','runner':'OFF','ftp':'OFF','smb':'OFF'},
+             'policy':{'active_count':0,'absent_count':6,'allow_traffic':False,'p8':'NO-GO'}}
+        good=m.canon(doc)
+        with patch.object(m,'PIN_F1_RESTORE',m.digest(good)):
+            self.assertEqual(m.validated_restore_receipt(good),m.digest(good))
+            for field,value in [('status','FAILED'),('traffic_allowed',True),('p8','GO')]:
+                with self.subTest(field=field):
+                    bad=dict(doc,**{field:value})
+                    with self.assertRaises(m.Halt):m.validated_restore_receipt(m.canon(bad))
+            with self.assertRaises(m.Halt):m.validated_restore_receipt(good+b'\n')
+        # Even a deliberately re-pinned semantically invalid document is rejected.
+        wrong=dict(doc,states={'ssh':'RUNNING','runner':'OFF','ftp':'OFF','smb':'OFF'})
+        raw=m.canon(wrong)
+        with patch.object(m,'PIN_F1_RESTORE',m.digest(raw)):
+            with self.assertRaises(m.Halt):m.validated_restore_receipt(raw)
+        double=b'{"a":1,"a":2}\n'
+        with patch.object(m,'PIN_F1_RESTORE',m.digest(double)):
+            with self.assertRaises(m.Halt):m.validated_restore_receipt(double)
+        # Strictly one pinned restore file and no auxiliary unauthorized payloads.
+        with tempfile.TemporaryDirectory() as t:
+            root=Path(t);bundle=root/'f1';bundle.mkdir()
+            prior=root/'f11';prior.mkdir()
+            for name in ('root-guard.py','manifest.json',m.F1_RESTORE_NAME):
+                (bundle/name).write_bytes(good)
+            (prior/'result.json').write_bytes(b'F11_SYNTHETIC')
+            with patch.object(m,'F1',bundle),patch.object(m,'F11_RECEIPT',prior/'result.json'), \
+                 patch.object(m,'PIN_F1_RESTORE',m.digest(good)), \
+                 patch.object(m,'PIN_F11_RECEIPT',m.digest(b'F11_SYNTHETIC')), \
+                 patch.object(m,'directory') as directory, \
+                 patch.object(m,'payload',side_effect=lambda path,*args,**kw:path.read_bytes()):
+                self.assertEqual(m.f1_restore_history(),m.digest(good))
+                (bundle/'unexpected.dat').write_bytes(b'bad')
+                with self.assertRaises(m.Halt):m.f1_restore_history()
+                (bundle/'unexpected.dat').unlink()
+                (prior/'result.json').write_bytes(b'MUTATED')
+                with self.assertRaises(m.Halt):m.f1_restore_history()
     def test_root_redeployment_does_not_change_p8(self):
         self.assertIn(b'NO-GO',m.canon({'p8':'NO-GO'}))
     def test_apply_never_calls_nft_write_directly(self):

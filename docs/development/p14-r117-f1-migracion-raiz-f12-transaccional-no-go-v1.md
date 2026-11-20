@@ -31,3 +31,9 @@ Si el segundo montaje falla, el procedimiento mueve las instalaciones nuevas par
 ## Evidencia de pruebas
 
 `lab/tests/test_p14_r117_f1_root_migration.py` comprueba SHA de origen y los 33 pins, prohibición de ejecución sin modo, inspección sin aplicación, ruta de instalación explícita, escritor exclusivo, modos 0700/0600, rechazo de destino existente, bytes nulos y restauración ante fallo. CI ejecuta exactamente el patrón de test de R117-F1, sin solapamiento con futuras F10/F12/F13.
+
+## R117-F1A — Recibo F11 restaurado y archivado (corrección de alcance)
+
+La inspección física de Prometheus acreditó un único archivo extra en el paquete F1 antiguo, `restore-be34354d31c4656d.json`. Su SHA-256 es `be34354d31c4656dbeb7c447cab42f52b0ee631df5c4e6347d9986c4297e3ec7`, y el recibo de ejecución F11 `result.json` tiene SHA-256 `f0edb262a81c8a0581b63df3d388836751136cad5b666be5c5326efa1232a122`. El migrador F1A requiere ambos recibos con propiedad raíz y modos seguros, coteja canonicalidad y semántica DENY 0/6, exige el conjunto de nombres exacto y detiene cualquier archivo adicional.
+
+La operación `--apply` archiva con `rename` el paquete F8 completo, incluido el recibo F11, verifica el SHA-256 tras archivar y consigna ambos hashes en el dossier transaccional. No borra ni recrea el recibo, no reutiliza la sesión R114, no modifica reglas de firewall y no acredita recuperación desde reglas ALLOW o 5/1. La inspección `--inspect` no hace escrituras.
