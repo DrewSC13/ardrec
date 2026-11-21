@@ -1068,6 +1068,20 @@ jobs:
           print("CI_R117_P8=NO-GO")
           PYTEST
 
+      - name: Validar continuidad R118 SOURCE_ONLY post-merge / Test source-lineage separation
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PY'
+          import unittest
+          suite = unittest.defaultTestLoader.discover('lab/tests',pattern='test_p14_r118*.py')
+          count = suite.countTestCases()
+          print('R118_DISCOVERED='+str(count),flush=True)
+          if count < 21:
+              raise SystemExit('R118_DISCOVERY_INSUFFICIENT')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit('R118_TESTS_FAIL')
+          PY
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
