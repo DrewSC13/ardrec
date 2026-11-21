@@ -1118,6 +1118,18 @@ jobs:
           if not result.wasSuccessful(): raise SystemExit('R121_FAILED')
           PYCI
 
+      - name: R122 F5 F16 F13 R121 / conciliación operacional FTP read-only
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYCI'
+          import unittest
+          suite=unittest.defaultTestLoader.discover('lab/tests', pattern='test_p14_r122*.py')
+          count=suite.countTestCases()
+          print('R122_DISCOVERED='+str(count),flush=True)
+          if count < 50: raise SystemExit('R122_DISCOVERY_INSUFFICIENT')
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful(): raise SystemExit('R122_FAILED')
+          PYCI
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
