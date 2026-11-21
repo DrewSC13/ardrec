@@ -32,7 +32,7 @@ AGENT_SHA = (
 )
 PINS = {
     "bootstrap":
-        "c7642e403e35d52e56d8eebcf57acea923167eef860a442cb2bb666df67fc5b5",
+        "94d2038a17fd27efab4a4fc2bdb77dafff9eb3ebb1f659a516273080394e59aa",
     "approval":
         "9c6753b9a439de6eb4a17ae87fe5a09b95816461f93a76a100b4e7b2c4843389",
     "revocation":
@@ -564,7 +564,7 @@ def stage_agent(root, files, *, checkpoint=None):
 ROOT_HOST = Path("/var/lib/ardrec")
 ROOT_EXECUTOR = ROOT_HOST / "r117-agent-bootstrap-executor-v1.py"
 ROOT_TRUST = Path(
-    "/etc/ardrec/r117-authorities-v1/bootstrap-public.pem"
+    "/etc/ardrec/r117-authorities-v2/bootstrap-public.pem"
 )
 DENY_GUARD = (
     ROOT_HOST / "r116-f1-five-one-deny-v1" / "root-guard.py"
