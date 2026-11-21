@@ -5,7 +5,8 @@ Only root-staged, authenticated pilot code can satisfy it; never creates data,
 starts guests, opens firewall, or grants P8. F5 will install it separately.
 """
 from __future__ import annotations
-import hashlib,json,os,stat
+import hashlib,json,os,stat,re,subprocess
+from datetime import datetime,timezone
 from pathlib import Path
 
 RECEIPT=Path('/var/lib/ardrec/r117-f4-boot-release-v1/receipt.json')
@@ -41,7 +42,8 @@ def require_attested_release(head,*,repo=REPO,reader=root_bytes):
     """Fail closed until an independent root staging creates both exact receipts."""
     need(type(head) is str and len(head)==40 and
          all(c in '0123456789abcdef' for c in head),'RELEASE_HEAD_INVALID')
-    rec=json.loads(reader(RECEIPT))
+    receipt_raw=reader(RECEIPT)
+    rec=json.loads(receipt_raw)
     need(type(rec) is dict and set(rec)=={'schema','head','source_sha256',
          'pilot_manifest_sha256','pilot_schema','p8','authorized_to_boot'},
          'RELEASE_RECEIPT_FIELDS')
@@ -62,5 +64,159 @@ def require_attested_release(head,*,repo=REPO,reader=root_bytes):
          pilot.get('head')==head and pilot.get('p8')=='NO-GO' and
          pilot.get('a6')=='ND' and pilot.get('network_automatic') is False,
          'PILOT_STAGE_UNTRUSTED')
+    _closed_transaction(head,receipt_raw,raw,reader)
     return {'schema':RELEASE_SCHEMA+'-attested','head':head,
             'pilot_sha256':digest(raw),'p8':'NO-GO','traffic_authorized':False}
+
+
+# F5D-F: F4 recognizes only a fully closed, cryptographically approved
+# release. A receipt alone is NEVER sufficient for release acceptance.
+ROOT=Path('/var/lib/ardrec')
+APPROVAL=RECEIPT.parent/'approval.json'
+APPROVAL_SIG=RECEIPT.parent/'approval.sig'
+TRUST=Path('/etc/ardrec/r117-f5b-release-trust-v1.pem')
+PREFIX=b'ARDREC-R117-F5B-ROOT-RELEASE-APPROVAL-v1\x00'
+TXN_NAME=re.compile(r'\.r117-f5b-transaction-[0-9a-f]{24}\Z')
+MARKERS={
+    'prepared.once':b'PREPARED_NOT_PUBLISHED\n',
+    'pilot-visible.once':b'PILOT_VISIBLE_RELEASE_PENDING\n',
+    'release-visible.once':b'RELEASE_VISIBLE_INSPECTION_REQUIRED\n',
+}
+JOURNAL_FILES=set(MARKERS)|{'intent.json','complete.json'}
+
+def _unique_pairs(pairs):
+    result={}
+    for key,value in pairs:
+        need(key not in result,'TRANSACTION_DUPLICATE_JSON_FIELD')
+        result[key]=value
+    return result
+
+def _strict_document(raw):
+    need(type(raw) is bytes and 0<len(raw)<=8192,
+         'TRANSACTION_DOCUMENT_SIZE')
+    try:
+        obj=json.loads(raw,object_pairs_hook=_unique_pairs,
+             parse_constant=lambda _:(_ for _ in ()).throw(
+                 Stop('TRANSACTION_NONFINITE_JSON')))
+        need(type(obj) is dict,'TRANSACTION_DOCUMENT_NOT_OBJECT')
+        canonical=(json.dumps(obj,sort_keys=True,separators=(',',':'),
+                   ensure_ascii=True,allow_nan=False)+'\n').encode('ascii')
+        need(raw==canonical,'TRANSACTION_DOCUMENT_NOT_CANONICAL')
+    except (UnicodeError,OverflowError,TypeError,ValueError) as exc:
+        raise Stop('TRANSACTION_DOCUMENT_INVALID') from exc
+    return obj
+
+def _ed25519_verify(pub, signature, statement):
+    """OpenSSL verification through seekable anonymous memory FDs.
+
+    Does not create persistent files or invoke the untrusted checkout.
+    """
+    need(type(pub) is bytes and 0<len(pub)<=4096 and
+         b'BEGIN PUBLIC KEY' in pub and
+         type(signature) is bytes and len(signature)==64 and
+         type(statement) is bytes and 0<len(statement)<=8192,
+         'RELEASE_CRYPTO_INPUT_INVALID')
+    need(hasattr(os,'memfd_create'), 'RELEASE_MEMFD_UNAVAILABLE')
+    handles=[]
+    try:
+        for name,raw in (('key',pub),('signature',signature),('message',statement)):
+            fd=os.memfd_create('ardrec-f5df-'+name,os.MFD_CLOEXEC)
+            handles.append(fd)
+            need(os.write(fd,raw)==len(raw),'RELEASE_MEMFD_WRITE_INCOMPLETE')
+            os.lseek(fd,0,os.SEEK_SET)
+        command=[
+            '/usr/bin/openssl','pkeyutl','-verify','-rawin',
+            '-pubin','-inkey','/proc/self/fd/'+str(handles[0]),
+            '-sigfile','/proc/self/fd/'+str(handles[1]),
+            '-in','/proc/self/fd/'+str(handles[2]),
+        ]
+        result=subprocess.run(command,stdin=subprocess.DEVNULL,
+            capture_output=True,timeout=10,check=False,
+            pass_fds=tuple(handles),
+            env={'PATH':'/usr/bin:/bin','LC_ALL':'C'})
+        need(result.returncode==0,'RELEASE_ED25519_SIGNATURE_INVALID')
+    finally:
+        for fd in handles:
+            os.close(fd)
+
+def _utc(value):
+    need(type(value) is str and re.fullmatch(
+        r'\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ',value),
+        'RELEASE_APPROVAL_UTC_INVALID')
+    try:
+        return datetime.fromisoformat(value.replace('Z','+00:00'))
+    except ValueError as exc:
+        raise Stop('RELEASE_APPROVAL_TIME_INVALID') from exc
+
+def _closed_transaction(head, receipt_raw, pilot_raw, reader):
+    """Reject incomplete F5B journals before any F4 release acceptance.
+
+    Structural closure plus independent signed INSTALL_SOURCE_ONLY approval.
+    This function never authorizes boot or networking.
+    """
+    _dir(ROOT)
+    entries=[name for name in os.listdir(ROOT)
+             if name.startswith('.r117-f5b-transaction-')]
+    need(len(entries)==1,'RELEASE_TRANSACTION_NOT_UNIQUE')
+    name=entries[0]
+    need(TXN_NAME.fullmatch(name) is not None,
+         'RELEASE_TRANSACTION_NAME_INVALID')
+    txn=ROOT/name
+    _dir(txn)
+    need(stat.S_IMODE(txn.lstat().st_mode)==0o700,
+         'RELEASE_TRANSACTION_DIRECTORY_MODE')
+    need(set(os.listdir(txn))==JOURNAL_FILES,
+         'RELEASE_TRANSACTION_FILES_INVALID')
+    for marker,expected in MARKERS.items():
+        need(reader(txn/marker)==expected,
+             'RELEASE_TRANSACTION_MARKER_INVALID_'+marker)
+
+    intent=_strict_document(reader(txn/'intent.json'))
+    complete=_strict_document(reader(txn/'complete.json'))
+    approval_raw=reader(APPROVAL)
+    approval=_strict_document(approval_raw)
+    signature=reader(APPROVAL_SIG)
+
+    need(set(intent)=={
+        'schema','head','candidate_sha256','approval_sha256',
+        'status','p8'},'RELEASE_INTENT_FIELDS_CHANGED')
+    need(set(complete)=={
+        'schema','head','pilot_manifest_sha256','receipt_sha256',
+        'approved_install','boot_permit_issued','network_connections',
+        'vm_starts','p8'},'RELEASE_COMPLETE_FIELDS_CHANGED')
+    need(set(approval)=={
+        'schema','head','candidate_sha256','valid_from','valid_until',
+        'purpose','authority','p8'},'RELEASE_APPROVAL_FIELDS_CHANGED')
+    need(intent['schema']=='ARDREC-R117-F5B-TRANSACTION-v1' and
+         intent['head']==head and intent['status']=='SOURCE_INSTALL_ATTEMPT' and
+         intent['p8']=='NO-GO' and
+         type(intent['candidate_sha256']) is str and
+         re.fullmatch('[0-9a-f]{64}',intent['candidate_sha256']) is not None and
+         intent['approval_sha256']==digest(approval_raw),
+         'RELEASE_INTENT_NOT_AUTHENTIC')
+    need(complete['schema']=='ARDREC-R117-F5B-COMPLETE-v1' and
+         complete['head']==head and
+         complete['pilot_manifest_sha256']==digest(pilot_raw) and
+         complete['receipt_sha256']==digest(receipt_raw) and
+         complete['approved_install'] is True and
+         complete['boot_permit_issued'] is False and
+         type(complete['vm_starts']) is int and
+         complete['vm_starts']==0 and
+         type(complete['network_connections']) is int and
+         complete['network_connections']==0 and complete['p8']=='NO-GO',
+         'RELEASE_TRANSACTION_NOT_COMPLETE')
+    need(approval['schema']=='ARDREC-R117-F5B-ROOT-INSTALL-APPROVAL-v1' and
+         approval['head']==head and
+         approval['candidate_sha256']==intent['candidate_sha256'] and
+         approval['purpose']=='INSTALL_SOURCE_ONLY' and
+         approval['p8']=='NO-GO' and
+         type(approval['authority']) is str and
+         3<=len(approval['authority'])<=80,
+         'RELEASE_APPROVAL_SCOPE_INVALID')
+    start,end=_utc(approval['valid_from']),_utc(approval['valid_until'])
+    now=datetime.now(timezone.utc)
+    need(start<=now<end and 0<(end-start).total_seconds()<=600,
+         'RELEASE_APPROVAL_EXPIRED_OR_FUTURE')
+    trust=reader(TRUST)
+    _ed25519_verify(trust,signature,PREFIX+approval_raw)
+    return True
