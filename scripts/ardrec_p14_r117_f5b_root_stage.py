@@ -495,6 +495,7 @@ def installed_audit(builder, head, approval_sha=None):
     }
 
 def apply(archive):
+    need(False, 'F5B_APPLY_BLOCKED_PENDING_ATOMIC_RELEASE_AND_BOOT_GATE')
     head = root_head()
     builder = load_builder(BUILDER)
 

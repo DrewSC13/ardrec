@@ -62,3 +62,14 @@ No ejecutar --apply durante pruebas ni al instalar código.
 F5B no concede A6 ni P8.
 
 P7=DRAFT, A6=ND y P8=NO-GO.
+
+## F5B-H1 — Bloqueo de aplicación privilegiada
+
+La auditoría del PR #193 detectó que el recibo de release puede publicarse antes del cierre transaccional y que el verificador F4 no confirma todos los ejecutables instalados.
+
+Por ello, `--apply` se bloquea explícitamente antes de cualquier acceso root o modificación física. La novena prueba demuestra el rechazo anticipado.
+
+El código de instalación permanece como implementación en revisión; no está liberado para su ejecución.
+F5C deberá resolver publicación durable, aceptación del commit completo, inspección de todos los archivos, bootstrap de confianza y puente de atestación root.
+
+Estado: SOURCE_ONLY; P8=NO-GO; A6=ND.

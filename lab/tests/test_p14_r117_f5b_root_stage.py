@@ -93,6 +93,14 @@ class F5BTests(unittest.TestCase):
             m.approval_fields(doc, "a" * 40,
                               "b" * 64, now)
 
+    def test_privileged_apply_fails_closed(self):
+        with self.assertRaises(m.Stop) as caught:
+            m.apply(Path('/nonexistent-f5b-candidate.zip'))
+        self.assertEqual(
+            str(caught.exception),
+            'F5B_APPLY_BLOCKED_PENDING_ATOMIC_RELEASE_AND_BOOT_GATE'
+        )
+
     def test_duplicate_json_rejected(self):
         with self.assertRaises(m.Stop):
             m.document(b'{"head":"a","head":"b"}\n')
