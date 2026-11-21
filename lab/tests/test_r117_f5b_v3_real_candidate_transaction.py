@@ -15,15 +15,11 @@ import zipfile
 import ardrec_r117_release_core_v1 as core
 import ardrec_r117_f5b_dual_authority_v1 as gate
 import ardrec_r117_f5b_release_transaction_v2 as txn
+from r117_v3_candidate_fixture import candidate_bytes
 
 HEAD = "197785a38bf166ec0b4c8d3ae17346d1fa217265"
 SHA = (
     "5ef729690589497c787f34e99dba8fefea798459fc6c10a2d144a64a71cb2bf7"
-)
-
-CANDIDATE = Path(
-    "/home/cicada/Development/GitHub/ardrec-patches/"
-    "R117_F5A_ROOT_CANDIDATE_197785a38bf1_V3.zip"
 )
 
 PHASES = [
@@ -57,7 +53,7 @@ class V3CandidateTransactionTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.candidate = CANDIDATE.read_bytes()
+        cls.candidate = candidate_bytes()
 
         if sha(cls.candidate) != SHA:
             raise RuntimeError("V3_CANDIDATE_SHA_CHANGED")

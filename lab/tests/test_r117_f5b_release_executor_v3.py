@@ -5,6 +5,7 @@ import unittest
 from unittest.mock import patch
 
 import ardrec_r117_f5b_release_executor_v3 as m
+from r117_v3_candidate_fixture import candidate_bytes
 
 REPO = Path(__file__).resolve().parents[2]
 
@@ -17,7 +18,7 @@ class ExecutorV3Tests(unittest.TestCase):
 
     def test_02_candidate_sha(self):
         self.assertEqual(
-            hashlib.sha256(m.CANDIDATE.read_bytes()).hexdigest(),
+            hashlib.sha256(candidate_bytes()).hexdigest(),
             m.CANDIDATE_SHA
         )
 
