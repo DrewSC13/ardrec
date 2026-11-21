@@ -1,0 +1,32 @@
+{
+  "activation_sha256": "7df39f9ff08febff341bd2411d1e9894f6587a6a107b183eb303bc73d8ea8b7c",
+  "approval_sha256": "1c87799423d1c67385d2b82d6de5a00d09f7e03cbed8fc55850b3a16ce28a3e8",
+  "approval_signature_sha256": "ab80df657e8ab872027d84300a89f0fa62b28a0bdec43da4af138453e56299f2",
+  "authorization_ledger_sha256": "fce3cd5af0545303714def2f8d04e29db5995ba01254b7c71206df5fe0fd9599",
+  "boot_authorized": false,
+  "candidate_head": "197785a38bf166ec0b4c8d3ae17346d1fa217265",
+  "candidate_sha256": "5ef729690589497c787f34e99dba8fefea798459fc6c10a2d144a64a71cb2bf7",
+  "clock_source": "LOCAL_SYSTEM_UTC",
+  "closure_scope": "F5B_SOURCE_ONLY",
+  "current_nonrevocation_status": "NOT_ASSESSED",
+  "historical_signature_verification": "PASS_DURING_ORIGINAL_INSTALLATION",
+  "installed_files_verified": 39,
+  "journal_phases": [
+    "PREPARED",
+    "PILOT_PUBLISHED",
+    "RELEASE_PUBLISHED",
+    "COMPLETION_DURABLE",
+    "ACTIVATION_PUBLISHED"
+  ],
+  "network_authorized": false,
+  "observed_at_utc": "2026-11-21T15:04:41Z",
+  "operational_validation": "PENDING",
+  "p8": "NO-GO",
+  "pending_activations": 0,
+  "release_receipt_sha256": "d9221c3e2837ca72d84c44624999269caf9ccc4dd20fc93a4f9725e23e41e9bf",
+  "revocation_sha256": "976d8b4cb17ecf3106a09f60a0a7006fe3b79c0459aa14ed85bed034d2acd8ad",
+  "revocation_signature_sha256": "76c614d4161da1d0b5b9ef5126f09607d832fa05fcf58a7c2ef4f3dea1e35fe1",
+  "schema": "ARDREC-R117-F5B-PHYSICAL-CLOSURE-v3",
+  "transaction": ".r117-f5b-transaction-0b2710219c326fd7014fda3c",
+  "transaction_complete_sha256": "cd0bc80ec5a690dcde604326a67f6214ded99bfab4470e5c185a97cb981ea22f"
+}

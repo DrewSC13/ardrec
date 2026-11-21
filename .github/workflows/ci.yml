@@ -1017,6 +1017,57 @@ jobs:
           print('CI_R117_F5DG=PASS_15_SOURCE_ONLY_NO_GO',flush=True)
           PYTEST
 
+      - name: R117 F5B V3 reproducible source-only tests
+        run: |
+          # F5B requires private transaction directories.
+          umask 077
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYTEST'
+          import unittest
+          from r117_v3_candidate_fixture import candidate_bytes
+
+          candidate_bytes()
+
+          groups = (
+              ("test_r117_f5b_v3_real_candidate_transaction.py", 6),
+              ("test_r117_f5b_release_executor_v3.py", 8),
+              ("test_r117_f5b_authorities_v3.py", 6),
+              ("test_r117_f5b_release_executor_v2.py", 10),
+          )
+
+          total = 0
+
+          for pattern, expected in groups:
+              suite = unittest.defaultTestLoader.discover(
+                  "lab/tests", pattern=pattern
+              )
+
+              if suite.countTestCases() != expected:
+                  raise SystemExit(
+                      "CI_R117_V3_DISCOVERY_DRIFT_" + pattern
+                  )
+
+              result = unittest.TextTestRunner(
+                  verbosity=1
+              ).run(suite)
+
+              if (
+                  not result.wasSuccessful()
+                  or result.skipped
+                  or result.testsRun != expected
+              ):
+                  raise SystemExit(
+                      "CI_R117_V3_TEST_FAILURE_" + pattern
+                  )
+
+              total += result.testsRun
+
+          if total != 30:
+              raise SystemExit("CI_R117_V3_TEST_COUNT_DRIFT")
+
+          print("CI_R117_F5B_V3=PASS_30_NO_HOST_WRITES")
+          print("CI_R117_P8=NO-GO")
+          PYTEST
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04

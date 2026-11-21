@@ -592,8 +592,23 @@ def _publish_activation(txn, token, head, candidate_raw,
 
     return digest(document_raw)
 
+def _checkpoint(callback, point):
+    """Fault-injection hook; never grants installation authority."""
+    if callback is not None:
+        callback(point)
+
+
 def apply(archive):
     need(False, 'F5B_APPLY_BLOCKED_PENDING_ATOMIC_RELEASE_AND_BOOT_GATE')
+    return _install_authorized(archive)
+
+
+def _install_authorized(archive, *, checkpoint=None):
+    """Internal transaction path, not a privileged CLI entrypoint.
+
+    Must only be enabled by a future independently authenticated
+    root bootstrap, after positive host-level acceptance tests.
+    """
     head = root_head()
     builder = load_builder(BUILDER)
 
@@ -673,6 +688,7 @@ def apply(archive):
             b"PREPARED_NOT_PUBLISHED\n"
         )
         sync_dir(txn)
+        _checkpoint(checkpoint, "PREPARED")
 
         stage_state_check = (
             not PILOT.exists() and
@@ -684,6 +700,7 @@ def apply(archive):
         # Two atomic publications; interruptions remain fail closed.
         os.rename(txn / "pilot", PILOT)
         sync_dir(ROOT)
+        _checkpoint(checkpoint, "PILOT_PUBLISHED")
 
         write_once(
             txn / "pilot-visible.once",
@@ -693,6 +710,7 @@ def apply(archive):
 
         os.rename(txn / "release", RELEASE)
         sync_dir(ROOT)
+        _checkpoint(checkpoint, "RELEASE_PUBLISHED")
 
         write_once(
             txn / "release-visible.once",
@@ -722,10 +740,12 @@ def apply(archive):
         )
         sync_dir(txn)
         sync_dir(ROOT)
+        _checkpoint(checkpoint, "COMPLETION_DURABLE")
 
         activation_sha = _publish_activation(
             txn, token, head, expected, approval_raw, checked
         )
+        _checkpoint(checkpoint, "ACTIVATION_PUBLISHED")
 
         print("R117_F5B_ACTIVATION_SHA256=" + activation_sha)
         print("R117_F5B_ROOT_INSTALL=PASS_ATTESTED_SOURCE_ONLY")
