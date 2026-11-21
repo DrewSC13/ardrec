@@ -937,6 +937,22 @@ jobs:
           print('CI_R117_F5D_A=PASS_17_CRYPTO_SOURCE_ONLY_NO_GO',flush=True)
           PYTEST
 
+
+      - name: R117 F5D-B integración FD cierre y Ed25519 / Integrated attestation
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B scripts/ardrec_p14_r117_f5d_b_integrated_attestation.py --offline
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYTEST'
+          import unittest
+          suite=unittest.defaultTestLoader.discover('lab/tests',pattern='test_p14_r117_f5d_b_integrated_attestation.py')
+          count=suite.countTestCases()
+          print('CI_R117_F5D_B_DISCOVERED='+str(count),flush=True)
+          if count!=20:raise SystemExit('CI_R117_F5D_B_DISCOVERY_DRIFT')
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped or result.testsRun!=20:
+              raise SystemExit('CI_R117_F5D_B_FAILED_OR_SKIPPED')
+          print('CI_R117_F5D_B=PASS_20_SOURCE_ONLY_NO_GO',flush=True)
+          PYTEST
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
