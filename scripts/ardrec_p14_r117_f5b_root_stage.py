@@ -31,6 +31,8 @@ BASE = "2c32f872602f40f5f29f34bfd3316b16fc42eaa4"
 ROOT = Path("/var/lib/ardrec")
 PILOT = ROOT / "r117-f4-ftp-pilot-root-v1"
 RELEASE = ROOT / "r117-f4-boot-release-v1"
+ACTIVATION = ROOT / "r117-f5b-activation-v1.json"
+ACTIVATION_SCHEMA = "ARDREC-R117-F5B-ACTIVATION-v1"
 AGENT = ROOT / "r117-f5b-root-agent-v1"
 INSTALLER = AGENT / "installer.py"
 BUILDER = AGENT / "candidate.py"
@@ -441,6 +443,8 @@ def stage_payload(folder, mapping):
     sync_dir(folder)
 
 def stage_state():
+    need(not ACTIVATION.exists() and not ACTIVATION.is_symlink(),
+         "ROOT_ACTIVATION_ALREADY_PRESENT")
     need(not PILOT.exists() and not PILOT.is_symlink(),
          "ROOT_PILOT_ALREADY_PRESENT")
     need(not RELEASE.exists() and not RELEASE.is_symlink(),
@@ -501,6 +505,92 @@ def installed_audit(builder, head, approval_sha=None):
         "p8": "NO-GO",
         "traffic_authorized": False,
     }
+
+
+def _publish_activation(txn, token, head, candidate_raw,
+                        approval_raw, checked):
+    """Publish only after a complete, durable source-only transaction.
+
+    The installer caller must hold the existing exclusive F5B lock.
+    No boot or network permission is granted.
+    """
+    need(
+        txn.parent == ROOT
+        and txn.name == ".r117-f5b-transaction-" + token
+        and re.fullmatch("[0-9a-f]{24}", token) is not None,
+        "ACTIVATION_TRANSACTION_ID_INVALID",
+    )
+
+    complete_raw = root_file(txn / "complete.json", limit=8192)
+    complete = document(complete_raw)
+
+    need(
+        complete.get("schema") == "ARDREC-R117-F5B-COMPLETE-v1"
+        and complete.get("head") == head
+        and complete.get("approved_install") is True
+        and complete.get("boot_permit_issued") is False
+        and complete.get("vm_starts") == 0
+        and type(complete.get("vm_starts")) is int
+        and complete.get("network_connections") == 0
+        and type(complete.get("network_connections")) is int
+        and complete.get("p8") == "NO-GO"
+        and complete.get("pilot_manifest_sha256") ==
+            checked["pilot_manifest_sha256"]
+        and complete.get("receipt_sha256") ==
+            checked["release_receipt_sha256"],
+        "ACTIVATION_COMPLETION_NOT_AUTHENTIC",
+    )
+
+    verified_approval, _, _ = signed_approval(
+        head, digest(candidate_raw)
+    )
+    need(
+        verified_approval == approval_raw,
+        "ACTIVATION_APPROVAL_CHANGED",
+    )
+
+    document_raw = canonical({
+        "schema": ACTIVATION_SCHEMA,
+        "head": head,
+        "transaction": txn.name,
+        "candidate_sha256": digest(candidate_raw),
+        "approval_sha256": digest(approval_raw),
+        "pilot_manifest_sha256":
+            checked["pilot_manifest_sha256"],
+        "receipt_sha256":
+            checked["release_receipt_sha256"],
+        "complete_sha256": digest(complete_raw),
+        "boot_authorized": False,
+        "network_authorized": False,
+        "p8": "NO-GO",
+    })
+
+    need(
+        not ACTIVATION.exists() and not ACTIVATION.is_symlink(),
+        "ACTIVATION_ALREADY_PUBLISHED",
+    )
+
+    pending = ROOT / (
+        ".r117-f5b-activation-pending-" + token
+    )
+
+    write_once(pending, document_raw)
+    sync_dir(ROOT)
+
+    need(
+        not ACTIVATION.exists() and not ACTIVATION.is_symlink(),
+        "ACTIVATION_CHANGED_BEFORE_PUBLISH",
+    )
+
+    os.rename(pending, ACTIVATION)
+    sync_dir(ROOT)
+
+    need(
+        root_file(ACTIVATION, limit=8192) == document_raw,
+        "ACTIVATION_FINAL_BYTES_CHANGED",
+    )
+
+    return digest(document_raw)
 
 def apply(archive):
     need(False, 'F5B_APPLY_BLOCKED_PENDING_ATOMIC_RELEASE_AND_BOOT_GATE')
@@ -633,6 +723,11 @@ def apply(archive):
         sync_dir(txn)
         sync_dir(ROOT)
 
+        activation_sha = _publish_activation(
+            txn, token, head, expected, approval_raw, checked
+        )
+
+        print("R117_F5B_ACTIVATION_SHA256=" + activation_sha)
         print("R117_F5B_ROOT_INSTALL=PASS_ATTESTED_SOURCE_ONLY")
         print("R117_F5B_TRANSACTION=" + str(txn))
         print("R117_F5B_HEAD=" + head)
