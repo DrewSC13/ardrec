@@ -1130,6 +1130,18 @@ jobs:
           if not result.wasSuccessful(): raise SystemExit('R122_FAILED')
           PYCI
 
+      - name: R123 FTP-T01 / contrato de supervisión monotónica DENY (sin ejecución)
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYCI'
+          import unittest
+          suite=unittest.defaultTestLoader.discover('lab/tests', pattern='test_p14_r123*.py')
+          count=suite.countTestCases()
+          print('R123_DISCOVERED='+str(count),flush=True)
+          if count < 65: raise SystemExit('R123_DISCOVERY_INSUFFICIENT')
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful(): raise SystemExit('R123_FAILED')
+          PYCI
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
