@@ -82,12 +82,8 @@ def require_attested_release(head,*,repo=REPO,reader=root_bytes):
 # R117: historical approval + fresh independent nonrevocation.
 # Source-only verification; boot and network remain prohibited.
 
-APPROVAL_PIN=(
-    '9c6753b9a439de6eb4a17ae87fe5a09b95816461f93a76a100b4e7b2c4843389'
-)
-REVOCATION_PIN=(
-    'db3ac74dc6121d894b63cac0c55fec8405f281147df03c34d148d71c030dc828'
-)
+APPROVAL_PIN='304c3409f9d074f2ab68881622de9129ab41ee1e1652e8a0ee102211637159d8'
+REVOCATION_PIN='4c32a558cf5b4c6032234ee91a457f203a8dd3472141a29906d6fb0b775a3509'
 
 REVOCATION=Path(
     '/etc/ardrec/r117-f5b-release-revocation-v1.json'
@@ -95,9 +91,7 @@ REVOCATION=Path(
 REVOCATION_SIG=Path(
     '/etc/ardrec/r117-f5b-release-revocation-v1.sig'
 )
-REVOCATION_TRUST=Path(
-    '/etc/ardrec/r117-authorities-v1/revocation-public.pem'
-)
+REVOCATION_TRUST=Path('/etc/ardrec/r117-authorities-v3/revocation-public.pem')
 
 REVOCATION_SCHEMA=(
     'ARDREC-R117-F5D-ROOT-RELEASE-REVOCATION-v1'
@@ -170,7 +164,7 @@ ACTIVATION=ROOT/'r117-f5b-activation-v1.json'
 ACTIVATION_SCHEMA='ARDREC-R117-F5B-ACTIVATION-v1'
 APPROVAL=RECEIPT.parent/'approval.json'
 APPROVAL_SIG=RECEIPT.parent/'approval.sig'
-TRUST=Path('/etc/ardrec/r117-f5b-release-trust-v1.pem')
+TRUST=Path('/etc/ardrec/r117-authorities-v3/approval-public.pem')
 PREFIX=b'ARDREC-R117-F5B-ROOT-RELEASE-APPROVAL-v1\x00'
 TXN_NAME=re.compile(r'\.r117-f5b-transaction-[0-9a-f]{24}\Z')
 MARKERS={
