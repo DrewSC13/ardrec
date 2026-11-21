@@ -1106,6 +1106,18 @@ jobs:
           if not result.wasSuccessful(): raise SystemExit('R120_FAILED')
           PYCI
 
+      - name: R121 expediente FTP-T01 F13-F14 A6 A7 A8 A10 / FTP case-chain replay
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYCI'
+          import unittest
+          suite=unittest.defaultTestLoader.discover('lab/tests', pattern='test_p14_r121*.py')
+          count=suite.countTestCases()
+          print('R121_DISCOVERED='+str(count),flush=True)
+          if count < 46: raise SystemExit('R121_DISCOVERY_INSUFFICIENT')
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful(): raise SystemExit('R121_FAILED')
+          PYCI
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
