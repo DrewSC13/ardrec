@@ -1082,6 +1082,18 @@ jobs:
               raise SystemExit('R118_TESTS_FAIL')
           PY
 
+      - name: R119 TUI real READONLY / Test host capture binding without dispatch
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYCI'
+          import unittest
+          suite=unittest.defaultTestLoader.discover('lab/tests', pattern='test_p14_r119*.py')
+          count=suite.countTestCases()
+          print('R119_DISCOVERED='+str(count),flush=True)
+          if count < 28: raise SystemExit('R119_DISCOVERY_INSUFFICIENT')
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful(): raise SystemExit('R119_FAILED')
+          PYCI
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04

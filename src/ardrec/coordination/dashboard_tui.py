@@ -154,6 +154,12 @@ def validate_dashboard_report(report: dict[str, Any]) -> None:
                     k: v for k, v in report.items() if k != 'sha256'
                 }))):
             raise DashboardError('invalid_durable_view_binding')
+    if 'r119_live' in report or report.get('schema') == 'ARDREC-R119-LIVE-READONLY-A1-A10-VIEW-v1':
+        try:
+            from ardrec.coordination.r119_live_inspection import verify_view
+            verify_view(report)
+        except (ValueError, TypeError, KeyError) as exc:
+            raise DashboardError('invalid_r119_live_source') from exc
     if 'a6_import' in report:
         imp = report['a6_import']
         if (type(imp) is not dict or imp.get('admission') != 'ACCEPTED_FOR_DOCUMENTARY_REVIEW' or
@@ -264,6 +270,62 @@ def detail_rows(report: dict[str, Any], selected: int) -> list[str]:
     stage = report['a10']['stages'][selected]
     out = [f"{stage['algorithm']} / {stage['status']}",
            f"ORIGEN: {stage['source']}", stage['detail'], '']
+    if 'r119_live' in report:
+        d = report['r119_live']
+        host = d['host']
+        if selected == 0:
+            out += ['A1: NO HAY EVALUACION AUTORIZADA DE REGLAS OPERATIVAS',
+                    'Sin falsear condiciones ni generar valores ND=TRUE']
+        elif selected == 1:
+            out += ['F5B HISTORICA / SOLO SOURCE',
+                    'CIERRE: ' + d['source']['closure_sha256'],
+                    'CANDIDATO: ' + d['source']['candidate_sha256'],
+                    'INSTALACION VIGENTE: NO CERTIFICADA POR ESTA LECTURA']
+        elif selected == 2:
+            out += ['R115-F5 ESTADO REAL CAPTURADO: ' + host['lifecycle_stage'],
+                    'NFT: ' + host['nft'], 'HELPER: ' + host['helper'],
+                    'F11 HOOK: ' + host['f11_hook'],
+                    'A3: ' + _flat(host['a3'])]
+            for role in sorted(host['states']):
+                out += [role.upper() + ': ' + host['states'][role] +
+                        ' / VMDEF ' + host['vm_definitions'][role]]
+            for binding in sorted(host['bindings']):
+                out += [binding + ': ' + host['bindings'][binding]]
+        elif selected == 3:
+            out += ['A4: SIN ELECCION OPERACIONAL; NO HAY P8 GO',
+                    'No selecciona una familia ni consume presupuesto']
+        elif selected == 4:
+            case = d['a5']
+            if case is None:
+                out += ['SIN DIARIO A5 SELECCIONADO',
+                        'Ningun intento fisico se ejecuta desde esta vista']
+            else:
+                out += ['CASO: ' + case['case_id'],
+                        'ESTADO DIARIO: ' + case['journal_status'],
+                        'RESULTADO CANDIDATO: ' + case['candidate_outcome'],
+                        'PROCEDENCIA FISICA: NO ACREDITADA',
+                        'RESERVA SHA: ' + case['source_reservation_sha256']]
+        elif selected == 5:
+            out += ['A6: ND / NO SE ADMITEN SOPORTES TECNICOS',
+                    'El hash y el banner FTP no acreditan origen fisico']
+        elif selected == 6:
+            out += ['A7: RIESGO FINAL NO CALCULADO',
+                    'Ningun Rf confirmado deriva de la captura']
+        elif selected == 7:
+            out += ['A8: SIN TRANSICION APLICADA',
+                    'Los estados de VM no son estados de observacion ARDREC']
+        elif selected == 8:
+            out += ['A9: NINGUNA GENERACION NUEVA PUBLICADA',
+                    'La vista no escribe el estado global confirmado']
+        else:
+            out += ['FUENTE: ' + d['replay_mode'],
+                    'CAPTURA: ' + d['captured_at_utc'],
+                    'FRESCA EN INSTANTE DE CAPTURA: ' + str(d['captured_fresh_for_display']),
+                    'CAPTURA SHA: ' + d['capture_sha256'],
+                    'NO ES UNA AUTORIZACION OPERACIONAL',
+                    'BLOQUEOS:']
+            out += [' - ' + x for x in d['blockers']]
+        return out
     if 'r71_shadow' in report:
         d = report['r71_shadow']
         if selected == 0:
@@ -426,6 +488,22 @@ def detail_rows(report: dict[str, Any], selected: int) -> list[str]:
 
 def summary_rows(report: dict[str, Any]) -> list[str]:
     validate_dashboard_report(report)
+    if 'r119_live' in report:
+        d = report['r119_live']
+        host = d['host']
+        return ['FUENTE: R119 CAPTURA REAL',
+                'MODO: ' + d['replay_mode'],
+                'P8: NO-GO', 'DESPACHO: NO', 'RF FINAL: ND',
+                'FRESCURA: ' + ('CAPTURA RECIENTE' if d['captured_fresh_for_display'] else 'REPLAY/NO FRESCA'),
+                'VM RUNNER: ' + host['states']['runner'],
+                'VM SSH: ' + host['states']['ssh'],
+                'VM FTP: ' + host['states']['ftp'],
+                'VM SMB: ' + host['states']['smb'],
+                'F11/R34: ' + host['nft'],
+                'A5: ' + ('CANDIDATO' if d['a5'] is not None else 'NO SELECCIONADO'),
+                'A6: ND', 'A9: SIN GENERACION',
+                'BLOQUEOS: ' + str(len(d['blockers'])),
+                'CAPTURA SHA:', '  ' + _short(d['capture_sha256'], 20)]
     if 'r71_shadow' in report:
         d = report['r71_shadow']
         return ['SESION: ' + report['session_id'],
@@ -527,7 +605,8 @@ def render_dashboard_frame(report: dict[str, Any], state: DashboardState,
     width = max(24, min(int(width), 240))
     height = max(6, min(int(height), 100))
     active = report['a10']['stages'][state.selected]
-    title = ' ARDREC / MONITOR  ' + report['session_id'] + '  [DESARROLLO]'
+    title = (' ARDREC / MONITOR  ' + report['session_id'] +
+             ('  [HOST REAL / SOLO LECTURA]' if 'r119_live' in report else '  [DESARROLLO]'))
     if 'r71_shadow' in report:
         title += '  [R71 SOMBRA BENIGNA]'
     if 'r70_safe' in report:
@@ -537,6 +616,11 @@ def render_dashboard_frame(report: dict[str, Any], state: DashboardState,
     flags = (' P8:NO-GO  DESPACHO:NO  RF:ND  VM:NO  '
              + ('A6:DOCUMENTAL' if 'a6_import' in report else 'A6:SIN IMPORTAR')
              + f"  VISTA:{active['algorithm']}")
+    if 'r119_live' in report:
+        mode = report['r119_live']
+        flags = (' P8:NO-GO  DESPACHO:NO  RF:ND  VM:CAPTURA REAL ' +
+                 ('REPLAY HISTORICO' if not mode['captured_fresh_for_display'] else 'LECTURA RECIENTE') +
+                 f"  VISTA:{active['algorithm']}")
     top = [_fit(title, width), _fit(flags, width), '-' * width]
     if height < 12 or width < 46:
         warnings = ['Terminal pequena: ampliar a >=46 columnas y >=12 filas.',
@@ -587,7 +671,8 @@ def render_dashboard_frame(report: dict[str, Any], state: DashboardState,
         nav = _panel(f'{focus} ALGORITMOS', entries, nav_width, panel_height)
         details = detail_rows(report, state.selected)
         if state.show_summary:
-            details = ['ESTADO: P8 NO-GO / RF ND / VM NO', ''] + details
+            details = [('ESTADO: P8 NO-GO / RF ND / VM CAPTURADAS' if 'r119_live' in report
+                        else 'ESTADO: P8 NO-GO / RF ND / VM NO'), ''] + details
         det = _panel(f'{active["algorithm"]} / DETALLE',
                      _wrapped(details, detail_width - 4),
                      detail_width, panel_height, state.scroll)
