@@ -1000,6 +1000,23 @@ jobs:
           print('CI_R117_F5DF=PASS_13_FAIL_CLOSED_SOURCE_ONLY',flush=True)
           PYTEST
 
+
+      - name: R117 F5D-G activacion atomica / Atomic source release gate
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYTEST'
+          import unittest
+          suite=unittest.defaultTestLoader.discover(
+              'lab/tests',pattern='test_p14_r117_f5dg_activation.py')
+          count=suite.countTestCases()
+          print('CI_R117_F5DG_DISCOVERED='+str(count),flush=True)
+          if count!=15:
+              raise SystemExit('CI_R117_F5DG_DISCOVERY_DRIFT')
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped or result.testsRun!=15:
+              raise SystemExit('CI_R117_F5DG_TEST_FAILURE_OR_SKIP')
+          print('CI_R117_F5DG=PASS_15_SOURCE_ONLY_NO_GO',flush=True)
+          PYTEST
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04

@@ -72,6 +72,8 @@ def require_attested_release(head,*,repo=REPO,reader=root_bytes):
 # F5D-F: F4 recognizes only a fully closed, cryptographically approved
 # release. A receipt alone is NEVER sufficient for release acceptance.
 ROOT=Path('/var/lib/ardrec')
+ACTIVATION=ROOT/'r117-f5b-activation-v1.json'
+ACTIVATION_SCHEMA='ARDREC-R117-F5B-ACTIVATION-v1'
 APPROVAL=RECEIPT.parent/'approval.json'
 APPROVAL_SIG=RECEIPT.parent/'approval.sig'
 TRUST=Path('/etc/ardrec/r117-f5b-release-trust-v1.pem')
@@ -148,6 +150,43 @@ def _utc(value):
     except ValueError as exc:
         raise Stop('RELEASE_APPROVAL_TIME_INVALID') from exc
 
+
+def _verify_activation(raw, head, txn_name, intent, complete,
+                       receipt_raw, pilot_raw, approval_raw, complete_raw):
+    """Recognize only an exact source-only activation.
+
+    This validates release metadata; it never grants boot, traffic
+    or broader execution authority.
+    """
+    activation=_strict_document(raw)
+    need(set(activation)=={
+        'schema','head','transaction','candidate_sha256',
+        'approval_sha256','pilot_manifest_sha256','receipt_sha256',
+        'complete_sha256','boot_authorized','network_authorized','p8'
+    },'ACTIVATION_FIELDS_INVALID')
+    need(
+        activation['schema']==ACTIVATION_SCHEMA
+        and activation['head']==head
+        and activation['transaction']==txn_name
+        and TXN_NAME.fullmatch(activation['transaction']) is not None
+        and activation['candidate_sha256']==intent['candidate_sha256']
+        and activation['approval_sha256']==digest(approval_raw)
+        and activation['pilot_manifest_sha256']==digest(pilot_raw)
+        and activation['receipt_sha256']==digest(receipt_raw)
+        and activation['complete_sha256']==digest(complete_raw)
+        and activation['boot_authorized'] is False
+        and activation['network_authorized'] is False
+        and activation['p8']=='NO-GO',
+        'ACTIVATION_NOT_BOUND_TO_CLOSED_RELEASE'
+    )
+    need(
+        complete['pilot_manifest_sha256']==activation['pilot_manifest_sha256']
+        and complete['receipt_sha256']==activation['receipt_sha256']
+        and intent['approval_sha256']==activation['approval_sha256'],
+        'ACTIVATION_JOURNAL_BINDING_INVALID'
+    )
+    return activation
+
 def _closed_transaction(head, receipt_raw, pilot_raw, reader):
     """Reject incomplete F5B journals before any F4 release acceptance.
 
@@ -172,7 +211,8 @@ def _closed_transaction(head, receipt_raw, pilot_raw, reader):
              'RELEASE_TRANSACTION_MARKER_INVALID_'+marker)
 
     intent=_strict_document(reader(txn/'intent.json'))
-    complete=_strict_document(reader(txn/'complete.json'))
+    complete_raw=reader(txn/'complete.json')
+    complete=_strict_document(complete_raw)
     approval_raw=reader(APPROVAL)
     approval=_strict_document(approval_raw)
     signature=reader(APPROVAL_SIG)
@@ -219,4 +259,6 @@ def _closed_transaction(head, receipt_raw, pilot_raw, reader):
          'RELEASE_APPROVAL_EXPIRED_OR_FUTURE')
     trust=reader(TRUST)
     _ed25519_verify(trust,signature,PREFIX+approval_raw)
+    _verify_activation(reader(ACTIVATION),head,name,intent,complete,
+                       receipt_raw,pilot_raw,approval_raw,complete_raw)
     return True
