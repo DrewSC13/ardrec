@@ -1,0 +1,23 @@
+{
+  "a6": "ND",
+  "base": "ecaa563735e8fc5a92c8d9e2a2d08c408658ff3c",
+  "branch": "feat/p14-r117-piloto-real-a5-a10",
+  "deny_first_unchanged": true,
+  "git_signed_current_head_required": true,
+  "historical_f3_lock_sha256": "eb6e1dc56576fe59d973eb76b6b563d0baf44cdabcd06d5857f908ee345ca53d",
+  "independent_scope_boot_revocation_required": true,
+  "network_traffic": false,
+  "one_attempt_per_role": true,
+  "p8": "NO-GO",
+  "pilot": "DRAFT",
+  "r116_merge": "fdb6efa0c297ce18b28cddb9494514f51d88bdb4",
+  "root_f3_immutable_source_count": 33,
+  "root_release": "NOT_INSTALLED",
+  "schema": "ARDREC-R117-F4-VERSIONED-BOOT-DISPATCH-v1",
+  "source_sha256": {
+    "src/ardrec/coordination/r117_f4_controlled_boot.py": "c2ce710d2011d74951ec3ddae907d7a2e1e7f27ba09d521d781b0d7a565b43a6",
+    "src/ardrec/coordination/r117_f4_root_release.py": "9f992444d2af56fc120556e75cfbe94a9711851c91581eada8d8a4a12df7cd73",
+    "src/ardrec/coordination/r117_f4_runner_ftp_boot.py": "aed659d2a0246cfeb3808388ad776cf8706abbc73562ef0271d8b614069c337e"
+  },
+  "vm_starts_during_install": 0
+}

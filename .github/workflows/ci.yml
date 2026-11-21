@@ -858,6 +858,21 @@ jobs:
           print('CI_R117_F3=PASS_30_SIGNED_SOURCE_NO_BOOT',flush=True)
           PY
 
+      - name: R117 F4 despachador versionado SSH runner FTP sin inicio / Test F4 safe source release
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B scripts/ardrec_p14_r117_f4_dispatch_audit.py --offline
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PY'
+          import unittest
+          suite=unittest.defaultTestLoader.discover('lab/tests',pattern='test_p14_r117_f4_versioned_dispatch.py')
+          n=suite.countTestCases()
+          print('CI_R117_F4_DISCOVERED='+str(n),flush=True)
+          if n!=40:raise SystemExit('CI_R117_F4_DISCOVERY_DRIFT')
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped or result.testsRun!=40:
+              raise SystemExit('CI_R117_F4_TEST_FAILURE_OR_SKIP')
+          print('CI_R117_F4=PASS_40_NO_ROOT_NO_BOOT_NO_NETWORK',flush=True)
+          PY
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
