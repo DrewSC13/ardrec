@@ -1142,6 +1142,18 @@ jobs:
           if not result.wasSuccessful(): raise SystemExit('R123_FAILED')
           PYCI
 
+      - name: R124 FTP-T01 / verificación del guardián raíz instalado (sólo lectura)
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYCI'
+          import unittest
+          suite=unittest.defaultTestLoader.discover('lab/tests', pattern='test_p14_r124*.py')
+          count=suite.countTestCases()
+          print('R124_DISCOVERED='+str(count),flush=True)
+          if count < 50: raise SystemExit('R124_DISCOVERY_INSUFFICIENT')
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful(): raise SystemExit('R124_FAILED')
+          PYCI
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
