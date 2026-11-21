@@ -969,6 +969,22 @@ jobs:
           print('CI_R117_F5D_C=PASS_17_SOURCE_ONLY_NO_GO',flush=True)
           PYTEST
 
+
+      - name: R117 F5D-D bootstrap firmado / Signed bootstrap policy tests
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B scripts/ardrec_p14_r117_f5d_d_bootstrap_contract.py --offline
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYTEST'
+          import unittest
+          suite=unittest.defaultTestLoader.discover('lab/tests',pattern='test_p14_r117_f5d_d_bootstrap_contract.py')
+          count=suite.countTestCases()
+          print('CI_R117_F5D_D_DISCOVERED='+str(count),flush=True)
+          if count!=19:raise SystemExit('CI_R117_F5D_D_DISCOVERY_DRIFT')
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped or result.testsRun!=19:
+              raise SystemExit('CI_R117_F5D_D_FAILED_OR_SKIPPED')
+          print('CI_R117_F5D_D=PASS_19_SOURCE_ONLY_NO_GO',flush=True)
+          PYTEST
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
