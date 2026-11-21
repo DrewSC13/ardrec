@@ -7,6 +7,7 @@ from datetime import datetime, timedelta, timezone
 from io import BytesIO
 from pathlib import Path
 import hashlib
+import os
 import subprocess
 import tempfile
 import unittest
@@ -102,6 +103,11 @@ class V3CandidateTransactionTests(unittest.TestCase):
             cls.keys_folder.cleanup()
 
     def setUp(self):
+        # Transaction directories must be private (0700).
+        # Restore the runner's original umask after each test.
+        previous_umask = os.umask(0o077)
+        self.addCleanup(os.umask, previous_umask)
+
         self.folder = tempfile.TemporaryDirectory(
             prefix="ardrec-r117-v3-transaction-"
         )

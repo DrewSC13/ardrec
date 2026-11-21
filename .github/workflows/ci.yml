@@ -1019,6 +1019,8 @@ jobs:
 
       - name: R117 F5B V3 reproducible source-only tests
         run: |
+          # F5B requires private transaction directories.
+          umask 077
           PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYTEST'
           import unittest
           from r117_v3_candidate_fixture import candidate_bytes
