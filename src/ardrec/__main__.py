@@ -13,6 +13,10 @@ from ardrec.benign_pipeline import VerificationError, GateError
 
 
 def main(argv=None) -> int:
+    argv = sys.argv[1:] if argv is None else list(argv)
+    if argv and argv[0] == 'live':
+        from ardrec.coordination.r119_live_inspection import main as live_main
+        return live_main(argv[1:])
     ap = argparse.ArgumentParser(description='ARDREC / sesion DEV durable R69')
     ap.add_argument('--durable-dev-root', type=Path, required=True,
                     help='directorio privado absoluto para sesion sintética')
