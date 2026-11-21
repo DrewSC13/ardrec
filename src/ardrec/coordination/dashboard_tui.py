@@ -32,6 +32,10 @@ class DashboardState:
     filter_mode: str = 'ALL'  # ALL / PENDING
     focus: str = 'STAGES'  # STAGES / DETAIL / SUMMARY
     scroll: int = 0
+    # R120: segunda dimensión local de navegación, independiente de las etapas.
+    view_mode: str = 'ALGORITHMS'  # ALGORITHMS / SERVICES
+    service_selected: int = 0  # SSH / FTP / SMB
+    family_selected: int = 0   # 0..7/8 en el catálogo fijado
 
 
 def validate_dashboard_report(report: dict[str, Any]) -> None:
@@ -206,6 +210,116 @@ def _navigate_visible(report: dict[str, Any], state: DashboardState, delta: int)
     return replace(state, selected=vis[(index + delta) % len(vis)], scroll=0)
 
 
+SERVICE_ORDER = ('ssh', 'ftp', 'smb')
+
+
+def _services_enabled(report: dict[str, Any]) -> bool:
+    return ('r119_live' in report and
+            type(report['r119_live'].get('catalog')) is dict)
+
+
+def _service_navigation(report: dict[str, Any], state: DashboardState, key: str) -> DashboardState:
+    if key in ('UP', 'k', 'DOWN', 'j'):
+        if state.focus == 'DETAIL':
+            delta = -1 if key in ('UP', 'k') else 1
+            return replace(state, scroll=max(0, state.scroll + delta))
+        delta = -1 if key in ('UP', 'k') else 1
+        return replace(state, service_selected=(state.service_selected + delta) % 3,
+                       family_selected=0, scroll=0)
+    if key in ('1', '2', '3'):
+        return replace(state, service_selected=int(key)-1, family_selected=0, scroll=0)
+    if key in ('LEFT', 'h', 'p', '[', 'RIGHT', 'l', 'n', ']'):
+        service = SERVICE_ORDER[state.service_selected]
+        count = len(report['r119_live']['catalog']['families'][service])
+        delta = -1 if key in ('LEFT', 'h', 'p', '[') else 1
+        return replace(state, family_selected=(state.family_selected+delta) % count,
+                       scroll=0)
+    if key in ('F2', 'c'):
+        return replace(state, compact=not state.compact, scroll=0)
+    if key in ('F5', 's'):
+        return replace(state, show_summary=not state.show_summary)
+    if key == 'TAB':
+        focuses = ('STAGES', 'DETAIL', 'SUMMARY')
+        return replace(state, focus=focuses[(focuses.index(state.focus) + 1) % 3])
+    if key == 'd':
+        return replace(state, compact=False, show_summary=False, focus='DETAIL')
+    if key in ('g', 'G'):
+        return replace(state, family_selected=0 if key == 'g' else
+                       len(report['r119_live']['catalog']['families'][SERVICE_ORDER[state.service_selected]])-1,
+                       scroll=0)
+    return state
+
+
+def _service_page(report: dict[str, Any], state: DashboardState) -> tuple[list[str], list[str], list[str], str]:
+    """Sólo deriva textos de la captura F5 y el catálogo P7 inmutable."""
+    data = report['r119_live']
+    host = data['host']
+    catalog = data['catalog']
+    service = SERVICE_ORDER[state.service_selected]
+    families = catalog['families'][service]
+    family = families[state.family_selected]
+    entries = []
+    for i, name in enumerate(SERVICE_ORDER):
+        entries.append(('>' if i == state.service_selected else ' ') +
+                       f' {name.upper():3} [{host["states"][name]}] ' +
+                       str(len(catalog['families'][name])) + ' familias')
+    entries += ['  ---------------------------',
+                '  FAMILIAS ' + service.upper() + ' / P7 DRAFT']
+    for i, item in enumerate(families):
+        marker = '>' if i == state.family_selected else ' '
+        entries.append(f'{marker} ' + item['id'] + ' ' + _short(item['condition_es'], 16))
+    binding = host['bindings'][service]
+    runner_binding = host['bindings']['runner_'+service]
+    detail = [
+        f'SERVICIO: {service.upper()} / VM {host["states"][service]}',
+        'DEFINICION VM: ' + host['vm_definitions'][service],
+        'INTERFAZ: ' + binding,
+        'INTERFAZ RUNNER: ' + runner_binding,
+        'RUNNER: ' + host['states']['runner'],
+        'AISLAMIENTO NFT: ' + host['nft'],
+        'F11: ' + host['f11_hook'],
+        '',
+        f'FAMILIA {state.family_selected+1}/{len(families)}: {family["id"]}',
+        'TABLA TESIS: ' + family['source_table'],
+        'CONDICION: ' + family['condition_es'],
+        'ACCION MINIMA (DOCUMENTAL): ' + family['minimum_action_es'],
+        'LIMITE INTERPRETATIVO: ' + family['interpretation_boundary_es'],
+        '',
+        'PRECONDICIONES DECLARADAS:',
+        *[' - '+val for val in family['preconditions']],
+        'SOPORTES REQUERIDOS:',
+        *[' - '+val for val in family['required_supports']],
+        '',
+        'P7: DRAFT / NO CALIBRADO / NO EJECUTABLE',
+        'A1: SIN AUTORIZACION ACTUAL PARA EL SERVICIO',
+        'A4: SIN ELECCION / A5: SIN DESPACHO R120',
+        'A6: ND / A7: RF ND / A9: NO PUBLICADO',
+    ]
+    a5 = data['a5']
+    if a5 is not None and service == 'ftp':
+        detail += ['', 'DIARIO FTP EXISTENTE (SOLO CANDIDATO):',
+                   'CASO: ' + a5['case_id'],
+                   'FAMILIA: ' + a5['family_id'],
+                   'ESTADO: ' + a5['journal_status'],
+                   'PROCEDENCIA FISICA: NO ACREDITADA']
+    summary = ['VISTA: SERVICIOS',
+               'SERVICIO: ' + service.upper(),
+               'VM: ' + host['states'][service],
+               'FAMILIAS P7: ' + str(len(families)),
+               'ELEGIDA: ' + family['id'],
+               'CATALOGO: DRAFT',
+               'EJECUTABLE: NO',
+               'P8: NO-GO',
+               'DESPACHO: NO',
+               'A6: ND', 'RF: ND',
+               'A9: SIN GENERACION',
+               'MODO: REPLAY/NO FRESCO' if not data['captured_fresh_for_display']
+               else 'MODO: CAPTURA RECIENTE',
+               'SHA CATALOGO:',
+               '  '+_short(catalog['sha256'], 20)]
+    return entries, detail, summary, family['id']
+
+
 def handle_key(report: dict[str, Any], state: DashboardState, key: str) -> DashboardState:
     """Reductor puro: ninguna tecla ejecuta A1-A10, red, escritura o despacho."""
     validate_dashboard_report(report)
@@ -226,6 +340,13 @@ def handle_key(report: dict[str, Any], state: DashboardState, key: str) -> Dashb
         return replace(state, help_open=not state.help_open)
     if state.help_open:
         return replace(state, help_open=False) if key in ('ESC', 'ENTER', 'q', 'Q') else state
+    if key in ('F6', 'v') and _services_enabled(report):
+        mode = 'SERVICES' if state.view_mode != 'SERVICES' else 'ALGORITHMS'
+        return replace(state, view_mode=mode, focus='STAGES', scroll=0)
+    if key == 'a' and state.view_mode == 'SERVICES':
+        return replace(state, view_mode='ALGORITHMS', focus='STAGES', scroll=0)
+    if state.view_mode == 'SERVICES' and _services_enabled(report):
+        return _service_navigation(report, state, key)
     if key in ('UP', 'k'):
         return replace(state, scroll=max(0, state.scroll - 1)) if state.focus == 'DETAIL' else _navigate_visible(report, state, -1)
     if key in ('DOWN', 'j'):
@@ -605,6 +726,11 @@ def render_dashboard_frame(report: dict[str, Any], state: DashboardState,
     width = max(24, min(int(width), 240))
     height = max(6, min(int(height), 100))
     active = report['a10']['stages'][state.selected]
+    service_mode = state.view_mode == 'SERVICES' and _services_enabled(report)
+    if service_mode:
+        entries_s, details_s, summary_s, label_s = _service_page(report, state)
+    active_label = ('SERVICIO:' + SERVICE_ORDER[state.service_selected].upper() +
+                    '  FAMILIA:' + label_s) if service_mode else active['algorithm']
     title = (' ARDREC / MONITOR  ' + report['session_id'] +
              ('  [HOST REAL / SOLO LECTURA]' if 'r119_live' in report else '  [DESARROLLO]'))
     if 'r71_shadow' in report:
@@ -615,12 +741,12 @@ def render_dashboard_frame(report: dict[str, Any], state: DashboardState,
         title += '  [GEN 0 RECUPERADA]'
     flags = (' P8:NO-GO  DESPACHO:NO  RF:ND  VM:NO  '
              + ('A6:DOCUMENTAL' if 'a6_import' in report else 'A6:SIN IMPORTAR')
-             + f"  VISTA:{active['algorithm']}")
+             + f"  VISTA:{active_label}")
     if 'r119_live' in report:
         mode = report['r119_live']
         flags = (' P8:NO-GO  DESPACHO:NO  RF:ND  VM:CAPTURA REAL ' +
                  ('REPLAY HISTORICO' if not mode['captured_fresh_for_display'] else 'LECTURA RECIENTE') +
-                 f"  VISTA:{active['algorithm']}")
+                 f"  VISTA:{active_label}")
     top = [_fit(title, width), _fit(flags, width), '-' * width]
     if height < 12 or width < 46:
         warnings = ['Terminal pequena: ampliar a >=46 columnas y >=12 filas.',
@@ -637,57 +763,75 @@ def render_dashboard_frame(report: dict[str, Any], state: DashboardState,
             'F2/c  compacto  | F3/  buscar  | F4/f  filtro',
             'F5/s  resumen  | g/G  primera/ultima',
             'F1/?  ayuda  | r  repintar sin ejecutar',
+            'F6/v  alternar ALGORITMOS / SERVICIOS (captura R119)',
+            'En SERVICIOS: ARRIBA/ABAJO cambia SSH, FTP, SMB',
+            'En SERVICIOS: IZQ/DER selecciona familia; 1/2/3 servicio',
+            'En SERVICIOS: a regresa a A1-A10',
             'q  salir; ESC cierra ayuda',
             'Sin red, sin escritura, sin despacho, sin riesgo acreditado',
         ]
         interior = _panel('AYUDA', _wrapped(rows, width - 6), width, height - 4)
         return top + interior + [_fit('F1 cerrar  |  q cerrar ayuda  |  P8:NO-GO', width)]
-    vis = visible_indices(report, state)
-    entries = []
-    for i in vis:
-        stage = report['a10']['stages'][i]
-        marker = '>' if i == state.selected else ' '
-        status = _short(stage['status'], 20 if not state.compact else 13)
-        entries.append(f"{marker} {stage['algorithm']}  {status}")
-    if not entries:
-        entries = ['(sin coincidencias)', 'F3 o / para buscar', 'F4 para alternar filtro']
+    vis = visible_indices(report, state) if not service_mode else ()
+    if service_mode:
+        entries = entries_s
+        details_rows = details_s
+        summary_content = summary_s
+        nav_title = 'SERVICIOS / FAMILIAS'
+    else:
+        entries = []
+        for i in vis:
+            stage = report['a10']['stages'][i]
+            marker = '>' if i == state.selected else ' '
+            status = _short(stage['status'], 20 if not state.compact else 13)
+            entries.append(f"{marker} {stage['algorithm']}  {status}")
+        if not entries:
+            entries = ['(sin coincidencias)', 'F3 o / para buscar', 'F4 para alternar filtro']
+        details_rows = detail_rows(report, state.selected)
+        summary_content = summary_rows(report)
+        nav_title = 'ALGORITMOS'
     focus = '>' if state.focus == 'STAGES' else ' '
     panel_height = height - 5
     if width >= 114 and state.show_summary and not state.compact:
         nav_width = 33
         summary_width = 29
         detail_width = width - nav_width - summary_width - 4
-        nav = _panel(f'{focus} ALGORITMOS', entries, nav_width, panel_height)
-        det = _panel(f'{active["algorithm"]} / DETALLE',
-                     _wrapped(detail_rows(report, state.selected), detail_width - 4),
+        nav = _panel(f'{focus} {nav_title}', entries, nav_width, panel_height)
+        det = _panel(f'{active_label} / DETALLE',
+                     _wrapped(details_rows, detail_width - 4),
                      detail_width, panel_height, state.scroll)
         summary = _panel('ESTADO / AUDITORIA',
-                         _wrapped(summary_rows(report), summary_width - 4),
+                         _wrapped(summary_content, summary_width - 4),
                          summary_width, panel_height)
         body = [a + '  ' + b + '  ' + c for a, b, c in zip(nav, det, summary)]
     elif width >= 78 and not state.compact:
         nav_width = 33
         detail_width = width - nav_width - 2
-        nav = _panel(f'{focus} ALGORITMOS', entries, nav_width, panel_height)
-        details = detail_rows(report, state.selected)
+        nav = _panel(f'{focus} {nav_title}', entries, nav_width, panel_height)
+        details = list(details_rows)
         if state.show_summary:
             details = [('ESTADO: P8 NO-GO / RF ND / VM CAPTURADAS' if 'r119_live' in report
                         else 'ESTADO: P8 NO-GO / RF ND / VM NO'), ''] + details
-        det = _panel(f'{active["algorithm"]} / DETALLE',
+        det = _panel(f'{active_label} / DETALLE',
                      _wrapped(details, detail_width - 4),
                      detail_width, panel_height, state.scroll)
         body = [a + '  ' + b for a, b in zip(nav, det)]
     else:
-        rows = [f'ETAPA {active["algorithm"]}  FILTRO {state.filter_mode}',
-                f'NAVEGABLES: {len(vis)}/10', '']
-        rows += (summary_rows(report) if state.focus == 'SUMMARY' else
-                 detail_rows(report, state.selected))
+        rows = ([f'SERVICIO {SERVICE_ORDER[state.service_selected].upper()}',
+                 f'FAMILIA {label_s}', ''] if service_mode else
+                [f'ETAPA {active["algorithm"]}  FILTRO {state.filter_mode}',
+                 f'NAVEGABLES: {len(vis)}/10', ''])
+        rows += (summary_content if state.focus == 'SUMMARY' else details_rows)
         body = _panel('DETALLE / COMPACTO', _wrapped(rows, width - 4),
                       width, panel_height, state.scroll)
-    mode = ('BUSCAR: ' + state.query + '_' if state.search_active else
-            f'FILTRO:{state.filter_mode}  FOCO:{state.focus}')
-    footer = ('  UP/DOWN etapa | LEFT/RIGHT mover | TAB foco | F1 ayuda | '
-              'F2 compact | F3 buscar | F4 filtro | q salir')
+    mode = ('MODO:SERVICIOS  SERVICIO:' + SERVICE_ORDER[state.service_selected].upper() +
+            '  FOCO:' + state.focus if service_mode else
+            ('BUSCAR: ' + state.query + '_' if state.search_active else
+             f'FILTRO:{state.filter_mode}  FOCO:{state.focus}'))
+    footer = ('  F6/v Algoritmos-Servicios | UP/DOWN servicio | LEFT/RIGHT familia | '
+              '1/2/3 SSH/FTP/SMB | q salir' if service_mode else
+              '  F6/v Servicios | UP/DOWN etapa | LEFT/RIGHT mover | '
+              'F1 ayuda | F2 compacto | q salir')
     return (top + body + [_fit(mode + '  SOLO LECTURA', width),
                           _fit(footer, width)])[:height]
 
@@ -698,7 +842,7 @@ def _key_name(code: int, curses_module: Any) -> str:
             curses_module.KEY_ENTER: 'ENTER', 10: 'ENTER', 13: 'ENTER',
             9: 'TAB', 27: 'ESC', 127: 'BACKSPACE', 8: 'BACKSPACE',
             curses_module.KEY_BACKSPACE: 'BACKSPACE'}
-    for n in range(1, 6):
+    for n in range(1, 7):
         keys[getattr(curses_module, f'KEY_F{n}', curses_module.KEY_F0 + n)] = f'F{n}'
     return keys.get(code, chr(code) if 32 <= code <= 126 else '')
 

@@ -10,6 +10,7 @@ La frescura de la lectura no convierte un estado DENY en permiso de tráfico.
 from __future__ import annotations
 
 import argparse
+import json
 from datetime import datetime, timezone
 import os
 from pathlib import Path
@@ -142,6 +143,45 @@ def _a5_case(folder: Path | None, raw_catalog: bytes):
             'a6': 'ND', 'source_attested': False, 'a9_generation': None}
 
 
+def _pinned_service_catalog(raw: bytes) -> dict:
+    """Proyección TUI del catálogo P7 fijado: metadatos, nunca permiso de prueba."""
+    need(contract.digest(raw) == f14.CATALOG_SHA256, 'PINNED_P7_CATALOG_MISMATCH')
+    try:
+        source = json.loads(raw, object_pairs_hook=contract.unique_pairs)
+    except (ValueError, TypeError, UnicodeError) as exc:
+        raise Stop('PINNED_CATALOG_JSON_INVALID') from exc
+    want = {'ssh': 8, 'ftp': 8, 'smb': 9}
+    need(type(source) is dict and source.get('counts') == {**want, 'total': 25} and
+         source.get('status') == 'P7_DRAFT_UNCALIBRATED_NOT_EXECUTABLE' and
+         source.get('execution_enabled') is False and
+         source.get('catalog_frozen') is False and
+         type(source.get('families')) is list and len(source['families']) == 25,
+         'PINNED_CATALOG_UNEXPECTED')
+    groups = {service: [] for service in want}
+    fields = ('id', 'source_table', 'condition_es', 'minimum_action_es',
+              'interpretation_boundary_es')
+    for family in source['families']:
+        need(type(family) is dict and family.get('protocol') in groups and
+             all(type(family.get(k)) is str and 0 < len(family[k]) <= 320 for k in fields) and
+             all(type(family.get(k)) is list and
+                 all(type(v) is str and v for v in family[k])
+                 for k in ('preconditions', 'required_supports')),
+             'PINNED_CATALOG_FAMILY_INVALID')
+        groups[family['protocol']].append({k: family[k] for k in fields} | {
+            'preconditions': list(family['preconditions']),
+            'required_supports': list(family['required_supports'])})
+    for service, count in want.items():
+        need(len(groups[service]) == count and
+             [f['id'] for f in groups[service]] ==
+             [f'{service.upper()}-T{i:02}' for i in range(1, count + 1)],
+             'PINNED_CATALOG_FAMILY_SEQUENCE')
+    return {'sha256': contract.digest(raw),
+            'status': source['status'],
+            'execution_enabled': False,
+            'catalog_frozen': False,
+            'counts': dict(want), 'families': groups}
+
+
 def build(capture: dict, *, closure_raw: bytes, catalog_raw: bytes,
           now: datetime, mode: str, a5_case_folder: Path | None = None) -> dict:
     """Genera una vista a partir de una captura, sin modificar evidencia ni estado."""
@@ -151,6 +191,7 @@ def build(capture: dict, *, closure_raw: bytes, catalog_raw: bytes,
     need(type(catalog_raw) is bytes and contract.digest(catalog_raw) == f14.CATALOG_SHA256,
          'PINNED_P7_CATALOG_MISMATCH')
     closure = check_closure(closure_raw)
+    service_catalog = _pinned_service_catalog(catalog_raw)
     try:
         host = f5.report(capture)
     except (f5.Stop, OSError, ValueError, TypeError, KeyError) as exc:
@@ -203,6 +244,7 @@ def build(capture: dict, *, closure_raw: bytes, catalog_raw: bytes,
             'replay_mode': mode, 'captured_fresh_for_display': fresh,
             'age_seconds_at_render': int(age),
             'host': host, 'source': closure, 'a5': a5,
+            'catalog': service_catalog,
             'blockers': sorted(set(blockers)),
             'current_operational_authority_attested': False,
             'p7_catalog_frozen': False,
@@ -248,6 +290,31 @@ def verify_view(report):
                                      'RUNNING_SIX_DENY_BINDINGS_MATCH',
                                      'DRIFT_NO_GO', 'INCOMPLETE_OR_TRANSITION_NO_GO'),
          'VIEW_HOST_SCHEMA')
+    # Una vista de navegación P7 no acredita disponibilidad operacional.
+    catalog = data.get('catalog')
+    need(type(catalog) is dict and
+         catalog.get('sha256') == f14.CATALOG_SHA256 and
+         catalog.get('status') == 'P7_DRAFT_UNCALIBRATED_NOT_EXECUTABLE' and
+         catalog.get('execution_enabled') is False and
+         catalog.get('catalog_frozen') is False and
+         catalog.get('counts') == {'ssh': 8, 'ftp': 8, 'smb': 9} and
+         type(catalog.get('families')) is dict and
+         set(catalog['families']) == {'ssh', 'ftp', 'smb'},
+         'VIEW_CATALOG_UNTRUSTED')
+    for service, amount in catalog['counts'].items():
+        families = catalog['families'][service]
+        need(type(families) is list and len(families) == amount and
+             [v.get('id') for v in families if type(v) is dict] ==
+             [f'{service.upper()}-T{i:02}' for i in range(1, amount + 1)],
+             'VIEW_CATALOG_FAMILY_SET')
+        for family in families:
+            need(all(type(family.get(k)) is str for k in
+                     ('source_table', 'condition_es', 'minimum_action_es',
+                      'interpretation_boundary_es')) and
+                 all(type(family.get(k)) is list and
+                     all(type(v) is str for v in family[k])
+                     for k in ('preconditions', 'required_supports')),
+                 'VIEW_CATALOG_FAMILY_FIELDS')
     case = data.get('a5')
     if case is not None:
         need(type(case) is dict and case.get('a6') == 'ND' and
