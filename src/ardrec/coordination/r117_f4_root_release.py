@@ -27,7 +27,8 @@ def _dir(path):
          not(path.is_symlink()) and not(st.st_mode&0o022),
          'RELEASE_UNTRUSTED_DIRECTORY_'+str(path))
 def root_bytes(path,maxsize=65536):
-    for d in (Path('/'),Path('/var'),Path('/var/lib'),Path('/var/lib/ardrec'),path.parent):_dir(d)
+    for d in reversed(path.parents):
+        _dir(d)
     fd=os.open(path,os.O_RDONLY|os.O_NOFOLLOW|os.O_CLOEXEC)
     try:
         st=os.fstat(fd)
@@ -53,10 +54,16 @@ def require_attested_release(head,*,repo=REPO,reader=root_bytes):
          type(rec['source_sha256']) is dict and set(rec['source_sha256'])==set(SRC),
          'RELEASE_SCOPE_NOT_CURRENT')
     for source in SRC:
-        f=repo/source
-        need(f.is_file() and not f.is_symlink() and
-             digest(f.read_bytes())==rec['source_sha256'][source],
-             'RELEASE_SOURCE_DRIFT_'+source)
+        installed=(
+            Path('/var/lib/ardrec/r117-f4-ftp-pilot-root-v1')
+            / 'runtime' / 'ardrec' / 'coordination'
+            / Path(source).name
+        )
+        need(
+            digest(reader(installed))==
+                rec['source_sha256'][source],
+            'RELEASE_SOURCE_DRIFT_'+source
+        )
     raw=reader(PILOT_MANIFEST)
     need(digest(raw)==rec['pilot_manifest_sha256'],'PILOT_STAGE_MANIFEST_CHANGED')
     pilot=json.loads(raw)
@@ -71,6 +78,93 @@ def require_attested_release(head,*,repo=REPO,reader=root_bytes):
 
 # F5D-F: F4 recognizes only a fully closed, cryptographically approved
 # release. A receipt alone is NEVER sufficient for release acceptance.
+
+# R117: historical approval + fresh independent nonrevocation.
+# Source-only verification; boot and network remain prohibited.
+
+APPROVAL_PIN=(
+    '9c6753b9a439de6eb4a17ae87fe5a09b95816461f93a76a100b4e7b2c4843389'
+)
+REVOCATION_PIN=(
+    'db3ac74dc6121d894b63cac0c55fec8405f281147df03c34d148d71c030dc828'
+)
+
+REVOCATION=Path(
+    '/etc/ardrec/r117-f5b-release-revocation-v1.json'
+)
+REVOCATION_SIG=Path(
+    '/etc/ardrec/r117-f5b-release-revocation-v1.sig'
+)
+REVOCATION_TRUST=Path(
+    '/etc/ardrec/r117-authorities-v1/revocation-public.pem'
+)
+
+REVOCATION_SCHEMA=(
+    'ARDREC-R117-F5D-ROOT-RELEASE-REVOCATION-v1'
+)
+REVOCATION_PREFIX=(
+    b'ARDREC-R117-F5D-ROOT-RELEASE-REVOCATION-v1\x00'
+)
+REVOCATION_FIELDS={
+    'schema','head','candidate_sha256',
+    'issued_at','valid_until',
+    'revoked','authority','p8'
+}
+
+
+def _historical_approval_time(start,end,now):
+    """Validate duration without treating an old signature as new."""
+    need(
+        start<=now
+        and start<end
+        and 0<(end-start).total_seconds()<=600,
+        'RELEASE_HISTORICAL_APPROVAL_TIME_INVALID'
+    )
+
+
+def _fresh_revocation(head,candidate_sha,reader,now):
+    """Verify a fresh independent nonrevocation declaration."""
+    raw=reader(REVOCATION)
+    doc=_strict_document(raw)
+
+    need(
+        set(doc)==REVOCATION_FIELDS
+        and doc['schema']==REVOCATION_SCHEMA
+        and doc['head']==head
+        and doc['candidate_sha256']==candidate_sha
+        and doc['revoked'] is False
+        and doc['p8']=='NO-GO'
+        and type(doc['authority']) is str
+        and 3<=len(doc['authority'])<=80,
+        'RELEASE_REVOCATION_SCOPE_INVALID'
+    )
+
+    start=_utc(doc['issued_at'])
+    until=_utc(doc['valid_until'])
+
+    need(
+        start<=now<until
+        and 0<(until-start).total_seconds()<=90,
+        'RELEASE_REVOCATION_NOT_FRESH'
+    )
+
+    public=reader(REVOCATION_TRUST)
+
+    need(
+        digest(public)==REVOCATION_PIN
+        and REVOCATION_PIN!=APPROVAL_PIN,
+        'RELEASE_REVOCATION_TRUST_PIN_INVALID'
+    )
+
+    signature=reader(REVOCATION_SIG)
+
+    _ed25519_verify(
+        public,signature,REVOCATION_PREFIX+raw
+    )
+
+    return True
+
+
 ROOT=Path('/var/lib/ardrec')
 ACTIVATION=ROOT/'r117-f5b-activation-v1.json'
 ACTIVATION_SCHEMA='ARDREC-R117-F5B-ACTIVATION-v1'
@@ -255,10 +349,18 @@ def _closed_transaction(head, receipt_raw, pilot_raw, reader):
          'RELEASE_APPROVAL_SCOPE_INVALID')
     start,end=_utc(approval['valid_from']),_utc(approval['valid_until'])
     now=datetime.now(timezone.utc)
-    need(start<=now<end and 0<(end-start).total_seconds()<=600,
-         'RELEASE_APPROVAL_EXPIRED_OR_FUTURE')
+
+    _historical_approval_time(start,end,now)
+
     trust=reader(TRUST)
+    need(digest(trust)==APPROVAL_PIN,
+         'RELEASE_APPROVAL_TRUST_PIN_INVALID')
+
     _ed25519_verify(trust,signature,PREFIX+approval_raw)
+
+    _fresh_revocation(
+        head,intent['candidate_sha256'],reader,now
+    )
     _verify_activation(reader(ACTIVATION),head,name,intent,complete,
                        receipt_raw,pilot_raw,approval_raw,complete_raw)
     return True
