@@ -73,3 +73,19 @@ El código de instalación permanece como implementación en revisión; no está
 F5C deberá resolver publicación durable, aceptación del commit completo, inspección de todos los archivos, bootstrap de confianza y puente de atestación root.
 
 Estado: SOURCE_ONLY; P8=NO-GO; A6=ND.
+
+## R117-F5B-H2 — Portabilidad de CI
+
+Se corrigió la resolución del checkout para pruebas offline.
+El repositorio operacional permanece fijado a la ruta de Prometheus.
+
+Se mantiene el bloqueo de --apply, la inmutabilidad de R116
+y la separación de las autorizaciones root.
+
+Se eliminó fcntl.error del manejador de excepciones:
+OSError cubre los errores del bloqueo de archivos.
+
+CI ejecuta once pruebas, incluidas la independencia de la ruta
+offline y la respuesta fail-closed del CLI.
+
+No hay instalación root, ejecución física ni autorización P8.

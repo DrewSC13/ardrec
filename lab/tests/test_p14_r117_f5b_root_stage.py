@@ -30,15 +30,15 @@ class F5BTests(unittest.TestCase):
 
     def test_candidate_source_pins(self):
         builder = m.offline_builder()
-        raw, doc = m.expected_bundle(builder, "a" * 40)
+        raw, doc = m.expected_bundle(builder, "a" * 40, repo=ROOT)
         self.assertEqual(len(doc["source_sha256"]), 36)
         self.assertGreater(len(raw), 0)
 
     def test_release_receipt_shape(self):
         builder = m.offline_builder()
-        raw, doc = m.expected_bundle(builder, "a" * 40)
+        raw, doc = m.expected_bundle(builder, "a" * 40, repo=ROOT)
         receipt = m.release_receipt(
-            builder, "a" * 40, m.canonical(doc)
+            builder, "a" * 40, m.canonical(doc), repo=ROOT
         )
         self.assertEqual(set(receipt), {
             "schema", "head", "source_sha256",
@@ -100,6 +100,30 @@ class F5BTests(unittest.TestCase):
             str(caught.exception),
             'F5B_APPLY_BLOCKED_PENDING_ATOMIC_RELEASE_AND_BOOT_GATE'
         )
+
+
+    def test_offline_checkout_is_explicit(self):
+        self.assertEqual(m.offline_repo(), ROOT)
+        self.assertEqual(
+            m.REPO,
+            Path("/home/cicada/Development/GitHub/ardrec")
+        )
+        self.assertEqual(
+            m.expected_bundle.__kwdefaults__["repo"], m.REPO
+        )
+        self.assertEqual(
+            m.release_receipt.__kwdefaults__["repo"], m.REPO
+        )
+
+    def test_cli_failure_remains_fail_closed(self):
+        from unittest.mock import patch
+
+        with patch.object(
+            m, "root_head",
+            side_effect=m.Stop("EXPECTED_REJECTION")
+        ):
+            with patch("sys.argv", ["f5b", "--inspect-root"]):
+                self.assertEqual(m.main(), 23)
 
     def test_duplicate_json_rejected(self):
         with self.assertRaises(m.Stop):

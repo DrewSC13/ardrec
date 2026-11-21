@@ -237,15 +237,23 @@ def load_builder(path):
     spec.loader.exec_module(module)
     return module
 
+def offline_repo():
+    root = Path(__file__).resolve().parents[1]
+    candidate = root / CANDIDATE_SOURCE
+    need(root.is_dir() and candidate.is_file() and
+         not candidate.is_symlink(),
+         'OFFLINE_CHECKOUT_INVALID')
+    return root
+
 def offline_builder():
-    path = REPO / CANDIDATE_SOURCE
+    path = offline_repo() / CANDIDATE_SOURCE
     need(path.is_file() and not path.is_symlink(),
          "F5A_SOURCE_MISSING")
     return load_builder(path)
 
-def expected_bundle(builder, head):
-    raw = builder.candidate(head)
-    review = builder.audit(raw, expected_head=head)
+def expected_bundle(builder, head, *, repo=REPO):
+    raw = builder.candidate(head, repo=repo)
+    review = builder.audit(raw, repo=repo, expected_head=head)
     need(
         review["schema"] == PILOT_SCHEMA
         and review["p8"] == "NO-GO"
@@ -255,13 +263,13 @@ def expected_bundle(builder, head):
     )
     return raw, review
 
-def release_receipt(builder, head, manifest_raw):
+def release_receipt(builder, head, manifest_raw, *, repo=REPO):
     return {
         "schema": RECEIPT_SCHEMA,
         "head": head,
         "source_sha256": {
             name: builder.sha(
-                builder.read_source(REPO, name)
+                builder.read_source(repo, name)
             )
             for name in F4
         },
@@ -647,13 +655,14 @@ def main():
         if args.offline:
             need(os.geteuid() != 0,
                  "OFFLINE_MUST_NOT_RUN_AS_ROOT")
+            repo = offline_repo()
             builder = offline_builder()
             raw, manifest = expected_bundle(
-                builder, "a" * 40
+                builder, "a" * 40, repo=repo
             )
             receipt = release_receipt(
                 builder, "a" * 40,
-                canonical(manifest)
+                canonical(manifest), repo=repo
             )
             need(
                 len(receipt["source_sha256"]) == 3
@@ -686,8 +695,7 @@ def main():
 
     except (
         Stop, OSError, ValueError, KeyError, TypeError,
-        zipfile.BadZipFile, subprocess.TimeoutExpired,
-        fcntl.error
+        zipfile.BadZipFile, subprocess.TimeoutExpired
     ) as error:
         print(
             "R117_F5B_STOP=" +

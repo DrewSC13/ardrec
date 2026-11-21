@@ -898,11 +898,11 @@ jobs:
           suite=unittest.defaultTestLoader.discover('lab/tests',pattern='test_p14_r117_f5b_root_stage.py')
           count=suite.countTestCases()
           print('CI_R117_F5B_DISCOVERED='+str(count),flush=True)
-          if count!=9:raise SystemExit('CI_R117_F5B_DISCOVERY_DRIFT')
+          if count!=11:raise SystemExit('CI_R117_F5B_DISCOVERY_DRIFT')
           result=unittest.TextTestRunner(verbosity=2).run(suite)
-          if not result.wasSuccessful() or result.skipped or result.testsRun!=9:
+          if not result.wasSuccessful() or result.skipped or result.testsRun!=11:
               raise SystemExit('CI_R117_F5B_FAILED_OR_SKIPPED')
-          print('CI_R117_F5B=PASS_9_SOURCE_ONLY_NO_GO',flush=True)
+          print('CI_R117_F5B=PASS_11_SOURCE_ONLY_NO_GO',flush=True)
           PYTEST
 
   rust:
