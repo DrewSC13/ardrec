@@ -873,6 +873,22 @@ jobs:
           print('CI_R117_F4=PASS_40_NO_ROOT_NO_BOOT_NO_NETWORK',flush=True)
           PY
 
+
+      - name: R117 F5A candidato root sin privilegios / Verify root candidate
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B scripts/ardrec_p14_r117_f5_root_candidate.py --offline
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYTEST'
+          import unittest
+          suite=unittest.defaultTestLoader.discover('lab/tests',pattern='test_p14_r117_f5_root_candidate.py')
+          count=suite.countTestCases()
+          print('CI_R117_F5A_DISCOVERED='+str(count),flush=True)
+          if count!=7:raise SystemExit('CI_R117_F5A_DISCOVERY_DRIFT')
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped or result.testsRun!=7:
+              raise SystemExit('CI_R117_F5A_FAILED_OR_SKIPPED')
+          print('CI_R117_F5A=PASS_7_SOURCE_ONLY_NO_GO',flush=True)
+          PYTEST
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
