@@ -1154,6 +1154,18 @@ jobs:
           if not result.wasSuccessful(): raise SystemExit('R124_FAILED')
           PYCI
 
+      - name: R125 aceptacion integrada FTP y cobertura 54 unidades / Integrated acceptance
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYCI'
+          import unittest
+          suite=unittest.defaultTestLoader.discover('lab/tests', pattern='test_p14_r125*.py')
+          count=suite.countTestCases()
+          print('R125_DISCOVERED='+str(count),flush=True)
+          if count < 90: raise SystemExit('R125_DISCOVERY_INSUFFICIENT')
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful(): raise SystemExit('R125_FAILED')
+          PYCI
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
