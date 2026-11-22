@@ -338,3 +338,19 @@ jobs:
               raise SystemExit('R163_F4_TEST_FAILED')
           print('R163_F4=PASS_14_NO_ROOT_NO_TRAFFIC')
           PYR163F4
+
+      - name: R163 V3 immutable root stage bundle (offline)
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYR163V3'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_p14_r163_v3_root_stage_agent.py'
+          )
+          if suite.countTestCases() != 12:
+              raise SystemExit('R163_V3_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit('R163_V3_TEST_FAILURE')
+          print('R163_V3=PASS_12_SOURCE_ONLY')
+          PYR163V3
