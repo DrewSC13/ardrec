@@ -240,3 +240,20 @@ jobs:
               raise SystemExit('R143_TESTS_FAILED')
           print('R143_INDEPENDENT_RELEASE_HANDOFF=PASS_36')
           PYR143
+
+      - name: R146 signed root installer candidate and independent bootstrap request
+        run: |
+          PYTHONPATH=src:scripts python3 -B - <<'PYR146'
+          import unittest
+          specs=(('test_p14_r146_independent_install.py',53),
+                 ('test_p14_r146_bootstrap_request.py',17))
+          total=0
+          for pattern,expected in specs:
+              suite=unittest.defaultTestLoader.discover('lab/tests',pattern=pattern)
+              if suite.countTestCases()!=expected:raise SystemExit('R146_DISCOVERY_INVALID')
+              result=unittest.TextTestRunner(verbosity=2).run(suite)
+              if not result.wasSuccessful():raise SystemExit('R146_TESTS_FAILED')
+              total+=expected
+          if total!=70:raise SystemExit('R146_TOTAL_INVALID')
+          print('R146_INDEPENDENT_INSTALL_CANDIDATE=PASS_70_SOURCE_ONLY')
+          PYR146
