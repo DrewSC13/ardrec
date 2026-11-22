@@ -180,3 +180,18 @@ jobs:
               raise SystemExit('R139_TEST_FAILURE')
           print('R139_RELEASE_REVIEW=PASS_30')
           PYR139
+
+      - name: R140 signed review + durable recovery (nonroot sandbox only)
+        run: |
+          PYTHONPATH=src:scripts python3 -B - <<'PYR140'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests', pattern='test_p14_r140_release_transaction_sandbox.py'
+          )
+          if suite.countTestCases() != 30:
+              raise SystemExit('R140_TEST_DISCOVERY_MISMATCH')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit('R140_TEST_FAILURE')
+          print('R140_RELEASE_TRANSACTION_SANDBOX=PASS_30')
+          PYR140
