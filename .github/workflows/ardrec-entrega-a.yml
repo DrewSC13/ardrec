@@ -86,3 +86,26 @@ jobs:
 
           print("R130_R132_R133=PASS_127", flush=True)
           PY
+
+      - name: Offline R134 independent audit
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR134'
+          import unittest
+
+          suite = unittest.defaultTestLoader.discover(
+              "lab/tests",
+              pattern="test_p14_r134_root_audit.py",
+          )
+
+          if suite.countTestCases() != 20:
+              raise SystemExit("R134_DISCOVERY_MISMATCH")
+
+          result = unittest.TextTestRunner(
+              verbosity=2
+          ).run(suite)
+
+          if not result.wasSuccessful():
+              raise SystemExit("R134_REGRESSION_FAILED")
+
+          print("R134_SOURCE_AUDIT=PASS_20")
+          PYR134
