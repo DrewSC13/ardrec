@@ -1166,6 +1166,22 @@ jobs:
           if not result.wasSuccessful(): raise SystemExit('R125_FAILED')
           PYCI
 
+      - name: R130 B17-R6A contrato de instalacion root / Offline root install source contract
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r130_b17_r6_install_contract.py' -v
+
+      - name: R130 B17-R6B1 firmas y transaccion privada / Signed offline staging
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r130_b17_r6_signed_stage.py' -v
+
+      - name: R130 R6B2 compatibilidad root Linux / Pinned root source compatibility
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r130_b17_r6b2_source_compat.py' -v
+
+      - name: R130 R6B3 transaccion root candidata / Safe transactional source review
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r130_b17_r6b3_root_candidate.py' -v
+
   rust:
     name: Rust - compilación / build
     runs-on: ubuntu-24.04
