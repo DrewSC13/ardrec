@@ -165,3 +165,18 @@ jobs:
                   raise SystemExit('R138_TEST_FAILURE:'+pattern)
           print('R138_BRANCH_PROVENANCE=PASS')
           PYR138
+
+      - name: R139 independent B9 signed release (offline)
+        run: |
+          PYTHONPATH=src:scripts python3 -B - <<'PYR139'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests', pattern='test_p14_r139_independent_release_review.py'
+          )
+          if suite.countTestCases() != 30:
+              raise SystemExit('R139_TEST_DISCOVERY_MISMATCH')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit('R139_TEST_FAILURE')
+          print('R139_RELEASE_REVIEW=PASS_30')
+          PYR139
