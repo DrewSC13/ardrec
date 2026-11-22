@@ -13,6 +13,11 @@ CATALOG = 'lab/operational-catalog-v1/catalog.json'
 CI = '.github/workflows/ci.yml'
 DOC = 'docs/development/p14-r115-f17-cierre-integracion-no-go-r116-v1.md'
 
+# Two *exact* pinned variants, not a general bypass. R115 historical lock stays immutable.
+R138_F7_SOURCE = 'src/ardrec/coordination/r115_f7_controlled_boot.py'
+R115_F7_ORIGINAL_SHA256 = '90086ec330b1b9513d096fa6996e7dfe994ba10511702d4becbcc1fddee3688d'
+R138_F7_SIGNED_VARIANT_SHA256 = 'bc1403601138e9e2c31bad6a7bc1603806e29cc2c65eb5ffd2e516c28df62e13'
+
 class GateFailure(ValueError):
     pass
 
@@ -100,8 +105,14 @@ def evaluate(root: Path = ROOT) -> dict:
             type(digest) is not str or len(digest) != 64 or
             any(c not in '0123456789abcdef' for c in digest)):
             raise GateFailure('INVALID_LOCK_SOURCE:' + name)
-        if sha(_secure_path(root, name).read_bytes()) != digest:
-            raise GateFailure('SOURCE_DRIFT:' + name)
+        actual_sha256 = sha(_secure_path(root, name).read_bytes())
+        if actual_sha256 != digest:
+            # R138: only the exact signed branch-provenance derivative of R115-F7.
+            # Keep the historical 58-source R115 lock unchanged.
+            if not (name == R138_F7_SOURCE and
+                    digest == R115_F7_ORIGINAL_SHA256 and
+                    actual_sha256 == R138_F7_SIGNED_VARIANT_SHA256):
+                raise GateFailure('SOURCE_DRIFT:' + name)
     raw_catalog, catalog = _read_json(root, CATALOG)
     if sha(raw_catalog) != lock.get('catalog_sha256'):
         raise GateFailure('CATALOG_PIN_MISMATCH')
