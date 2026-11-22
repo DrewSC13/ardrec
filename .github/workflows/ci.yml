@@ -1237,3 +1237,78 @@ jobs:
           echo 'R88_CI_PRIVATE_PROBE=PASS_IDENTICAL_BYTES_ONE_INODE'
           PYTHONPATH=src python3 -B scripts/ardrec_p14_r88_vertical.py --verify-rust-only --rust-probe "$probe_copy" --rust-sha256 "$original_sha"
 
+
+      - name: R126 B4 guardián raíz DENY de sesión / Root-owned DENY session watchdog
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r126_root_session_guard.py' -v
+
+      - name: R126 Window V2 ventana firmada de alcance actual / Current-source signed window
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r126_window_v2.py' -v
+
+      - name: R126 Scope V2 autenticación documental / Signed source scope
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r126_scope_v2.py' -v
+
+      - name: R126 B5 entrega no autorizada a operador / Root operator source handoff
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r126_b5_operator_handoff.py' -v
+
+      - name: R127 B6 observador físico del temporizador / Bounded independent DENY monitor
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r127_failure_observer.py' -v
+
+
+      - name: R128-R129 B7 flujo FTP A5-A10 / End-to-end crash recovery
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r128_r129_end_to_end.py' -v
+
+      - name: R128 B8 lectura fija del ejecutor R116-F3 / Pinned physical receipt bridge
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r128_f3_receipt_bridge.py' -v
+
+      - name: R128 B9 sesion unica ejecutor raiz V2 / Root one-session FTP executor
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r128_root_v2_executor.py' -v
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -B scripts/ardrec_p14_r128_root_v2_executor.py --capabilities
+
+      - name: R126-R129 integración FTP física bajo autoridad / Verified guarded integration
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYTEST'
+          import unittest
+          suite=unittest.defaultTestLoader.discover('lab/tests', pattern='test_p14_r126_r129*.py')
+          count=suite.countTestCases()
+          print('R126_R129_DISCOVERED='+str(count), flush=True)
+          if count < 48: raise SystemExit('R126_R129_DISCOVERY_INSUFFICIENT')
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful(): raise SystemExit('R126_R129_FAILED')
+          PYTEST
+
+      - name: R129 B10 recibos B9 F13 QGA y barrera A9 / Exact source replay, no global publish
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r129_b10_receipt_gate.py' -v
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -B scripts/ardrec_p14_r129_b10_receipt_gate.py --capabilities
+
+      - name: R129 B11 A6 independencia fisica / External technical truth, exact root source
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r129_b11_independent_a6.py' -v
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -B scripts/ardrec_p14_r129_b11_independent_a6.py --capabilities
+
+      - name: R129 B12 A7 calibracion firmada y A9 reductor nativo / Exact A7 and immutable A9 guard
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r129_b12_calibration_a9.py' -v
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -B scripts/ardrec_p14_r129_b12_calibration_a9.py --capabilities
+
+      - name: R129 B13 A8-A9 transaccion nativa y recuperacion aislada / Native durable crash recovery
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r129_b13_native_a9_replay.py' -v
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -B scripts/ardrec_p14_r129_b13_native_a9_replay.py --capabilities
+
+      - name: R126-R129 B14 liberacion independiente / Root release signature and revocation
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r126_r129_b14_signed_release.py' -v
+
+      - name: R129 B15 cierre A8/A9 estructural con tres firmantes / Native structural publication with crash replay
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r129_b15_structural_commit.py' -v
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -B scripts/ardrec_p14_r129_b15_structural_commit.py --capabilities
