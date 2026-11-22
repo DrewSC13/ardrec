@@ -195,3 +195,18 @@ jobs:
               raise SystemExit('R140_TEST_FAILURE')
           print('R140_RELEASE_TRANSACTION_SANDBOX=PASS_30')
           PYR140
+
+      - name: R141 fixed root material acquisition (nonroot tests only)
+        run: |
+          PYTHONPATH=src:scripts python3 -B - <<'PYR141'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests', pattern='test_p14_r141_root_material_reader.py'
+          )
+          if suite.countTestCases() != 40:
+              raise SystemExit('R141_TEST_DISCOVERY_MISMATCH')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit('R141_TEST_FAILURE')
+          print('R141_ROOT_INPUT_READER=PASS_40')
+          PYR141
