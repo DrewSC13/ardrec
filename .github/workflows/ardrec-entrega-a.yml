@@ -127,3 +127,20 @@ jobs:
                   raise SystemExit('R135_TEST_FAILURE:' + pattern)
           print('R135=PASS_44', flush=True)
           PYR135
+
+      - name: R136 B4/B9 signed semantics and lab diagnosis
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR136'
+          import unittest
+          for pattern, expected in (
+              ('test_p14_r136_operational_semantics.py', 18),
+              ('test_p14_r136_lab_diagnosis.py', 12),
+          ):
+              suite = unittest.defaultTestLoader.discover('lab/tests', pattern=pattern)
+              if suite.countTestCases() != expected:
+                  raise SystemExit('R136_TEST_DISCOVERY_MISMATCH')
+              result = unittest.TextTestRunner(verbosity=1).run(suite)
+              if not result.wasSuccessful():
+                  raise SystemExit('R136_TEST_FAILURE')
+          print('R136=PASS_30')
+          PYR136
