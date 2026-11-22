@@ -279,3 +279,14 @@ jobs:
           if not result.wasSuccessful():raise SystemExit('R149_TESTS_FAILED')
           print('R149_SCENARIO_DESIGN=PASS_55_SOURCE_ONLY')
           PYR149
+
+      - name: R161 single-operator DEV controller source-only (not physical permit)
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR161'
+          import unittest
+          suite=unittest.defaultTestLoader.discover('lab/tests',pattern='test_p14_r161_single_operator.py')
+          if suite.countTestCases()!=56:raise SystemExit('R161_DISCOVERY_INVALID')
+          result=unittest.TextTestRunner(verbosity=1).run(suite)
+          if not result.wasSuccessful():raise SystemExit('R161_TESTS_FAILED')
+          print('R161_SOFTWARE=PASS_56_NO_ROOT_NO_TRAFFIC')
+          PYR161
