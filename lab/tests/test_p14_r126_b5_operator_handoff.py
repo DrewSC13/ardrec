@@ -35,7 +35,7 @@ class TestB5(unittest.TestCase):
         patch.object(b5,'PATCHES',self.patches).start()
         patch.object(b5,'git',side_effect=self.git).start()
         patch.object(b5,'metadata',return_value='ABSENT').start()
-        patch.object(b5.os,'geteuid',return_value=1000).start()
+        patch.object(b5.os,'geteuid',return_value=self.patches.stat().st_uid).start()
         patch.object(b5.Path,'cwd',return_value=self.root).start()
 
     def git(self,*a):
