@@ -1,0 +1,292 @@
+name: ARDREC Entrega A / Source validation
+
+on:
+  push:
+    branches:
+      - feat/ardrec-cierre-operacional-experimental
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ardrec-entrega-a-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  installation-source:
+    name: R130 R132 R133 / Offline verification
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    defaults:
+      run:
+        shell: bash --noprofile --norc {0}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Python version
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version-file: .python-version
+          architecture: x64
+
+      - name: Verify source pins and Python version
+        run: |
+          python3 --version
+          python3 - <<'PY'
+          import hashlib
+          from pathlib import Path
+
+          expected = {
+              "scripts/ardrec_p14_r130_b4_root_guard_v2.py":
+                  "f64ce5f8c31cd80f98d07f47eb99728e15e406a66b697044e3d5eefd6a3f73e8",
+              "scripts/ardrec_p14_r130_b9_ftp_executor_v2.py":
+                  "c3c840f66476f3f0bbd87e48f657fdc6270e09b57b130eaf9c5b3cb68980cbd3",
+          }
+
+          for name, digest in expected.items():
+              actual = hashlib.sha256(Path(name).read_bytes()).hexdigest()
+              if actual != digest:
+                  raise SystemExit("SOURCE_PIN_MISMATCH:" + name)
+
+          print("B4_B9_SOURCE_PINS=PASS")
+          PY
+
+      - name: Offline R130 R132 R133 regression
+        run: |
+          PYTHONPATH=src python3 -B - <<'PY'
+          import unittest
+
+          checks = (
+              ("test_p14_r130_b17_r6*.py", 75, "R130"),
+              ("test_p14_r132_install_recovery.py", 20, "R132"),
+              ("test_p14_r133_install_release_gate.py", 32, "R133"),
+          )
+
+          for pattern, expected, label in checks:
+              suite = unittest.defaultTestLoader.discover(
+                  "lab/tests", pattern=pattern
+              )
+              count = suite.countTestCases()
+              print(f"{label}_DISCOVERED={count}", flush=True)
+
+              if count != expected:
+                  raise SystemExit(label + "_TEST_COUNT_MISMATCH")
+
+              result = unittest.TextTestRunner(
+                  verbosity=2
+              ).run(suite)
+
+              if not result.wasSuccessful():
+                  raise SystemExit(label + "_REGRESSION_FAILED")
+
+          print("R130_R132_R133=PASS_127", flush=True)
+          PY
+
+      - name: Offline R134 independent audit
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR134'
+          import unittest
+
+          suite = unittest.defaultTestLoader.discover(
+              "lab/tests",
+              pattern="test_p14_r134_root_audit.py",
+          )
+
+          if suite.countTestCases() != 20:
+              raise SystemExit("R134_DISCOVERY_MISMATCH")
+
+          result = unittest.TextTestRunner(
+              verbosity=2
+          ).run(suite)
+
+          if not result.wasSuccessful():
+              raise SystemExit("R134_REGRESSION_FAILED")
+
+          print("R134_SOURCE_AUDIT=PASS_20")
+          PYR134
+
+      - name: R135 transaction and read-only physical readiness
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR135'
+          import unittest
+          cases = (
+              ('test_p14_r135_root_transaction.py', 32),
+              ('test_p14_r135_lab_readiness.py', 12),
+          )
+          for pattern, expected in cases:
+              suite = unittest.defaultTestLoader.discover('lab/tests', pattern=pattern)
+              if suite.countTestCases() != expected:
+                  raise SystemExit('R135_DISCOVERY_MISMATCH:' + pattern)
+              result = unittest.TextTestRunner(verbosity=1).run(suite)
+              if not result.wasSuccessful():
+                  raise SystemExit('R135_TEST_FAILURE:' + pattern)
+          print('R135=PASS_44', flush=True)
+          PYR135
+
+      - name: R136 B4/B9 signed semantics and lab diagnosis
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR136'
+          import unittest
+          for pattern, expected in (
+              ('test_p14_r136_operational_semantics.py', 18),
+              ('test_p14_r136_lab_diagnosis.py', 12),
+          ):
+              suite = unittest.defaultTestLoader.discover('lab/tests', pattern=pattern)
+              if suite.countTestCases() != expected:
+                  raise SystemExit('R136_TEST_DISCOVERY_MISMATCH')
+              result = unittest.TextTestRunner(verbosity=1).run(suite)
+              if not result.wasSuccessful():
+                  raise SystemExit('R136_TEST_FAILURE')
+          print('R136=PASS_30')
+          PYR136
+
+      - name: R138 signed branch provenance for F7/F8
+        run: |
+          PYTHONPATH=src:scripts python3 -B - <<'PYR138'
+          import unittest
+          for pattern, count in (
+              ('test_p14_r115_f7_controlled_boot.py', 0),
+              ('test_p14_r115_f8_runner_ftp_boot.py', 0),
+              ('test_p14_r138_boot_branch_provenance.py', 19),
+          ):
+              suite=unittest.defaultTestLoader.discover('lab/tests',pattern=pattern)
+              discovered=suite.countTestCases()
+              if count and discovered!=count:
+                  raise SystemExit('R138_COUNT_MISMATCH:'+pattern)
+              if not count and discovered==0:
+                  raise SystemExit('R138_HISTORICAL_MISSING:'+pattern)
+              result=unittest.TextTestRunner(verbosity=1).run(suite)
+              if not result.wasSuccessful():
+                  raise SystemExit('R138_TEST_FAILURE:'+pattern)
+          print('R138_BRANCH_PROVENANCE=PASS')
+          PYR138
+
+      - name: R139 independent B9 signed release (offline)
+        run: |
+          PYTHONPATH=src:scripts python3 -B - <<'PYR139'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests', pattern='test_p14_r139_independent_release_review.py'
+          )
+          if suite.countTestCases() != 30:
+              raise SystemExit('R139_TEST_DISCOVERY_MISMATCH')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit('R139_TEST_FAILURE')
+          print('R139_RELEASE_REVIEW=PASS_30')
+          PYR139
+
+      - name: R140 signed review + durable recovery (nonroot sandbox only)
+        run: |
+          PYTHONPATH=src:scripts python3 -B - <<'PYR140'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests', pattern='test_p14_r140_release_transaction_sandbox.py'
+          )
+          if suite.countTestCases() != 30:
+              raise SystemExit('R140_TEST_DISCOVERY_MISMATCH')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit('R140_TEST_FAILURE')
+          print('R140_RELEASE_TRANSACTION_SANDBOX=PASS_30')
+          PYR140
+
+      - name: R141 fixed root material acquisition (nonroot tests only)
+        run: |
+          PYTHONPATH=src:scripts python3 -B - <<'PYR141'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests', pattern='test_p14_r141_root_material_reader.py'
+          )
+          if suite.countTestCases() != 40:
+              raise SystemExit('R141_TEST_DISCOVERY_MISMATCH')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit('R141_TEST_FAILURE')
+          print('R141_ROOT_INPUT_READER=PASS_40')
+          PYR141
+
+      - name: R142 protected material to signed sandbox transaction
+        run: |
+          PYTHONPATH=src:scripts python3 -B - <<'PYR142'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests', pattern='test_p14_r142_material_transaction_bridge.py'
+          )
+          if suite.countTestCases() != 30:
+              raise SystemExit('R142_TEST_DISCOVERY_MISMATCH')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit('R142_TEST_FAILURE')
+          print('R142_MATERIAL_TRANSACTION=PASS_30')
+          PYR142
+
+      - name: R143 signed Git source handoff and independent authority request
+        run: |
+          PYTHONPATH=src:scripts python3 -B - <<'PYR143'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests', pattern='test_p14_r143_root_release_handoff.py'
+          )
+          if suite.countTestCases() != 36:
+              raise SystemExit('R143_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit('R143_TESTS_FAILED')
+          print('R143_INDEPENDENT_RELEASE_HANDOFF=PASS_36')
+          PYR143
+
+      - name: R146 signed root installer candidate and independent bootstrap request
+        run: |
+          PYTHONPATH=src:scripts python3 -B - <<'PYR146'
+          import unittest
+          specs=(('test_p14_r146_independent_install.py',53),
+                 ('test_p14_r146_bootstrap_request.py',17))
+          total=0
+          for pattern,expected in specs:
+              suite=unittest.defaultTestLoader.discover('lab/tests',pattern=pattern)
+              if suite.countTestCases()!=expected:raise SystemExit('R146_DISCOVERY_INVALID')
+              result=unittest.TextTestRunner(verbosity=2).run(suite)
+              if not result.wasSuccessful():raise SystemExit('R146_TESTS_FAILED')
+              total+=expected
+          if total!=70:raise SystemExit('R146_TOTAL_INVALID')
+          print('R146_INDEPENDENT_INSTALL_CANDIDATE=PASS_70_SOURCE_ONLY')
+          PYR146
+
+      - name: R148 reproducible paired experiment register for 54 planned slots
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR148'
+          import unittest
+          suite=unittest.defaultTestLoader.discover('lab/tests',pattern='test_p14_r148_paired_register.py')
+          if suite.countTestCases()!=60:raise SystemExit('R148_DISCOVERY_INVALID')
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():raise SystemExit('R148_TESTS_FAILED')
+          print('R148_PAIRED_EXPERIMENT_REGISTER=PASS_60_SOURCE_ONLY')
+          PYR148
+
+      - name: R149 offline 54-service-scenario design and private selection audit
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR149'
+          import unittest
+          suite=unittest.defaultTestLoader.discover('lab/tests',pattern='test_p14_r149_scenario_design.py')
+          if suite.countTestCases()!=55:raise SystemExit('R149_DISCOVERY_INVALID')
+          result=unittest.TextTestRunner(verbosity=1).run(suite)
+          if not result.wasSuccessful():raise SystemExit('R149_TESTS_FAILED')
+          print('R149_SCENARIO_DESIGN=PASS_55_SOURCE_ONLY')
+          PYR149
+
+      - name: R161 single-operator DEV controller source-only (not physical permit)
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR161'
+          import unittest
+          suite=unittest.defaultTestLoader.discover('lab/tests',pattern='test_p14_r161_single_operator.py')
+          if suite.countTestCases()!=56:raise SystemExit('R161_DISCOVERY_INVALID')
+          result=unittest.TextTestRunner(verbosity=1).run(suite)
+          if not result.wasSuccessful():raise SystemExit('R161_TESTS_FAILED')
+          print('R161_SOFTWARE=PASS_56_NO_ROOT_NO_TRAFFIC')
+          PYR161
