@@ -268,3 +268,14 @@ jobs:
           if not result.wasSuccessful():raise SystemExit('R148_TESTS_FAILED')
           print('R148_PAIRED_EXPERIMENT_REGISTER=PASS_60_SOURCE_ONLY')
           PYR148
+
+      - name: R149 offline 54-service-scenario design and private selection audit
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR149'
+          import unittest
+          suite=unittest.defaultTestLoader.discover('lab/tests',pattern='test_p14_r149_scenario_design.py')
+          if suite.countTestCases()!=55:raise SystemExit('R149_DISCOVERY_INVALID')
+          result=unittest.TextTestRunner(verbosity=1).run(suite)
+          if not result.wasSuccessful():raise SystemExit('R149_TESTS_FAILED')
+          print('R149_SCENARIO_DESIGN=PASS_55_SOURCE_ONLY')
+          PYR149
