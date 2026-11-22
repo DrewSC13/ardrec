@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feat/ardrec-cierre-operacional-experimental
+      - feat/ardrec-cierre-operacional-experimental-v2
 
 permissions:
   contents: read
@@ -290,3 +291,18 @@ jobs:
           if not result.wasSuccessful():raise SystemExit('R161_TESTS_FAILED')
           print('R161_SOFTWARE=PASS_56_NO_ROOT_NO_TRAFFIC')
           PYR161
+      - name: R163 signed single-operator policy source verification
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR163'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_p14_r163_single_operator_install_policy.py'
+          )
+          if suite.countTestCases() != 12:
+              raise SystemExit('R163_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit('R163_REGRESSION_FAILED')
+          print('R163_POLICY=PASS_12_NO_ROOT_NO_TRAFFIC')
+          PYR163
