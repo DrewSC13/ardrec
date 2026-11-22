@@ -210,3 +210,18 @@ jobs:
               raise SystemExit('R141_TEST_FAILURE')
           print('R141_ROOT_INPUT_READER=PASS_40')
           PYR141
+
+      - name: R142 protected material to signed sandbox transaction
+        run: |
+          PYTHONPATH=src:scripts python3 -B - <<'PYR142'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests', pattern='test_p14_r142_material_transaction_bridge.py'
+          )
+          if suite.countTestCases() != 30:
+              raise SystemExit('R142_TEST_DISCOVERY_MISMATCH')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit('R142_TEST_FAILURE')
+          print('R142_MATERIAL_TRANSACTION=PASS_30')
+          PYR142
