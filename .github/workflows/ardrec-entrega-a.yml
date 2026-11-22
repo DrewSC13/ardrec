@@ -144,3 +144,24 @@ jobs:
                   raise SystemExit('R136_TEST_FAILURE')
           print('R136=PASS_30')
           PYR136
+
+      - name: R138 signed branch provenance for F7/F8
+        run: |
+          PYTHONPATH=src:scripts python3 -B - <<'PYR138'
+          import unittest
+          for pattern, count in (
+              ('test_p14_r115_f7_controlled_boot.py', 0),
+              ('test_p14_r115_f8_runner_ftp_boot.py', 0),
+              ('test_p14_r138_boot_branch_provenance.py', 19),
+          ):
+              suite=unittest.defaultTestLoader.discover('lab/tests',pattern=pattern)
+              discovered=suite.countTestCases()
+              if count and discovered!=count:
+                  raise SystemExit('R138_COUNT_MISMATCH:'+pattern)
+              if not count and discovered==0:
+                  raise SystemExit('R138_HISTORICAL_MISSING:'+pattern)
+              result=unittest.TextTestRunner(verbosity=1).run(suite)
+              if not result.wasSuccessful():
+                  raise SystemExit('R138_TEST_FAILURE:'+pattern)
+          print('R138_BRANCH_PROVENANCE=PASS')
+          PYR138

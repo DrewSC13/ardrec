@@ -38,6 +38,10 @@ ROOT = Path('/home/cicada/ardrec-lab/r115-f7-one-boot-deny-v1')
 REPO = Path('/home/cicada/Development/GitHub/ardrec')
 BRANCH = 'feat/p14-r115-a3-p7-a6-real'
 BASE = '6ce42a1143d50f7adf69ea3159b56c0e993c45cb'
+# R138: nueva línea de desarrollo. La historia R115 original conserva
+# sus identidades y sigue válida solo bajo las mismas guardas.
+ACTIVE_BRANCH = 'feat/ardrec-cierre-operacional-experimental'
+ACTIVE_BASE = 'b43b9488ad7f89d728ea24430b789342f758c4a0'
 ORDER = ('ssh','runner','ftp')
 ALL = ('ssh','runner','ftp','smb')
 PERMIT_TRUST = Path('/etc/ardrec/r115-boot-trust-v1.json')
@@ -124,12 +128,17 @@ def git_guard(*, for_boot=False, runner=subprocess.run):
     need(Path.cwd().resolve()==REPO,'WRONG_REPOSITORY_DIRECTORY')
     need(ok(_run(('git','rev-parse','--show-toplevel'),runner=runner),'GIT_ROOT')==str(REPO),
          'GIT_ROOT_MISMATCH')
-    need(ok(_run(('git','branch','--show-current'),runner=runner),'GIT_BRANCH')==BRANCH,
-         'GIT_BRANCH_MISMATCH')
+    branch=ok(_run(('git','branch','--show-current'),runner=runner),'GIT_BRANCH')
+    need(branch in (BRANCH,ACTIVE_BRANCH),'GIT_BRANCH_MISMATCH')
     head=ok(_run(('git','rev-parse','HEAD'),runner=runner),'GIT_HEAD')
     need(f1.GIT_SHA.fullmatch(head),'INVALID_HEAD')
     need(_run(('git','merge-base','--is-ancestor',BASE,head),runner=runner)['rc']==0,
          'SIGNED_F1_F6_BASE_NOT_ANCESTOR')
+    # La nueva rama exige, adicionalmente, el cierre R136 firmado como
+    # ancestro exacto. No acepta cualquier rama que derive de R115.
+    if branch==ACTIVE_BRANCH:
+        need(_run(('git','merge-base','--is-ancestor',ACTIVE_BASE,head),runner=runner)['rc']==0,
+             'SIGNED_R136_BASE_NOT_ANCESTOR')
     need(ok(_run(('git','status','--porcelain=v1','--untracked-files=all'),runner=runner),
             'GIT_STATUS')=='','SOURCE_TREE_NOT_CLEAN')
     sig=ok(_run(('git','log','-1','--format=%G?'),runner=runner),'GIT_SIGNATURE')
