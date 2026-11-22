@@ -306,3 +306,19 @@ jobs:
               raise SystemExit('R163_REGRESSION_FAILED')
           print('R163_POLICY=PASS_12_NO_ROOT_NO_TRAFFIC')
           PYR163
+
+      - name: R163 phase review signed policy (offline)
+        run: |
+          PYTHONPATH=src:lab/tests python3 -B - <<'PYR163F3'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_p14_r163_install_phase_gate.py',
+          )
+          if suite.countTestCases() != 24:
+              raise SystemExit('R163_F3_TEST_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit('R163_F3_TEST_FAILURE')
+          print('R163_F3_PHASE_GATE=PASS_24_SOURCE_ONLY')
+          PYR163F3
