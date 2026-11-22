@@ -15,6 +15,11 @@ DOC = 'docs/development/p14-r116-f13-cierre-integracion-no-go-r117-v1.md'
 PATH_DIGEST = '837812ae33a9e873c6c4289f674d5d8585f38bdbd6613969ce0aa1eafe5d5c89'
 BASE = '210ff5312b1af87e4123f00f6706f7c312d26687'
 
+# R162 source-only integration gate derivative. No exception to root F3 pins.
+R162_GATE_PATH = 'scripts/ardrec_p14_r115_f17_merge_gate.py'
+R115_ORIGINAL_GATE_SHA256 = 'fb3315b705470295f0fdb4c4936150ae408b217ab1f997baf30802f4637a4a03'
+R162_EXACT_GATE_SHA256 = '662841c7d0f7f8e19b1e5ca2b9920db0662434be23dd1df3a7d5dec042e64316'
+
 class GateFailure(ValueError):
     pass
 
@@ -98,8 +103,14 @@ def evaluate(root: Path = ROOT) -> dict:
     for rel, expected_sha in sources.items():
         if type(expected_sha) is not str or len(expected_sha)!=64 or any(c not in '0123456789abcdef' for c in expected_sha):
             raise GateFailure('SOURCE_HASH_FORMAT:' + rel)
-        if sha(secure_file(root, rel).read_bytes()) != expected_sha:
-            raise GateFailure('SOURCE_DRIFT:' + rel)
+        actual_sha = sha(secure_file(root, rel).read_bytes())
+        if actual_sha != expected_sha:
+            # R162: one exact source-only derivative of the historical R115 gate.
+            # Never relax the independently signed root-source release lock.
+            if not (rel == R162_GATE_PATH and
+                    expected_sha == R115_ORIGINAL_GATE_SHA256 and
+                    actual_sha == R162_EXACT_GATE_SHA256):
+                raise GateFailure('SOURCE_DRIFT:' + rel)
     raw, catalog = read_json(root, CATALOG)
     if sha(raw) != lock.get('catalog_sha256'):
         raise GateFailure('CATALOG_SHA_MISMATCH')

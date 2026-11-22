@@ -12,8 +12,8 @@ from ardrec.coordination import r115_f8_runner_ftp_boot as f8
 class ProvenanceTests(TestCase):
     def fake(self, *, branch=None, head=None, legacy_rc=0, active_rc=0,
              status='', signature='G', tracked=True, clean=True, cwd=True):
-        branch = f7.ACTIVE_BRANCH if branch is None else branch
-        head = f7.ACTIVE_BASE if head is None else head
+        branch = f7.BRANCH if branch is None else branch
+        head = f7.BASE if head is None else head
         captured = []
         def respond(argv, **_kwargs):
             args = tuple(argv)
@@ -31,7 +31,6 @@ class ProvenanceTests(TestCase):
                 value = signature
             elif args[:3] == ('git','merge-base','--is-ancestor'):
                 if args[3] == f7.BASE: rc = legacy_rc
-                elif args[3] == f7.ACTIVE_BASE: rc = active_rc
                 else: raise AssertionError('UNKNOWN_BASE')
             elif args[:3] == ('git','ls-files','--error-unmatch'):
                 rc = 0 if tracked else 1
@@ -55,26 +54,27 @@ class ProvenanceTests(TestCase):
         self.assertEqual(f7.BASE,'6ce42a1143d50f7adf69ea3159b56c0e993c45cb')
 
     def test_02_current_branch_pinned_identity(self):
-        self.assertEqual(f7.ACTIVE_BRANCH,'feat/ardrec-cierre-operacional-experimental')
-        self.assertEqual(f7.ACTIVE_BASE,'b43b9488ad7f89d728ea24430b789342f758c4a0')
+        # Historical root-bound F7 cannot authorize the current development branch.
+        self.assertFalse(hasattr(f7, 'ACTIVE_BRANCH'))
+        self.assertFalse(hasattr(f7, 'ACTIVE_BASE'))
 
     def test_03_new_branch_requires_both_ancestors(self):
-        head, commands = self.guard()
-        self.assertEqual(head,f7.ACTIVE_BASE)
-        expected={('git','merge-base','--is-ancestor',f7.BASE,head),
-                  ('git','merge-base','--is-ancestor',f7.ACTIVE_BASE,head)}
-        self.assertTrue(expected <= set(commands))
+        # Source-only merge is not a boot authority extension.
+        self.refusal('GIT_BRANCH_MISMATCH',
+                     branch='feat/ardrec-cierre-operacional-experimental',
+                     head='b43b9488ad7f89d728ea24430b789342f758c4a0')
 
     def test_04_historical_branch_still_allowed(self):
         head, commands = self.guard(branch=f7.BRANCH,head=f7.BASE)
         self.assertEqual(head,f7.BASE)
-        self.assertNotIn(('git','merge-base','--is-ancestor',f7.ACTIVE_BASE,head),commands)
+        self.assertEqual(sum(x[:3]==('git','merge-base','--is-ancestor') for x in commands),1)
 
     def test_05_unknown_branch_rejected(self):
         self.refusal('GIT_BRANCH_MISMATCH',branch='feat/unauthorized-branch')
 
     def test_06_active_base_missing_rejected(self):
-        self.refusal('SIGNED_R136_BASE_NOT_ANCESTOR',active_rc=1)
+        self.refusal('GIT_BRANCH_MISMATCH',
+                     branch='feat/ardrec-cierre-operacional-experimental', active_rc=1)
 
     def test_07_historical_base_missing_rejected(self):
         self.refusal('SIGNED_F1_F6_BASE_NOT_ANCESTOR',legacy_rc=1)
@@ -105,7 +105,7 @@ class ProvenanceTests(TestCase):
 
     def test_16_normal_check_does_not_require_source_files(self):
         head, commands=self.guard(for_boot=False,tracked=False)
-        self.assertEqual(head,f7.ACTIVE_BASE)
+        self.assertEqual(head,f7.BASE)
         self.assertFalse(any(args[:3]==('git','ls-files','--error-unmatch') for args in commands))
 
     def test_17_F8_delegates_to_F7_and_checks_its_own_sources(self):
@@ -113,16 +113,16 @@ class ProvenanceTests(TestCase):
         def pretend(argv, **_kwargs):
             args.append(tuple(argv))
             return {'rc':0}
-        with patch.object(f7,'git_guard',return_value=f7.ACTIVE_BASE) as check, \
+        with patch.object(f7,'git_guard',return_value=f7.BASE) as check, \
              patch.object(f7,'_run',side_effect=pretend):
-            self.assertEqual(f8._check_sources(),f7.ACTIVE_BASE)
+            self.assertEqual(f8._check_sources(),f7.BASE)
             check.assert_called_once_with(for_boot=True)
             self.assertEqual(len(args),4)
             self.assertTrue(all('r115_f8' in str(a) or 'ardrec_p14_r115_f8' in str(a) for a in args))
 
     def test_18_F8_denies_without_F7_provenance(self):
-        with patch.object(f7,'git_guard',side_effect=f7.Stop('SIGNED_R136_BASE_NOT_ANCESTOR')):
-            with self.assertRaisesRegex(f7.Stop,'SIGNED_R136_BASE_NOT_ANCESTOR'):
+        with patch.object(f7,'git_guard',side_effect=f7.Stop('SIGNED_F1_F6_BASE_NOT_ANCESTOR')):
+            with self.assertRaisesRegex(f7.Stop,'SIGNED_F1_F6_BASE_NOT_ANCESTOR'):
                 f8._check_sources()
 
     def test_19_no_automatic_operation_exposed_by_bridge(self):

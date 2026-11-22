@@ -1,3 +1,16 @@
+> **Actualización de integración R163 (2026-11-22).** La ampliación de procedencia
+> realizada en R138 modificó `r115_f7_controlled_boot.py`, que forma parte de
+> los manifiestos históricos de la cadena root R115/R116/R117. Para el merge
+> de software se restaura exactamente F7 al SHA-256 histórico
+> `90086ec330b1b9513d096fa6996e7dfe994ba10511702d4becbcc1fddee3688d`.
+> En consecuencia, la rama `feat/ardrec-cierre-operacional-experimental` **no**
+> tiene autorización de arranque mediante el F7 histórico. La compatibilidad
+> R138 documentada a continuación describe el cambio que se ensayó en desarrollo,
+> **no** una capacidad de arranque disponible en el cierre integrado. El modo
+> monousuario R161 continúa siendo control de fuente sin concesión root.
+> La habilitación física futura requiere un adaptador versionado y una
+> liberación root firmada con las huellas actualizadas; P8 permanece `NO-GO`.
+
 # R138 — Continuidad firmada de arranque F7/F8 bajo rama ARDREC
 
 ## Alcance
