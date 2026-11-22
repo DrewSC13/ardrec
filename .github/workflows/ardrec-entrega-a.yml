@@ -354,3 +354,32 @@ jobs:
               raise SystemExit('R163_V3_TEST_FAILURE')
           print('R163_V3=PASS_12_SOURCE_ONLY')
           PYR163V3
+
+      - name: R163 V3 root bootstrap source-only regression
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYR163F7'
+          import unittest
+
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_p14_r163_v3_bootstrap.py',
+          )
+
+          if suite.countTestCases() != 12:
+              raise SystemExit(
+                  'R163_F7_DISCOVERY_INVALID'
+              )
+
+          result = unittest.TextTestRunner(
+              verbosity=2
+          ).run(suite)
+
+          if not result.wasSuccessful():
+              raise SystemExit(
+                  'R163_F7_TEST_FAILED'
+              )
+
+          print(
+              'R163_F7=PASS_12_NO_ROOT_NO_TRAFFIC'
+          )
+          PYR163F7
