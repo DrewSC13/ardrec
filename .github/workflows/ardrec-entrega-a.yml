@@ -1,0 +1,88 @@
+name: ARDREC Entrega A / Source validation
+
+on:
+  push:
+    branches:
+      - feat/ardrec-cierre-operacional-experimental
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ardrec-entrega-a-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  installation-source:
+    name: R130 R132 R133 / Offline verification
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    defaults:
+      run:
+        shell: bash --noprofile --norc {0}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Python version
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version-file: .python-version
+          architecture: x64
+
+      - name: Verify source pins and Python version
+        run: |
+          python3 --version
+          python3 - <<'PY'
+          import hashlib
+          from pathlib import Path
+
+          expected = {
+              "scripts/ardrec_p14_r130_b4_root_guard_v2.py":
+                  "f64ce5f8c31cd80f98d07f47eb99728e15e406a66b697044e3d5eefd6a3f73e8",
+              "scripts/ardrec_p14_r130_b9_ftp_executor_v2.py":
+                  "c3c840f66476f3f0bbd87e48f657fdc6270e09b57b130eaf9c5b3cb68980cbd3",
+          }
+
+          for name, digest in expected.items():
+              actual = hashlib.sha256(Path(name).read_bytes()).hexdigest()
+              if actual != digest:
+                  raise SystemExit("SOURCE_PIN_MISMATCH:" + name)
+
+          print("B4_B9_SOURCE_PINS=PASS")
+          PY
+
+      - name: Offline R130 R132 R133 regression
+        run: |
+          PYTHONPATH=src python3 -B - <<'PY'
+          import unittest
+
+          checks = (
+              ("test_p14_r130_b17_r6*.py", 75, "R130"),
+              ("test_p14_r132_install_recovery.py", 20, "R132"),
+              ("test_p14_r133_install_release_gate.py", 32, "R133"),
+          )
+
+          for pattern, expected, label in checks:
+              suite = unittest.defaultTestLoader.discover(
+                  "lab/tests", pattern=pattern
+              )
+              count = suite.countTestCases()
+              print(f"{label}_DISCOVERED={count}", flush=True)
+
+              if count != expected:
+                  raise SystemExit(label + "_TEST_COUNT_MISMATCH")
+
+              result = unittest.TextTestRunner(
+                  verbosity=2
+              ).run(suite)
+
+              if not result.wasSuccessful():
+                  raise SystemExit(label + "_REGRESSION_FAILED")
+
+          print("R130_R132_R133=PASS_127", flush=True)
+          PY
