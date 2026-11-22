@@ -109,3 +109,21 @@ jobs:
 
           print("R134_SOURCE_AUDIT=PASS_20")
           PYR134
+
+      - name: R135 transaction and read-only physical readiness
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR135'
+          import unittest
+          cases = (
+              ('test_p14_r135_root_transaction.py', 32),
+              ('test_p14_r135_lab_readiness.py', 12),
+          )
+          for pattern, expected in cases:
+              suite = unittest.defaultTestLoader.discover('lab/tests', pattern=pattern)
+              if suite.countTestCases() != expected:
+                  raise SystemExit('R135_DISCOVERY_MISMATCH:' + pattern)
+              result = unittest.TextTestRunner(verbosity=1).run(suite)
+              if not result.wasSuccessful():
+                  raise SystemExit('R135_TEST_FAILURE:' + pattern)
+          print('R135=PASS_44', flush=True)
+          PYR135
