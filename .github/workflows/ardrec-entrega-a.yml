@@ -6,6 +6,7 @@ on:
       - feat/ardrec-cierre-operacional-experimental
       - feat/ardrec-cierre-operacional-experimental-v2
       - feat/ardrec-integracion-funcional-experimental-v1
+      - feat/ardrec-pipeline-evidencia-riesgo-integrada-v1
 
 permissions:
   contents: read
@@ -392,3 +393,7 @@ jobs:
       - name: R164-F5 cross-population identity boundary (offline)
         run: |
           PYTHONPATH=src:scripts python3 -B -m unittest discover -s lab/tests -p 'test_p14_r164_f5_boundary.py' -v
+
+      - name: R165-F2 integrated A5-A10 documentary gate (offline)
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r165_f2_a5_a10_documentary_controller.py' -v
