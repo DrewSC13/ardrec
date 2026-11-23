@@ -5,6 +5,7 @@ on:
     branches:
       - feat/ardrec-cierre-operacional-experimental
       - feat/ardrec-cierre-operacional-experimental-v2
+      - feat/ardrec-integracion-funcional-experimental-v1
 
 permissions:
   contents: read
@@ -383,3 +384,7 @@ jobs:
               'R163_F7=PASS_12_NO_ROOT_NO_TRAFFIC'
           )
           PYR163F7
+
+      - name: R164-F3 experimental workspace R148 R149 (offline)
+        run: |
+          PYTHONPATH=src:scripts python3 -B -m unittest discover -s lab/tests -p 'test_p14_r164_f3_workspace.py' -v
