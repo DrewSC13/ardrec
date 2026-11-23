@@ -1,0 +1,15 @@
+{
+  "files_sha256": {
+    "lab/tests/test_p14_r167_f7d_release.py": "c1cfca04636b562bba4fd167128b193fc79651fe79d715e57814fe0d59a2a62e",
+    "scripts/ardrec_p14_r167_f7d_controlled_boot.py": "d50688bc8405751e86055a94488d553eba4d5263b238ca7156532e25f11db740",
+    "src/ardrec/coordination/r167_f7d_controlled_boot.py": "da6c33bed861c82940a846f1f2eeacf048bde78ece5ead9e6bb6aefe5308bd80",
+    "src/ardrec/coordination/r167_f7d_release_gate.py": "57566c5a9b5ef74b779967cd329c1114c8e82667c8a0f626d47ccec1829aa05f"
+  },
+  "historical_sha256": "361e338d1948f8be31504bdd2b8108346ab96b80e58ae56ebdb32fb4de25e3af",
+  "network_traffic": false,
+  "p8": "NO-GO",
+  "release_state": "EXTERNAL_SIGNATURE_REQUIRED",
+  "root_release_installed": false,
+  "schema": "ARDREC-R167-F7D-SOURCE-v1",
+  "vm_starts_during_build": 0
+}
