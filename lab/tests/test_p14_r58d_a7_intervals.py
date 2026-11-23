@@ -1,4 +1,4 @@
-"""R58-D: 33 deterministic and adversarial tests of the A7 exact envelope."""
+"""R58-D: deterministic and adversarial tests of the A7 exact envelope."""
 from __future__ import annotations
 
 from copy import deepcopy
@@ -92,6 +92,74 @@ class TestR58DA7(unittest.TestCase):
     def test_boolean_index(self): expect_block([dict(deepcopy(BASE),assessment_index=True)])
     def test_too_large_index(self): expect_block([dict(deepcopy(BASE),assessment_index=2**31)])
     def test_bad_service(self): expect_block([dict(deepcopy(BASE),service_id='ANY')])
+
+    def test_ftp_t01_hyphen_case_preserved(self):
+        row = deepcopy(BASE)
+        row["service_id"] = "FTP_DEV"
+        row["case_id"] = "FTP-T01-S01-01"
+
+        document = self.doc([row])
+
+        self.assertEqual(
+            document["inputs"][0]["case_id"],
+            "FTP-T01-S01-01",
+        )
+        self.assertEqual(
+            document["results"][0]["case_id"],
+            "FTP-T01-S01-01",
+        )
+        self.assertTrue(verify_intervals(document))
+
+    def test_hyphen_and_underscore_not_aliased(self):
+        original = dict(
+            deepcopy(BASE),
+            service_id="FTP_DEV",
+            case_id="FTP-T01-S01-01",
+        )
+
+        other = dict(
+            deepcopy(BASE),
+            service_id="FTP_DEV",
+            case_id="FTP_T01_S01_01",
+        )
+
+        document = self.doc([original, other])
+
+        self.assertEqual(document["unit_count"], 2)
+        self.assertEqual(
+            {row["case_id"] for row in document["inputs"]},
+            {"FTP-T01-S01-01", "FTP_T01_S01_01"},
+        )
+
+    def test_malformed_hyphen_case_rejected(self):
+        invalid = (
+            "-FTP",
+            "FTP-",
+            "FTP--T01",
+            "FTP-t01",
+            "FTP T01",
+            "FTP/T01",
+        )
+
+        for case in invalid:
+            with self.subTest(case_id=case):
+                expect_block([
+                    dict(deepcopy(BASE), case_id=case)
+                ])
+
+    def test_hyphen_evidence_identifier_still_rejected(self):
+        row = deepcopy(BASE)
+        row["evidence"] = [
+            dict(deepcopy(FIXED), evidence_id="E-01")
+        ]
+
+        expect_block([row])
+
+    def test_overlength_case_identifier_rejected(self):
+        expect_block([
+            dict(deepcopy(BASE), case_id="A" * 65)
+        ])
+
     def test_bad_case(self): expect_block([dict(deepcopy(BASE),case_id='../bad')])
     def test_extra_unit_field(self): expect_block([dict(deepcopy(BASE),authorized=True)])
     def test_missing_unit_field(self):
