@@ -388,3 +388,7 @@ jobs:
       - name: R164-F3 experimental workspace R148 R149 (offline)
         run: |
           PYTHONPATH=src:scripts python3 -B -m unittest discover -s lab/tests -p 'test_p14_r164_f3_workspace.py' -v
+
+      - name: R164-F5 cross-population identity boundary (offline)
+        run: |
+          PYTHONPATH=src:scripts python3 -B -m unittest discover -s lab/tests -p 'test_p14_r164_f5_boundary.py' -v
