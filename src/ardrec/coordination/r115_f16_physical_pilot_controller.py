@@ -65,7 +65,7 @@ def physical_deny_stage(capture, *, now):
     want={'runner_ssh':'DENY_MATCH','ssh':'DENY_MATCH',
           'runner_ftp':'DENY_MATCH','ftp':'DENY_MATCH',
           'runner_smb':'DENY_MATCH','smb':'ABSENT_WHILE_OFF'}
-    need(report['bindings']==want,'FOUR_DENY_TWO_OFF_BINDINGS_REQUIRED')
+    need(report['bindings']==want,'FIVE_DENY_ONE_OFF_BINDING_REQUIRED')
     need(report['nft']=='MATCH' and report['helper']=='MATCH' and
          report['f11_hook']=='MATCH','F11_R34_NOT_ATTESTED')
     need(proof['f5_capture_sha256']==capture_sha,'CAPTURE_HASH_NOT_BOUND')

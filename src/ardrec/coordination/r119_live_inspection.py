@@ -10,6 +10,8 @@ La frescura de la lectura no convierte un estado DENY en permiso de tráfico.
 from __future__ import annotations
 
 import argparse
+import base64
+import binascii
 import json
 from datetime import datetime, timezone
 import os
@@ -353,6 +355,216 @@ def _read_baseline(repo: Path):
     return closure_raw, catalog_raw
 
 
+
+def ftp_phase_deny_readback(host: dict) -> str:
+    """Reconoce solo la topologia FTP 5/1; no libera A3/P8.
+
+    El informe F5 ya vinculo cada binding DENY a dominio, interfaz y UUID.
+    La sexta interfaz SMB solo puede estar ausente con la VM SMB apagada.
+    """
+    need(type(host) is dict and type(host.get('states')) is dict and
+         type(host.get('vm_definitions')) is dict and
+         type(host.get('bindings')) is dict, 'FTP_PHASE_HOST_REPORT_INVALID')
+    good = (host.get('nft') == 'MATCH' and
+            host.get('helper') == 'MATCH' and
+            host.get('f11_hook') == 'MATCH' and
+            host['states'] == {'runner': 'RUNNING', 'ssh': 'RUNNING',
+                               'ftp': 'RUNNING', 'smb': 'OFF'} and
+            host['vm_definitions'] == {k: 'MATCH' for k in f5.VMS} and
+            set(host['bindings']) == set(f5.six.ROLES) and
+            all(host['bindings'][name] == 'DENY_MATCH'
+                for name in f5.six.ROLES if name != 'smb') and
+            host['bindings']['smb'] == 'ABSENT_WHILE_OFF')
+    return ('FIVE_DENY_ONE_ABSENT_READBACK_ONLY' if good
+            else 'NOT_ESTABLISHED')
+
+
+def diagnostic_lines(capture: dict, host: dict, *, mode: str) -> list[str]:
+    """Expone codigos por sonda sin volcar stdout/stderr ni modificar el host."""
+    need(mode in ('F5_LIVE_CAPTURE', 'F5_PRIVATE_RECEIPT_REPLAY'),
+         'DIAGNOSTIC_MODE_INVALID')
+    need(f5.report(capture) == host, 'DIAGNOSTIC_SOURCE_REPORT_MISMATCH')
+    stage = ftp_phase_deny_readback(host)
+    probes = capture['probes']
+    failed = []
+    result = [
+        'R166_F2_CAPTURE_SHA256=' + f1digest(capture),
+        'R166_F2_CAPTURE_CLASS=' + ('CURRENT_CAPTURE_READONLY' if
+                                    mode == 'F5_LIVE_CAPTURE' else 'HISTORICAL_REPLAY'),
+        'R166_F2_FTP_PHASE=' + stage,
+        'R166_F2_FTP_DENY_VERIFIED=' + str(sum(
+            v == 'DENY_MATCH' for v in host['bindings'].values())),
+        'R166_F2_FTP_SMB_BINDING=' + host['bindings']['smb'],
+    ]
+    for role in f5.VMS:
+        result.append('R166_F2_VM_' + role.upper() + '_STATE=' + host['states'][role])
+        result.append('R166_F2_VM_' + role.upper() + '_DEFINITION=' +
+                      host['vm_definitions'][role])
+    for name in f5.six.ROLES:
+        result.append('R166_F2_BINDING_' + name.upper() + '=' + host['bindings'][name])
+    result.extend((
+        'R166_F2_NFT=' + host['nft'],
+        'R166_F2_HELPER=' + host['helper'],
+        'R166_F2_F11_HOOK=' + host['f11_hook'],
+    ))
+    for name in sorted(probes):
+        probe = probes[name]
+        if probe['timeout']:
+            status = 'TIMEOUT'
+        elif probe['truncated']:
+            status = 'OUTPUT_TRUNCATED'
+        elif probe['rc'] is None:
+            status = 'COMMAND_UNAVAILABLE'
+        elif probe['rc'] != 0:
+            status = 'RC_' + str(probe['rc'])
+        else:
+            status = 'RC_0'
+        result.append('R166_F2_PROBE_' + name.upper() + '=' + status)
+        if status != 'RC_0':
+            failed.append(name)
+    result.extend((
+        'R166_F2_FAILED_PROBES=' + str(len(failed)),
+        'R166_F2_A3_AUTHORIZED=NO',
+        'R166_F2_A6_PHYSICAL_ADMITTED=NO',
+        'R166_F2_A9_PUBLISHED=NO',
+        'R166_F2_P8=NO-GO',
+        'R166_F2_HOST_MUTATIONS=0',
+    ))
+    return result
+
+
+def f1digest(capture: dict) -> str:
+    """Hash de captura mediante el mismo codec F5/R119."""
+    return contract.digest(contract.canonical(capture))
+
+
+
+# R166-F3: causas de falla derivadas del stderr original R115-F5.
+# Las salidas son codigos de lista cerrada; no exponen usuarios, dominios,
+# IP, rutas privadas ni texto arbitrario aportado por herramientas externas.
+R163_PATHS = {
+    'BOOTSTRAP': Path('/opt/ardrec/r163-bootstrap-v1/bootstrap.py'),
+    'BOOTSTRAP_BUNDLE': Path('/var/lib/ardrec/r163-bootstrap-source-v1/agent.zip'),
+    'AGENT': Path('/opt/ardrec/r163-installer-v1/installer.py'),
+    'AGENT_MANIFEST': Path('/opt/ardrec/r163-installer-v1/manifest.json'),
+    'B4_SOURCE': Path('/opt/ardrec/r163-installer-v1/source/B4/source.py'),
+    'B9_SOURCE': Path('/opt/ardrec/r163-installer-v1/source/B9/source.py'),
+    'STAGING_JOURNAL': Path('/var/lib/ardrec/r163-stage-state-v1/journal.json'),
+    'STAGING_RECEIPT': Path('/var/lib/ardrec/r163-stage-state-v1/receipt.json'),
+    'TRUST': Path('/etc/ardrec/r163-stage-trust-v1.json'),
+    'AUTHORIZATION': Path('/etc/ardrec/r163-stage-authorization-v1.json'),
+    'REVOCATION': Path('/etc/ardrec/r163-stage-revocation-v1.json'),
+}
+
+
+def probe_cause(name: str, probe: dict) -> str:
+    """Clasifica el error conservado, sin ejecutar nada y sin imprimir stderr.
+
+    Aun la clasificacion mas especifica no valida la identidad root ni
+    demuestra el motivo de otros intentos distintos al recibo.
+    """
+    need(name in f5.READS and type(probe) is dict,
+         'F3_PROBE_NAME_INVALID')
+    if probe['timeout']:
+        return 'TIMEOUT'
+    if probe['truncated']:
+        return 'OUTPUT_TRUNCATED'
+    if probe['rc'] is None:
+        return 'COMMAND_UNAVAILABLE'
+    if probe['rc'] == 0:
+        return 'SUCCESS'
+    try:
+        # R115 valida el tamaño y codificacion del contenido antes de llamar.
+        raw = base64.b64decode(probe['stderr'], validate=True)
+        err = raw.decode('utf-8', errors='replace').lower()
+    except (ValueError, TypeError, binascii.Error):
+        return 'INVALID_ERROR_ENCODING'
+    if re.search(r'sudo:.*(a password is required|a terminal is required|no tty present)', err, re.S):
+        return 'SUDO_AUTH_REQUIRED'
+    if re.search(r'sudo:.*(not allowed to execute|not in the sudoers|not permitted to run|may not run sudo|not allowed on)', err, re.S):
+        return 'SUDO_POLICY_DENIED'
+    if 'sudo:' in err and ('must have a tty' in err or 'no tty' in err):
+        return 'SUDO_TTY_POLICY'
+    if 'sudo:' in err and ('account validation failure' in err or 'authentication failure' in err):
+        return 'SUDO_AUTH_FAILED'
+    if 'virsh' in str(f5.READS[name][0]) or f5.READS[name][0].endswith('/virsh'):
+        if 'failed to connect to the hypervisor' in err or 'failed to connect to libvirt' in err:
+            return 'LIBVIRT_CONNECT_FAILED'
+        if ('failed to get domain' in err or 'domain not found' in err or
+            'failed to get nwfilter binding' in err or 'nwfilter binding not found' in err):
+            return 'LIBVIRT_OBJECT_NOT_FOUND'
+        if 'permission denied' in err or 'authentication failed' in err:
+            return 'LIBVIRT_ACCESS_DENIED'
+    if name == 'nft' and ('no such file or directory' in err or 'does not exist' in err):
+        return 'NFT_TABLE_NOT_FOUND'
+    if name in ('helper_sha', 'hook_sha') and 'no such file or directory' in err:
+        return 'SOURCE_FILE_NOT_FOUND'
+    if not err.strip():
+        return 'NONZERO_WITHOUT_STDERR'
+    return 'UNCLASSIFIED_NONZERO'
+
+
+def cause_lines(capture: dict, host: dict) -> list[str]:
+    """Reclasifica exclusivamente el recibo F5 autenticado por R119."""
+    need(f5.report(capture) == host, 'F3_SOURCE_REPORT_MISMATCH')
+    counts: dict[str, int] = {}
+    out = ['R166_F3_CAUSE_SOURCE=F5_ORIGINAL_STDERR_REDACTED',
+           'R166_F3_ORIGINAL_CAPTURE_SHA256=' + f1digest(capture)]
+    for name in sorted(f5.READS):
+        code = probe_cause(name, capture['probes'][name])
+        counts[code] = counts.get(code, 0) + 1
+        out.append('R166_F3_PROBE_' + name.upper() + '_CAUSE=' + code)
+    out.append('R166_F3_CAUSE_COUNTS=' + ','.join(
+        k + ':' + str(counts[k]) for k in sorted(counts)))
+    out.extend(('R166_F3_R163_AUTHENTICITY=NOT_ATTESTED',
+                'R166_F3_ROOT_INSTALL_ACTION=NONE',
+                'R166_F3_P8=NO-GO', 'R166_F3_HOST_MUTATIONS=0'))
+    return out
+
+
+def _root_path_metadata(path: Path) -> str:
+    """Metadata accesible sin privilegios; no leer archivos ni seguir enlaces."""
+    try:
+        meta = path.lstat()
+    except PermissionError:
+        return 'ACCESS_DENIED_UNKNOWN'
+    except FileNotFoundError:
+        return 'NOT_VISIBLE_OR_ABSENT'
+    except OSError:
+        return 'METADATA_UNAVAILABLE'
+    if stat.S_ISLNK(meta.st_mode):
+        return 'SYMLINK_REJECTED'
+    if not stat.S_ISREG(meta.st_mode):
+        return 'NOT_REGULAR_FILE'
+    if meta.st_uid != 0:
+        return 'OWNER_NOT_ROOT'
+    if meta.st_nlink != 1:
+        return 'MULTILINK_UNTRUSTED'
+    if stat.S_IMODE(meta.st_mode) != 0o600:
+        return 'MODE_NOT_0600'
+    return 'ROOT_0600_METADATA_ONLY'
+
+
+def r163_presence_lines() -> list[str]:
+    """Inventario no privilegiado, no firmado; NO sustituye preflight root."""
+    lines = ['R166_F3_R163_READBACK=UNPRIVILEGED_METADATA_ONLY']
+    observed = []
+    for name, path in R163_PATHS.items():
+        status = _root_path_metadata(path)
+        lines.append('R166_F3_R163_' + name + '=' + status)
+        observed.append(status)
+    lines.extend((
+        'R166_F3_R163_METADATA_ALL_VISIBLE=' +
+        ('YES' if all(x == 'ROOT_0600_METADATA_ONLY' for x in observed) else 'NO'),
+        'R166_F3_R163_SOURCE_AUTHENTICITY=NOT_ATTESTED',
+        'R166_F3_R163_SIGNED_AUTHORITY=NOT_ATTESTED',
+        'R166_F3_R163_ROOT_STAGE=NOT_ATTESTED',
+        'R166_F3_R163_RUNTIME_ACTIVATION=NOT_ATTESTED',
+        'R166_F3_R163_HOST_MUTATIONS=0',
+        'R166_F3_P8=NO-GO',
+    ))
+    return lines
+
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description='ARDREC R119: lectura VM/F11/F13 a TUI R38, NO-GO')
     action = p.add_mutually_exclusive_group(required=True)
@@ -362,9 +574,17 @@ def main(argv=None) -> int:
     out.add_argument('--texto', action='store_true')
     out.add_argument('--tui', action='store_true')
     p.add_argument('--caso-a5', type=Path, help='optional R115-F13 private case journal')
+    p.add_argument('--diagnostico', action='store_true',
+                   help='R166-F2: estados por sonda y comprobacion 5/1, sin secretos')
+    p.add_argument('--causas', action='store_true',
+                   help='R166-F3: causas saneadas desde stderr del recibo, no nuevas sondas')
+    p.add_argument('--r163-presencia', action='store_true',
+                   help='R166-F3: solo metadata local de rutas R163, no acredita root')
     p.add_argument('--repo', type=Path, default=Path.cwd())
     args = p.parse_args(argv)
     try:
+        need(not (args.causas or args.r163_presencia) or (args.diagnostico and args.texto),
+             'F3_FLAGS_REQUIRE_DIAGNOSTIC_TEXT')
         need(os.geteuid() != 0, 'ROOT_INTERACTIVE_FORBIDDEN')
         closure, catalog = _read_baseline(args.repo)
         if args.capturar:
@@ -399,6 +619,15 @@ def main(argv=None) -> int:
     print('R119_A9=NOT_PUBLISHED')
     print('R119_P8=NO-GO')
     print('R119_BLOCKERS='+','.join(view['r119_live']['blockers']))
+    if args.diagnostico:
+        for line in diagnostic_lines(capture, host, mode=mode):
+            print(line)
+    if args.causas:
+        for line in cause_lines(capture, host):
+            print(line)
+    if args.r163_presencia:
+        for line in r163_presence_lines():
+            print(line)
     if args.tui:
         try:
             tui.run_dashboard_tui(view)

@@ -50,7 +50,7 @@ def main(argv=None):
         return 2
     print('R115_F16_RECEIPT='+str(folder))
     print('R115_F16_VM_STATES='+json.dumps(report['observed_vm_states'],sort_keys=True))
-    print('R115_F16_PHYSICAL_DENY='+('MATCH_4_ACTIVE_2_OFFLINE'
+    print('R115_F16_PHYSICAL_DENY='+('MATCH_5_ACTIVE_1_OFFLINE'
           if report['physical_deny'] else 'ND'))
     print('R115_F16_BOOT_CHAIN='+('REPLAY_ATTESTED' if report['boot_chain'] else 'ND'))
     print('R115_F16_PILOT_DOCUMENT='+report['independent_pilot_document']['status'])

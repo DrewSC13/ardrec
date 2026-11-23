@@ -7,6 +7,7 @@ on:
       - feat/ardrec-cierre-operacional-experimental-v2
       - feat/ardrec-integracion-funcional-experimental-v1
       - feat/ardrec-pipeline-evidencia-riesgo-integrada-v1
+      - feat/ardrec-a1-a10-cierre-integral-v1
 
 permissions:
   contents: read
@@ -155,7 +156,7 @@ jobs:
           for pattern, count in (
               ('test_p14_r115_f7_controlled_boot.py', 0),
               ('test_p14_r115_f8_runner_ftp_boot.py', 0),
-              ('test_p14_r138_boot_branch_provenance.py', 19),
+              ('test_p14_r138_boot_branch_provenance.py', 20),
           ):
               suite=unittest.defaultTestLoader.discover('lab/tests',pattern=pattern)
               discovered=suite.countTestCases()
@@ -401,3 +402,53 @@ jobs:
       - name: R165-F3 native A5-A10 fixture chain (offline)
         run: |
           PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r165_f3_offline_native_chain.py' -v
+
+      - name: R166-F1 CLI expediente documental + CAS + replay (sin red)
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYR166'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_p14_r166_f1_case_archive_cli.py',
+          )
+          if suite.countTestCases() != 13:
+              raise SystemExit('R166_F1_TEST_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit('R166_F1_REGRESSION_FAILED')
+          if len(result.skipped) != 0:
+              raise SystemExit('R166_F1_SKIPPED_UNPRIVILEGED_TESTS')
+          print('R166_F1=PASS_13_DOCUMENTARY_ONLY')
+          PYR166
+
+      - name: R166-F2 lectura fisica R119, diagnostico de sondas y topologia FTP 5/1 (sin red)
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYR166F2'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_p14_r166_f2_physical_readback.py',
+          )
+          if suite.countTestCases() != 10:
+              raise SystemExit('R166_F2_TEST_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R166_F2_REGRESSION_FAILED_OR_SKIPPED')
+          print('R166_F2=PASS_10_READONLY_SOURCE_PROJECTION')
+          PYR166F2
+
+      - name: R166-F3 clasificacion causal desde recibos y metadatos R163 (sin root)
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYR166F3'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_p14_r166_f3_causal_root_readback.py',
+          )
+          if suite.countTestCases() != 16:
+              raise SystemExit('R166_F3_TEST_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R166_F3_REGRESSION_FAILED_OR_SKIPPED')
+          print('R166_F3=PASS_16_CAUSAL_READONLY')
+          PYR166F3

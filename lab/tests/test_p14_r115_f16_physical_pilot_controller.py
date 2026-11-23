@@ -175,9 +175,11 @@ class Packaging(unittest.TestCase):
         with patch.object(mod.f7,'git_guard',return_value=HEAD), \
              patch.object(mod.f5,'capture',return_value=live()), \
              patch.object(mod.f16,'persist',return_value=Path('/tmp/receipt')), \
-             patch.object(mod,'datetime') as dt, patch('builtins.print'):
+             patch.object(mod,'datetime') as dt, patch('builtins.print') as printed:
             dt.now.return_value=NOW
             self.assertEqual(mod.main(['--inspect-current']),0)
+            self.assertIn('R115_F16_PHYSICAL_DENY=MATCH_5_ACTIVE_1_OFFLINE',
+                          [x.args[0] for x in printed.call_args_list])
     def test_signed_reports_are_not_permits(self):
         out=m.assess(**kw())
         self.assertIsNone(out['a9'])

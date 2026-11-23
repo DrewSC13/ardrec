@@ -31,6 +31,7 @@ class ProvenanceTests(TestCase):
                 value = signature
             elif args[:3] == ('git','merge-base','--is-ancestor'):
                 if args[3] == f7.BASE: rc = legacy_rc
+                elif args[3] == f7.ACTIVE_BASE: rc = active_rc
                 else: raise AssertionError('UNKNOWN_BASE')
             elif args[:3] == ('git','ls-files','--error-unmatch'):
                 rc = 0 if tracked else 1
@@ -54,14 +55,14 @@ class ProvenanceTests(TestCase):
         self.assertEqual(f7.BASE,'6ce42a1143d50f7adf69ea3159b56c0e993c45cb')
 
     def test_02_current_branch_pinned_identity(self):
-        # Historical root-bound F7 cannot authorize the current development branch.
-        self.assertFalse(hasattr(f7, 'ACTIVE_BRANCH'))
-        self.assertFalse(hasattr(f7, 'ACTIVE_BASE'))
+        # Two independent ancestry checks preserve historical provenance.
+        self.assertEqual(f7.ACTIVE_BRANCH,'feat/ardrec-a1-a10-cierre-integral-v1')
+        self.assertEqual(f7.ACTIVE_BASE,'5c7770c1548585f8eac7f50d5f68b8fb77a10614')
 
     def test_03_new_branch_requires_both_ancestors(self):
-        # Source-only merge is not a boot authority extension.
-        self.refusal('GIT_BRANCH_MISMATCH',
-                     branch='feat/ardrec-cierre-operacional-experimental',
+        # A matching branch name cannot authorize missing active ancestry.
+        self.refusal('ACTIVE_BASE_NOT_ANCESTOR',
+                     branch=f7.ACTIVE_BRANCH,active_rc=1,
                      head='b43b9488ad7f89d728ea24430b789342f758c4a0')
 
     def test_04_historical_branch_still_allowed(self):
@@ -73,8 +74,8 @@ class ProvenanceTests(TestCase):
         self.refusal('GIT_BRANCH_MISMATCH',branch='feat/unauthorized-branch')
 
     def test_06_active_base_missing_rejected(self):
-        self.refusal('GIT_BRANCH_MISMATCH',
-                     branch='feat/ardrec-cierre-operacional-experimental', active_rc=1)
+        self.refusal('ACTIVE_BASE_NOT_ANCESTOR',
+                     branch=f7.ACTIVE_BRANCH, active_rc=1)
 
     def test_07_historical_base_missing_rejected(self):
         self.refusal('SIGNED_F1_F6_BASE_NOT_ANCESTOR',legacy_rc=1)
@@ -124,6 +125,11 @@ class ProvenanceTests(TestCase):
         with patch.object(f7,'git_guard',side_effect=f7.Stop('SIGNED_F1_F6_BASE_NOT_ANCESTOR')):
             with self.assertRaisesRegex(f7.Stop,'SIGNED_F1_F6_BASE_NOT_ANCESTOR'):
                 f8._check_sources()
+
+    def test_20_active_branch_checks_both_ancestors(self):
+        head, commands = self.guard(branch=f7.ACTIVE_BRANCH,head=f7.ACTIVE_BASE)
+        self.assertEqual(head,f7.ACTIVE_BASE)
+        self.assertEqual(sum(x[:3]==('git','merge-base','--is-ancestor') for x in commands),2)
 
     def test_19_no_automatic_operation_exposed_by_bridge(self):
         self.assertEqual(f7.ORDER,('ssh','runner','ftp'))
