@@ -1,0 +1,15 @@
+{
+  "boot_release": "NOT_ATTESTED",
+  "files_sha256": {
+    "lab/tests/test_p14_r168_f1_runner_ftp.py": "e8cda91336c1ce38e1968f558b7e19a3c7362eb366c7cbaef2f5989cec67b0f2",
+    "scripts/ardrec_p14_r168_f1_runner_ftp.py": "31f3de2a56377d2eae9faa0361ae41a7ca5af5a40755d8acf6c763b66e6aa755",
+    "src/ardrec/coordination/r168_f1_runner_ftp_boot.py": "01f610861de7947656492aaa5d3ab8b0a4a82b9f6d8fa9ba50187267bbf0d6f5"
+  },
+  "historical_r117_source_sha256": "aed659d2a0246cfeb3808388ad776cf8706abbc73562ef0271d8b614069c337e",
+  "network_traffic": false,
+  "p8": "NO-GO",
+  "physical_boot_blocked": true,
+  "schema": "ARDREC-R168-F1-RUNNER-SOURCE-v1",
+  "ssh_predecessor": "R167-F7D-REPLAY",
+  "vm_starts": 0
+}
