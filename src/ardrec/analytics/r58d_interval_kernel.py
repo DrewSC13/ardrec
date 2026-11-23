@@ -18,6 +18,9 @@ MAX_EVIDENCE = 25
 MAX_BYTES = 262144
 SERVICES = frozenset(('SSH_DEV', 'FTP_DEV', 'SMB_DEV'))
 IDENT = re.compile(r'[A-Z][A-Z0-9_]{0,63}\Z', re.ASCII)
+# F13/B10: case_id conserva guiones canónicos FTP-T01.
+# evidence_id mantiene la gramática IDENT original.
+CASE_IDENT = re.compile(r'[A-Z][A-Z0-9_]*(?:-[A-Z0-9_]+)*\Z', re.ASCII)
 UNIT_KEYS = frozenset(('service_id', 'case_id', 'assessment_index', 'initial_risk',
                        'normalized_criticality', 'replacement_risk', 'evidence'))
 EVIDENCE_KEYS = frozenset(('evidence_id', 'kind', 'lower', 'upper'))
@@ -35,6 +38,14 @@ def need(condition: bool, code: str) -> None:
 
 def _ident(value: Any) -> bool:
     return type(value) is str and IDENT.fullmatch(value) is not None
+
+
+def _case_ident(value: Any) -> bool:
+    return (
+        type(value) is str
+        and len(value) <= 64
+        and CASE_IDENT.fullmatch(value) is not None
+    )
 
 
 def _weights(value: Any) -> tuple[str, str, str]:
@@ -71,7 +82,7 @@ def _normalize_row(raw: Any) -> dict[str, Any]:
     need(type(raw) is dict and set(raw) == UNIT_KEYS, 'UNIT_SCHEMA')
     sid, cid, index = raw['service_id'], raw['case_id'], raw['assessment_index']
     need(type(sid) is str and sid in SERVICES, 'SERVICE_UNSUPPORTED')
-    need(_ident(cid), 'CASE_ID')
+    need(_case_ident(cid), 'CASE_ID')
     need(type(index) is int and 0 <= index < 2**31, 'ASSESSMENT_INDEX')
     r0 = rational(raw['initial_risk'])
     cn = rational(raw['normalized_criticality'])
