@@ -21,6 +21,10 @@ REVOCATION = Path(
     "/etc/ardrec/r167-f7d-release-revocation-v1.json"
 )
 
+RELEASE_TRUST = Path(
+    "/etc/ardrec/r167-f7d-release-trust-v1.json"
+)
+
 PREFIX = b"ARDREC-R167-F7D-INDEPENDENT-RELEASE-v1\x00"
 REVOKE_PREFIX = b"ARDREC-R167-F7D-RELEASE-REVOCATION-v1\x00"
 
@@ -85,7 +89,12 @@ def source_admission():
         )
     return pinned
 
-def root_revocation():
+def root_policy(path):
+    need(
+        isinstance(path, Path)
+        and path in (RELEASE_TRUST, REVOCATION),
+        "ROOT_POLICY_NOT_ALLOWLISTED",
+    )
     for item in (Path("/"), Path("/etc"), Path("/etc/ardrec")):
         s = item.lstat()
         need(
@@ -96,7 +105,7 @@ def root_revocation():
         )
 
     try:
-        s = REVOCATION.lstat()
+        s = path.lstat()
     except OSError as exc:
         raise Stop("RELEASE_ROOT_REVOCATION_UNAVAILABLE") from exc
 
@@ -110,7 +119,7 @@ def root_revocation():
     )
 
     fd = os.open(
-        REVOCATION,
+        path,
         os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC,
     )
     try:
@@ -131,6 +140,9 @@ def root_revocation():
         return f1.load(raw)
     finally:
         os.close(fd)
+
+def root_revocation():
+    return root_policy(REVOCATION)
 
 def require(plan, *, now):
     pins = source_admission()
@@ -156,8 +168,25 @@ def require(plan, *, now):
         "RELEASE_PLAN_NOT_DENY",
     )
 
-    trust = f1.load(f6.secure_root_file(f6.TRUST))
+    trust = f1.load(root_policy(RELEASE_TRUST))
     f3.trust_check(trust)
+
+    scope_trust = f1.load(f6.secure_root_file(f6.TRUST))
+    f3.trust_check(scope_trust)
+
+    release_keys = {
+        trust["scope_signer"]["public_key_pem"],
+        trust["revocation_signer"]["public_key_pem"],
+    }
+    scope_keys = {
+        scope_trust["scope_signer"]["public_key_pem"],
+        scope_trust["revocation_signer"]["public_key_pem"],
+    }
+
+    need(
+        release_keys.isdisjoint(scope_keys),
+        "RELEASE_TRUST_REUSES_SCOPE_AUTHORITY",
+    )
 
     f3.exact(
         approval,

@@ -93,3 +93,34 @@ class VersionedReleaseTests(unittest.TestCase):
             hashlib.sha256(path.read_bytes()).hexdigest(),
             "361e338d1948f8be31504bdd2b8108346ab96b80e58ae56ebdb32fb4de25e3af",
         )
+
+
+class ReleaseTrustIsolationTests(unittest.TestCase):
+
+    def test_release_has_separate_root_trust(self):
+        self.assertEqual(
+            release.RELEASE_TRUST,
+            Path("/etc/ardrec/r167-f7d-release-trust-v1.json"),
+        )
+        self.assertNotEqual(
+            release.RELEASE_TRUST,
+            Path("/etc/ardrec/r115-ftp-t01-trust-v1.json"),
+        )
+
+    def test_unallowlisted_policy_is_rejected(self):
+        with self.assertRaisesRegex(
+            release.Stop, "ROOT_POLICY_NOT_ALLOWLISTED"
+        ):
+            release.root_policy(
+                Path("/tmp/untrusted-release-policy.json")
+            )
+
+    def test_release_refuses_scope_key_reuse_by_design(self):
+        import inspect
+        code = inspect.getsource(release.require)
+        self.assertIn(
+            "RELEASE_TRUST_REUSES_SCOPE_AUTHORITY", code
+        )
+        self.assertIn(
+            "root_policy(RELEASE_TRUST)", code
+        )
