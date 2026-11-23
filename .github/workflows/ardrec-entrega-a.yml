@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feat/ardrec-cierre-operacional-experimental
+      - feat/ardrec-cierre-operacional-experimental-v2
 
 permissions:
   contents: read
@@ -290,3 +291,95 @@ jobs:
           if not result.wasSuccessful():raise SystemExit('R161_TESTS_FAILED')
           print('R161_SOFTWARE=PASS_56_NO_ROOT_NO_TRAFFIC')
           PYR161
+      - name: R163 signed single-operator policy source verification
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR163'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_p14_r163_single_operator_install_policy.py'
+          )
+          if suite.countTestCases() != 12:
+              raise SystemExit('R163_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit('R163_REGRESSION_FAILED')
+          print('R163_POLICY=PASS_12_NO_ROOT_NO_TRAFFIC')
+          PYR163
+
+      - name: R163 phase review signed policy (offline)
+        run: |
+          PYTHONPATH=src:lab/tests python3 -B - <<'PYR163F3'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_p14_r163_install_phase_gate.py',
+          )
+          if suite.countTestCases() != 24:
+              raise SystemExit('R163_F3_TEST_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit('R163_F3_TEST_FAILURE')
+          print('R163_F3_PHASE_GATE=PASS_24_SOURCE_ONLY')
+          PYR163F3
+
+      - name: R163 durable source staging and recovery (offline)
+        run: |
+          PYTHONPATH=src:lab/tests python3 -B - <<'PYR163F4'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_p14_r163_single_operator_stage.py',
+          )
+          if suite.countTestCases() != 14:
+              raise SystemExit('R163_F4_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit('R163_F4_TEST_FAILED')
+          print('R163_F4=PASS_14_NO_ROOT_NO_TRAFFIC')
+          PYR163F4
+
+      - name: R163 V3 immutable root stage bundle (offline)
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYR163V3'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_p14_r163_v3_root_stage_agent.py'
+          )
+          if suite.countTestCases() != 12:
+              raise SystemExit('R163_V3_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit('R163_V3_TEST_FAILURE')
+          print('R163_V3=PASS_12_SOURCE_ONLY')
+          PYR163V3
+
+      - name: R163 V3 root bootstrap source-only regression
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYR163F7'
+          import unittest
+
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_p14_r163_v3_bootstrap.py',
+          )
+
+          if suite.countTestCases() != 12:
+              raise SystemExit(
+                  'R163_F7_DISCOVERY_INVALID'
+              )
+
+          result = unittest.TextTestRunner(
+              verbosity=2
+          ).run(suite)
+
+          if not result.wasSuccessful():
+              raise SystemExit(
+                  'R163_F7_TEST_FAILED'
+              )
+
+          print(
+              'R163_F7=PASS_12_NO_ROOT_NO_TRAFFIC'
+          )
+          PYR163F7
