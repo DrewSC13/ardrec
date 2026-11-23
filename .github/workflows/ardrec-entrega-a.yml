@@ -456,3 +456,19 @@ jobs:
       - name: R166-F8 strict signed root source continuity (nonroot)
         run: |
           PYTHONPATH=src:scripts python3 -B -m unittest discover -s lab/tests -p 'test_p14_r166_f8_root_source_continuity.py' -v
+
+      - name: R166-F9 signed F3-only migration regression (offline)
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYR166F9'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_p14_r166_f9_migrate_f3.py',
+          )
+          if suite.countTestCases() != 10:
+              raise SystemExit('R166_F9_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R166_F9_REGRESSION_FAILURE')
+          print('R166_F9=PASS_10_OFFLINE_F3_ONLY')
+          PYR166F9
