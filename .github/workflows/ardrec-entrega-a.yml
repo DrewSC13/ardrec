@@ -472,3 +472,19 @@ jobs:
               raise SystemExit('R166_F9_REGRESSION_FAILURE')
           print('R166_F9=PASS_10_OFFLINE_F3_ONLY')
           PYR166F9
+
+      - name: R166-F10 current signed scope bridge (offline)
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYR166F10'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_p14_r166_f10_current_scope_bridge.py',
+          )
+          if suite.countTestCases() != 10:
+              raise SystemExit('R166_F10_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R166_F10_REGRESSION_FAILED')
+          print('R166_F10=PASS_10_CURRENT_HEAD_SIGNED_SCOPE')
+          PYR166F10

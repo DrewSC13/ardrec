@@ -219,9 +219,31 @@ def signed_boot_permit(plan,contract_raw,authorization_raw,permit_raw,*,now,
             'role':plan['role'],'valid_until':stmt['valid_until']}
 
 def scope_required(contract_raw,authorization_raw,*,now):
-    result=f6.scope(contract_raw,authorization_raw,
-                    catalog_raw=f6.CATALOG.read_bytes(),now=now)
-    need(result[0]=='VERDADERO','SIGNED_CASE_SCOPE_NOT_AUTHORIZED_'+result[0])
+    # R166-F10: no cambia el contrato historico ni concede trafico.
+    # La rama activa requiere la autoridad R116 vinculada al HEAD firmado.
+    branch=ok(_run(('git','branch','--show-current')),'GIT_BRANCH')
+    head=git_guard(for_boot=True)
+    need(branch==ok(_run(('git','branch','--show-current')),
+                    'GIT_BRANCH_RECHECK'),'SCOPE_BRANCH_CHANGED')
+    need(branch in (BRANCH,ACTIVE_BRANCH),'SCOPE_BRANCH_NOT_ALLOWED')
+    catalog_raw=f6.CATALOG.read_bytes()
+    if branch==ACTIVE_BRANCH:
+        # Import diferido: R116-F2 importa F16, y F16 importa este modulo.
+        from ardrec.coordination import r116_f2_current_pilot_gate as current
+        try:
+            result=current.current_scope_review(
+                contract_raw,authorization_raw,
+                catalog_raw=catalog_raw,now=now,head=head)
+        except (current.Stop,f1.Rejected,ValueError,TypeError,
+                KeyError,OSError) as exc:
+            raise Stop('CURRENT_HEAD_SCOPE_NOT_ATTESTED') from exc
+    else:
+        result=f6.scope(contract_raw,authorization_raw,
+                        catalog_raw=catalog_raw,now=now)
+    need(type(result) is tuple and len(result)==3 and
+         result[0]=='VERDADERO' and
+         type(result[2]) is str and f1.SHA.fullmatch(result[2]),
+         'SIGNED_CASE_SCOPE_NOT_AUTHORIZED')
     return result
 
 def _ticket(role):

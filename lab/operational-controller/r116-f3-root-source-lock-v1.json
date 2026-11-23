@@ -26,7 +26,7 @@
     "runtime/ardrec/coordination/r115_f4_effective_deny_readback.py": "093d5fca0bc369abaa666e94375dac7f05b9f44a3d012b6470dde8ba380b9f6e",
     "runtime/ardrec/coordination/r115_f5_lifecycle_readiness.py": "6adff76b752a736d3e10bc7231b3ed0c5ad5b0b7308b24b2b530c1e9a482d58b",
     "runtime/ardrec/coordination/r115_f6_signed_scope_and_activation.py": "a697591bc2e221c050547a29c1153f5ba1a9f3f45438cfc7d9f332a4ba31e4ee",
-    "runtime/ardrec/coordination/r115_f7_controlled_boot.py": "e55971adf1432aedd7c59163fad42e7e80b226f7d48294e6d1fbb9808fe82c36",
+    "runtime/ardrec/coordination/r115_f7_controlled_boot.py": "361e338d1948f8be31504bdd2b8108346ab96b80e58ae56ebdb32fb4de25e3af",
     "runtime/ardrec/coordination/r115_f8_runner_ftp_boot.py": "8694c1d9ada30c514962c79b1145c8acc1331aa04fd4338ae950b0488654cf7d",
     "runtime/ardrec/coordination/r115_f9_authority_handoff.py": "b8a2d8f89c7725c3ce31579dd758c49ae6d399289bb300f1669f3194ad071d7f",
     "runtime/ardrec/coordination/r116_f12_controlled_boot.py": "0a31f03d382f6fde04b93c688064f630fa0c7ab46ef45e3b40dc2d31618d59d1",
