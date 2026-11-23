@@ -452,3 +452,7 @@ jobs:
               raise SystemExit('R166_F3_REGRESSION_FAILED_OR_SKIPPED')
           print('R166_F3=PASS_16_CAUSAL_READONLY')
           PYR166F3
+
+      - name: R166-F8 strict signed root source continuity (nonroot)
+        run: |
+          PYTHONPATH=src:scripts python3 -B -m unittest discover -s lab/tests -p 'test_p14_r166_f8_root_source_continuity.py' -v

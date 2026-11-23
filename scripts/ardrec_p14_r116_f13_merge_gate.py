@@ -20,6 +20,21 @@ R162_GATE_PATH = 'scripts/ardrec_p14_r115_f17_merge_gate.py'
 R115_ORIGINAL_GATE_SHA256 = 'fb3315b705470295f0fdb4c4936150ae408b217ab1f997baf30802f4637a4a03'
 R162_EXACT_GATE_SHA256 = '662841c7d0f7f8e19b1e5ca2b9920db0662434be23dd1df3a7d5dec042e64316'
 
+
+# R166: derived source hashes only; historical lock unchanged.
+# F5 sources come from a verified signed commit.
+# F8 sources come from a SHA-256 verified patch.
+R166_EXACT_DERIVATIVES = {
+    'lab/operational-controller/r116-f3-root-source-lock-v1.json': ('eb6e1dc56576fe59d973eb76b6b563d0baf44cdabcd06d5857f908ee345ca53d', '873069a2a9665741d504062b57f329efcd20b407de91caa6a8178d0839d0128a'),
+    'lab/tests/test_p14_r115_f16_physical_pilot_controller.py': ('ec8d773a45545e93f6e0cc686de29619cb0ca2098e42cbb17be6e8b877105ea7', '52b3d020844912fd946bfada566247eb4ac632be504d1ec42ea83aba8a968595'),
+    'lab/tests/test_p14_r115_f7_controlled_boot.py': ('a7ae80133cf710f1bb1152995bdb2a118e48593d1d5beb900520faa66d74d7ac', '6fb0d659374d2921e49282266846c66d1034e66fe6986973094e56c079746081'),
+    'scripts/ardrec_p14_r115_f16_physical_pilot_controller.py': ('00bdafb935eab7b528667145647d6c3494fd2b62b64cacbb32dbf3da01e99b88', 'd661d0e15ce25367b66fd8ba94aa66159a550f01416ad07c628dc4b9388917f6'),
+    'scripts/ardrec_p14_r116_f1_root_stage.py': ('badaf3cf9a92d4aa1b6663c7f42c3fb7e7b392b8b817ac4259126339a9f8a659', 'e3aeed02c57766ff64b239732d741d796608f4e9c2ef7abacd279cc80e6af836'),
+    'scripts/ardrec_p14_r116_f3_root_stage.py': ('6f6af46d3ff3b2e55719f3452731ced86d83964d277e269de7d3e7b29cddbf04', '72405e0743a412e1e3b7f0ea15fb0303890f6b105d7e2624215d325ddb4dfe76'),
+    'src/ardrec/coordination/r115_f16_physical_pilot_controller.py': ('480783a68c88a0e1a28ea43da9419e0ca67cb6d02a05a12658348f31b3930c49', 'fae85aa10c4cf033eacd4ab42208dad66ad516d2dd0300c550d8bbb796c6c4e0'),
+    'src/ardrec/coordination/r115_f7_controlled_boot.py': ('90086ec330b1b9513d096fa6996e7dfe994ba10511702d4becbcc1fddee3688d', 'e55971adf1432aedd7c59163fad42e7e80b226f7d48294e6d1fbb9808fe82c36'),
+}
+
 class GateFailure(ValueError):
     pass
 
@@ -107,9 +122,16 @@ def evaluate(root: Path = ROOT) -> dict:
         if actual_sha != expected_sha:
             # R162: one exact source-only derivative of the historical R115 gate.
             # Never relax the independently signed root-source release lock.
-            if not (rel == R162_GATE_PATH and
-                    expected_sha == R115_ORIGINAL_GATE_SHA256 and
-                    actual_sha == R162_EXACT_GATE_SHA256):
+            historical_derivative = (
+                rel == R162_GATE_PATH and
+                expected_sha == R115_ORIGINAL_GATE_SHA256 and
+                actual_sha == R162_EXACT_GATE_SHA256
+            )
+            r166_exact_derivative = (
+                R166_EXACT_DERIVATIVES.get(rel)
+                == (expected_sha, actual_sha)
+            )
+            if not (historical_derivative or r166_exact_derivative):
                 raise GateFailure('SOURCE_DRIFT:' + rel)
     raw, catalog = read_json(root, CATALOG)
     if sha(raw) != lock.get('catalog_sha256'):

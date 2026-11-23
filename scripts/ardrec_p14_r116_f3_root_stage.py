@@ -22,6 +22,8 @@ REPO=Path('/home/cicada/Development/GitHub/ardrec')
 PARENT=Path('/var/lib/ardrec')
 DEST=PARENT/'r116-f3-ftp-pilot-root-v1'
 BRANCH='feat/p14-r116-piloto-ftp-fisico-a5-a10'
+ACTIVE_BRANCH='feat/ardrec-a1-a10-cierre-integral-v1'
+ACTIVE_BASE='5c7770c1548585f8eac7f50d5f68b8fb77a10614'
 BASE='e193b1dcf97f72ba4245fc7dfc6d0d4b9814eecc'
 LOCK=Path('lab/operational-controller/r116-f3-root-source-lock-v1.json')
 SCHEMA='ARDREC-R116-F3-ROOT-FTP-PILOT-v1'
@@ -46,13 +48,18 @@ def git(*args):
 def checked():
     need(os.geteuid()==0,'ROOT_REQUIRED')
     need(REPO.is_dir() and not REPO.is_symlink(),'REPOSITORY_NOT_DIRECTORY')
-    need(git('branch','--show-current').strip()==BRANCH.encode(),'WRONG_SOURCE_BRANCH')
+    branch=git('branch','--show-current').strip()
+    need(branch in (BRANCH.encode(),ACTIVE_BRANCH.encode()),'WRONG_SOURCE_BRANCH')
     need(git('status','--porcelain=v1','--untracked-files=all')==b'',
          'SOURCE_WORKTREE_NOT_CLEAN')
     need(git('merge-base','--is-ancestor',BASE,'HEAD')==b'','R116_F2_NOT_ANCESTOR')
+    if branch==ACTIVE_BRANCH.encode():
+        need(git('merge-base','--is-ancestor',ACTIVE_BASE,'HEAD')==b'',
+             'ACTIVE_BASE_NOT_ANCESTOR')
     head=git('rev-parse','HEAD').decode('ascii').strip()
     need(re.fullmatch('[0-9a-f]{40}',head),'GIT_HEAD_INVALID')
     need(git('log','-1','--format=%G?').strip()==b'G','SOURCE_COMMIT_NOT_VERIFIED')
+    git('verify-commit','HEAD')
     def commit_read(name):
         raw=git('show','HEAD:'+name)
         path=REPO/name
