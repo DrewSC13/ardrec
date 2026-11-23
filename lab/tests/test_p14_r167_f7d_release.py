@@ -124,3 +124,65 @@ class ReleaseTrustIsolationTests(unittest.TestCase):
         self.assertIn(
             "root_policy(RELEASE_TRUST)", code
         )
+
+
+class ReleaseRootPolicyDecodingTests(unittest.TestCase):
+
+    def test_root_policy_is_not_decoded_twice(self):
+        from unittest.mock import patch
+        from datetime import datetime, timezone
+
+        from ardrec.coordination import (
+            r115_dev_admission_contract as f1,
+            r167_f7d_release_gate as gate,
+        )
+
+        release_trust = {
+            "scope_signer": {"public_key_pem": "RELEASE_A"},
+            "revocation_signer": {"public_key_pem": "RELEASE_B"},
+        }
+        scope_trust = {
+            "scope_signer": {"public_key_pem": "SCOPE_A"},
+            "revocation_signer": {"public_key_pem": "SCOPE_B"},
+        }
+        invalid_approval = {
+            "statement": {},
+            "signer_key_id": "NEGATIVE_TEST",
+            "signature_b64": "",
+        }
+        plan = {
+            "role": "ssh",
+            "traffic_authorized": False,
+            "p8": "NO-GO",
+        }
+
+        with patch.object(gate, "source_admission", return_value={}), (
+            patch.object(
+                gate.f2,
+                "private_read",
+                return_value=f1.canonical(invalid_approval),
+            )
+        ), (
+            patch.object(
+                gate,
+                "root_policy",
+                return_value=release_trust,
+            )
+        ), (
+            patch.object(
+                gate.f6,
+                "secure_root_file",
+                return_value=f1.canonical(scope_trust),
+            )
+        ), (
+            patch.object(gate.f3, "trust_check")
+        ):
+            # Debe llegar a validar la estructura del documento,
+            # no fallar con INPUT_SIZE al leer la confianza.
+            with self.assertRaisesRegex(
+                gate.f3.Stop, "RELEASE_FIELDS"
+            ):
+                gate.require(
+                    plan,
+                    now=datetime.now(timezone.utc),
+                )

@@ -168,7 +168,7 @@ def require(plan, *, now):
         "RELEASE_PLAN_NOT_DENY",
     )
 
-    trust = f1.load(root_policy(RELEASE_TRUST))
+    trust = root_policy(RELEASE_TRUST)
     f3.trust_check(trust)
 
     scope_trust = f1.load(f6.secure_root_file(f6.TRUST))
