@@ -1,0 +1,14 @@
+{
+  "boot_release": "SIGNED_REQUIRED",
+  "files_sha256": {
+    "lab/tests/test_p14_r168_f2_runner_release.py": "3dddf378a7151a381b7521ffb00af44c128eb1792910dad0f4f5c9749b47bc3f",
+    "scripts/ardrec_p14_r168_f2_runner_ftp.py": "9e25bf0efb929197c33f8879ce12401f80d4437a4e41ab8e040966daef0b6aff",
+    "src/ardrec/coordination/r168_f2_runner_ftp_boot.py": "b7910574bc87cf1bd98d48310759509c8f60a654d66d514cff4a40f660c14273",
+    "src/ardrec/coordination/r168_f2_runner_release_gate.py": "c22a3b94b6c7cc7d6c962616d2e04f10c7884652e5edd285ce763f1e708a8539"
+  },
+  "historical_source_sha256": "01f610861de7947656492aaa5d3ab8b0a4a82b9f6d8fa9ba50187267bbf0d6f5",
+  "p8": "NO-GO",
+  "role": "runner",
+  "schema": "ARDREC-R168-F2-RUNNER-SOURCE-v1",
+  "traffic_authorized": false
+}
