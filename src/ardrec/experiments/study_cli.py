@@ -211,6 +211,15 @@ def main(argv=None):
         help="Consulta de evidencia local consolidada",
     )
 
+    sources.add_argument(
+        "--evidencia-vm", type=Path,
+        help="Evidencia funcional privada de VM",
+    )
+
+    parser.add_argument(
+        "--artefactos-vm", type=Path
+    )
+
     parser.add_argument(
         "--sha256",
         help="Identificador esperado de la consolidacion",
@@ -246,6 +255,54 @@ def main(argv=None):
     parser.add_argument("--soportes-i2", type=Path)
 
     args = parser.parse_args(argv)
+
+    if args.evidencia_vm is not None:
+
+        if (
+            args.artefactos_vm is None
+            or not args.sha256
+            or args.seleccion is not None
+            or args.csv
+            or args.informe_i8
+            or args.preparar_i2
+            or args.revisar_riesgo
+            or args.entrada_i2 is not None
+            or args.soportes_i2 is not None
+            or args.analisis_exploratorio
+            or args.resumen_pareado
+        ):
+            parser.error("Opciones incompatibles con evidencia VM")
+
+        from ardrec.experiments import vm_functional_evidence
+
+        try:
+            report = vm_functional_evidence.evaluate(
+                args.evidencia_vm,
+                args.sha256,
+                args.artefactos_vm,
+                CATALOG,
+            )
+
+            if args.json:
+                sys.stdout.buffer.write(
+                    r148.canonical(report)
+                )
+            else:
+                sys.stdout.write(
+                    vm_functional_evidence.render_text(report)
+                )
+
+            return 0
+
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+            print(
+                "VM_EVIDENCE_STOP=" + type(exc).__name__,
+                file=sys.stderr,
+            )
+            return 2
+
+    if args.artefactos_vm is not None:
+        parser.error("--artefactos-vm requiere --evidencia-vm")
 
     if args.csv and not args.informe_i8:
         parser.error("--csv requiere --informe-i8")
