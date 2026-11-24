@@ -79,6 +79,7 @@ jobs:
               ("R237", "test_r237_signed_scope.py", 14),
               ("R240", "test_r240_revocation_history.py", 14),
               ("R243", "test_r243_paired_reconciliation.py", 12),
+              ("R244", "test_r244_reference_supports.py", 8),
           )
 
           total = 0
@@ -126,12 +127,12 @@ jobs:
                   flush=True,
               )
 
-          if total != 93:
+          if total != 101:
               raise SystemExit(
                   f"PROSPECTIVE_TEST_TOTAL_INVALID:{total}"
               )
 
-          print("PROSPECTIVE_REGRESSIONS=93/93")
+          print("PROSPECTIVE_REGRESSIONS=101/101")
           print("OPERATIONAL_ACTIVATION=NO")
           PYR239
 
