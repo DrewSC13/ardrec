@@ -516,4 +516,7 @@ jobs:
       - name: R168-F12 exact R117 F4 F5A source migration
         run: |
           PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r168_f12_r117_compat.py' -v
-\n      - name: R168-F13 signed historical R117-F5B V3 candidate replay\n        run: |\n          PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r168_f13_historical_v3.py' -v\n
+
+      - name: R168-F13 signed historical R117-F5B V3 candidate replay
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r168_f13_historical_v3.py' -v
