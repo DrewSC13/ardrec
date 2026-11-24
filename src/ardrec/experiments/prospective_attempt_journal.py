@@ -31,6 +31,12 @@ OPERATIONS = {
     "SMB": "AUTHORIZED_READ_ONLY_FILE",
 }
 
+ADDITIONAL_LOCAL_OPERATIONS = {
+    "SSH": ("FIXED_SYNTHETIC_SFTP_READ",),
+    "FTP": (),
+    "SMB": ("FIXED_SYNTHETIC_SMB_READ",),
+}
+
 MAX_TTL_SECONDS = 600
 
 STATES = (
@@ -82,6 +88,7 @@ def make_plan(
     operator_uid,
     created_at,
     expires_at,
+    operation=None,
 ):
 
     need(
@@ -126,11 +133,22 @@ def make_plan(
         "PLAN_VALIDITY_INVALID",
     )
 
+    if operation is None:
+        operation = OPERATIONS[protocol]
+
+    need(
+        operation in (
+            OPERATIONS[protocol],
+            *ADDITIONAL_LOCAL_OPERATIONS[protocol],
+        ),
+        "LOCAL_OPERATION_INVALID",
+    )
+
     return durable.seal({
         "schema": SCHEMA + "-plan",
         "plan_id": plan_id,
         "protocol": protocol,
-        "operation": OPERATIONS[protocol],
+        "operation": operation,
         "code_head": head,
         "code_tree": tree,
         "coverage_sha256": coverage_sha256,
@@ -165,6 +183,7 @@ def verify_plan(plan):
         operator_uid=plan["operator_uid"],
         created_at=plan["created_at"],
         expires_at=plan["expires_at"],
+        operation=plan["operation"],
     )
 
     need(
