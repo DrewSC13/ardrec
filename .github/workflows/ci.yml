@@ -60,6 +60,21 @@ jobs:
                   raise SystemExit(f'{label}_TEST_FAILURE')
           PY
 
+      - name: R202 functional FTP fixture
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR202'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_r202_functional_ftp_fixture.py',
+          )
+          if suite.countTestCases() != 5:
+              raise SystemExit('R202_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R202_REGRESSION_FAILED')
+          PYR202
+
       - name: R199 initial assessment and preparation
         run: |
           PYTHONPATH=src python3 -B - <<'PYR199'
