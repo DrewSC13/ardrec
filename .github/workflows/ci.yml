@@ -60,6 +60,21 @@ jobs:
                   raise SystemExit(f'{label}_TEST_FAILURE')
           PY
 
+      - name: R194 bounded local protocol pilot
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR194'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_r194_local_protocol_pilot.py',
+          )
+          if suite.countTestCases() != 8:
+              raise SystemExit('R194_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R194_REGRESSION_FAILED')
+          PYR194
+
       - name: R192 bounded local SSH pilot
         run: |
           PYTHONPATH=src python3 -B - <<'PYR192'
