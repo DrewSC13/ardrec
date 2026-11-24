@@ -504,3 +504,7 @@ jobs:
               raise SystemExit('R166_F11_REGRESSION_FAILED')
           print('R166_F11=PASS_10_F3_ONLY')
           PYR166F11
+
+      - name: R168-F10 strict R115 historical derivative verification
+        run: |
+          PYTHONPATH=src:scripts python3 -B -m unittest discover -s lab/tests -p 'test_p14_r168_f10_r115_compat.py' -v
