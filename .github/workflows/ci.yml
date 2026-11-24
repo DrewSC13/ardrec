@@ -60,6 +60,21 @@ jobs:
                   raise SystemExit(f'{label}_TEST_FAILURE')
           PY
 
+      - name: R205 prospective attempt journal
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR205'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_r205_prospective_attempt_journal.py',
+          )
+          if suite.countTestCases() != 9:
+              raise SystemExit('R205_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R205_REGRESSION_FAILED')
+          PYR205
+
       - name: R204 functional SSH and SMB fixtures
         run: |
           PYTHONPATH=src python3 -B - <<'PYR204'
