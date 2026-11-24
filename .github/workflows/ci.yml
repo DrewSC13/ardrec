@@ -60,6 +60,21 @@ jobs:
                   raise SystemExit(f'{label}_TEST_FAILURE')
           PY
 
+      - name: R187 exact parameter sensitivity
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR187'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_r187_parameter_sensitivity.py',
+          )
+          if suite.countTestCases() != 11:
+              raise SystemExit('R187_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R187_REGRESSION_FAILED')
+          PYR187
+
       - name: R184 paired statistical summary / resumen pareado
         run: |
           PYTHONPATH=src python3 -B - <<'PYR184'
