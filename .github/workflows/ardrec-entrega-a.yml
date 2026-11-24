@@ -3,6 +3,8 @@ name: ARDREC Entrega A / Source validation
 on:
   push:
     branches:
+      - main
+      - feat/ardrec-cierre-experimental-20261126
       - feat/ardrec-cierre-operacional-experimental
       - feat/ardrec-cierre-operacional-experimental-v2
       - feat/ardrec-integracion-funcional-experimental-v1
