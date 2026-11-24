@@ -60,6 +60,21 @@ jobs:
                   raise SystemExit(f'{label}_TEST_FAILURE')
           PY
 
+      - name: R199 initial assessment and preparation
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR199'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_r199_initial_assessment.py',
+          )
+          if suite.countTestCases() != 7:
+              raise SystemExit('R199_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R199_REGRESSION_FAILED')
+          PYR199
+
       - name: R197 prospective local pilot
         run: |
           PYTHONPATH=src python3 -B - <<'PYR197'
