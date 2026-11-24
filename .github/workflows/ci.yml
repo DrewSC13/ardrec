@@ -60,6 +60,21 @@ jobs:
                   raise SystemExit(f'{label}_TEST_FAILURE')
           PY
 
+      - name: R195 local evidence bridge
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR195'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_r195_local_evidence_bridge.py',
+          )
+          if suite.countTestCases() != 8:
+              raise SystemExit('R195_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R195_REGRESSION_FAILED')
+          PYR195
+
       - name: R194 bounded local protocol pilot
         run: |
           PYTHONPATH=src python3 -B - <<'PYR194'
