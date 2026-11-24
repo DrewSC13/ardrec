@@ -196,8 +196,22 @@ def main(argv=None):
         description="Consulta experimental privada, sin admision de evidencia.",
     )
 
+    sources = parser.add_mutually_exclusive_group(
+        required=True
+    )
+
+    sources.add_argument(
+        "--registro", type=Path
+    )
+
+    sources.add_argument(
+        "--consolidacion-local", type=Path,
+        help="Consulta de evidencia local consolidada",
+    )
+
     parser.add_argument(
-        "--registro", type=Path, required=True
+        "--sha256",
+        help="Identificador esperado de la consolidacion",
     )
 
     parser.add_argument(
@@ -223,6 +237,57 @@ def main(argv=None):
     output.add_argument("--json", action="store_true")
 
     args = parser.parse_args(argv)
+
+    if args.consolidacion_local is not None:
+
+        if not args.sha256:
+            parser.error("--consolidacion-local requiere --sha256")
+
+        if (
+            args.seleccion is not None
+            or args.analisis_exploratorio
+            or args.resumen_pareado
+        ):
+            parser.error("opciones incompatibles con consolidacion local")
+
+        from ardrec.experiments import local_consolidation
+
+        try:
+
+            report = local_consolidation.evaluate(
+                args.consolidacion_local,
+                args.sha256,
+                CATALOG,
+            )
+
+            if args.json:
+
+                sys.stdout.buffer.write(
+                    r148.canonical(report)
+                )
+
+            else:
+
+                sys.stdout.write(
+                    local_consolidation.render_text(report)
+                )
+
+            return 0
+
+        except (
+            OSError, ValueError, KeyError,
+            TypeError, RecursionError,
+        ) as exc:
+
+            print(
+                "CONSOLIDACION_STOP=" + type(exc).__name__,
+                file=sys.stderr,
+            )
+
+            return 2
+
+    if args.sha256 is not None:
+        parser.error("--sha256 requiere --consolidacion-local")
 
     if args.resumen_pareado and not args.analisis_exploratorio:
         parser.error("--resumen-pareado requiere --analisis-exploratorio")
