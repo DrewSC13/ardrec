@@ -40,7 +40,9 @@ def evaluate(registry_folder, selection_folder=None, analysis=False, paired_summ
     selection = None
 
     if selection_folder is not None:
-        selection = r149.read(
+        from ardrec.experiments import paired_reconciliation
+
+        selection, _ = paired_reconciliation.read_selection(
             selection_folder,
             catalog,
             protocol,
@@ -235,6 +237,8 @@ def main(argv=None):
 
     output.add_argument("--texto", action="store_true")
     output.add_argument("--json", action="store_true")
+    output.add_argument("--csv", action="store_true")
+    parser.add_argument("--informe-i8", action="store_true")
 
     parser.add_argument("--preparar-i2", action="store_true")
     parser.add_argument("--revisar-riesgo", action="store_true")
@@ -242,6 +246,48 @@ def main(argv=None):
     parser.add_argument("--soportes-i2", type=Path)
 
     args = parser.parse_args(argv)
+
+    if args.csv and not args.informe_i8:
+        parser.error("--csv requiere --informe-i8")
+
+    if args.informe_i8:
+
+        if (
+            args.registro is None
+            or args.seleccion is None
+            or args.consolidacion_local is not None
+            or args.sha256 is not None
+            or args.preparar_i2
+            or args.revisar_riesgo
+            or args.entrada_i2 is not None
+            or args.soportes_i2 is not None
+            or args.analisis_exploratorio
+            or args.resumen_pareado
+        ):
+            parser.error("I8 requiere registro y seleccion")
+
+        from ardrec.experiments import paired_reconciliation as i8
+
+        try:
+
+            report = i8.evaluate(
+                args.registro,
+                args.seleccion,
+                CATALOG,
+            )
+
+            if args.csv:
+                sys.stdout.buffer.write(i8.export_csv(report))
+            elif args.json:
+                sys.stdout.buffer.write(r148.canonical(report))
+            else:
+                sys.stdout.write(i8.render_text(report))
+
+            return 0
+
+        except (OSError, ValueError, KeyError, TypeError, RecursionError) as exc:
+            print("I8_STOP=" + type(exc).__name__, file=sys.stderr)
+            return 2
 
     if args.revisar_riesgo and not args.preparar_i2:
         parser.error("--revisar-riesgo requiere --preparar-i2")
