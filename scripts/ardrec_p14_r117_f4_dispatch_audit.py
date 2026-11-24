@@ -14,6 +14,10 @@ REPO=Path('/home/cicada/Development/GitHub/ardrec')
 ROOT=Path(__file__).resolve().parents[1]
 MANIFEST=Path('lab/operational-controller/r117-f4-dispatch-sources-v1.json')
 LOCK=Path('lab/operational-controller/r116-f3-root-source-lock-v1.json')
+
+# R168-F12: hashes exactos; el manifiesto historico no cambia.
+R168_HISTORIC_LOCK_SHA = 'eb6e1dc56576fe59d973eb76b6b563d0baf44cdabcd06d5857f908ee345ca53d'
+R168_DERIVED_LOCK_SHA = '2d15b24c9101d7615ca6f43dca3b050f1f6058ac3672592b621d3da042dd319a'
 BASE='ecaa563735e8fc5a92c8d9e2a2d08c408658ff3c'
 BRANCH='feat/p14-r117-piloto-real-a5-a10'
 FIELDS={'schema','base','branch','r116_merge','root_release',
@@ -49,8 +53,12 @@ def audit_offline(repo=ROOT):
          (obj['pilot'],obj['a6'],obj['p8'])==('DRAFT','ND','NO-GO'),
          'DISPATCH_MANIFEST_CHANGED')
     lock=repo/LOCK
-    need(lock.is_file() and not lock.is_symlink() and
-         sha(lock.read_bytes())==obj['historical_f3_lock_sha256'],
+    need(lock.is_file() and not lock.is_symlink(),
+         'HISTORIC_33_LOCK_DRIFT')
+    need(obj['historical_f3_lock_sha256'] == R168_HISTORIC_LOCK_SHA,
+         'HISTORIC_33_MANIFEST_PIN_DRIFT')
+    need(sha(lock.read_bytes()) in (
+         R168_HISTORIC_LOCK_SHA, R168_DERIVED_LOCK_SHA),
          'HISTORIC_33_LOCK_DRIFT')
     for name in FILES:
         p=repo/name

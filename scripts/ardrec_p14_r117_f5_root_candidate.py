@@ -20,6 +20,10 @@ BASE = "8c3d2b4647747898684c9211bcc41c9968eb3cfe"
 R116 = "fdb6efa0c297ce18b28cddb9494514f51d88bdb4"
 BRANCH = "feat/p14-r117-piloto-real-a5-a10"
 LOCK = "lab/operational-controller/r116-f3-root-source-lock-v1.json"
+
+# R168-F12: hashes exactos; el manifiesto historico no cambia.
+R168_HISTORIC_LOCK_SHA = 'eb6e1dc56576fe59d973eb76b6b563d0baf44cdabcd06d5857f908ee345ca53d'
+R168_DERIVED_LOCK_SHA = '2d15b24c9101d7615ca6f43dca3b050f1f6058ac3672592b621d3da042dd319a'
 DISPATCH = "lab/operational-controller/r117-f4-dispatch-sources-v1.json"
 CATALOG = "lab/operational-catalog-v1/catalog.json"
 PILOT = "scripts/ardrec_p14_r116_f3_root_pilot.py"
@@ -120,8 +124,12 @@ def checked_sources(repo=REPO):
         "ARDREC-R117-F4-VERSIONED-BOOT-DISPATCH-v1"
         and dispatch.get("p8") == "NO-GO"
         and dispatch.get("root_release") == "NOT_INSTALLED"
-        and sha(lock_raw) ==
-        dispatch.get("historical_f3_lock_sha256")
+        and dispatch.get("historical_f3_lock_sha256")
+            == R168_HISTORIC_LOCK_SHA
+        and sha(lock_raw) in (
+            R168_HISTORIC_LOCK_SHA,
+            R168_DERIVED_LOCK_SHA,
+        )
         and type(dispatch.get("source_sha256")) is dict
         and set(dispatch["source_sha256"]) == set(F4),
         "R117_F4_DISPATCH_INVALID",
