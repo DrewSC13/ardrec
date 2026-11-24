@@ -60,6 +60,21 @@ jobs:
                   raise SystemExit(f'{label}_TEST_FAILURE')
           PY
 
+      - name: R191 independent reference rubric
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR191'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_r191_reference_rubric.py',
+          )
+          if suite.countTestCases() != 12:
+              raise SystemExit('R191_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R191_REGRESSION_FAILED')
+          PYR191
+
       - name: R187 exact parameter sensitivity
         run: |
           PYTHONPATH=src python3 -B - <<'PYR187'
