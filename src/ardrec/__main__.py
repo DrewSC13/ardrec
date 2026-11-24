@@ -14,6 +14,9 @@ from ardrec.benign_pipeline import VerificationError, GateError
 
 def main(argv=None) -> int:
     argv = sys.argv[1:] if argv is None else list(argv)
+    if argv and argv[0] == 'familias':
+        from ardrec.coordination.family_cli import main as family_main
+        return family_main(argv[1:])
     if argv and argv[0] == 'caso':
         from ardrec.coordination.r166_case_archive_cli import main as case_main
         return case_main(argv[1:])
