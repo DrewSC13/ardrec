@@ -205,4 +205,52 @@ class CurrentTraceabilityTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Inventario Rust incompleto"):
             checker.verify_p8_rust_inventory(extra, checks)
 
+
+    def test_r236_inventory_is_exact(self):
+        observed = sorted(
+            x for x in self.inventory
+            if x.startswith(checker.R236_TEST_MODULE + ".")
+        )
+        self.assertEqual(len(observed), 12)
+        self.assertEqual(observed, sorted(checker.R236_TEST_IDS))
+
+    def test_r236_missing_method_rejected(self):
+        target = next(iter(checker.R236_TEST_IDS))
+        self.inventory = [x for x in self.inventory if x != target]
+        with self.assertRaisesRegex(ValueError, "Metodos R236"):
+            self.validate()
+
+    def test_r236_unregistered_method_rejected(self):
+        self.inventory = [
+            *self.inventory,
+            checker.R236_TEST_MODULE
+            + ".NativeRiskPublicationTests.test_unregistered",
+        ]
+        with self.assertRaisesRegex(ValueError, "Metodos R236"):
+            self.validate()
+
+    def test_r236_renamed_method_rejected(self):
+        target = next(iter(checker.R236_TEST_IDS))
+        self.inventory = [
+            target + "_renamed" if x == target else x
+            for x in self.inventory
+        ]
+        with self.assertRaisesRegex(ValueError, "Metodos R236"):
+            self.validate()
+
+    def test_r236_does_not_allow_unregistered_modules(self):
+        self.inventory = [
+            *self.inventory,
+            "test_unknown_module.UnknownTests.test_unregistered",
+        ]
+        with self.assertRaisesRegex(ValueError, "Métodos Python"):
+            self.validate()
+
+    def test_r236_does_not_change_historical_baseline(self):
+        report = self.validate()
+        self.assertEqual(report["baseline_python_tests"], 405)
+        self.assertEqual(report["system_functional_acceptance"], "PENDING")
+        self.assertEqual(report["experimental_validation"], "NOT_RUN")
+
+
 if __name__=='__main__':unittest.main()

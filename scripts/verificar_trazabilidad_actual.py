@@ -49,6 +49,25 @@ R8_TEST_IDS = frozenset({
 })
 
 
+# R236: explicit native analytical publication test inventory.
+# Synthetic integration only; historical acceptance unchanged.
+R236_TEST_MODULE = "test_r236_native_risk_publication"
+R236_TEST_IDS = frozenset({
+    'test_r236_native_risk_publication.NativeRiskPublicationTests.test_01_exact_initial_values',
+    'test_r236_native_risk_publication.NativeRiskPublicationTests.test_02_catalog_positive_model',
+    'test_r236_native_risk_publication.NativeRiskPublicationTests.test_03_negative_model_is_explicit',
+    'test_r236_native_risk_publication.NativeRiskPublicationTests.test_04_missing_support_is_not_negative',
+    'test_r236_native_risk_publication.NativeRiskPublicationTests.test_05_exact_contribution',
+    'test_r236_native_risk_publication.NativeRiskPublicationTests.test_06_accumulation_maximum',
+    'test_r236_native_risk_publication.NativeRiskPublicationTests.test_07_no_evidence_preserves_r0',
+    'test_r236_native_risk_publication.NativeRiskPublicationTests.test_08_native_publication_and_readback',
+    'test_r236_native_risk_publication.NativeRiskPublicationTests.test_09_unknown_evidence_not_published_as_zero',
+    'test_r236_native_risk_publication.NativeRiskPublicationTests.test_10_inconsistent_projection_rejected',
+    'test_r236_native_risk_publication.NativeRiskPublicationTests.test_11_invalid_dimensions_rejected',
+    'test_r236_native_risk_publication.NativeRiskPublicationTests.test_12_no_operational_claim',
+})
+
+
 def require(ok, message):
     if not ok:
         raise ValueError(message)
@@ -422,10 +441,20 @@ def validate(root=ROOT, registry=None, evidence=None, *, discovered=None, check_
     )
     require(r8_observed == sorted(R8_TEST_IDS),
             'Metodos P8-R8 ausentes, nuevos o renombrados')
+    # R236 is an exact reviewed extension, not a wildcard exemption.
+    r236_observed = sorted(
+        x for x in observed
+        if x.startswith(R236_TEST_MODULE + '.')
+    )
+    require(
+        len(R236_TEST_IDS) == 12
+        and r236_observed == sorted(R236_TEST_IDS),
+        'Metodos R236 ausentes, nuevos o renombrados'
+    )
     baseline = sorted(
         x for x in observed
         if not x.startswith((TOOL_TEST + '.', R7_TEST_MODULE + '.',
-                             R8_TEST_MODULE + '.'))
+                             R8_TEST_MODULE + '.', R236_TEST_MODULE + '.'))
     )
     declared = sorted(c['unittest_id'] for c in checks.values() if c['kind'] == 'PYTHON_UNIT')
     require(baseline == declared and len(baseline) == 405, 'Métodos Python ausentes, nuevos o renombrados')
