@@ -40,3 +40,39 @@ No admite observaciones experimentales.
 
 P7=DRAFT_NOT_FROZEN.
 P8=NO-GO.
+
+
+## Correccion R194-C
+
+R194-B identifico el fallo de montaje de /work sobre una
+raiz del host de solo lectura.
+
+Se sustituye el montaje completo del host por una raiz
+temporal con /usr de solo lectura, identidad local minima,
+espacios temporales y un directorio privado de trabajo.
+
+Se conserva el aislamiento de red y la eliminacion de
+capacidades. No existe fallback privilegiado.
+
+Si no se encuentra un servidor FTP instalado, se permite
+una distribucion fuente de pyftpdlib 2.2.0, fijada por SHA-256.
+Solo se extraen modulos Python del paquete previamente
+verificado. No se ejecutan instaladores ni scripts de build.
+
+La descarga se realiza fuera del ejecutor, por consentimiento
+del operador. El servidor no registra cuentas, no admite
+comandos de aplicacion y utiliza una conexion local propia.
+
+Uso opcional:
+
+    uv run --no-sync python -B -m ardrec.coordination.local_protocol_pilot --confirm AUTORIZO_PILOTO_FTP_SMB_LOCAL --ftp-source ARCHIVE --json
+
+El inicio del wrapper Bubblewrap no prueba que el daemon
+haya completado su arranque. Solo una respuesta valida
+permite acreditar la observacion de transporte.
+
+La procedencia criptografica del paquete no equivale a
+una auditoria independiente de seguridad.
+
+Se mantienen las restricciones experimentales y los
+contratos operacionales historicos.

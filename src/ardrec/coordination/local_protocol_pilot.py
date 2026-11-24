@@ -6,6 +6,8 @@ No login, file transfer or experimental admission.
 from __future__ import annotations
 
 import argparse
+import io
+import tarfile
 import json
 import os
 import re
@@ -30,6 +32,15 @@ BUSYBOX = Path("/usr/bin/busybox")
 VSFTPD = Path("/usr/sbin/vsftpd")
 SMBD = Path("/usr/sbin/smbd")
 BWRAP = Path("/usr/bin/bwrap")
+PYTHON = Path("/usr/bin/python3")
+
+FTP_SOURCE_SHA256 = (
+    "4ba0642078792df63dd3b2e9c8f838f2a"
+    "3ecf428c7518d5921c0530d53512acf"
+)
+FTP_SOURCE_VERSION = "2.2.0"
+FTP_SOURCE_MAX_BYTES = 250000
+FTP_EXTRACT_MAX_BYTES = 4000000
 
 DIALECTS = (0x0202, 0x0210)
 
@@ -353,22 +364,99 @@ def sandbox(folder, command):
 
     info = ssh.trusted_binary(BWRAP)
 
-    return info, [
+    uid = os.getuid()
+    gid = os.getgid()
+
+    need(
+        uid not in (0, 65534),
+        "UNSUPPORTED_LOCAL_OPERATOR_UID",
+    )
+
+    etc = folder / "sandbox-etc"
+    etc.mkdir(mode=0o700)
+
+    passwd = (
+        "root:x:0:0:root:/work:/usr/sbin/nologin\n"
+        f"operator:x:{uid}:{gid}:operator:/work:/usr/sbin/nologin\n"
+        "nobody:x:65534:65534:nobody:/work:/usr/sbin/nologin\n"
+    )
+
+    groups = {
+        0: "root",
+        65534: "nogroup",
+    }
+
+    if gid not in groups:
+
+        groups[gid] = "operator"
+
+    group = "".join(
+        f"{name}:x:{number}:\n"
+        for number, name in sorted(groups.items())
+    )
+
+    files = {
+        "passwd": passwd,
+        "group": group,
+        "nsswitch.conf":
+            "passwd: files\ngroup: files\nhosts: files\n",
+        "hosts":
+            "127.0.0.1 localhost ardrecpilot\n",
+        "hostname":
+            "ardrecpilot\n",
+    }
+
+    for name, content in files.items():
+
+        path = etc / name
+
+        with path.open("x", encoding="ascii") as handle:
+            handle.write(content)
+
+        path.chmod(0o600)
+
+    args = [
         str(BWRAP),
         "--unshare-all",
         "--die-with-parent",
         "--cap-drop", "ALL",
-        "--ro-bind", "/", "/",
+        "--clearenv",
+        "--ro-bind", "/usr", "/usr",
+        "--symlink", "usr/bin", "/bin",
+        "--symlink", "usr/sbin", "/sbin",
+        "--symlink", "usr/lib", "/lib",
+        "--symlink", "usr/lib64", "/lib64",
         "--dev", "/dev",
         "--proc", "/proc",
         "--tmpfs", "/run",
         "--tmpfs", "/tmp",
+        "--tmpfs", "/var",
+        "--dir", "/etc",
+        "--dir", "/run/samba",
+        "--dir", "/var/lib/samba",
+        "--dir", "/var/cache/samba",
+    ]
+
+    for name in files:
+
+        args.extend([
+            "--ro-bind",
+            str(etc / name),
+            f"/etc/{name}",
+        ])
+
+    args.extend([
         "--bind", str(folder), "/work",
         "--chdir", "/work",
         "--setenv", "HOME", "/work",
+        "--setenv", "PATH", "/usr/bin:/usr/sbin",
+        "--setenv", "LANG", "C",
+        "--setenv", "LC_ALL", "C",
         "--",
         *command,
-    ]
+    ])
+
+    return info, args
 
 
 def select_ftp():
@@ -405,7 +493,165 @@ def select_ftp():
     return None, None
 
 
-def evaluate(protocol):
+
+def prepare_ftp_source(archive, folder):
+
+    with Path(archive).open("rb") as handle:
+
+        raw = handle.read(
+            FTP_SOURCE_MAX_BYTES + 1
+        )
+
+    need(
+        0 < len(raw) <= FTP_SOURCE_MAX_BYTES,
+        "FTP_SOURCE_SIZE_INVALID",
+    )
+
+    need(
+        ssh.digest(raw) == FTP_SOURCE_SHA256,
+        "FTP_SOURCE_SHA256_INVALID",
+    )
+
+    vendor = folder / "vendor"
+    vendor.mkdir(mode=0o700)
+
+    extracted = 0
+    files = 0
+
+    with tarfile.open(
+        fileobj=io.BytesIO(raw),
+        mode="r:gz",
+    ) as archive_file:
+
+        for member in archive_file:
+
+            parts = Path(member.name).parts
+
+            need(
+                bool(parts)
+                and not Path(member.name).is_absolute()
+                and ".." not in parts,
+                "FTP_ARCHIVE_PATH_INVALID",
+            )
+
+            if (
+                len(parts) < 3
+                or parts[0] != "pyftpdlib-2.2.0"
+                or parts[1] != "pyftpdlib"
+                or not member.name.endswith(".py")
+            ):
+
+                continue
+
+            need(
+                member.isfile()
+                and 0 <= member.size <= 1000000,
+                "FTP_ARCHIVE_MEMBER_INVALID",
+            )
+
+            extracted += member.size
+            files += 1
+
+            need(
+                extracted <= FTP_EXTRACT_MAX_BYTES
+                and files <= 200,
+                "FTP_ARCHIVE_EXTRACTION_LIMIT",
+            )
+
+            destination = vendor.joinpath(*parts[1:])
+
+            destination.parent.mkdir(
+                mode=0o700,
+                parents=True,
+                exist_ok=True,
+            )
+
+            source = archive_file.extractfile(member)
+
+            need(
+                source is not None,
+                "FTP_ARCHIVE_MEMBER_UNREADABLE",
+            )
+
+            with source:
+
+                content = source.read(
+                    member.size + 1
+                )
+
+            need(
+                len(content) == member.size,
+                "FTP_ARCHIVE_MEMBER_SIZE_MISMATCH",
+            )
+
+            with destination.open("xb") as output:
+
+                output.write(content)
+
+    need(
+        (vendor / "pyftpdlib/__init__.py").is_file(),
+        "FTP_PACKAGE_ENTRY_MISSING",
+    )
+
+    return {
+        "version": FTP_SOURCE_VERSION,
+        "archive_sha256": FTP_SOURCE_SHA256,
+        "source_files": files,
+        "source_bytes": extracted,
+        "installation_performed": False,
+    }
+
+
+FTP_RUNNER = """\
+import os
+import socket
+import sys
+import time
+
+sys.path.insert(0, "/work/vendor")
+
+from pyftpdlib.authorizers import DummyAuthorizer
+from pyftpdlib.handlers import FTPHandler
+from pyftpdlib.servers import FTPServer
+
+FTPHandler.authorizer = DummyAuthorizer()
+FTPHandler.timeout = 5
+FTPHandler.max_login_attempts = 1
+
+# No users and no application commands are admitted.
+FTPHandler.proto_cmds = {}
+
+peer = socket.socket(fileno=os.dup(0))
+
+# This listener exists only within the isolated namespace.
+server = FTPServer(("127.0.0.1", 0), FTPHandler)
+server.max_cons = 2
+server.max_cons_per_ip = 1
+
+try:
+    handler = server.handle_accepted(
+        peer, peer.getpeername()
+    )
+
+    if handler is None:
+        raise RuntimeError("FTP_HANDLER_NOT_STARTED")
+
+    deadline = time.monotonic() + 5.0
+
+    while handler.connected and time.monotonic() < deadline:
+        server.serve_forever(
+            timeout=0.1,
+            blocking=False,
+            handle_exit=False,
+        )
+
+finally:
+    server.close_all()
+    peer.close()
+"""
+
+
+def evaluate(protocol, ftp_source=None):
 
     need(
         protocol in ("FTP", "SMB"),
@@ -451,6 +697,11 @@ def evaluate(protocol):
 
             implementation, binary = select_ftp()
 
+            if binary is None and ftp_source is not None:
+
+                implementation = "PYFTPDLIB_PINNED_SOURCE"
+                binary = PYTHON
+
         else:
 
             implementation = "SAMBA_SMBD"
@@ -494,6 +745,39 @@ def evaluate(protocol):
                 "ftpd",
                 str(folder),
             ]
+
+        elif implementation == "PYFTPDLIB_PINNED_SOURCE":
+
+            result["ftp_dependency"] = prepare_ftp_source(
+                ftp_source,
+                folder,
+            )
+
+            runner = folder / "ftp_runner.py"
+
+            with runner.open(
+                "x", encoding="ascii"
+            ) as handle:
+
+                handle.write(FTP_RUNNER)
+
+            result["runner_sha256"] = ssh.digest(
+                runner.read_bytes()
+            )
+
+            result["sandbox_requested"] = True
+
+            info, command = sandbox(
+                folder,
+                [
+                    str(binary),
+                    "-I",
+                    "-B",
+                    "/work/ftp_runner.py",
+                ],
+            )
+
+            result["sandbox_binary"] = info
 
         elif implementation == "VSFTPD":
 
@@ -645,6 +929,24 @@ def evaluate(protocol):
 
                     process = None
 
+                if protocol == "SMB":
+
+                    log = folder / "log.smbd"
+
+                    if (
+                        log.is_file()
+                        and not log.is_symlink()
+                    ):
+
+                        with log.open("rb") as handle:
+
+                            result["samba_log_excerpt"] = (
+                                handle.read(4096).decode(
+                                    "utf-8",
+                                    errors="replace",
+                                )
+                            )
+
                 diagnostics.seek(0)
 
                 result["diagnostics"] = (
@@ -709,7 +1011,7 @@ def evaluate(protocol):
     return result
 
 
-def run(confirmation):
+def run(confirmation, ftp_source=None):
 
     need(
         confirmation == CONFIRM,
@@ -725,7 +1027,12 @@ def run(confirmation):
 
     for protocol in ("FTP", "SMB"):
 
-        record = evaluate(protocol)
+        record = evaluate(
+            protocol,
+            ftp_source=ftp_source
+            if protocol == "FTP"
+            else None,
+        )
 
         results.append(record)
 
@@ -778,9 +1085,19 @@ def main(argv=None):
         required=True,
     )
 
+    parser.add_argument(
+        "--ftp-source",
+        type=Path,
+        default=None,
+        help="Pinned pyftpdlib source archive for local FTP fallback",
+    )
+
     args = parser.parse_args(argv)
 
-    report = run(args.confirm)
+    report = run(
+        args.confirm,
+        ftp_source=args.ftp_source,
+    )
 
     print(
         ssh.canonical(report).decode("ascii")

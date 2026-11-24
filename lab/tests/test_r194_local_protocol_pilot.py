@@ -176,5 +176,117 @@ class LocalProtocolTests(unittest.TestCase):
             )
 
 
+
+class R194CorrectionTests(unittest.TestCase):
+
+    def test_minimal_sandbox_mounts(self):
+
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmp:
+
+            with patch.object(
+                m.ssh,
+                "trusted_binary",
+                return_value={"sha256": "DEV"},
+            ), patch.object(
+                m.os,
+                "getuid",
+                return_value=1000,
+            ), patch.object(
+                m.os,
+                "getgid",
+                return_value=1000,
+            ):
+
+                _, args = m.sandbox(
+                    Path(tmp),
+                    ["/usr/bin/true"],
+                )
+
+            mounts = [
+                args[index:index + 3]
+                for index, value in enumerate(args)
+                if value == "--ro-bind"
+            ]
+
+            self.assertNotIn(
+                ["--ro-bind", "/", "/"],
+                mounts,
+            )
+
+            self.assertIn(
+                ["--ro-bind", "/usr", "/usr"],
+                mounts,
+            )
+
+            self.assertIn("--unshare-all", args)
+            self.assertIn("--clearenv", args)
+            self.assertNotIn("--share-net", args)
+
+            self.assertTrue(
+                (
+                    Path(tmp)
+                    / "sandbox-etc/passwd"
+                ).is_file()
+            )
+
+    def test_unpinned_source_rejected(self):
+
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmp:
+
+            folder = Path(tmp)
+            archive = folder / "invalid.tar.gz"
+
+            archive.write_bytes(
+                b"not the pinned source"
+            )
+
+            with self.assertRaisesRegex(
+                ValueError,
+                "FTP_SOURCE_SHA256_INVALID",
+            ):
+
+                m.prepare_ftp_source(
+                    archive,
+                    folder,
+                )
+
+            self.assertFalse(
+                (folder / "vendor").exists()
+            )
+
+    def test_ftp_runner_no_accounts(self):
+
+        self.assertIn(
+            "DummyAuthorizer()",
+            m.FTP_RUNNER,
+        )
+
+        self.assertIn(
+            "FTPHandler.proto_cmds = {}",
+            m.FTP_RUNNER,
+        )
+
+        self.assertNotIn(
+            "add_user(",
+            m.FTP_RUNNER,
+        )
+
+        self.assertNotIn(
+            "add_anonymous(",
+            m.FTP_RUNNER,
+        )
+
+        self.assertEqual(
+            len(m.FTP_SOURCE_SHA256),
+            64,
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
