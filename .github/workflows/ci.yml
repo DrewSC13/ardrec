@@ -60,6 +60,66 @@ jobs:
                   raise SystemExit(f'{label}_TEST_FAILURE')
           PY
 
+      - name: R206 local prospective dispatch
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR206'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_r206_prospective_local_dispatch.py',
+          )
+          if suite.countTestCases() != 5:
+              raise SystemExit('R206_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R206_REGRESSION_FAILED')
+          PYR206
+
+      - name: R205 prospective attempt journal
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR205'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_r205_prospective_attempt_journal.py',
+          )
+          if suite.countTestCases() != 9:
+              raise SystemExit('R205_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R205_REGRESSION_FAILED')
+          PYR205
+
+      - name: R204 functional SSH and SMB fixtures
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR204'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_r204_functional_local_fixtures.py',
+          )
+          if suite.countTestCases() != 8:
+              raise SystemExit('R204_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R204_REGRESSION_FAILED')
+          PYR204
+
+      - name: R202 functional FTP fixture
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR202'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_r202_functional_ftp_fixture.py',
+          )
+          if suite.countTestCases() != 5:
+              raise SystemExit('R202_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R202_REGRESSION_FAILED')
+          PYR202
+
       - name: R199 initial assessment and preparation
         run: |
           PYTHONPATH=src python3 -B - <<'PYR199'
