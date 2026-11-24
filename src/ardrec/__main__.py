@@ -14,6 +14,34 @@ from ardrec.benign_pipeline import VerificationError, GateError
 
 def main(argv=None) -> int:
     argv = sys.argv[1:] if argv is None else list(argv)
+    if argv in (['--help'], ['-h']):
+        print("""ARDREC / Algoritmo de Recalibracion Dinamica del Riesgo
+Uso: python -m ardrec [comando] [opciones]
+
+COMANDOS:
+  live       Observabilidad fisica de solo lectura
+  caso       Archivo y reproduccion documental
+  familias   Evaluacion offline de familias DEV
+  estudio    Consulta y analisis experimental exploratorio
+
+SESION DEV:
+  --durable-dev-root   Almacen durable de desarrollo
+  --safe-cycle        Generacion estructural DEV
+  --shadow-cycle      Recorrido hipotetico y proceso benigno
+
+AYUDA:
+  python -m ardrec live --help
+  python -m ardrec caso --help
+  python -m ardrec familias --help
+  python -m ardrec estudio --help
+  python -m ardrec --durable-dev-root RUTA --help
+
+ALCANCE:
+  La interfaz no concede autoridad operacional.
+  P8 permanece NO-GO cuando no existe autorizacion valida.
+  Los resultados DEV no constituyen observaciones experimentales.
+""")
+        return 0
     if argv and argv[0] == 'familias':
         from ardrec.coordination.family_cli import main as family_main
         return family_main(argv[1:])
