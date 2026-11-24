@@ -18,6 +18,17 @@ R138_F7_SOURCE = 'src/ardrec/coordination/r115_f7_controlled_boot.py'
 R115_F7_ORIGINAL_SHA256 = '90086ec330b1b9513d096fa6996e7dfe994ba10511702d4becbcc1fddee3688d'
 R138_F7_SIGNED_VARIANT_SHA256 = 'bc1403601138e9e2c31bad6a7bc1603806e29cc2c65eb5ffd2e516c28df62e13'
 
+# R168-F10: variante completa de cinco fuentes del commit firmado.
+# El manifiesto historico R115 permanece inmutable.
+R168_SIGNED_SOURCE_HEAD = 'a5c4e66978a5f7038b1153aec7ad0783321d0f51'
+R168_WHOLE_SOURCE_VARIANT = {
+    'lab/tests/test_p14_r115_f16_physical_pilot_controller.py': ('ec8d773a45545e93f6e0cc686de29619cb0ca2098e42cbb17be6e8b877105ea7', '52b3d020844912fd946bfada566247eb4ac632be504d1ec42ea83aba8a968595'),
+    'lab/tests/test_p14_r115_f7_controlled_boot.py': ('a7ae80133cf710f1bb1152995bdb2a118e48593d1d5beb900520faa66d74d7ac', '6fb0d659374d2921e49282266846c66d1034e66fe6986973094e56c079746081'),
+    'scripts/ardrec_p14_r115_f16_physical_pilot_controller.py': ('00bdafb935eab7b528667145647d6c3494fd2b62b64cacbb32dbf3da01e99b88', 'd661d0e15ce25367b66fd8ba94aa66159a550f01416ad07c628dc4b9388917f6'),
+    'src/ardrec/coordination/r115_f16_physical_pilot_controller.py': ('480783a68c88a0e1a28ea43da9419e0ca67cb6d02a05a12658348f31b3930c49', 'fae85aa10c4cf033eacd4ab42208dad66ad516d2dd0300c550d8bbb796c6c4e0'),
+    'src/ardrec/coordination/r115_f7_controlled_boot.py': ('90086ec330b1b9513d096fa6996e7dfe994ba10511702d4becbcc1fddee3688d', '361e338d1948f8be31504bdd2b8108346ab96b80e58ae56ebdb32fb4de25e3af'),
+}
+
 class GateFailure(ValueError):
     pass
 
@@ -97,6 +108,14 @@ def evaluate(root: Path = ROOT) -> dict:
     if (type(sources) is not dict or len(sources) != 58 or
         type(lock.get('source_count')) is not int or lock['source_count'] != 58):
         raise GateFailure('LOCK_SOURCE_COUNT_MISMATCH')
+    # Admitir la derivacion solamente si coinciden TODOS los cinco
+    # archivos y TODOS los hashes originales del cierre historico.
+    r168_exact_variant = all(
+        sources.get(name) == historical
+        and sha(_secure_path(root, name).read_bytes()) == derived
+        for name, (historical, derived)
+        in R168_WHOLE_SOURCE_VARIANT.items()
+    )
     for name, digest in sources.items():
         if (not name.startswith(('docs/development/p14-r115-',
                                  'lab/tests/test_p14_r115_',
@@ -111,7 +130,9 @@ def evaluate(root: Path = ROOT) -> dict:
             # Keep the historical 58-source R115 lock unchanged.
             if not (name == R138_F7_SOURCE and
                     digest == R115_F7_ORIGINAL_SHA256 and
-                    actual_sha256 == R138_F7_SIGNED_VARIANT_SHA256):
+                    actual_sha256 == R138_F7_SIGNED_VARIANT_SHA256) and not (
+                    r168_exact_variant
+                    and name in R168_WHOLE_SOURCE_VARIANT):
                 raise GateFailure('SOURCE_DRIFT:' + name)
     raw_catalog, catalog = _read_json(root, CATALOG)
     if sha(raw_catalog) != lock.get('catalog_sha256'):

@@ -7,6 +7,7 @@ on:
       - feat/ardrec-cierre-operacional-experimental-v2
       - feat/ardrec-integracion-funcional-experimental-v1
       - feat/ardrec-pipeline-evidencia-riesgo-integrada-v1
+      - feat/ardrec-a1-a10-cierre-integral-v1
 
 permissions:
   contents: read
@@ -155,7 +156,7 @@ jobs:
           for pattern, count in (
               ('test_p14_r115_f7_controlled_boot.py', 0),
               ('test_p14_r115_f8_runner_ftp_boot.py', 0),
-              ('test_p14_r138_boot_branch_provenance.py', 19),
+              ('test_p14_r138_boot_branch_provenance.py', 20),
           ):
               suite=unittest.defaultTestLoader.discover('lab/tests',pattern=pattern)
               discovered=suite.countTestCases()
@@ -401,3 +402,121 @@ jobs:
       - name: R165-F3 native A5-A10 fixture chain (offline)
         run: |
           PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r165_f3_offline_native_chain.py' -v
+
+      - name: R166-F1 CLI expediente documental + CAS + replay (sin red)
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYR166'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_p14_r166_f1_case_archive_cli.py',
+          )
+          if suite.countTestCases() != 13:
+              raise SystemExit('R166_F1_TEST_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit('R166_F1_REGRESSION_FAILED')
+          if len(result.skipped) != 0:
+              raise SystemExit('R166_F1_SKIPPED_UNPRIVILEGED_TESTS')
+          print('R166_F1=PASS_13_DOCUMENTARY_ONLY')
+          PYR166
+
+      - name: R166-F2 lectura fisica R119, diagnostico de sondas y topologia FTP 5/1 (sin red)
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYR166F2'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_p14_r166_f2_physical_readback.py',
+          )
+          if suite.countTestCases() != 10:
+              raise SystemExit('R166_F2_TEST_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R166_F2_REGRESSION_FAILED_OR_SKIPPED')
+          print('R166_F2=PASS_10_READONLY_SOURCE_PROJECTION')
+          PYR166F2
+
+      - name: R166-F3 clasificacion causal desde recibos y metadatos R163 (sin root)
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYR166F3'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_p14_r166_f3_causal_root_readback.py',
+          )
+          if suite.countTestCases() != 16:
+              raise SystemExit('R166_F3_TEST_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R166_F3_REGRESSION_FAILED_OR_SKIPPED')
+          print('R166_F3=PASS_16_CAUSAL_READONLY')
+          PYR166F3
+
+      - name: R166-F8 strict signed root source continuity (nonroot)
+        run: |
+          PYTHONPATH=src:scripts python3 -B -m unittest discover -s lab/tests -p 'test_p14_r166_f8_root_source_continuity.py' -v
+
+      - name: R166-F9 signed F3-only migration regression (offline)
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYR166F9'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_p14_r166_f9_migrate_f3.py',
+          )
+          if suite.countTestCases() != 10:
+              raise SystemExit('R166_F9_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R166_F9_REGRESSION_FAILURE')
+          print('R166_F9=PASS_10_OFFLINE_F3_ONLY')
+          PYR166F9
+
+      - name: R166-F10 current signed scope bridge (offline)
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYR166F10'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_p14_r166_f10_current_scope_bridge.py',
+          )
+          if suite.countTestCases() != 10:
+              raise SystemExit('R166_F10_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R166_F10_REGRESSION_FAILED')
+          print('R166_F10=PASS_10_CURRENT_HEAD_SIGNED_SCOPE')
+          PYR166F10
+
+      - name: R166-F11 signed F3 one-source migration regression (offline)
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B - <<'PYR166F11'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_p14_r166_f11_migrate_f3.py',
+          )
+          if suite.countTestCases() != 10:
+              raise SystemExit('R166_F11_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R166_F11_REGRESSION_FAILED')
+          print('R166_F11=PASS_10_F3_ONLY')
+          PYR166F11
+
+      - name: R168-F10 strict R115 historical derivative verification
+        run: |
+          PYTHONPATH=src:scripts python3 -B -m unittest discover -s lab/tests -p 'test_p14_r168_f10_r115_compat.py' -v
+
+      - name: R168-F11 strict R116 to R115 signed derivative
+        run: |
+          PYTHONPATH=src:scripts python3 -B -m unittest discover -s lab/tests -p 'test_p14_r168_f11_r116_compat.py' -v
+
+      - name: R168-F12 exact R117 F4 F5A source migration
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r168_f12_r117_compat.py' -v
+
+      - name: R168-F13 signed historical R117-F5B V3 candidate replay
+        run: |
+          PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r168_f13_historical_v3.py' -v

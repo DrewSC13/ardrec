@@ -1,0 +1,14 @@
+{
+  "boot_release": "NOT_ATTESTED",
+  "files_sha256": {
+    "lab/tests/test_p14_r167_f7_versioned.py": "c4e273c6819159312eb09738715b348457121f226a8cbc5c5975d4905b88e77c",
+    "scripts/ardrec_p14_r167_f7_controlled_boot.py": "010c44412dc3a4fdbc2503a23dcd360323f67370bfa47ef1ec29d2fb3a523cb1",
+    "src/ardrec/coordination/r167_f7_controlled_boot.py": "d90a75a04ac6a7d6aed239316db4577d482a9479b7ffa213dca7be36213a0345"
+  },
+  "historical_f7_sha256": "361e338d1948f8be31504bdd2b8108346ab96b80e58ae56ebdb32fb4de25e3af",
+  "network_traffic": false,
+  "p8": "NO-GO",
+  "root_install": false,
+  "schema": "ARDREC-R167-F7-SOURCE-ONLY-v1",
+  "vm_starts": 0
+}

@@ -38,6 +38,8 @@ ROOT = Path('/home/cicada/ardrec-lab/r115-f7-one-boot-deny-v1')
 REPO = Path('/home/cicada/Development/GitHub/ardrec')
 BRANCH = 'feat/p14-r115-a3-p7-a6-real'
 BASE = '6ce42a1143d50f7adf69ea3159b56c0e993c45cb'
+ACTIVE_BRANCH = 'feat/ardrec-a1-a10-cierre-integral-v1'
+ACTIVE_BASE = '5c7770c1548585f8eac7f50d5f68b8fb77a10614'
 ORDER = ('ssh','runner','ftp')
 ALL = ('ssh','runner','ftp','smb')
 PERMIT_TRUST = Path('/etc/ardrec/r115-boot-trust-v1.json')
@@ -124,12 +126,15 @@ def git_guard(*, for_boot=False, runner=subprocess.run):
     need(Path.cwd().resolve()==REPO,'WRONG_REPOSITORY_DIRECTORY')
     need(ok(_run(('git','rev-parse','--show-toplevel'),runner=runner),'GIT_ROOT')==str(REPO),
          'GIT_ROOT_MISMATCH')
-    need(ok(_run(('git','branch','--show-current'),runner=runner),'GIT_BRANCH')==BRANCH,
-         'GIT_BRANCH_MISMATCH')
+    current_branch=ok(_run(('git','branch','--show-current'),runner=runner),'GIT_BRANCH')
+    need(current_branch in (BRANCH,ACTIVE_BRANCH),'GIT_BRANCH_MISMATCH')
     head=ok(_run(('git','rev-parse','HEAD'),runner=runner),'GIT_HEAD')
     need(f1.GIT_SHA.fullmatch(head),'INVALID_HEAD')
     need(_run(('git','merge-base','--is-ancestor',BASE,head),runner=runner)['rc']==0,
          'SIGNED_F1_F6_BASE_NOT_ANCESTOR')
+    if current_branch==ACTIVE_BRANCH:
+        need(_run(('git','merge-base','--is-ancestor',ACTIVE_BASE,head),runner=runner)['rc']==0,
+             'ACTIVE_BASE_NOT_ANCESTOR')
     need(ok(_run(('git','status','--porcelain=v1','--untracked-files=all'),runner=runner),
             'GIT_STATUS')=='','SOURCE_TREE_NOT_CLEAN')
     sig=ok(_run(('git','log','-1','--format=%G?'),runner=runner),'GIT_SIGNATURE')
@@ -214,9 +219,31 @@ def signed_boot_permit(plan,contract_raw,authorization_raw,permit_raw,*,now,
             'role':plan['role'],'valid_until':stmt['valid_until']}
 
 def scope_required(contract_raw,authorization_raw,*,now):
-    result=f6.scope(contract_raw,authorization_raw,
-                    catalog_raw=f6.CATALOG.read_bytes(),now=now)
-    need(result[0]=='VERDADERO','SIGNED_CASE_SCOPE_NOT_AUTHORIZED_'+result[0])
+    # R166-F10: no cambia el contrato historico ni concede trafico.
+    # La rama activa requiere la autoridad R116 vinculada al HEAD firmado.
+    branch=ok(_run(('git','branch','--show-current')),'GIT_BRANCH')
+    head=git_guard(for_boot=True)
+    need(branch==ok(_run(('git','branch','--show-current')),
+                    'GIT_BRANCH_RECHECK'),'SCOPE_BRANCH_CHANGED')
+    need(branch in (BRANCH,ACTIVE_BRANCH),'SCOPE_BRANCH_NOT_ALLOWED')
+    catalog_raw=f6.CATALOG.read_bytes()
+    if branch==ACTIVE_BRANCH:
+        # Import diferido: R116-F2 importa F16, y F16 importa este modulo.
+        from ardrec.coordination import r116_f2_current_pilot_gate as current
+        try:
+            result=current.current_scope_review(
+                contract_raw,authorization_raw,
+                catalog_raw=catalog_raw,now=now,head=head)
+        except (current.Stop,f1.Rejected,ValueError,TypeError,
+                KeyError,OSError) as exc:
+            raise Stop('CURRENT_HEAD_SCOPE_NOT_ATTESTED') from exc
+    else:
+        result=f6.scope(contract_raw,authorization_raw,
+                        catalog_raw=catalog_raw,now=now)
+    need(type(result) is tuple and len(result)==3 and
+         result[0]=='VERDADERO' and
+         type(result[2]) is str and f1.SHA.fullmatch(result[2]),
+         'SIGNED_CASE_SCOPE_NOT_AUTHORIZED')
     return result
 
 def _ticket(role):

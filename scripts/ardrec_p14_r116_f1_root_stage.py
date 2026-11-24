@@ -19,6 +19,8 @@ REPO=Path('/home/cicada/Development/GitHub/ardrec')
 ROOT=Path('/var/lib/ardrec')
 DEST=ROOT/'r116-f1-five-one-deny-v1'
 BRANCH='feat/p14-r116-piloto-ftp-fisico-a5-a10'
+ACTIVE_BRANCH='feat/ardrec-a1-a10-cierre-integral-v1'
+ACTIVE_BASE='5c7770c1548585f8eac7f50d5f68b8fb77a10614'
 BASE='46dccd948d2d61c4fd777c64dafad3efa71cf035'
 SOURCE={
     'root-guard.py': 'scripts/ardrec_p14_r116_f1_root_deny_guard.py',
@@ -40,11 +42,16 @@ def git(*args):
 def checked_source():
     need(os.geteuid()==0,'ROOT_REQUIRED')
     need(REPO.is_dir() and not REPO.is_symlink(),'REPO_INVALID')
-    need(git('branch','--show-current').strip()==BRANCH.encode(), 'BRANCH_MISMATCH')
+    branch=git('branch','--show-current').strip()
+    need(branch in (BRANCH.encode(),ACTIVE_BRANCH.encode()), 'BRANCH_MISMATCH')
     need(git('merge-base','--is-ancestor',BASE,'HEAD')==b'', 'ANCESTRY_INVALID')
+    if branch==ACTIVE_BRANCH.encode():
+        need(git('merge-base','--is-ancestor',ACTIVE_BASE,'HEAD')==b'',
+             'ACTIVE_ANCESTRY_INVALID')
     need(git('status','--porcelain=v1','--untracked-files=all')==b'',
          'DIRTY_REPOSITORY')
     need(git('log','-1','--format=%G?').strip()==b'G','SOURCE_COMMIT_NOT_VERIFIED')
+    git('verify-commit','HEAD')
     data={}
     for name,path in SOURCE.items():
         p=REPO/path

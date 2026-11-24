@@ -202,6 +202,8 @@ class F7Permit(unittest.TestCase):
         self.assertNotIn('smb',f.ORDER)
     def test_no_readonly_root_mutation_apis(self):
         self.assertEqual(f.BRANCH,'feat/p14-r115-a3-p7-a6-real')
+        self.assertEqual(f.ACTIVE_BRANCH,'feat/ardrec-a1-a10-cierre-integral-v1')
+        self.assertEqual(f.ACTIVE_BASE,'5c7770c1548585f8eac7f50d5f68b8fb77a10614')
         self.assertEqual(f.BASE,'6ce42a1143d50f7adf69ea3159b56c0e993c45cb')
     def test_command_timeout_fails_closed(self):
         import subprocess

@@ -1,0 +1,14 @@
+{
+  "boot_release": "SIGNED_REQUIRED",
+  "files_sha256": {
+    "lab/tests/test_p14_r168_f5_ftp_release.py": "dc119d50cb5f1207f0d688fbb3dcf410325de72769540707dbf0c566d17110b6",
+    "scripts/ardrec_p14_r168_f5_ftp.py": "36955bd4be0e49bb930853a3b015a11229d6c20385648d2704dd751af3a44aa9",
+    "src/ardrec/coordination/r168_f5_ftp_boot.py": "ecfae3f218e3f3a0cddad43f043e1b76798bd0ad0cbfa3f8445879734d64c03f",
+    "src/ardrec/coordination/r168_f5_ftp_release_gate.py": "e8aa889e244df2bcaab47d593ddc96c299d5d2996f329b91a4e3dffb484225b5"
+  },
+  "historical_source_sha256": "b7910574bc87cf1bd98d48310759509c8f60a654d66d514cff4a40f660c14273",
+  "p8": "NO-GO",
+  "role": "ftp",
+  "schema": "ARDREC-R168-F5-FTP-SOURCE-v1",
+  "traffic_authorized": false
+}
