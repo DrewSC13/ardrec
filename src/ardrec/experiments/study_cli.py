@@ -237,10 +237,14 @@ def main(argv=None):
     output.add_argument("--json", action="store_true")
 
     parser.add_argument("--preparar-i2", action="store_true")
+    parser.add_argument("--revisar-riesgo", action="store_true")
     parser.add_argument("--entrada-i2", type=Path)
     parser.add_argument("--soportes-i2", type=Path)
 
     args = parser.parse_args(argv)
+
+    if args.revisar_riesgo and not args.preparar_i2:
+        parser.error("--revisar-riesgo requiere --preparar-i2")
 
     if args.preparar_i2:
 
@@ -258,10 +262,17 @@ def main(argv=None):
             parser.error("I2 requiere entrada y soportes conjuntamente")
 
         from ardrec.experiments import baseline_preparation
+        from ardrec.experiments import prospective_risk_integration
+
+        engine = (
+            prospective_risk_integration
+            if args.revisar_riesgo
+            else baseline_preparation
+        )
 
         try:
 
-            report = baseline_preparation.evaluate(
+            report = engine.evaluate(
                 args.registro,
                 args.seleccion,
                 CATALOG,
@@ -272,7 +283,7 @@ def main(argv=None):
             if args.json:
                 sys.stdout.buffer.write(r148.canonical(report))
             else:
-                sys.stdout.write(baseline_preparation.render_text(report))
+                sys.stdout.write(engine.render_text(report))
 
             return 0
 
