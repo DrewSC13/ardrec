@@ -82,12 +82,8 @@ def main(argv=None) -> int:
             run_dashboard_tui(build_durable_dashboard(doc, fixture))
     else:
         if args.shadow_cycle:
-            sys.stdout.write('ARDREC R71 / SOMBRA POSITIVA CONTROLADA\n'
-                 'A3 SIMULADO | A4 SSH CASE_REFERENCE (HIPOTETICO)\n'
-                 'A5 BENIGNO LOCAL 1 INICIO | A6 ND | RF HIPOTETICO 5/12\n'
-                 'RF CONFIRMADO ND | P8 NO-GO | A9 GEN1 INMUTABLE\n'
-                 f"HEAD_R70={doc['r70_head_sha256']}\n"
-                 f"SHA_R71={doc['sha256']}\n")
+            from ardrec.coordination.shadow_cycle import render_shadow_text
+            sys.stdout.write(render_shadow_text(doc))
         elif doc['generation'] == 1:
             sys.stdout.write('ARDREC R70 / GEN 1 ANALITICA DEV ESTRUCTURAL\n'
                  'A3 SIN DESPACHO | A4 SIN ELEGIBLES | A5 0 INTENTOS\n'
