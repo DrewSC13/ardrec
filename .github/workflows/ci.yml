@@ -68,7 +68,7 @@ jobs:
               'lab/tests',
               pattern='test_r194_local_protocol_pilot.py',
           )
-          if suite.countTestCases() != 11:
+          if suite.countTestCases() != 15:
               raise SystemExit('R194_DISCOVERY_INVALID')
           result = unittest.TextTestRunner(verbosity=2).run(suite)
           if not result.wasSuccessful() or result.skipped:

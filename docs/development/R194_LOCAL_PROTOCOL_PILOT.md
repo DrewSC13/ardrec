@@ -76,3 +76,36 @@ una auditoria independiente de seguridad.
 
 Se mantienen las restricciones experimentales y los
 contratos operacionales historicos.
+
+
+## Correccion R194-D
+
+Python 3.12 y versiones posteriores ya no incluyen
+asynchat ni asyncore en la biblioteca estandar.
+
+La distribucion fuente pyftpdlib 2.2.0 requiere las
+dependencias de compatibilidad correspondientes.
+
+El piloto utiliza exclusivamente:
+
+- pyasyncore 1.0.5.
+- pyasynchat 1.0.5.
+
+Ambos wheels se verifican contra huellas SHA-256
+fijadas en el codigo antes de incorporarse al workspace.
+
+Se cargan directamente mediante zipimport, sin ejecutar
+instaladores, extraer archivos arbitrarios ni modificar
+el entorno Python del host.
+
+El runner verifica que los modulos procedan de los
+wheels privados esperados.
+
+Las dependencias deben estar junto al archivo fuente
+pyftpdlib-2.2.0.tar.gz.
+
+Su alcance es exclusivamente el piloto local aislado.
+No se incorporan al runtime operacional historico.
+
+Se conserva el rechazo ante dependencias ausentes,
+alteradas o procedentes de ubicaciones inesperadas.

@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 import io
 import tarfile
+import zipfile
 import json
 import os
 import re
@@ -41,6 +42,21 @@ FTP_SOURCE_SHA256 = (
 FTP_SOURCE_VERSION = "2.2.0"
 FTP_SOURCE_MAX_BYTES = 250000
 FTP_EXTRACT_MAX_BYTES = 4000000
+
+FTP_COMPAT_WHEELS = (
+    (
+        "pyasyncore-1.0.5-py3-none-any.whl",
+        "269bbc5252671827387636822841a1fb721ec6e858b23a3e12cf92eb1f97da2a",
+        "asyncore",
+    ),
+    (
+        "pyasynchat-1.0.5-py3-none-any.whl",
+        "35b7859515693e479e8d95ebe9f32cbf4d6312ab7599ced39fc24699e51de46f",
+        "asynchat",
+    ),
+)
+
+FTP_COMPAT_MAX_BYTES = 65536
 
 DIALECTS = (0x0202, 0x0210)
 
@@ -494,6 +510,86 @@ def select_ftp():
 
 
 
+def prepare_ftp_compatibility(source_dir, vendor):
+
+    source_dir = Path(source_dir)
+    vendor = Path(vendor)
+
+    verified = []
+
+    for filename, expected, module_name in FTP_COMPAT_WHEELS:
+
+        path = source_dir / filename
+
+        need(
+            path.is_file() and not path.is_symlink(),
+            "FTP_COMPAT_WHEEL_MISSING:" + filename,
+        )
+
+        with path.open("rb") as handle:
+
+            raw = handle.read(
+                FTP_COMPAT_MAX_BYTES + 1
+            )
+
+        need(
+            0 < len(raw) <= FTP_COMPAT_MAX_BYTES,
+            "FTP_COMPAT_WHEEL_SIZE_INVALID",
+        )
+
+        need(
+            ssh.digest(raw) == expected,
+            "FTP_COMPAT_WHEEL_SHA256_INVALID:" + filename,
+        )
+
+        with zipfile.ZipFile(io.BytesIO(raw)) as archive:
+
+            entry = module_name + "/__init__.py"
+
+            need(
+                archive.namelist().count(entry) == 1,
+                "FTP_COMPAT_MODULE_ENTRY_INVALID",
+            )
+
+            info = archive.getinfo(entry)
+
+            need(
+                0 < info.file_size <= 262144,
+                "FTP_COMPAT_MODULE_SIZE_INVALID",
+            )
+
+        verified.append(
+            (filename, expected, module_name, raw)
+        )
+
+    # No files are written before both wheels are verified.
+    result = []
+
+    for filename, expected, module_name, raw in verified:
+
+        destination = vendor / filename
+
+        with destination.open("xb") as handle:
+
+            handle.write(raw)
+
+        need(
+            ssh.digest(destination.read_bytes()) == expected,
+            "FTP_COMPAT_COPY_INVALID",
+        )
+
+        result.append({
+            "filename": filename,
+            "version": "1.0.5",
+            "module": module_name,
+            "sha256": expected,
+            "bytes": len(raw),
+            "installation_performed": False,
+        })
+
+    return result
+
+
 def prepare_ftp_source(archive, folder):
 
     with Path(archive).open("rb") as handle:
@@ -593,9 +689,15 @@ def prepare_ftp_source(archive, folder):
         "FTP_PACKAGE_ENTRY_MISSING",
     )
 
+    compatibility = prepare_ftp_compatibility(
+        Path(archive).parent,
+        vendor,
+    )
+
     return {
         "version": FTP_SOURCE_VERSION,
         "archive_sha256": FTP_SOURCE_SHA256,
+        "compatibility_dependencies": compatibility,
         "source_files": files,
         "source_bytes": extracted,
         "installation_performed": False,
@@ -608,7 +710,37 @@ import socket
 import sys
 import time
 
-sys.path.insert(0, "/work/vendor")
+sys.path[:0] = [
+    "/work/vendor",
+    "/work/vendor/pyasyncore-1.0.5-py3-none-any.whl",
+    "/work/vendor/pyasynchat-1.0.5-py3-none-any.whl",
+]
+
+import asyncore
+import asynchat
+
+for module, expected in (
+    (
+        asyncore,
+        "/work/vendor/pyasyncore-1.0.5-py3-none-any.whl/",
+    ),
+    (
+        asynchat,
+        "/work/vendor/pyasynchat-1.0.5-py3-none-any.whl/",
+    ),
+):
+
+    if not str(module.__file__).startswith(expected):
+
+        raise RuntimeError(
+            "FTP_COMPAT_IMPORT_ORIGIN_INVALID"
+        )
+
+print(
+    "FTP_COMPAT_IMPORTS=PASS",
+    file=sys.stderr,
+    flush=True,
+)
 
 from pyftpdlib.authorizers import DummyAuthorizer
 from pyftpdlib.handlers import FTPHandler

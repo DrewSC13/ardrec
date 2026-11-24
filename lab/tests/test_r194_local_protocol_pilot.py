@@ -288,5 +288,119 @@ class R194CorrectionTests(unittest.TestCase):
         )
 
 
+
+class R194CompatibilityTests(unittest.TestCase):
+
+    def test_compatibility_wheels_are_pinned(self):
+
+        self.assertEqual(
+            len(m.FTP_COMPAT_WHEELS),
+            2,
+        )
+
+        self.assertEqual(
+            {
+                entry[2]
+                for entry in m.FTP_COMPAT_WHEELS
+            },
+            {"asyncore", "asynchat"},
+        )
+
+        for filename, digest, name in m.FTP_COMPAT_WHEELS:
+
+            self.assertTrue(
+                filename.endswith(
+                    "-1.0.5-py3-none-any.whl"
+                )
+            )
+
+            self.assertRegex(
+                digest,
+                r"^[0-9a-f]{64}$",
+            )
+
+    def test_missing_compatibility_dependency_rejected(self):
+
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmp:
+
+            folder = Path(tmp)
+
+            vendor = folder / "vendor"
+            vendor.mkdir()
+
+            with self.assertRaisesRegex(
+                ValueError,
+                "FTP_COMPAT_WHEEL_MISSING",
+            ):
+
+                m.prepare_ftp_compatibility(
+                    folder,
+                    vendor,
+                )
+
+            self.assertEqual(
+                list(vendor.iterdir()),
+                [],
+            )
+
+    def test_altered_compatibility_dependency_rejected(self):
+
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmp:
+
+            folder = Path(tmp)
+
+            vendor = folder / "vendor"
+            vendor.mkdir()
+
+            filename = m.FTP_COMPAT_WHEELS[0][0]
+
+            (folder / filename).write_bytes(
+                b"invalid synthetic wheel"
+            )
+
+            with self.assertRaisesRegex(
+                ValueError,
+                "FTP_COMPAT_WHEEL_SHA256_INVALID",
+            ):
+
+                m.prepare_ftp_compatibility(
+                    folder,
+                    vendor,
+                )
+
+            self.assertEqual(
+                list(vendor.iterdir()),
+                [],
+            )
+
+    def test_compatibility_import_origin_is_checked(self):
+
+        self.assertIn(
+            "import asyncore",
+            m.FTP_RUNNER,
+        )
+
+        self.assertIn(
+            "import asynchat",
+            m.FTP_RUNNER,
+        )
+
+        self.assertIn(
+            "FTP_COMPAT_IMPORT_ORIGIN_INVALID",
+            m.FTP_RUNNER,
+        )
+
+        self.assertIn(
+            "FTP_COMPAT_IMPORTS=PASS",
+            m.FTP_RUNNER,
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
