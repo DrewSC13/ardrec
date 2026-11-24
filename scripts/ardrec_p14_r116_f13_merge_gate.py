@@ -20,6 +20,18 @@ R162_GATE_PATH = 'scripts/ardrec_p14_r115_f17_merge_gate.py'
 R115_ORIGINAL_GATE_SHA256 = 'fb3315b705470295f0fdb4c4936150ae408b217ab1f997baf30802f4637a4a03'
 R162_EXACT_GATE_SHA256 = '662841c7d0f7f8e19b1e5ca2b9920db0662434be23dd1df3a7d5dec042e64316'
 
+# R168-F11: admision exacta de R115-F17 desde el HEAD firmado.
+# No se modifica el manifiesto historico de 87 fuentes.
+R168_F10_SIGNED_HEAD = 'f7f8abe38c954d9f15f82c1cc1977ab6c5e3fd78'
+R168_F10_GATE_SHA256 = 'ba8c914b42e72f0f364b45f039d92814771ab6d6ab009dd47cc300ef854dd914'
+R168_F10_REQUIRED_FIVE = (
+    'lab/tests/test_p14_r115_f16_physical_pilot_controller.py',
+    'lab/tests/test_p14_r115_f7_controlled_boot.py',
+    'scripts/ardrec_p14_r115_f16_physical_pilot_controller.py',
+    'src/ardrec/coordination/r115_f16_physical_pilot_controller.py',
+    'src/ardrec/coordination/r115_f7_controlled_boot.py',
+)
+
 
 # R166: derived source hashes only; historical lock unchanged.
 # F5 sources come from a verified signed commit.
@@ -115,6 +127,9 @@ def evaluate(root: Path = ROOT) -> dict:
     digest = sha(('\n'.join(sorted(sources))+'\n').encode())
     if lock.get('source_path_digest') != PATH_DIGEST or digest != PATH_DIGEST:
         raise GateFailure('SOURCE_PATH_INDEX_MISMATCH')
+    # El cierre R116 conserva el SHA original de R115-F17.
+    if sources.get(R162_GATE_PATH) != R115_ORIGINAL_GATE_SHA256:
+        raise GateFailure('R115_GATE_HISTORICAL_PIN_CHANGED')
     for rel, expected_sha in sources.items():
         if type(expected_sha) is not str or len(expected_sha)!=64 or any(c not in '0123456789abcdef' for c in expected_sha):
             raise GateFailure('SOURCE_HASH_FORMAT:' + rel)
@@ -131,7 +146,24 @@ def evaluate(root: Path = ROOT) -> dict:
                 R166_EXACT_DERIVATIVES.get(rel)
                 == (expected_sha, actual_sha)
             )
-            if not (historical_derivative or r166_exact_derivative):
+            # El nuevo R115-F17 solo es admisible junto a la
+            # derivacion completa de cinco fuentes ya fijadas por R166.
+            r168_exact_derivative = (
+                rel == R162_GATE_PATH
+                and expected_sha == R115_ORIGINAL_GATE_SHA256
+                and actual_sha == R168_F10_GATE_SHA256
+                and all(
+                    sources.get(name) == R166_EXACT_DERIVATIVES[name][0]
+                    and sha(secure_file(root, name).read_bytes())
+                        == R166_EXACT_DERIVATIVES[name][1]
+                    for name in R168_F10_REQUIRED_FIVE
+                )
+            )
+            if not (
+                historical_derivative
+                or r166_exact_derivative
+                or r168_exact_derivative
+            ):
                 raise GateFailure('SOURCE_DRIFT:' + rel)
     raw, catalog = read_json(root, CATALOG)
     if sha(raw) != lock.get('catalog_sha256'):

@@ -508,3 +508,7 @@ jobs:
       - name: R168-F10 strict R115 historical derivative verification
         run: |
           PYTHONPATH=src:scripts python3 -B -m unittest discover -s lab/tests -p 'test_p14_r168_f10_r115_compat.py' -v
+
+      - name: R168-F11 strict R116 to R115 signed derivative
+        run: |
+          PYTHONPATH=src:scripts python3 -B -m unittest discover -s lab/tests -p 'test_p14_r168_f11_r116_compat.py' -v
