@@ -20,7 +20,7 @@ def need(ok, code):
         raise ValueError(code)
 
 
-def evaluate(registry_folder, selection_folder=None, analysis=False):
+def evaluate(registry_folder, selection_folder=None, analysis=False, paired_summary=False):
     need(os.geteuid() != 0, "ROOT_FORBIDDEN")
     need(
         CATALOG.is_file() and not CATALOG.is_symlink(),
@@ -47,10 +47,19 @@ def evaluate(registry_folder, selection_folder=None, analysis=False):
             registry,
         )
 
-    statistics = (
-        r148.analyze(protocol, registry, catalog)
-        if analysis else None
-    )
+    summary = None
+
+    if paired_summary:
+        need(analysis, "EXPLORATORY_FLAG_REQUIRED")
+        from ardrec.experiments import paired_summary as paired
+        statistics, summary = paired.analyze(
+            protocol, registry, catalog
+        )
+    else:
+        statistics = (
+            r148.analyze(protocol, registry, catalog)
+            if analysis else None
+        )
 
     need(
         audit["confirmed_physical_observations"] == 0
@@ -94,6 +103,10 @@ def evaluate(registry_folder, selection_folder=None, analysis=False):
         "a6": "ND",
         "a9": "NOT_PUBLISHED",
     }
+
+    if summary is not None:
+        report["schema"] = "ARDREC-R184-STUDY-CLI-v2"
+        report["paired_summary"] = summary
 
     report["sha256"] = r148.digest(
         r148.canonical(report)
@@ -151,6 +164,21 @@ def render_text(report):
             f"WILCOXON_DECISION={test['decision']}",
         ])
 
+    summary = report.get("paired_summary")
+
+    if summary is not None:
+        for key in (
+            "mae_static", "mae_ardrec",
+            "mean_difference", "median_difference",
+            "rank_biserial", "favor_ardrec",
+            "favor_static", "equal_errors",
+        ):
+            value = summary[key]
+            lines.append(
+                key.upper() + "=" +
+                ("ND" if value is None else str(value))
+            )
+
     lines.extend([
         "OBSERVACIONES_FISICAS_ADMITIDAS=0",
         "ANALISIS_CONFIRMATORIO=NO_AUTORIZADO",
@@ -181,6 +209,12 @@ def main(argv=None):
         action="store_true",
     )
 
+    parser.add_argument(
+        "--resumen-pareado",
+        action="store_true",
+        help="MAE global y efecto exploratorio en escala 0-1",
+    )
+
     output = parser.add_mutually_exclusive_group(
         required=True
     )
@@ -190,11 +224,15 @@ def main(argv=None):
 
     args = parser.parse_args(argv)
 
+    if args.resumen_pareado and not args.analisis_exploratorio:
+        parser.error("--resumen-pareado requiere --analisis-exploratorio")
+
     try:
         report = evaluate(
             args.registro,
             args.seleccion,
             args.analisis_exploratorio,
+            args.resumen_pareado,
         )
 
         if args.json:
