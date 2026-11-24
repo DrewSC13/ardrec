@@ -60,6 +60,21 @@ jobs:
                   raise SystemExit(f'{label}_TEST_FAILURE')
           PY
 
+      - name: R211 exact synthetic risk trajectory
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR211'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_r211_risk_trajectory.py',
+          )
+          if suite.countTestCases() != 6:
+              raise SystemExit('R211_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R211_REGRESSION_FAILED')
+          PYR211
+
       - name: R206 local prospective dispatch
         run: |
           PYTHONPATH=src python3 -B - <<'PYR206'
