@@ -95,7 +95,7 @@ def authorization_statement(plan):
     }
 
 
-def review(
+def inspect_signed_status(
     *,
     plan,
     trust_raw,
@@ -216,22 +216,27 @@ def review(
     )
 
     need(
-        revocation["revoked"] is False
-        and revocation["reason"] == "ACTIVE",
-        "AUTHORIZATION_REVOKED",
+        type(revocation["revoked"]) is bool
+        and revocation["reason"] == (
+            "REVOKED" if revocation["revoked"]
+            else "ACTIVE"
+        ),
+        "REVOCATION_STATE_INVALID",
     )
 
     return durable.seal({
-        "schema": SCHEMA,
+        "schema": SCHEMA + "-status",
         "plan_sha256": plan["sha256"],
         "trust_sha256": expected_trust_sha256,
         "authorization_sha256": sha(authorization_raw),
         "revocation_sha256": sha(revocation_raw),
         "revocation_sequence": sequence,
+        "revocation_issued_at": issued,
+        "revoked": revocation["revoked"],
         "verified_at": now,
         "valid_until": expires,
         "cryptographic_signatures_verified": True,
-        "documentary_scope_verified": True,
+        "documentary_scope_verified": not revocation["revoked"],
         "human_operator_count": 1,
         "human_independence_verified": False,
         "trust_provenance_attested": False,
@@ -248,3 +253,45 @@ def review(
         "p7": "DRAFT_NOT_FROZEN",
         "p8": "NO-GO",
     })
+
+
+def review(
+    *,
+    plan,
+    trust_raw,
+    authorization_raw,
+    revocation_raw,
+    expected_trust_sha256,
+    expected_plan_sha256,
+    minimum_revocation_sequence,
+    now,
+):
+    status = inspect_signed_status(
+        plan=plan,
+        trust_raw=trust_raw,
+        authorization_raw=authorization_raw,
+        revocation_raw=revocation_raw,
+        expected_trust_sha256=expected_trust_sha256,
+        expected_plan_sha256=expected_plan_sha256,
+        minimum_revocation_sequence=minimum_revocation_sequence,
+        now=now,
+    )
+
+    need(
+        status["revoked"] is False,
+        "AUTHORIZATION_REVOKED",
+    )
+
+    original = {
+        key: value
+        for key, value in status.items()
+        if key not in (
+            "sha256",
+            "revoked",
+            "revocation_issued_at",
+        )
+    }
+
+    original["schema"] = SCHEMA
+
+    return durable.seal(original)
