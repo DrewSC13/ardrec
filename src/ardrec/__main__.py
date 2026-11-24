@@ -17,6 +17,9 @@ def main(argv=None) -> int:
     if argv and argv[0] == 'familias':
         from ardrec.coordination.family_cli import main as family_main
         return family_main(argv[1:])
+    if argv and argv[0] == 'estudio':
+        from ardrec.experiments.study_cli import main as study_main
+        return study_main(argv[1:])
     if argv and argv[0] == 'caso':
         from ardrec.coordination.r166_case_archive_cli import main as case_main
         return case_main(argv[1:])
