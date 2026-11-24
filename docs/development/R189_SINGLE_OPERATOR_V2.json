@@ -1,0 +1,87 @@
+{
+  "confirmed_rf": null,
+  "experimental_observations_admitted": 0,
+  "historical_contracts_replaced": false,
+  "historical_sources": [
+    {
+      "path": "docs/development/R179_SINGLE_OPERATOR_BOUNDARY.md",
+      "sha256": "5edff44b35a7185daba0f6142f871d0e6631f7cc0d4509dce3f85c6af492e1b7"
+    },
+    {
+      "path": "docs/development/R163_SINGLE_OPERATOR_INSTALL_POLICY.md",
+      "sha256": "a614c707549ad1982ee98e5cd7d4c2f2a0e7a393ef2cf8d5229345f557aef428"
+    },
+    {
+      "path": "docs/development/R163_DURABLE_SOURCE_STAGING.md",
+      "sha256": "55b6db5d3c1dfb3e3cf6e03de95cb9e7399cf6cb52146f79b05834541c2f8df8"
+    },
+    {
+      "path": "docs/development/R163_V3_BOOTSTRAP.md",
+      "sha256": "4f4ccb18b885018a36046115df119d30ae2a7afb53e6cf69ad70f9d47c09e832"
+    },
+    {
+      "path": "docs/development/p14-r146-agente-instalador-independiente-reconstruido.md",
+      "sha256": "5c71d15d9f8bcb10324e9015daeb6afc2a388e14a01c640c163b0db7875e84a0"
+    },
+    {
+      "path": "docs/development/p14-r161-control-monousuario-de-desarrollo-y-merge.md",
+      "sha256": "0d56377e6c492ba5bd60c89019ea9a282b3b8efba424cc5cac9cdb76d87ede0a"
+    }
+  ],
+  "human_independence_claimed": false,
+  "human_operator_count": 1,
+  "methodology": {
+    "academic_change_approved": false,
+    "external_expert_validation_claimed": false,
+    "freeze_before_definitive_collection": true,
+    "independent_reference_from_method_outputs": true,
+    "interobserver_reliability_claimed": false,
+    "methodological_independence_required": true,
+    "pilot_required": true,
+    "planned_by_protocol": {
+      "FTP": 18,
+      "SMB": 18,
+      "SSH": 18
+    },
+    "planned_observations": 54,
+    "researcher_count": 1,
+    "review_mode_proposal": "DOCUMENTED_INTERNAL_CONTENT_REVIEW"
+  },
+  "network_traffic_authorized": false,
+  "operational_generation_published": false,
+  "p7": "DRAFT_NOT_FROZEN",
+  "p8": "NO-GO",
+  "physical_evidence_admitted": false,
+  "required_invariants": {
+    "bounded_authorized_scope": true,
+    "bounded_execution": true,
+    "concurrency_control": true,
+    "durable_audit": true,
+    "explicit_authorization": true,
+    "fail_closed": true,
+    "immutable_runtime_provenance": true,
+    "least_privilege": true,
+    "no_false_human_independence": true,
+    "no_synthetic_evidence_promotion": true,
+    "no_uncontrolled_retries": true,
+    "physical_evidence_provenance": true,
+    "restoration_verification": true,
+    "revocation_validation": true,
+    "separate_privileged_runtime": true
+  },
+  "roles": [
+    "RESEARCHER",
+    "DEVELOPER",
+    "ADMINISTRATOR",
+    "OPERATOR",
+    "ASSESSOR",
+    "CUSTODIAN"
+  ],
+  "root_install_authorized": false,
+  "runtime_installed": false,
+  "schema": "ARDREC-SINGLE-OPERATOR-v2-DESIGN",
+  "source_head": "4434a46baf07595397ab19c1fd2cef60d0e94f3f",
+  "source_tree": "07d867972c88eb4d29a1f363d11e104c32683e4f",
+  "status": "DESIGN_PROPOSAL_NOT_IMPLEMENTED",
+  "version": "2.0-DRAFT"
+}
