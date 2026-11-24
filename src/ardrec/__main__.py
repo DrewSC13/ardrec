@@ -14,6 +14,40 @@ from ardrec.benign_pipeline import VerificationError, GateError
 
 def main(argv=None) -> int:
     argv = sys.argv[1:] if argv is None else list(argv)
+    if argv in (['--help'], ['-h']):
+        print("""ARDREC / Algoritmo de Recalibracion Dinamica del Riesgo
+Uso: python -m ardrec [comando] [opciones]
+
+COMANDOS:
+  live       Observabilidad fisica de solo lectura
+  caso       Archivo y reproduccion documental
+  familias   Evaluacion offline de familias DEV
+  estudio    Consulta y analisis experimental exploratorio
+
+SESION DEV:
+  --durable-dev-root   Almacen durable de desarrollo
+  --safe-cycle        Generacion estructural DEV
+  --shadow-cycle      Recorrido hipotetico y proceso benigno
+
+AYUDA:
+  python -m ardrec live --help
+  python -m ardrec caso --help
+  python -m ardrec familias --help
+  python -m ardrec estudio --help
+  python -m ardrec --durable-dev-root RUTA --help
+
+ALCANCE:
+  La interfaz no concede autoridad operacional.
+  P8 permanece NO-GO cuando no existe autorizacion valida.
+  Los resultados DEV no constituyen observaciones experimentales.
+""")
+        return 0
+    if argv and argv[0] == 'familias':
+        from ardrec.coordination.family_cli import main as family_main
+        return family_main(argv[1:])
+    if argv and argv[0] == 'estudio':
+        from ardrec.experiments.study_cli import main as study_main
+        return study_main(argv[1:])
     if argv and argv[0] == 'caso':
         from ardrec.coordination.r166_case_archive_cli import main as case_main
         return case_main(argv[1:])
@@ -82,12 +116,8 @@ def main(argv=None) -> int:
             run_dashboard_tui(build_durable_dashboard(doc, fixture))
     else:
         if args.shadow_cycle:
-            sys.stdout.write('ARDREC R71 / SOMBRA POSITIVA CONTROLADA\n'
-                 'A3 SIMULADO | A4 SSH CASE_REFERENCE (HIPOTETICO)\n'
-                 'A5 BENIGNO LOCAL 1 INICIO | A6 ND | RF HIPOTETICO 5/12\n'
-                 'RF CONFIRMADO ND | P8 NO-GO | A9 GEN1 INMUTABLE\n'
-                 f"HEAD_R70={doc['r70_head_sha256']}\n"
-                 f"SHA_R71={doc['sha256']}\n")
+            from ardrec.coordination.shadow_cycle import render_shadow_text
+            sys.stdout.write(render_shadow_text(doc))
         elif doc['generation'] == 1:
             sys.stdout.write('ARDREC R70 / GEN 1 ANALITICA DEV ESTRUCTURAL\n'
                  'A3 SIN DESPACHO | A4 SIN ELEGIBLES | A5 0 INTENTOS\n'

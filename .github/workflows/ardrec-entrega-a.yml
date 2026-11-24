@@ -3,6 +3,8 @@ name: ARDREC Entrega A / Source validation
 on:
   push:
     branches:
+      - main
+      - feat/ardrec-cierre-experimental-20261126
       - feat/ardrec-cierre-operacional-experimental
       - feat/ardrec-cierre-operacional-experimental-v2
       - feat/ardrec-integracion-funcional-experimental-v1
@@ -520,3 +522,19 @@ jobs:
       - name: R168-F13 signed historical R117-F5B V3 candidate replay
         run: |
           PYTHONPATH=src:scripts:lab/tests python3 -B -m unittest discover -s lab/tests -p 'test_p14_r168_f13_historical_v3.py' -v
+
+      - name: R180 CLI integration and replay (offline)
+        run: |
+          PYTHONPATH=src:scripts python3 -B - <<'PYR180'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_r180_cli_integration.py',
+          )
+          if suite.countTestCases() != 5:
+              raise SystemExit('R180_TEST_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R180_CLI_REGRESSION_FAILED')
+          print('R180_CLI=PASS_5_OFFLINE')
+          PYR180

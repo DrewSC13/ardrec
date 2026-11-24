@@ -126,3 +126,74 @@ def run_shadow_cycle(durable: Path, benign: Path, candidate: dict[str, Any],
     }
     body['sha256'] = digest(canonical(body))
     return body
+
+
+def render_shadow_text(doc: dict[str, Any]) -> str:
+    """Presentacion A1-A10 derivada del resultado DEV existente.
+
+    No ejecuta servicios, no modifica estado y no concede autoridad.
+    La seleccion y el riesgo candidato permanecen hipoteticos.
+    """
+    _need(
+        doc.get('schema') == SCHEMA
+        and doc.get('source_kind')
+        == 'SYNTHETIC_SHADOW_SELECTION_AND_LOCAL_BENIGN'
+        and doc.get('physical_observation_attested') is False
+        and doc.get('operational_dispatch') is False
+        and doc.get('a7_confirmed_rf') is None
+        and doc.get('a9_new_generation_published') is False
+        and doc.get('p8_operational') == 'NO-GO',
+        'shadow_render_scope_invalid',
+    )
+    _need(
+        doc.get('sha256') == digest(canonical({
+            key: value for key, value in doc.items()
+            if key != 'sha256'
+        })),
+        'shadow_render_digest_invalid',
+    )
+
+    selected = doc['a4_shadow_selection']
+
+    lines = [
+        'ARDREC / RECORRIDO INTEGRADO A1-A10 DEV',
+        f"ORIGEN={doc['source_kind']}",
+        f"REGISTRO={doc['record_id']}",
+        f"A2_CONFIGURACION={doc['configuration_sha256']}",
+        f"A1_DECISIONES={len(doc['a1_decisions'])}",
+    ]
+
+    for service, detail in sorted(doc['a1_decisions'].items()):
+        decision = detail['r68']
+        lines.append(
+            f"A1_{service}={decision['status']}"
+            f"|REGLA={decision['selected_rule']}"
+            f"|SALIDA={decision['declared_output']}"
+        )
+
+    lines.extend([
+        f"A3_GUARDA_DEV={doc['a3_shadow_guard']}",
+        f"A3_OPERACIONAL={doc['a3_operational_guard']}",
+        f"A4_HIPOTETICO={selected['service_id']}"
+        f"|CASO={selected['case_id']}"
+        f"|PRIORIDAD={selected['priority']}",
+        f"A4_CONFIRMADO={doc['a4_confirmed_selection']}",
+        f"A5_RESULTADO_LOCAL={doc['a5_local_benign_outcome']}",
+        f"A5_INICIOS_LOCALES={doc['a5_local_benign_starts']}",
+        f"A5_EVENT_HEAD={doc['a5_event_head_sha256']}",
+        f"A6_CLASIFICACION={doc['a6_classification']}",
+        f"A7_RF_HIPOTETICO={doc['a7_hypothetical_rf']}",
+        "A7_RF_CONFIRMADO=ND",
+        f"A8_TRANSICION_ORIGINAL={doc['a8_original_stop']}",
+        f"A9_GENERACION_ESTRUCTURAL={doc['a9_structural_generation']}",
+        f"A9_NUEVA_GENERACION={doc['a9_new_generation_published']}",
+        f"A9_HEAD={doc['r70_head_sha256']}",
+        f"A9_SNAPSHOT={doc['r70_snapshot_sha256']}",
+        "A10_PRESENTACION=TEXT_FROM_NATIVE_RESULT",
+        f"P8={doc['p8_operational']}",
+        "OBSERVACION_FISICA=NO",
+        "OBSERVACIONES_EXPERIMENTALES_ADMITIDAS=0",
+        f"RECIBO_SHA256={doc['sha256']}",
+    ])
+
+    return '\n'.join(lines) + '\n'

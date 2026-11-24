@@ -1,5 +1,85 @@
 # ARDREC
 
+## Estado actual / Current status
+
+Prototipo academico de recalibracion dinamica del riesgo
+para servicios Linux SSH, FTP y SMB/Samba.
+
+La rama de cierre integra los motores analiticos existentes,
+la persistencia durable DEV, la observabilidad fisica de
+solo lectura y las interfaces de evaluacion y estudio.
+
+| Capacidad | Alcance acreditado |
+|---|---|
+| A1-A10 | Recorrido integrado DEV y contratos parciales |
+| SSH, FTP, SMB | 25 familias y 29 rutas evaluadas offline |
+| Persistencia | Generaciones estructurales DEV recuperables |
+| Observabilidad | Lectura fisica sin despacho |
+| Archivo de casos | Procesamiento documental separado |
+| Estudio experimental | Consulta y analisis exploratorio |
+| Operacion fisica integral | Pendiente de autorizacion |
+| Validacion cientifica | P7 sin congelar; 0/54 admitidas |
+
+### Inicio rapido / Quick start
+
+Desde la raiz del repositorio, con el entorno fijado:
+
+```sh
+uv sync --locked
+uv run --no-sync python -B -m ardrec --help
+uv run --no-sync python -B -m ardrec live --help
+uv run --no-sync python -B -m ardrec caso --help
+uv run --no-sync python -B -m ardrec familias --help
+uv run --no-sync python -B -m ardrec estudio --help
+```
+
+### Interfaces
+
+- `live`: inspeccion y reproduccion de capturas fisicas.
+- `caso`: revision, incorporacion y reapertura documental.
+- `familias`: evaluacion sintetica DEV y reproduccion.
+- `estudio`: consulta privada y analisis exploratorio.
+- Sesion durable DEV: inicializacion, persistencia y recorrido
+  hipotetico con ejecucion local benigna.
+
+### Seguridad y reproducibilidad
+
+Repositorio publico; datos privados, claves y autorizaciones
+fuera del repositorio.
+
+La custodia monousuario no acredita independencia humana.
+No se modifican los contratos operacionales R146/R163.
+P8 permanece NO-GO mientras falten sus requisitos.
+
+Las pruebas DEV no demuestran por si mismas compromiso,
+riesgo confirmado ni validez experimental.
+
+### English summary
+
+Academic prototype for dynamic risk recalibration in Linux
+SSH, FTP and SMB/Samba services. The current development
+branch includes offline analytical engines, durable DEV
+storage, read-only physical inspection and four CLI
+interfaces.
+
+Operational authorization and independent scientific
+validation remain separate requirements. Synthetic results
+must not be reported as physical experimental observations.
+
+### Documentacion / Documentation
+
+- [Custodia monousuario](docs/development/R179_SINGLE_OPERATOR_BOUNDARY.md)
+- [Registro experimental](docs/development/p14-r148-registro-y-analisis-experimental-54-unidades.md)
+- [Seleccion de escenarios](docs/development/p14-r149-diseno-escenarios-54-unidades.md)
+
+---
+
+## Registro historico de desarrollo
+
+Las siguientes declaraciones se conservan como antecedentes
+de las etapas anteriores y no reemplazan el estado actual.
+
+
 > **Propuesta P8-R35 — expedientes anclados a fuentes originales sin certificacion:** [`docs/estado-vigente-p8-r35.md`](docs/estado-vigente-p8-r35.md). Concilia R14/R31/R32/R33 y vincula 39 candidatos de clausula con 312 requisitos de lectura y observaciones preliminares; no autoriza CLI, `argv`, clientes, casos ni despachos.
 
 > **P8-R34 integrado mediante PR #65 — navegacion documental privada de solo lectura:** [`docs/estado-vigente-p8-r34.md`](docs/estado-vigente-p8-r34.md). Consultas acotadas de las 39 entradas y 312 preguntas originalmente pendientes sin mostrar roff/notas ni crear decisiones, permisos, `argv` o despachos.
