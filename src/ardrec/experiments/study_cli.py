@@ -236,7 +236,57 @@ def main(argv=None):
     output.add_argument("--texto", action="store_true")
     output.add_argument("--json", action="store_true")
 
+    parser.add_argument("--preparar-i2", action="store_true")
+    parser.add_argument("--entrada-i2", type=Path)
+    parser.add_argument("--soportes-i2", type=Path)
+
     args = parser.parse_args(argv)
+
+    if args.preparar_i2:
+
+        if (
+            args.registro is None
+            or args.seleccion is None
+            or args.consolidacion_local is not None
+            or args.sha256 is not None
+            or args.analisis_exploratorio
+            or args.resumen_pareado
+        ):
+            parser.error("I2 requiere registro y seleccion sin analisis")
+
+        if (args.entrada_i2 is None) != (args.soportes_i2 is None):
+            parser.error("I2 requiere entrada y soportes conjuntamente")
+
+        from ardrec.experiments import baseline_preparation
+
+        try:
+
+            report = baseline_preparation.evaluate(
+                args.registro,
+                args.seleccion,
+                CATALOG,
+                args.entrada_i2,
+                args.soportes_i2,
+            )
+
+            if args.json:
+                sys.stdout.buffer.write(r148.canonical(report))
+            else:
+                sys.stdout.write(baseline_preparation.render_text(report))
+
+            return 0
+
+        except (OSError, ValueError, KeyError, TypeError, RecursionError) as exc:
+
+            print(
+                "I2_STOP=" + type(exc).__name__,
+                file=sys.stderr,
+            )
+
+            return 2
+
+    if args.entrada_i2 is not None or args.soportes_i2 is not None:
+        parser.error("entrada y soportes requieren --preparar-i2")
 
     if args.consolidacion_local is not None:
 
