@@ -220,6 +220,12 @@ def main(argv=None):
         "--artefactos-vm", type=Path
     )
 
+    sources.add_argument(
+        "--prioridad-piloto",
+        type=Path,
+        help="Consulta prospectiva A4",
+    )
+
     parser.add_argument(
         "--sha256",
         help="Identificador esperado de la consolidacion",
@@ -255,6 +261,52 @@ def main(argv=None):
     parser.add_argument("--soportes-i2", type=Path)
 
     args = parser.parse_args(argv)
+
+    if args.prioridad_piloto is not None:
+
+        if (
+            not args.sha256
+            or args.seleccion is not None
+            or args.artefactos_vm is not None
+            or args.csv
+            or args.informe_i8
+            or args.preparar_i2
+            or args.revisar_riesgo
+            or args.entrada_i2 is not None
+            or args.soportes_i2 is not None
+            or args.analisis_exploratorio
+            or args.resumen_pareado
+        ):
+            parser.error("Opciones incompatibles con prioridad piloto")
+
+        from ardrec.selection import prospective_priority
+
+        try:
+
+            report = prospective_priority.evaluate(
+                args.prioridad_piloto,
+                args.sha256,
+            )
+
+            if args.json:
+                sys.stdout.buffer.write(
+                    r148.canonical(report)
+                )
+            else:
+                sys.stdout.write(
+                    prospective_priority.render_text(report)
+                )
+
+            return 0
+
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+
+            print(
+                "PRIORITY_STOP=" + type(exc).__name__,
+                file=sys.stderr,
+            )
+
+            return 2
 
     if args.evidencia_vm is not None:
 
