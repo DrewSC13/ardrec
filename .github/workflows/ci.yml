@@ -60,6 +60,79 @@ jobs:
                   raise SystemExit(f'{label}_TEST_FAILURE')
           PY
 
+      - name: R239 prospective signed scope and regression
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR239'
+          """Explicit prospective regression inventory.
+
+          All tests operate on documentary or synthetic fixtures.
+          No operational authority or experimental admission is granted.
+          """
+
+          import unittest
+
+          SUITES = (
+              ("R163", "test_p14_r163_single_operator_install_policy.py", 12),
+              ("R223", "test_r223_local_consolidation.py", 9),
+              ("R228", "test_r228_baseline_preparation.py", 17),
+              ("R232", "test_r232_prospective_risk.py", 15),
+              ("R237", "test_r237_signed_scope.py", 14),
+          )
+
+          total = 0
+
+          for label, filename, expected in SUITES:
+
+              loader = unittest.TestLoader()
+
+              suite = loader.discover(
+                  "lab/tests",
+                  pattern=filename,
+              )
+
+              count = suite.countTestCases()
+
+              print(
+                  f"{label}_DISCOVERED={count}",
+                  flush=True,
+              )
+
+              if loader.errors or count != expected:
+                  raise SystemExit(
+                      f"{label}_DISCOVERY_INVALID:{count}!={expected}"
+                  )
+
+              result = unittest.TextTestRunner(
+                  verbosity=2
+              ).run(suite)
+
+              if (
+                  not result.wasSuccessful()
+                  or result.skipped
+                  or result.expectedFailures
+                  or result.unexpectedSuccesses
+                  or result.testsRun != expected
+              ):
+                  raise SystemExit(
+                      f"{label}_REGRESSION_FAILED"
+                  )
+
+              total += result.testsRun
+
+              print(
+                  f"{label}_REGRESSION=PASS",
+                  flush=True,
+              )
+
+          if total != 67:
+              raise SystemExit(
+                  f"PROSPECTIVE_TEST_TOTAL_INVALID:{total}"
+              )
+
+          print("PROSPECTIVE_REGRESSIONS=67/67")
+          print("OPERATIONAL_ACTIVATION=NO")
+          PYR239
+
       - name: R215 prospective research review
         run: |
           PYTHONPATH=src python3 -B - <<'PYR215'
