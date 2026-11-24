@@ -60,6 +60,21 @@ jobs:
                   raise SystemExit(f'{label}_TEST_FAILURE')
           PY
 
+      - name: R192 bounded local SSH pilot
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR192'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests',
+              pattern='test_r192_local_ssh_pilot.py',
+          )
+          if suite.countTestCases() != 7:
+              raise SystemExit('R192_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R192_REGRESSION_FAILED')
+          PYR192
+
       - name: R191 independent reference rubric
         run: |
           PYTHONPATH=src python3 -B - <<'PYR191'
