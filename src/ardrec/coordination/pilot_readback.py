@@ -245,9 +245,13 @@ def evaluate(
     closure_pin,
     preregistration_pin,
     recovery_pin,
+    unit_id=None,
 ):
 
     need(os.geteuid() != 0, "ROOT_FORBIDDEN")
+
+    need(unit_id is None or unit_id in pilot_controller.UNITS,
+         "PILOT_UNIT_UNKNOWN")
 
     archive_folder = Path(archive_folder)
 
@@ -419,7 +423,7 @@ def evaluate(
         "READBACK_COVERAGE_INVALID",
     )
 
-    return durable.seal({
+    report = durable.seal({
         "schema": SCHEMA,
         "scope": "SOURCE_BOUND_DEVELOPMENT_READBACK",
         "source_archive_sha256": archive_report["sha256"],
@@ -445,6 +449,100 @@ def evaluate(
         "p7": "DRAFT_NOT_FROZEN",
         "p8": "NO-GO",
     })
+
+
+    if unit_id is None:
+        return report
+
+    prereg = source_document(
+        preregistration_folder, "05-pilot-preregistration.json",
+        preregistration_pin,
+    )
+    record = next(row for row in prereg["records"]
+                  if row["unit_id"] == unit_id)
+    controller_unit = next(row for row in review["units"]
+                           if row["unit_id"] == unit_id)
+    return explain_unit(report, second, record, controller_unit, preregistration_pin)
+
+
+def explain_unit(report, snapshot, record, controller_unit, preregistration_pin):
+    """Project a previously verified replay; never grant current authority."""
+    uid = record["unit_id"]
+    rows = [row for row in report["units"] if row["unit_id"] == uid]
+    need(len(rows) == 1 and uid == controller_unit["unit_id"],
+         "REPLAY_UNIT_BINDING_INVALID")
+    row = rows[0]
+    payloads = index_payloads(snapshot)
+    character = payloads[(uid, "characterization")]
+    controls = payloads[(uid, "pending_controls")]
+    bindings = {(item["service_scenario_id"], item["role"]): item
+                for item in decode(snapshot.references.manifest_bytes)["bindings"]}
+    need(snapshot.snapshot_sha256 == report["snapshot_sha256"][-1]
+         and character["operational_baseline_closed"] is False
+         and controller_unit["baseline_closed"] is False
+         and controls["dispatch_allowed"] is False
+         and controls["blockers"] == row["blockers"]
+         and tuple(row["blockers"]) == pilot_controller.BLOCKERS
+         and character["plan_sha256"] == record["plan_sha256"]
+         == controller_unit["plan_sha256"]
+         and character["source_preregistration_sha256"]
+         == preregistration_pin
+         and controller_unit["native_t1_rejection"] == "authority_unverified",
+         "REPLAY_GUARD_BINDING_INVALID")
+    return durable.seal({
+        "schema": "ARDREC-R281-UNIT-REPLAY-v1",
+        "scope": "HISTORICAL_DEVELOPMENT_READBACK_ONLY",
+        "readback_sha256": report["sha256"],
+        "snapshot_sha256": snapshot.snapshot_sha256,
+        "unit": row,
+        "first_pending_guard": {
+            "code": row["blockers"][0],
+            "ordering": "ARCHIVED_CONTROLLER_BLOCKER_ORDER",
+            "status": "NOT_CLOSED_IN_ARCHIVED_SOURCE",
+            "current_operational_status": "ND",
+            "support": [
+                {"file": f"method/{uid}/I1.json", "field": "baseline_closed",
+                 "value": False, "document_sha256": record["i1_sha256"]},
+                {"file": f"method/{uid}/I2.json", "field": "operational_baseline_closed",
+                 "value": False, "document_sha256": record["i2_sha256"]},
+            ],
+            "characterization": bindings[(uid, "characterization")],
+            "pending_controls": bindings[(uid, "pending_controls")],
+            "preregistration_sha256": preregistration_pin,
+        },
+        "native_t1_rejection": controller_unit["native_t1_rejection"],
+        "plan_sha256": record["plan_sha256"],
+        "new_protocol_attempts": 0,
+        "operational_a9_publications": 0,
+        "formal_pilot_admitted": 0,
+        "experimental_admitted": 0,
+        "p7": report["p7"], "p8": report["p8"],
+    })
+
+
+def render_unit_text(report):
+    unit, guard = report["unit"], report["first_pending_guard"]
+    lines = ["ARDREC / REAPERTURA HISTORICA POR UNIDAD",
+             "SCOPE=" + report["scope"], "UNIT=" + unit["unit_id"],
+             "PHASE=" + unit["phase"], "DECISION=" + unit["a8_decision"],
+             "FIRST_PENDING_GUARD=" + guard["code"],
+             "GUARD_ORDER=" + guard["ordering"],
+             "GUARD_STATUS=" + guard["status"],
+             "CURRENT_OPERATIONAL_STATUS=" + guard["current_operational_status"],
+             "NATIVE_T1_REJECTION=" + report["native_t1_rejection"],
+             "READBACK_SHA256=" + report["readback_sha256"],
+             "SNAPSHOT_SHA256=" + report["snapshot_sha256"],
+             "PREREGISTRATION_SHA256=" + guard["preregistration_sha256"],
+             "PLAN_SHA256=" + report["plan_sha256"]]
+    for item in guard["support"]:
+        lines.append(f'SUPPORT={item["file"]}:{item["field"]}=false '
+                     f'DOCUMENT_SHA256={item["document_sha256"]}')
+    for role in ("characterization", "pending_controls"):
+        lines.append(role.upper() + "_SHA256=" + guard[role]["sha256"])
+    lines.extend(["RF_CONFIRMED=ND", "A9=NOT_PUBLISHED",
+                  "NEW_PROTOCOL_ATTEMPTS=0", "P7=" + report["p7"],
+                  "P8=" + report["p8"], "REPORT_SHA256=" + report["sha256"]])
+    return "\n".join(lines) + "\n"
 
 
 def render_text(report):

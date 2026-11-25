@@ -250,6 +250,7 @@ def main(argv=None):
         help="Consulta analitica con verificacion de fuentes",
     )
 
+    parser.add_argument("--unidad-replay", help="Reapertura historica por unidad y soporte de guarda")
     parser.add_argument("--cierre-piloto", type=Path)
     parser.add_argument("--recuperacion-piloto", type=Path)
     parser.add_argument("--sha256-cierre")
@@ -292,6 +293,9 @@ def main(argv=None):
 
     args = parser.parse_args(argv)
 
+    if args.unidad_replay is not None and args.archivo_piloto is None:
+        parser.error("Unidad replay requiere archivo piloto")
+
     if args.archivo_piloto is not None:
 
         if (
@@ -330,13 +334,16 @@ def main(argv=None):
                 closure_pin=args.sha256_cierre,
                 preregistration_pin=args.sha256_prerregistro,
                 recovery_pin=args.sha256_recuperacion,
+                unit_id=args.unidad_replay,
             )
 
             if args.json:
                 sys.stdout.buffer.write(r148.canonical(report))
             else:
                 sys.stdout.write(
-                    pilot_readback.render_text(report)
+                    pilot_readback.render_unit_text(report)
+                    if args.unidad_replay is not None
+                    else pilot_readback.render_text(report)
                 )
 
             return 0
