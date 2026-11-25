@@ -250,7 +250,7 @@ def evaluate(
 
     need(os.geteuid() != 0, "ROOT_FORBIDDEN")
 
-    need(unit_id is None or unit_id in pilot_controller.UNITS,
+    need(unit_id is None or unit_id == "todas" or unit_id in pilot_controller.UNITS,
          "PILOT_UNIT_UNKNOWN")
 
     archive_folder = Path(archive_folder)
@@ -458,6 +458,9 @@ def evaluate(
         preregistration_folder, "05-pilot-preregistration.json",
         preregistration_pin,
     )
+    if unit_id == "todas":
+        return explain_batch(report, second, prereg, review,
+            lambda relative: pilot_controller.read(Path(preregistration_folder), relative))
     record = next(row for row in prereg["records"]
                   if row["unit_id"] == unit_id)
     controller_unit = next(row for row in review["units"]
@@ -518,6 +521,105 @@ def explain_unit(report, snapshot, record, controller_unit, preregistration_pin)
         "experimental_admitted": 0,
         "p7": report["p7"], "p8": report["p8"],
     })
+
+
+def explain_batch(report, snapshot, prereg, review, read_document):
+    """One verified reconstruction, all historical guards, no current authority."""
+    pin = prereg["sha256"]
+    records = pilot_controller.validate_source(prereg, pin)
+    pilot_controller.verify_seal(report)
+    pilot_controller.recover_state(review)
+    need(report["source_controller_sha256"] == review["sha256"]
+         and review["source_sha256"] == pin
+         and report["p7"] == "DRAFT_NOT_FROZEN" and report["p8"] == "NO-GO"
+         and report["scope"] == "SOURCE_BOUND_DEVELOPMENT_READBACK",
+         "BATCH_SOURCE_BINDING_INVALID")
+    controllers = {row["unit_id"]: row for row in review["units"]}
+    need(len(review["units"]) == len(controllers) == 6
+         and set(controllers) == pilot_controller.UNITS,
+         "BATCH_UNIT_SET_INVALID")
+    payloads = index_payloads(snapshot)
+    units = []
+    for rec in sorted(records, key=lambda row: row["unit_id"]):
+        uid = rec["unit_id"]
+        item = explain_unit(report, snapshot, rec, controllers[uid], pin)
+        def document(name, expected):
+            relative = f"method/{uid}/{name}.json"
+            doc = pilot_controller.verify_seal(read_document(relative), expected)
+            need(doc["unit_id"] == uid
+                 and doc["schema"] == pilot_controller.SOURCE_SCHEMA + "-" + name,
+                 "BATCH_DOCUMENT_CONTEXT_INVALID")
+            return doc
+        i1 = document("I1", rec["i1_sha256"])
+        i2 = document("I2", rec["i2_sha256"])
+        plan = document("plan", rec["plan_sha256"])
+        need(plan["i1_sha256"] == i1["sha256"] == i2["i1_sha256"]
+             and plan["i2_sha256"] == i2["sha256"], "BATCH_DAG_INVALID")
+        controls = payloads[(uid, "pending_controls")]
+        def fact(name, doc, field, value):
+            need(type(doc[field]) is type(value) and doc[field] == value,
+                 "BATCH_HISTORICAL_FACT_MISMATCH:" + name + ":" + field)
+            return {"file": f"method/{uid}/{name}.json", "field": field,
+                    "value": value, "document_sha256": doc["sha256"]}
+        first = item["first_pending_guard"]
+        native = first["pending_controls"]
+        def guard(code, status, supports):
+            need(code in pilot_controller.BLOCKERS, "BATCH_GUARD_UNKNOWN")
+            return {"code": code, "historical_status": status,
+                    "current_operational_status": "ND", "supports": supports}
+        guards = [
+            guard(pilot_controller.BLOCKERS[0], "NOT_CLOSED_IN_ARCHIVED_SOURCE", [
+                fact("I1", i1, "baseline_closed", False),
+                fact("I2", i2, "operational_baseline_closed", False)]),
+            guard(pilot_controller.BLOCKERS[1], "PENDING_IN_ARCHIVED_I1", [
+                fact("I1", i1, "service_specific_identity_pending", True)]),
+            guard(pilot_controller.BLOCKERS[2], "PENDING_IN_ARCHIVED_I1", [
+                fact("I1", i1, "fresh_service_credentials_pending", True)]),
+            guard(pilot_controller.BLOCKERS[3], "AUTHORITY_ND_IN_ARCHIVED_REVIEW", [
+                fact("plan", plan, "guard", "ND"),
+                fact("plan", plan, "execution_authorized", False),
+                {"reference": native, "field": "a3_authority", "value": "ND"}]),
+            guard(pilot_controller.BLOCKERS[4], "ARCHIVED_BLOCKER_ONLY_CURRENT_CONTRACT_ND", [
+                {"reference": native, "field": "blockers", "value": pilot_controller.BLOCKERS[4]},
+                {"reference": native, "field": "dispatch_allowed", "value": False}]),
+        ]
+        need(controls["a3_authority"] == "ND" and controls["dispatch_allowed"] is False
+             and tuple(g["code"] for g in guards) == tuple(controls["blockers"]),
+             "BATCH_GUARD_SOURCE_INVALID")
+        units.append({"unit_id": uid, "replay": item, "guards": guards,
+                      "static_method": fact("I2", i2, "static_method_definitively_frozen", False)})
+    return durable.seal({"schema": "ARDREC-R284-GUARD-BATCH-v1",
+        "scope": "HISTORICAL_DEVELOPMENT_READBACK_ONLY",
+        "readback_sha256": report["sha256"], "snapshot_sha256": snapshot.snapshot_sha256,
+        "preregistration_sha256": pin, "units": units, "units_replayed": len(units),
+        "historical_guards_explained": sum(len(u["guards"]) for u in units),
+        "current_guards_accredited": 0, "new_protocol_attempts": 0,
+        "operational_a9_publications": 0, "formal_pilot_admitted": 0,
+        "experimental_admitted": 0, "p7": report["p7"], "p8": report["p8"]})
+
+
+def render_batch_text(report):
+    lines = ["ARDREC / REAPERTURA HISTORICA INTEGRADA", "SCOPE=" + report["scope"]]
+    for unit in report["units"]:
+        row = unit["replay"]["unit"]
+        lines.append(f'UNIT={unit["unit_id"]} PHASE={row["phase"]} DECISION={row["a8_decision"]}')
+        for guard in unit["guards"]:
+            lines.append(f'  GUARD={guard["code"]} HISTORICAL={guard["historical_status"]} CURRENT=ND')
+            for support in guard["supports"]:
+                if "file" in support:
+                    source = support["file"] + " SHA256=" + support["document_sha256"]
+                else:
+                    source = support["reference"]["reference"] + " SHA256=" + support["reference"]["sha256"]
+                lines.append(f'    {source} FIELD={support["field"]} VALUE={json_value_text(support["value"])}')
+    lines += ["UNITS_REPLAYED=" + str(report["units_replayed"]),
+              "HISTORICAL_GUARDS_EXPLAINED=" + str(report["historical_guards_explained"]),
+              "CURRENT_GUARDS_ACCREDITED=0", "NEW_PROTOCOL_ATTEMPTS=0", "A9=NOT_PUBLISHED",
+              "P7=" + report["p7"], "P8=" + report["p8"], "REPORT_SHA256=" + report["sha256"]]
+    return "\n".join(lines) + "\n"
+
+
+def json_value_text(value):
+    return {True: "true", False: "false"}[value] if type(value) is bool else str(value)
 
 
 def render_unit_text(report):

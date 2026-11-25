@@ -250,7 +250,7 @@ def main(argv=None):
         help="Consulta analitica con verificacion de fuentes",
     )
 
-    parser.add_argument("--unidad-replay", help="Reapertura historica por unidad y soporte de guarda")
+    parser.add_argument("--unidad-replay", help="Reapertura historica por unidad o todas, con soportes de guardas")
     parser.add_argument("--cierre-piloto", type=Path)
     parser.add_argument("--recuperacion-piloto", type=Path)
     parser.add_argument("--sha256-cierre")
@@ -341,7 +341,9 @@ def main(argv=None):
                 sys.stdout.buffer.write(r148.canonical(report))
             else:
                 sys.stdout.write(
-                    pilot_readback.render_unit_text(report)
+                    pilot_readback.render_batch_text(report)
+                    if args.unidad_replay == "todas"
+                    else pilot_readback.render_unit_text(report)
                     if args.unidad_replay is not None
                     else pilot_readback.render_text(report)
                 )
