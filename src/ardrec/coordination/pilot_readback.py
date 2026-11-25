@@ -104,34 +104,74 @@ def evaluate_archived_unit(projection, payloads):
     window = payloads[(uid, "convergence_window")]
     objective = payloads[(uid, "objective_status")]
 
+    # R286: validate the entire historical scope before evaluating A8.
+    # These are the R276 review semantics, not an operational gate.
+    baseline_nd = ND("BASELINE_NOT_CLOSED")
+    evidence_nd = ND("EVIDENCE_NOT_ACCREDITED")
+    generation = projection.generation_index
+    observed = generation == 1 and uid in native.CONTROLS
+    supports = repository["i7"]
+
     need(
-        projection.operational_state.value == "PREPARADO"
-        and isinstance(projection.frozen.initial_risk, ND)
-        and isinstance(
-            projection.frozen.normalized_criticality, ND
-        )
-        and isinstance(
-            projection.analysis.accumulated_evidence, ND
-        )
-        and isinstance(
-            projection.analysis.recalibrated_risk, ND
-        )
+        uid in pilot_controller.UNITS
+        and generation in (0, 1)
+        and projection.operational_state.value == "PREPARADO"
+        and projection.frozen.initial_risk == baseline_nd
+        and projection.frozen.normalized_criticality == baseline_nd
+        and projection.analysis.accumulated_evidence == evidence_nd
+        and projection.analysis.substituted_baseline == baseline_nd
+        and projection.analysis.upper_bound == evidence_nd
+        and projection.analysis.lower_adjustment_bound == baseline_nd
+        and projection.analysis.recalibrated_risk == evidence_nd
         and projection.analysis.priority is None
         and character["operational_baseline_closed"] is False
+        and character["protocol"] == uid.split("-")[1]
+        and character["family_id"] == pilot_controller.FAMILIES[character["protocol"]]
+        and character["profile"] == ("CONTROL" if uid in native.CONTROLS else "CONTRAST")
+        and type(history["review_generation"]) is int
+        and history["review_generation"] == generation
+        and history["native_phase"] == "PREPARADO"
+        and type(history["operational_publications"]) is int
         and history["operational_publications"] == 0
         and history["confirmed_rf"] is None
         and repository["a6"] == "ND"
+        and type(repository["confirmed_evidence_count"]) is int
         and repository["confirmed_evidence_count"] == 0
+        and type(supports) is list and len(supports) == 4
+        and all(type(item) is dict and type(item.get("support")) is str
+                and item.get("operationally_accredited") is False for item in supports)
+        and len({item["support"] for item in supports}) == 4
+        and type(counters["development_observations"]) is int
+        and counters["development_observations"] == int(observed)
         and type(counters["operational_attempts"]) is int
         and counters["operational_attempts"] == 0
+        and counters["automatic_retry"] is False
+        and (repository["i3"] is not None) == observed
+        and (counters["i6"] is not None) == observed
         and window["confirmed_samples"] == []
         and window["convergence_accredited"] is False
         and objective["technical_objective_accredited"] is False
+        and objective["selected_for_dispatch"] is False
+        and objective["status"] == "ND"
+        and controls["a3_authority"] == "ND"
+        and controls["a4_operational_selection"] is None
         and controls["dispatch_allowed"] is False
-        and type(controls["blockers"]) is list
-        and len(controls["blockers"]) > 0,
+        and controls["blockers"] == list(pilot_controller.BLOCKERS),
         "ARCHIVED_UNIT_SCOPE_INVALID",
     )
+
+    if observed:
+        i3, i6 = repository["i3"], counters["i6"]
+        need(
+            type(i3) is dict and type(i6) is dict
+            and i3["unit_id"] == uid
+            and i3["instance_id"] == character["instance_id"]
+            and i3["plan_sha256"] == character["plan_sha256"]
+            and i3["experimental_admission"] is False
+            and i6["operational_attempt_admitted"] is False
+            and i6["automatic_retry"] is False,
+            "ARCHIVED_DEVELOPMENT_OBSERVATION_INVALID",
+        )
 
     facts = {
         name: "ND"
