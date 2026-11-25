@@ -1,0 +1,5 @@
+# R289 — Trazabilidad de la revisión R287 / R287 revision traceability
+
+ES: El trabajo Python de CI 45631207206 (job 139264731150) rechazó la huella del archivo analítico modificada en R287. Se mantiene el registro histórico de 405 métodos y su huella original. El verificador reconoce exclusivamente la revisión R287 por SHA-256 fijo y registra exactamente sus cinco métodos de prueba y la huella de su fuente. Cinco comprobaciones del verificador cubren la conservación del inventario, ausencia/exceso de métodos y rechazo de alteración histórica. Los hallazgos AL-06 y AL-07 y las restricciones P7/P8 no cambian.
+
+EN: Python CI run 45631207206 (job 139264731150) rejected the changed analytical archive hash in R287. Preserve the 405-method historical inventory and original digest. The checker recognizes only the exact pinned R287 revision and registers its five test methods and source digest. Five checker tests cover preservation, missing/extra methods and historical tampering. No change to AL-06, AL-07 or P7/P8 restrictions.

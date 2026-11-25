@@ -253,4 +253,35 @@ class CurrentTraceabilityTests(unittest.TestCase):
         self.assertEqual(report["experimental_validation"], "NOT_RUN")
 
 
+    def test_r287_exact_inventory_and_historical_baseline(self):
+        result = self.validate()
+        self.assertEqual(result["r287_archive_identity_tests"], 5)
+        self.assertEqual(result["baseline_python_tests"], 405)
+        self.assertEqual(result["r287_reviewed_archive_sha256"], checker.R287_ARCHIVE_CURRENT_SHA256)
+        self.assertEqual(result["open_findings"], ["AL-06", "AL-07"])
+
+    def test_r287_missing_method_rejected(self):
+        self.inventory = [x for x in self.inventory if x != min(checker.R287_TEST_IDS)]
+        with self.assertRaisesRegex(ValueError, "Metodos R287"):
+            self.validate()
+
+    def test_r287_extra_method_rejected(self):
+        self.inventory = [*self.inventory, checker.R287_TEST_MODULE + ".ArchiveIdentityTests.test_unregistered"]
+        with self.assertRaisesRegex(ValueError, "Metodos R287"):
+            self.validate()
+
+    def test_r287_cannot_rewrite_historical_archive_pin(self):
+        self.registry["source_files"][checker.R287_ARCHIVE_PATH] = checker.R287_ARCHIVE_CURRENT_SHA256
+        with self.assertRaisesRegex(ValueError, "Huella histórica R287 alterada"):
+            self.validate()
+
+    def test_r287_source_revision_is_exact(self):
+        old = checker.R287_ARCHIVE_BASE_SHA256
+        self.assertEqual(checker.reviewed_source_digest(checker.R287_ARCHIVE_PATH, old),
+                         checker.R287_ARCHIVE_CURRENT_SHA256)
+        self.assertEqual(checker.reviewed_source_digest("other.py", old), old)
+        with self.assertRaises(ValueError):
+            checker.reviewed_source_digest(checker.R287_ARCHIVE_PATH, "0" * 64)
+
+
 if __name__=='__main__':unittest.main()
