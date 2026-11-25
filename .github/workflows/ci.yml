@@ -86,6 +86,7 @@ jobs:
               ("R270", "test_r270_pilot_observation.py", 8),
               ("R276", "test_r276_native_pilot_archive.py", 8),
               ("R277", "test_r277_ordinary_closure.py", 12),
+              ("R278", "test_r278_pilot_readback.py", 8),
           )
 
           total = 0
@@ -133,12 +134,12 @@ jobs:
                   flush=True,
               )
 
-          if total != 155:
+          if total != 163:
               raise SystemExit(
                   f"PROSPECTIVE_TEST_TOTAL_INVALID:{total}"
               )
 
-          print("PROSPECTIVE_REGRESSIONS=155/155")
+          print("PROSPECTIVE_REGRESSIONS=163/163")
           print("OPERATIONAL_ACTIVATION=NO")
           PYR239
 

@@ -6,6 +6,7 @@ their provenance or operational authorization is established.
 No execution, state mutation or A9 publication.
 """
 
+from copy import deepcopy
 from fractions import Fraction
 import re
 
@@ -327,7 +328,7 @@ def evaluate(*, facts, history, executions, budget, phase):
 
     source = {
         "facts": dict(facts),
-        "history": history,
+        "history": deepcopy(history),
         "executions": executions,
         "budget": budget,
         "phase": phase,
