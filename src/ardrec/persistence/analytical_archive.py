@@ -104,6 +104,19 @@ class AnalyticalArchive:
             raise
 
     @staticmethod
+    def _identity(info):
+        # Ignore atime: reading a valid archive may update it.
+        return (info.st_dev, info.st_ino, info.st_mode, info.st_uid,
+                info.st_gid, info.st_nlink, info.st_size,
+                info.st_mtime_ns, info.st_ctime_ns)
+
+    @staticmethod
+    def _same_entry(folder, name, expected):
+        actual = os.stat(name, dir_fd=folder, follow_symlinks=False)
+        require(AnalyticalArchive._identity(actual) == AnalyticalArchive._identity(expected),
+                'archive_entry_changed')
+
+    @staticmethod
     def _read(folder, reference):
         fingerprint(reference)
         fd = os.open(reference + '.json', os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC, dir_fd=folder)
@@ -124,6 +137,10 @@ class AnalyticalArchive:
             raw = bytes(raw)
             require(digest(raw) == reference, 'object_hash_mismatch')
             os.fsync(fd)
+            final = AnalyticalArchive._regular(fd)
+            require(AnalyticalArchive._identity(before) == AnalyticalArchive._identity(final),
+                    'file_changed')
+            AnalyticalArchive._same_entry(folder, reference + '.json', final)
             return raw
         finally:
             os.close(fd)
@@ -132,7 +149,7 @@ class AnalyticalArchive:
         fingerprint(snapshot_sha256)
         folder = os.open(snapshot_sha256, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=self._root)
         try:
-            self._directory(folder)
+            initial = self._directory(folder)
             total = 0
             def read(reference):
                 nonlocal total
@@ -157,6 +174,9 @@ class AnalyticalArchive:
             os.fsync(folder)
             os.fsync(self._root)
             self._check()
+            final = self._directory(folder)
+            require(self._identity(initial) == self._identity(final), 'snapshot_directory_changed')
+            self._same_entry(self._root, snapshot_sha256, final)
             return ArchivedReferences(snapshot_sha256, projections, resolved)
         finally:
             os.close(folder)

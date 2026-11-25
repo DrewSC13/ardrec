@@ -68,6 +68,31 @@ R236_TEST_IDS = frozenset({
 })
 
 
+# R289: reviewed R287 source revision; preserve the historical R26 inventory.
+# R287 is a local archive integrity change, not operational acceptance.
+R287_ARCHIVE_PATH = "src/ardrec/persistence/analytical_archive.py"
+R287_ARCHIVE_BASE_SHA256 = "0b0fd6050930541cd3d871d6e11f20b0a95b33ec2996a975aa0b6867e024b189"
+R287_ARCHIVE_CURRENT_SHA256 = "99e3e14ed6459f4c20d2754c2fd1eb8bfda86a9bc1081e6b155ee025fd54ce98"
+R287_TEST_MODULE = "test_r287_archive_identity"
+R287_TEST_PATH = "tests/unit/test_r287_archive_identity.py"
+R287_TEST_SHA256 = "d804565098604bbe31717a06cfe81de0b37d2005dbed0943d9a80ae341268000"
+R287_TEST_IDS = frozenset({
+    "test_r287_archive_identity.ArchiveIdentityTests.test_unchanged",
+    "test_r287_archive_identity.ArchiveIdentityTests.test_entry_replaced_by_identical_bytes",
+    "test_r287_archive_identity.ArchiveIdentityTests.test_permission_changed_after_sync",
+    "test_r287_archive_identity.ArchiveIdentityTests.test_snapshot_directory_replaced",
+    "test_r287_archive_identity.ArchiveIdentityTests.test_directory_changed_during_read",
+})
+
+
+def reviewed_source_digest(path, historical_digest):
+    if path == R287_ARCHIVE_PATH:
+        require(historical_digest == R287_ARCHIVE_BASE_SHA256,
+                "Huella histórica R287 alterada")
+        return R287_ARCHIVE_CURRENT_SHA256
+    return historical_digest
+
+
 def require(ok, message):
     if not ok:
         raise ValueError(message)
@@ -424,7 +449,7 @@ def validate(root=ROOT, registry=None, evidence=None, *, discovered=None, check_
     require(evidence['new_increment_execution'] == 'PENDING_LOCAL_AND_REMOTE_VERIFICATION', 'Evidencia de esta revisión inventada')
     sources = registry['source_files']
     for path, digest in sources.items():
-        require(hashlib.sha256(relative(root, path).read_bytes()).hexdigest() == digest, 'Fuente modificada: ' + path)
+        require(hashlib.sha256(relative(root, path).read_bytes()).hexdigest() == reviewed_source_digest(path, digest), 'Fuente modificada: ' + path)
     required_sources = {c['path'] for c in checks.values()} | {p for c in components.values() for p in c['modules']}
     required_sources |= {'docs/traceability/development-v1.json','docs/traceability/evidence-v1.json','docs/traceability/alignment-current-v1.json','docs/traceability/point-1-closure-v1.json','docs/acceptance/system-v1.json','docs/acceptance/current-coverage-v1.json','docs/acceptance/current-coverage-v2.json','tests/fixtures/model-reference-v1.json'}
     require(set(sources) == required_sources, 'Procedencia incompleta o ajena')
@@ -451,10 +476,15 @@ def validate(root=ROOT, registry=None, evidence=None, *, discovered=None, check_
         and r236_observed == sorted(R236_TEST_IDS),
         'Metodos R236 ausentes, nuevos o renombrados'
     )
+    require(hashlib.sha256(relative(root, R287_TEST_PATH).read_bytes()).hexdigest()
+            == R287_TEST_SHA256, "Fuente de pruebas R287 modificada")
+    r287_observed = sorted(x for x in observed if x.startswith(R287_TEST_MODULE + '.'))
+    require(len(R287_TEST_IDS) == 5 and r287_observed == sorted(R287_TEST_IDS),
+            "Metodos R287 ausentes, nuevos o renombrados")
     baseline = sorted(
         x for x in observed
         if not x.startswith((TOOL_TEST + '.', R7_TEST_MODULE + '.',
-                             R8_TEST_MODULE + '.', R236_TEST_MODULE + '.'))
+                             R8_TEST_MODULE + '.', R236_TEST_MODULE + '.', R287_TEST_MODULE + '.'))
     )
     declared = sorted(c['unittest_id'] for c in checks.values() if c['kind'] == 'PYTHON_UNIT')
     require(baseline == declared and len(baseline) == 405, 'Métodos Python ausentes, nuevos o renombrados')
@@ -532,6 +562,8 @@ def validate(root=ROOT, registry=None, evidence=None, *, discovered=None, check_
     if check_note:require((root/NOTE).read_text()==render(registry), 'Markdown desactualizado respecto de JSON')
     return {'requirements':44,'system_criteria':27,'methodological_obligations':17,'algorithms':10,'invariants':15,
             'reference_oracles':51,'components':len(components),'baseline_python_tests':405,'baseline_rust_tests':73,'integration_scripts':7,
+            'r287_archive_identity_tests':len(r287_observed),
+            'r287_reviewed_archive_sha256':R287_ARCHIVE_CURRENT_SHA256,
             'development_obligations':7,'open_findings':['AL-06','AL-07'],'traceability':'PASS_REGISTERED_REQUIREMENTS',
             'system_functional_acceptance':'PENDING','experimental_validation':'NOT_RUN'}
 

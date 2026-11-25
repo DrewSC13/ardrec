@@ -245,6 +245,18 @@ def main(argv=None):
         "--prerregistro-piloto", type=Path
     )
 
+    sources.add_argument(
+        "--archivo-piloto", type=Path,
+        help="Consulta analitica con verificacion de fuentes",
+    )
+
+    parser.add_argument("--unidad-replay", help="Reapertura historica por unidad o todas, con soportes de guardas")
+    parser.add_argument("--cierre-piloto", type=Path)
+    parser.add_argument("--recuperacion-piloto", type=Path)
+    parser.add_argument("--sha256-cierre")
+    parser.add_argument("--sha256-prerregistro")
+    parser.add_argument("--sha256-recuperacion")
+
     parser.add_argument(
         "--sha256",
         help="Identificador esperado de la consolidacion",
@@ -280,6 +292,81 @@ def main(argv=None):
     parser.add_argument("--soportes-i2", type=Path)
 
     args = parser.parse_args(argv)
+
+    if args.unidad_replay is not None and args.archivo_piloto is None:
+        parser.error("Unidad replay requiere archivo piloto")
+
+    if args.archivo_piloto is not None:
+
+        if (
+            not args.sha256
+            or not args.sha256_cierre
+            or not args.sha256_prerregistro
+            or not args.sha256_recuperacion
+            or args.cierre_piloto is None
+            or args.recuperacion_piloto is None
+            or args.ejecucion_piloto is None
+            or args.prerregistro_piloto is None
+            or args.seleccion is not None
+            or args.artefactos_vm is not None
+            or args.csv
+            or args.informe_i8
+            or args.preparar_i2
+            or args.revisar_riesgo
+            or args.entrada_i2 is not None
+            or args.soportes_i2 is not None
+            or args.analisis_exploratorio
+            or args.resumen_pareado
+        ):
+            parser.error("Fuentes u opciones invalidas para archivo piloto")
+
+        from ardrec.coordination import pilot_readback
+
+        try:
+
+            report = pilot_readback.evaluate(
+                args.archivo_piloto,
+                args.cierre_piloto,
+                args.prerregistro_piloto,
+                args.ejecucion_piloto,
+                args.recuperacion_piloto,
+                archive_pin=args.sha256,
+                closure_pin=args.sha256_cierre,
+                preregistration_pin=args.sha256_prerregistro,
+                recovery_pin=args.sha256_recuperacion,
+                unit_id=args.unidad_replay,
+            )
+
+            if args.json:
+                sys.stdout.buffer.write(r148.canonical(report))
+            else:
+                sys.stdout.write(
+                    pilot_readback.render_batch_text(report)
+                    if args.unidad_replay == "todas"
+                    else pilot_readback.render_unit_text(report)
+                    if args.unidad_replay is not None
+                    else pilot_readback.render_text(report)
+                )
+
+            return 0
+
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+
+            print(
+                "PILOT_READBACK_STOP=" + str(exc),
+                file=sys.stderr,
+            )
+
+            return 2
+
+    if any(value is not None for value in (
+        args.cierre_piloto,
+        args.recuperacion_piloto,
+        args.sha256_cierre,
+        args.sha256_prerregistro,
+        args.sha256_recuperacion,
+    )):
+        parser.error("Fuentes de archivo sin archivo piloto")
 
     if args.observaciones_piloto is None and (
         args.ejecucion_piloto is not None
