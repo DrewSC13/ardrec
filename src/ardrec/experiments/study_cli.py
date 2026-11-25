@@ -232,6 +232,19 @@ def main(argv=None):
         help="Controlador nativo de preejecucion",
     )
 
+    sources.add_argument(
+        "--observaciones-piloto",
+        type=Path,
+    )
+
+    parser.add_argument(
+        "--ejecucion-piloto", type=Path
+    )
+
+    parser.add_argument(
+        "--prerregistro-piloto", type=Path
+    )
+
     parser.add_argument(
         "--sha256",
         help="Identificador esperado de la consolidacion",
@@ -267,6 +280,62 @@ def main(argv=None):
     parser.add_argument("--soportes-i2", type=Path)
 
     args = parser.parse_args(argv)
+
+    if args.observaciones_piloto is None and (
+        args.ejecucion_piloto is not None
+        or args.prerregistro_piloto is not None
+    ):
+        parser.error("Fuentes auxiliares sin observaciones piloto")
+
+    if args.observaciones_piloto is not None:
+
+        if (
+            not args.sha256
+            or args.ejecucion_piloto is None
+            or args.prerregistro_piloto is None
+            or args.seleccion is not None
+            or args.artefactos_vm is not None
+            or args.csv
+            or args.informe_i8
+            or args.preparar_i2
+            or args.revisar_riesgo
+            or args.entrada_i2 is not None
+            or args.soportes_i2 is not None
+            or args.analisis_exploratorio
+            or args.resumen_pareado
+        ):
+            parser.error("Opciones incompatibles con observaciones piloto")
+
+        from ardrec.coordination import pilot_observation
+
+        try:
+
+            report = pilot_observation.evaluate(
+                args.observaciones_piloto,
+                args.ejecucion_piloto,
+                args.prerregistro_piloto,
+                args.sha256,
+            )
+
+            if args.json:
+                sys.stdout.buffer.write(
+                    r148.canonical(report)
+                )
+            else:
+                sys.stdout.write(
+                    pilot_observation.render_text(report)
+                )
+
+            return 0
+
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+
+            print(
+                "PILOT_OBSERVATION_STOP=" + str(exc),
+                file=sys.stderr,
+            )
+
+            return 2
 
     if args.controlador_piloto is not None:
 
