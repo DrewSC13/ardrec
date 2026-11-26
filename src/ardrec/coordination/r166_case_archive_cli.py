@@ -386,6 +386,82 @@ def _show(record: dict, status: str, *, mode: str) -> None:
         print("OBSERVACIONES_EXPERIMENTALES_ADMITIDAS=0")
 
 
+def development_case(*, origin: Path, archive: Path, case_id: str,
+                     scenario_pin: str, reopen: bool = False) -> tuple[dict, str]:
+    """Open or recover a prospective DEV case; no dispatch or promotion."""
+    from ardrec.experiments import initial_assessment as a2
+    from ardrec.rules.kernel import decide
+    from ardrec.state import Truth
+
+    need(os.geteuid() > 0, "ROOT_CLI_FORBIDDEN")
+    need(re.fullmatch(r"DEV-[a-f0-9]{32}", case_id) is not None,
+         "DEV_CASE_ID_INVALID")
+    need(HEX64.fullmatch(scenario_pin) is not None, "SCENARIO_PIN_INVALID")
+    origin, archive = _abs_path(origin), _abs_path(archive)
+    for folder in (origin, archive):
+        need(folder.resolve(strict=True) == folder, "DEV_PATH_ALIAS")
+        _private_dir(folder)
+    need(origin != archive and origin not in archive.parents and
+         archive not in origin.parents, "DEV_SOURCE_ARCHIVE_OVERLAP")
+
+    names = ("scenario.json", "inventory.json", "assessment-template.json")
+    raw = {name: _private_file(origin / name, MAX_FILE) for name in names}
+    manifest = _json(raw["scenario.json"], "SCENARIO_INVALID")
+    inventory = _json(raw["inventory.json"], "INVENTORY_INVALID")
+    template = _json(raw["assessment-template.json"], "TEMPLATE_INVALID")
+    need(_digest(raw["scenario.json"]) == scenario_pin, "SCENARIO_PIN_MISMATCH")
+    protocol = manifest["protocol"]
+    need(protocol in a2.PROTOCOLS, "PROTOCOL_INVALID")
+    config_name = a2.CONFIG_NAMES[protocol]
+    raw[config_name] = _private_file(origin / config_name, MAX_FILE)
+    a2.verify_manifest(manifest, raw[config_name], inventory)
+    need(template == {
+        "schema": a2.SCHEMA + "-assessment-template",
+        "candidate_id": manifest["candidate_id"],
+        "scenario_manifest_sha256": manifest["sha256"],
+        "ratings": {name: {"ordinal": None, "support_sha256": None,
+                           "justification": None} for name in a2.DIMENSIONS},
+        "initial_risk": None, "normalized_criticality": None,
+        "baseline_closed": False, "execution_authorized": False,
+        "experimental_unit": False,
+    }, "ASSESSMENT_TEMPLATE_INVALID")
+
+    # Native A1: this is a DEV hold decision, not the complete operational A3 table.
+    facts = {"baseline_closed": Truth.FALSO,
+             "service_identity_verified": Truth.ND,
+             "technical_evidence_accredited": Truth.ND}
+    rule = {"id": "DEV_HOLD", "condicion": {"op": "NO", "arg": {
+        "op": "CAMPO", "nombre": "baseline_closed"}}, "salida": "PREPARADO"}
+    decision = decide([rule], {name: "LOGICO" for name in facts}, facts)
+    need(decision.authorized and decision.output == "PREPARADO", "DEV_HOLD_INVALID")
+    record = {
+        "schema": "ARDREC-R302-DEV-CASE-v1", "case_id": case_id,
+        "scope": "PROSPECTIVE_DEVELOPMENT_PREPARATION_ONLY",
+        "source_directory": str(origin), "protocol": protocol,
+        "candidate_id": manifest["candidate_id"],
+        "source_head": manifest["code_head"],
+        "scenario_manifest_sha256": manifest["sha256"],
+        "source_files": {name: _digest(data) for name, data in raw.items()},
+        "decision": {"rule": decision.selected, "truth": decision.status.name,
+                     "output": decision.output,
+                     "facts": {name: value.name for name, value in facts.items()}},
+        "state": "PREPARADO", "operator_uid": os.geteuid(),
+        "operator_model": "SINGLE_USER", "execution_authorized": False,
+        "baseline_closed": False, "attempts": 0, "evidence": [],
+        "initial_risk": None, "normalized_criticality": None,
+        "confirmed_rf": None, "operational_a9_published": False,
+        "experimental_admission": False, "p8": "NO-GO",
+    }
+    record["sha256"] = _digest(f1.canonical(record))
+    path = archive / (case_id + ".json")
+    expected = f1.canonical(record)
+    if reopen:
+        need(_private_file(path, MAX_RECORD) == expected, "DEV_CASE_SOURCE_OR_RECORD_CHANGED")
+        return record, "DEV_CASE_REOPENED"
+    written = _create_exclusive(path, expected)
+    return record, "DEV_CASE_OPENED" if written else "DEV_CASE_REOPENED"
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="python -m ardrec caso",
                                  description="R166: expediente documental privado, sin trafico ni A9 operacional")
@@ -400,13 +476,32 @@ def main(argv: list[str] | None = None) -> int:
         pp.add_argument("--manifiesto", required=True, type=Path)
         if name != "revisar":
             pp.add_argument("--archivo", required=True, type=Path)
-    for pp in (seal, *[p.choices[k] for k in ("revisar", "incorporar", "reabrir")]):
+    for name in ("abrir-dev", "reabrir-dev"):
+        pp = p.add_parser(name, help="caso prospectivo DEV sin autorizacion de ejecucion")
+        pp.add_argument("--origen", required=True, type=Path)
+        pp.add_argument("--archivo", required=True, type=Path)
+        pp.add_argument("--id", required=True)
+        pp.add_argument("--sha256", required=True, help="SHA-256 de scenario.json")
+    for pp in p.choices.values():
         g = pp.add_mutually_exclusive_group(required=True)
         g.add_argument("--texto", action="store_true")
         g.add_argument("--json", action="store_true")
     args = ap.parse_args(argv)
     try:
         need(os.geteuid() != 0, "ROOT_CLI_FORBIDDEN")
+        if args.action in ("abrir-dev", "reabrir-dev"):
+            record, status = development_case(
+                origin=args.origen, archive=args.archivo, case_id=args.id,
+                scenario_pin=args.sha256, reopen=args.action == "reabrir-dev")
+            if args.json:
+                sys.stdout.buffer.write(f1.canonical(record))
+            else:
+                print("ARDREC / CASO DEV / " + status)
+                print("CASE_ID=" + record["case_id"])
+                print("PROTOCOL=" + record["protocol"])
+                print("STATE=PREPARADO | ATTEMPTS=0 | A6/A7=ND | P8=NO-GO")
+                print("RECORD_SHA256=" + record["sha256"])
+            return 0
         if args.action == "sellar":
             m = build_manifest(origin=args.origen, journal=args.journal,
                                review_at_utc=args.evaluacion_utc)

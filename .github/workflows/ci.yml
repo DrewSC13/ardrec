@@ -250,6 +250,19 @@ jobs:
               raise SystemExit('R199_REGRESSION_FAILED')
           PYR199
 
+      - name: R302 apertura de caso DEV / Prospective DEV case
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR302'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests', pattern='test_r302_development_case.py')
+          if suite.countTestCases() != 6:
+              raise SystemExit('R302_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R302_REGRESSION_FAILED')
+          PYR302
+
       - name: R197 prospective local pilot
         run: |
           PYTHONPATH=src python3 -B - <<'PYR197'
