@@ -464,7 +464,8 @@ def development_case(*, origin: Path, archive: Path, case_id: str,
 
 def development_assessment(*, origin: Path, archive: Path, case_id: str,
                            scenario_pin: str, inputs: Path, input_pin: str,
-                           reopen: bool = False, preview: bool = False) -> tuple[dict, str]:
+                           reopen: bool = False, preview: bool = False,
+                           expected_sha256: str | None = None) -> tuple[dict, str]:
     """Persist or preflight a documentary assessment, never operational risk."""
     need(not (reopen and preview), "ASSESSMENT_MODE_CONFLICT")
     from ardrec.experiments import initial_assessment as a2
@@ -528,6 +529,8 @@ def development_assessment(*, origin: Path, archive: Path, case_id: str,
         "p7": "DRAFT_NOT_FROZEN", "p8": "NO-GO",
     }
     record["sha256"] = _digest(f1.canonical(record))
+    if expected_sha256 is not None:
+        need(record["sha256"] == expected_sha256, "DEV_BATCH_ASSESSMENT_DRIFT")
     path = archive / (case_id + ".assessment.json")
     expected = f1.canonical(record)
     if reopen or (preview and (path.exists() or path.is_symlink())):
@@ -539,14 +542,16 @@ def development_assessment(*, origin: Path, archive: Path, case_id: str,
     return record, "DEV_ASSESSMENT_CREATED" if written else "DEV_ASSESSMENT_REOPENED"
 
 
-def development_snapshot(*, origin: Path, archive: Path, case_id: str,
+def _development_snapshot(*, origin: Path, archive: Path, case_id: str,
                          scenario_pin: str, inputs: Path, input_pin: str,
-                         reopen: bool = False) -> tuple[dict, str]:
-    """Persist the R303 documentary projection in the native analytical archive."""
-    from ardrec.analytical import AnalyticalProjection, AnalysisValues, FrozenValues, ObjectReference
+                         reopen: bool = False, preview: bool = False,
+                         expected_assessment_sha256: str | None = None) -> tuple[dict, str]:
+    """Preflight or persist the existing documentary projection, without authority."""
+    need(not (reopen and preview), "SNAPSHOT_MODE_CONFLICT")
+    from ardrec.analytical import AnalyticalProjection, AnalysisValues, FrozenValues, ObjectReference, encode_projection
     from ardrec.analytical_references import ROLES, OBJECT_FORMAT, MANIFEST_FORMAT, canonical, resolve_references
     from ardrec.contracts import ND
-    from ardrec.persistence.analytical_archive import AnalyticalArchive, digest
+    from ardrec.persistence.analytical_archive import AnalyticalArchive, digest, FORMAT
     from ardrec.state import ServicePhase
     from ardrec.stopping.development_stop import preview_stop, verify_stop
     from ardrec.experiments.initial_assessment import CONFIG_NAMES
@@ -555,7 +560,8 @@ def development_snapshot(*, origin: Path, archive: Path, case_id: str,
                                scenario_pin=scenario_pin, reopen=True)
     assessment, _ = development_assessment(origin=origin, archive=archive,
         case_id=case_id, scenario_pin=scenario_pin, inputs=inputs,
-        input_pin=input_pin, reopen=True)
+        input_pin=input_pin, reopen=not preview, preview=preview,
+        expected_sha256=expected_assessment_sha256)
     stop = preview_stop(a6_classification="ND", accredited=False, vm_checked=False,
                         operational_dispatch=False, source_sha256=assessment["sha256"])
     need(verify_stop(stop), "DEV_STOP_INVALID")
@@ -605,22 +611,34 @@ def development_snapshot(*, origin: Path, archive: Path, case_id: str,
     archive = _abs_path(archive)
     native_path = archive / (case_id + ".analytical")
     index_path = archive / (case_id + ".snapshot.json")
-    # An existing index is a recovery request, never permission to replace a snapshot.
+    # Reconstruct the native content address before touching storage.
+    snapshot_pin = digest(canonical(dict(format=FORMAT, manifest_sha256=manifest_pin,
+        projection_sha256=[digest(encode_projection(p)) for p in projections])))
     existing = index_path.exists() or index_path.is_symlink()
+    native_exists = native_path.exists() or native_path.is_symlink()
+    installed = native_path / snapshot_pin
+    present = installed.exists() or installed.is_symlink()
     if reopen or existing:
         previous = _json(_private_file(index_path, MAX_RECORD), "DEV_SNAPSHOT_INDEX_INVALID")
-        snapshot_pin = previous["snapshot_sha256"]
-        need(type(snapshot_pin) is str and HEX64.fullmatch(snapshot_pin) is not None,
-             "DEV_SNAPSHOT_PIN_INVALID")
-    else:
-        create = not native_path.exists() and not native_path.is_symlink()
-        with AnalyticalArchive(native_path, create=create) as native:
-            snapshot_pin = native.store(projections, manifest,
-                expected_manifest_sha256=manifest_pin, load_object=objects.__getitem__)
-    with AnalyticalArchive(native_path) as native:
-        recovered = native.load(snapshot_pin)
-        need(recovered.snapshot_sha256 == snapshot_pin and recovered.projections == projections
-             and recovered.references == resolved, "DEV_SNAPSHOT_READBACK_INVALID")
+        need(previous.get("snapshot_sha256") == snapshot_pin, "DEV_SNAPSHOT_PIN_INVALID")
+        need(native_exists and present, "DEV_SNAPSHOT_NATIVE_MISSING")
+    if preview and native_exists:
+        # Opening validates the directory and its existing lock. Never create in preview.
+        with AnalyticalArchive(native_path) as native:
+            if present:
+                recovered = native.load(snapshot_pin)
+                need(recovered.projections == projections and recovered.references == resolved,
+                     "DEV_SNAPSHOT_READBACK_INVALID")
+    elif not preview:
+        if not (reopen or existing):
+            with AnalyticalArchive(native_path, create=not native_exists) as native:
+                written_pin = native.store(projections, manifest,
+                    expected_manifest_sha256=manifest_pin, load_object=objects.__getitem__)
+                need(written_pin == snapshot_pin, "DEV_SNAPSHOT_PIN_DRIFT")
+        with AnalyticalArchive(native_path) as native:
+            recovered = native.load(snapshot_pin)
+            need(recovered.snapshot_sha256 == snapshot_pin and recovered.projections == projections
+                 and recovered.references == resolved, "DEV_SNAPSHOT_READBACK_INVALID")
     record = dict(schema="ARDREC-R304-DEV-SNAPSHOT-v1", scope="NON_OPERATIONAL_DOCUMENTARY_ANALYSIS",
                   case_id=case_id, case_sha256=case["sha256"], assessment_sha256=assessment["sha256"],
                   snapshot_sha256=snapshot_pin, manifest_sha256=manifest_pin, references=len(bindings),
@@ -632,13 +650,26 @@ def development_snapshot(*, origin: Path, archive: Path, case_id: str,
     if reopen or existing:
         need(_private_file(index_path, MAX_RECORD) == expected, "DEV_SNAPSHOT_INDEX_CHANGED")
         return record, "DEV_SNAPSHOT_REOPENED"
+    if preview:
+        return record, "DEV_SNAPSHOT_RECOVERABLE" if present else "DEV_SNAPSHOT_PREVIEW_NEW"
     written = _create_exclusive(index_path, expected)
     return record, "DEV_SNAPSHOT_CREATED" if written else "DEV_SNAPSHOT_REOPENED"
 
 
+def development_snapshot(*, origin: Path, archive: Path, case_id: str,
+                         scenario_pin: str, inputs: Path, input_pin: str,
+                         reopen: bool = False,
+                         expected_assessment_sha256: str | None = None) -> tuple[dict, str]:
+    """Persist or recover a documentary projection in the native archive."""
+    return _development_snapshot(origin=origin, archive=archive, case_id=case_id,
+        scenario_pin=scenario_pin, inputs=inputs, input_pin=input_pin, reopen=reopen,
+        expected_assessment_sha256=expected_assessment_sha256)
+
+
 def development_batch(*, manifest: Path, manifest_pin: str, archive: Path,
-                      reopen: bool = False) -> dict:
-    """Coordinate existing documentary cases; no dispatch, journal binding or promotion."""
+                      reopen: bool = False, preview: bool = False) -> dict:
+    """Coordinate or preflight existing documentary cases, without dispatch."""
+    need(not (reopen and preview), "DEV_BATCH_MODE_CONFLICT")
     from ardrec.analytics.r58d_interval_kernel import build_intervals, verify_intervals
 
     need(os.geteuid() > 0, "ROOT_CLI_FORBIDDEN")
@@ -681,27 +712,31 @@ def development_batch(*, manifest: Path, manifest_pin: str, archive: Path,
         case, _ = development_case(origin=entry["origin"], archive=archive,
                                    case_id=entry["case_id"], scenario_pin=entry["scenario_pin"], reopen=True)
         assessment, _ = development_assessment(**entry, preview=not reopen, reopen=reopen)
-        index = archive / (entry["case_id"] + ".snapshot.json")
-        if reopen or index.exists() or index.is_symlink():
-            development_snapshot(**entry, reopen=True)
-        prepared.append((entry, case, assessment))
+        snapshot, status = _development_snapshot(**entry, reopen=reopen, preview=not reopen,
+            expected_assessment_sha256=assessment["sha256"])
+        prepared.append((entry, case, assessment, snapshot, status))
     # Native A7 batch computation must agree with each R303 candidate interval.
     intervals = build_intervals([assessment["interval"]["inputs"][0]
-                                 for _, _, assessment in prepared])
+                                 for _, _, assessment, _, _ in prepared])
     need(verify_intervals(intervals), "DEV_BATCH_INTERVAL_INVALID")
-    expected_rows = sorted((a["interval"]["results"][0] for _, _, a in prepared),
+    expected_rows = sorted((a["interval"]["results"][0] for _, _, a, _, _ in prepared),
                            key=lambda r: (r["service_id"], r["case_id"], r["assessment_index"]))
     need(intervals["results"] == expected_rows, "DEV_BATCH_INTERVAL_MISMATCH")
     need(_private_file(manifest, MAX_FILE) == raw, "DEV_BATCH_MANIFEST_CHANGED")
     results = []
     # No global atomicity: existing per-case immutable records make retries safe
     # after interruption, provided all original inputs still match.
-    for entry, case, expected in prepared:
-        if not reopen:
-            assessment, _ = development_assessment(**entry)
-            need(assessment == expected, "DEV_BATCH_ASSESSMENT_DRIFT")
-            development_snapshot(**entry)
-        snapshot, _ = development_snapshot(**entry, reopen=True)
+    for entry, case, expected, planned_snapshot, status in prepared:
+        if preview:
+            snapshot = planned_snapshot
+        else:
+            if not reopen:
+                assessment, _ = development_assessment(**entry, expected_sha256=expected["sha256"])
+                need(assessment == expected, "DEV_BATCH_ASSESSMENT_DRIFT")
+                development_snapshot(**entry, expected_assessment_sha256=expected["sha256"])
+            snapshot, _ = development_snapshot(**entry, reopen=True,
+                expected_assessment_sha256=expected["sha256"])
+            need(snapshot == planned_snapshot, "DEV_BATCH_SNAPSHOT_DRIFT")
         need(snapshot["case_sha256"] == case["sha256"] and snapshot["assessment_sha256"] == expected["sha256"],
              "DEV_BATCH_SNAPSHOT_BINDING")
         results.append(dict(case_id=case["case_id"], protocol=case["protocol"],
@@ -719,6 +754,12 @@ def development_batch(*, manifest: Path, manifest_pin: str, archive: Path,
         a3_authority="ND", a4_selected=None, a5_attempts=0, a6="ND", confirmed_rf=None,
         operational_a9_published=False, execution_authorized=False, experimental_admission=False,
         experimental_observations=0, p7="DRAFT_NOT_FROZEN", p8="NO-GO")
+    if preview:
+        report["schema"] = "ARDREC-R315-DEV-BATCH-PREVIEW-v1"
+        report["scope"] = "DOCUMENTARY_PREVIEW_ONLY"
+        report["persistence_requested"] = False
+        report["snapshot_statuses"] = {case["case_id"]: status
+            for _, case, _, _, status in prepared}
     report["sha256"] = _digest(f1.canonical(report))
     return report
 
@@ -746,7 +787,7 @@ def main(argv: list[str] | None = None) -> int:
         if name in ("valorar-dev", "reabrir-valoracion-dev", "archivar-analisis-dev", "reabrir-analisis-dev"):
             pp.add_argument("--valoracion", required=True, type=Path)
             pp.add_argument("--sha256-valoracion", required=True)
-    for name in ("preparar-lote-dev", "reabrir-lote-dev"):
+    for name in ("preparar-lote-dev", "reabrir-lote-dev", "prevalidar-lote-dev"):
         pp = p.add_parser(name, help="coordinar valoraciones y archivos DEV sin despacho")
         pp.add_argument("--manifiesto", required=True, type=Path)
         pp.add_argument("--sha256", required=True)
@@ -758,13 +799,14 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     try:
         need(os.geteuid() != 0, "ROOT_CLI_FORBIDDEN")
-        if args.action in ("preparar-lote-dev", "reabrir-lote-dev"):
+        if args.action in ("preparar-lote-dev", "reabrir-lote-dev", "prevalidar-lote-dev"):
             report = development_batch(manifest=args.manifiesto, manifest_pin=args.sha256,
-                                       archive=args.archivo, reopen=args.action == "reabrir-lote-dev")
+                                       archive=args.archivo, reopen=args.action == "reabrir-lote-dev",
+                                       preview=args.action == "prevalidar-lote-dev")
             if args.json:
                 sys.stdout.buffer.write(f1.canonical(report))
             else:
-                print("ARDREC / LOTE DEV / PASS")
+                print("ARDREC / LOTE DEV / " + ("PREVIEW_ONLY" if args.action == "prevalidar-lote-dev" else "PASS"))
                 print("CASES=" + str(report["case_count"]) + " | REFERENCES=" + str(report["references"]))
                 for row in report["cases"]:
                     bounds = row["rf_hypothetical"]

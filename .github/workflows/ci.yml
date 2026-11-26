@@ -322,6 +322,18 @@ jobs:
       - name: R314 arquitectura monousuario / Single-user architecture declaration
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_r314_architecture_cli.py -v
 
+      - name: R315 prevalidacion y recuperacion DEV / DEV batch preflight and recovery
+        run: |
+          PYTHONPATH=src:lab/tests python3 -B - <<'PYR315'
+          import unittest
+          suite = unittest.defaultTestLoader.discover('lab/tests', pattern='test_r315_batch_preflight.py')
+          if suite.countTestCases() != 8:
+              raise SystemExit('R315_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R315_REGRESSION_FAILED')
+          PYR315
+
       - name: R307 coordinacion de lotes DEV / DEV batch coordination
         run: |
           PYTHONPATH=src python3 -B - <<'PYR307'
