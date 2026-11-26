@@ -319,6 +319,19 @@ jobs:
               raise SystemExit('R304_REGRESSION_FAILED')
           PYR304
 
+      - name: R307 coordinacion de lotes DEV / DEV batch coordination
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR307'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests', pattern='test_r307_dev_batch.py')
+          if suite.countTestCases() != 10:
+              raise SystemExit('R307_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R307_REGRESSION_FAILED')
+          PYR307
+
       - name: R197 prospective local pilot
         run: |
           PYTHONPATH=src python3 -B - <<'PYR197'

@@ -464,8 +464,9 @@ def development_case(*, origin: Path, archive: Path, case_id: str,
 
 def development_assessment(*, origin: Path, archive: Path, case_id: str,
                            scenario_pin: str, inputs: Path, input_pin: str,
-                           reopen: bool = False) -> tuple[dict, str]:
-    """Persist a documentary assessment and mathematical uncertainty, never operational risk."""
+                           reopen: bool = False, preview: bool = False) -> tuple[dict, str]:
+    """Persist or preflight a documentary assessment, never operational risk."""
+    need(not (reopen and preview), "ASSESSMENT_MODE_CONFLICT")
     from ardrec.experiments import initial_assessment as a2
     from ardrec.analytics.r58d_interval_kernel import build_intervals, verify_intervals
 
@@ -529,9 +530,11 @@ def development_assessment(*, origin: Path, archive: Path, case_id: str,
     record["sha256"] = _digest(f1.canonical(record))
     path = archive / (case_id + ".assessment.json")
     expected = f1.canonical(record)
-    if reopen:
+    if reopen or (preview and (path.exists() or path.is_symlink())):
         need(_private_file(path, MAX_RECORD) == expected, "ASSESSMENT_RECORD_CHANGED")
         return record, "DEV_ASSESSMENT_REOPENED"
+    if preview:
+        return record, "DEV_ASSESSMENT_PREVIEW"
     written = _create_exclusive(path, expected)
     return record, "DEV_ASSESSMENT_CREATED" if written else "DEV_ASSESSMENT_REOPENED"
 
@@ -633,6 +636,93 @@ def development_snapshot(*, origin: Path, archive: Path, case_id: str,
     return record, "DEV_SNAPSHOT_CREATED" if written else "DEV_SNAPSHOT_REOPENED"
 
 
+def development_batch(*, manifest: Path, manifest_pin: str, archive: Path,
+                      reopen: bool = False) -> dict:
+    """Coordinate existing documentary cases; no dispatch, journal binding or promotion."""
+    from ardrec.analytics.r58d_interval_kernel import build_intervals, verify_intervals
+
+    need(os.geteuid() > 0, "ROOT_CLI_FORBIDDEN")
+    manifest, archive = map(_abs_path, (manifest, archive))
+    need(manifest.resolve(strict=True) == manifest and archive.resolve(strict=True) == archive,
+         "DEV_BATCH_PATH_ALIAS")
+    _private_dir(archive)
+    raw = _private_file(manifest, MAX_FILE)
+    need(type(manifest_pin) is str and HEX64.fullmatch(manifest_pin) is not None
+         and _digest(raw) == manifest_pin, "DEV_BATCH_PIN_INVALID")
+    doc = _json(raw, "DEV_BATCH_MANIFEST_INVALID")
+    need(type(doc) is dict and set(doc) == {"schema", "cases"}
+         and doc["schema"] == "ARDREC-R307-DEV-BATCH-v1"
+         and type(doc["cases"]) is list and 1 <= len(doc["cases"]) <= 54,
+         "DEV_BATCH_SCHEMA_INVALID")
+    entries = []
+    ids = set()
+    paths = [archive]
+    # Validate the entire input manifest before calling any persistence function.
+    for row in doc["cases"]:
+        need(type(row) is dict and set(row) == {"case_id", "origin", "scenario_pin", "inputs", "input_pin"}
+             and all(type(v) is str for v in row.values()), "DEV_BATCH_ENTRY_INVALID")
+        cid = row["case_id"]
+        need(re.fullmatch(r"DEV-[a-f0-9]{32}", cid) is not None and cid not in ids,
+             "DEV_BATCH_CASE_DUPLICATE_OR_INVALID")
+        ids.add(cid)
+        origin, inputs = map(_abs_path, (row["origin"], row["inputs"]))
+        for path in (origin, inputs):
+            need(path.resolve(strict=True) == path, "DEV_BATCH_PATH_ALIAS")
+            need(all(path != other and path not in other.parents and other not in path.parents
+                     for other in paths), "DEV_BATCH_PATH_OVERLAP")
+            paths.append(path)
+        need(all(HEX64.fullmatch(row[key]) is not None for key in ("scenario_pin", "input_pin")),
+             "DEV_BATCH_CASE_PIN_INVALID")
+        entries.append(dict(origin=origin, archive=archive, case_id=cid,
+                            scenario_pin=row["scenario_pin"], inputs=inputs, input_pin=row["input_pin"]))
+    entries.sort(key=lambda row: row["case_id"])
+    prepared = []
+    for entry in entries:
+        case, _ = development_case(origin=entry["origin"], archive=archive,
+                                   case_id=entry["case_id"], scenario_pin=entry["scenario_pin"], reopen=True)
+        assessment, _ = development_assessment(**entry, preview=not reopen, reopen=reopen)
+        index = archive / (entry["case_id"] + ".snapshot.json")
+        if reopen or index.exists() or index.is_symlink():
+            development_snapshot(**entry, reopen=True)
+        prepared.append((entry, case, assessment))
+    # Native A7 batch computation must agree with each R303 candidate interval.
+    intervals = build_intervals([assessment["interval"]["inputs"][0]
+                                 for _, _, assessment in prepared])
+    need(verify_intervals(intervals), "DEV_BATCH_INTERVAL_INVALID")
+    expected_rows = sorted((a["interval"]["results"][0] for _, _, a in prepared),
+                           key=lambda r: (r["service_id"], r["case_id"], r["assessment_index"]))
+    need(intervals["results"] == expected_rows, "DEV_BATCH_INTERVAL_MISMATCH")
+    need(_private_file(manifest, MAX_FILE) == raw, "DEV_BATCH_MANIFEST_CHANGED")
+    results = []
+    # No global atomicity: existing per-case immutable records make retries safe
+    # after interruption, provided all original inputs still match.
+    for entry, case, expected in prepared:
+        if not reopen:
+            assessment, _ = development_assessment(**entry)
+            need(assessment == expected, "DEV_BATCH_ASSESSMENT_DRIFT")
+            development_snapshot(**entry)
+        snapshot, _ = development_snapshot(**entry, reopen=True)
+        need(snapshot["case_sha256"] == case["sha256"] and snapshot["assessment_sha256"] == expected["sha256"],
+             "DEV_BATCH_SNAPSHOT_BINDING")
+        results.append(dict(case_id=case["case_id"], protocol=case["protocol"],
+            case_sha256=case["sha256"], assessment_sha256=expected["sha256"],
+            snapshot_sha256=snapshot["snapshot_sha256"], manifest_sha256=snapshot["manifest_sha256"],
+            reference_count=snapshot["references"], state=snapshot["state"],
+            initial_risk_candidate=expected["draft"]["calculated"]["initial_risk"],
+            criticality_candidate=expected["draft"]["calculated"]["normalized_criticality"],
+            rf_hypothetical=expected["interval"]["results"][0], a6="ND",
+            a8=snapshot["a8"], confirmed_rf=None))
+    need(_private_file(manifest, MAX_FILE) == raw, "DEV_BATCH_MANIFEST_CHANGED")
+    report = dict(schema="ARDREC-R307-DEV-BATCH-RESULT-v1", scope="DOCUMENTARY_ONLY",
+        input_sha256=manifest_pin, cases=results, case_count=len(results),
+        references=sum(row["reference_count"] for row in results), interval_batch_sha256=intervals["sha256"],
+        a3_authority="ND", a4_selected=None, a5_attempts=0, a6="ND", confirmed_rf=None,
+        operational_a9_published=False, execution_authorized=False, experimental_admission=False,
+        experimental_observations=0, p7="DRAFT_NOT_FROZEN", p8="NO-GO")
+    report["sha256"] = _digest(f1.canonical(report))
+    return report
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="python -m ardrec caso",
                                  description="R166: expediente documental privado, sin trafico ni A9 operacional")
@@ -656,6 +746,11 @@ def main(argv: list[str] | None = None) -> int:
         if name in ("valorar-dev", "reabrir-valoracion-dev", "archivar-analisis-dev", "reabrir-analisis-dev"):
             pp.add_argument("--valoracion", required=True, type=Path)
             pp.add_argument("--sha256-valoracion", required=True)
+    for name in ("preparar-lote-dev", "reabrir-lote-dev"):
+        pp = p.add_parser(name, help="coordinar valoraciones y archivos DEV sin despacho")
+        pp.add_argument("--manifiesto", required=True, type=Path)
+        pp.add_argument("--sha256", required=True)
+        pp.add_argument("--archivo", required=True, type=Path)
     for pp in p.choices.values():
         g = pp.add_mutually_exclusive_group(required=True)
         g.add_argument("--texto", action="store_true")
@@ -663,6 +758,20 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     try:
         need(os.geteuid() != 0, "ROOT_CLI_FORBIDDEN")
+        if args.action in ("preparar-lote-dev", "reabrir-lote-dev"):
+            report = development_batch(manifest=args.manifiesto, manifest_pin=args.sha256,
+                                       archive=args.archivo, reopen=args.action == "reabrir-lote-dev")
+            if args.json:
+                sys.stdout.buffer.write(f1.canonical(report))
+            else:
+                print("ARDREC / LOTE DEV / PASS")
+                print("CASES=" + str(report["case_count"]) + " | REFERENCES=" + str(report["references"]))
+                for row in report["cases"]:
+                    bounds = row["rf_hypothetical"]
+                    print(row["case_id"], row["protocol"], "PREPARADO", bounds["rf_lower"] + ".." + bounds["rf_upper"])
+                print("A3=ND | A4=NONE | A5=0 | A6=ND | RF_CONFIRMED=ND | P8=NO-GO")
+                print("REPORT_SHA256=" + report["sha256"])
+            return 0
         if args.action in ("abrir-dev", "reabrir-dev"):
             record, status = development_case(
                 origin=args.origen, archive=args.archivo, case_id=args.id,
