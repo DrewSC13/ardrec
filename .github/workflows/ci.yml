@@ -437,6 +437,8 @@ jobs:
               raise SystemExit('R187_REGRESSION_FAILED')
           PYR187
 
+      - name: R324 precision estadistica / Exact paired precision
+        run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_r324_paired_precision.py -v
       - name: R184 paired statistical summary / resumen pareado
         run: |
           PYTHONPATH=src python3 -B - <<'PYR184'

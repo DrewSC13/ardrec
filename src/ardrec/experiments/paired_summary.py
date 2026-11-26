@@ -1,7 +1,7 @@
 """R184: resumen pareado exploratorio; sin autoridad experimental."""
 from __future__ import annotations
 
-from decimal import Decimal, localcontext
+from decimal import Context, Decimal, ROUND_HALF_EVEN, localcontext
 from fractions import Fraction
 from statistics import median
 
@@ -54,9 +54,7 @@ def analyze(protocol, registry, catalog):
 
     rows = []
 
-    with localcontext() as ctx:
-
-        ctx.prec = 128
+    with localcontext(Context(prec=128, rounding=ROUND_HALF_EVEN)):
 
         for slot in selected:
 
