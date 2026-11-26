@@ -175,6 +175,20 @@ jobs:
               raise SystemExit('R211_REGRESSION_FAILED')
           PYR211
 
+      - name: R305 guardas previas de fixtures / Fixture pre-dispatch guards
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR305'
+          import unittest
+          for pattern, count in (('test_r305_pre_dispatch_binding.py', 14),
+                                 ('test_r221_read_batch.py', 8)):
+              suite = unittest.defaultTestLoader.discover('lab/tests', pattern=pattern)
+              if suite.countTestCases() != count:
+                  raise SystemExit('R305_DISCOVERY_INVALID: ' + pattern)
+              result = unittest.TextTestRunner(verbosity=2).run(suite)
+              if not result.wasSuccessful() or result.skipped:
+                  raise SystemExit('R305_REGRESSION_FAILED: ' + pattern)
+          PYR305
+
       - name: R206 local prospective dispatch
         run: |
           PYTHONPATH=src python3 -B - <<'PYR206'

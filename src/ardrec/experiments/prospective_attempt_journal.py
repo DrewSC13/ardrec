@@ -479,12 +479,14 @@ class Journal:
                 now,
             )
 
-    def authorize(self, plan_id, consent):
+    def authorize(self, plan_id, consent, *, expected_plan_sha256=None):
 
         with self._transaction() as conn:
 
             row = self._load(conn, plan_id)
             plan = row["plan"]
+            if expected_plan_sha256 is not None:
+                need(plan["sha256"] == expected_plan_sha256, "JOURNAL_PLAN_PIN_MISMATCH")
 
             now = clock()
 
@@ -521,7 +523,7 @@ class Journal:
             )
 
     def reserve(
-        self, plan_id, *, head, tree, runner_sha256
+        self, plan_id, *, head, tree, runner_sha256, expected_plan_sha256=None
     ):
 
         expired = False
@@ -531,6 +533,8 @@ class Journal:
 
             row = self._load(conn, plan_id)
             plan = row["plan"]
+            if expected_plan_sha256 is not None:
+                need(plan["sha256"] == expected_plan_sha256, "JOURNAL_PLAN_PIN_MISMATCH")
 
             now = clock()
 
