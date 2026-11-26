@@ -7,7 +7,7 @@ or publish A9. It cannot send network traffic or start a VM.
 from __future__ import annotations
 
 import csv
-from decimal import Decimal, InvalidOperation, localcontext
+from decimal import Context, Decimal, InvalidOperation, ROUND_HALF_EVEN, localcontext
 from fractions import Fraction
 import hashlib
 import io
@@ -129,6 +129,7 @@ def _decimal(value):
     except (InvalidOperation, ValueError) as exc:
         raise Stop('DECIMAL_INVALID') from exc
     need(d.is_finite() and d>=0 and d.adjusted()<=12,'DECIMAL_RANGE_OR_FINITE')
+    need(-48 <= d.as_tuple().exponent <= 12, 'DECIMAL_EXPONENT_OUT_OF_RANGE')
     return d
 
 def _digest_or_none(value):
@@ -259,7 +260,7 @@ def wilcoxon_exact(diffs:list[Decimal])->dict:
                 'w_plus_twice':None,'w_total_twice':None,
                 'p_one_sided_exact':None,'p_fraction':None,
                 'decision':'NOT_TESTABLE_ALL_ZERO_OR_NO_PAIRS'}
-    ranks=_midranks([abs(x) for x in nonzero])
+    ranks=_midranks([x.copy_abs() for x in nonzero])
     observed=sum(w for w,d in zip(ranks,nonzero) if d>0)
     distribution=[0]*(sum(ranks)+1)
     distribution[0]=1
@@ -271,8 +272,7 @@ def wilcoxon_exact(diffs:list[Decimal])->dict:
     total=1<<n
     tail=sum(distribution[observed:])
     fraction=Fraction(tail,total)
-    with localcontext() as ctx:
-        ctx.prec=45
+    with localcontext(Context(prec=60, rounding=ROUND_HALF_EVEN)):
         probability=Decimal(fraction.numerator)/Decimal(fraction.denominator)
     decision='FAVORS_ARDREC_UNVERIFIED_EXPLORATORY' if probability<Decimal('0.05') else 'NOT_SIGNIFICANT_UNVERIFIED_EXPLORATORY'
     return {'n_pairs':len(diffs),'n_nonzero':n,'n_zero':zero,
@@ -282,6 +282,11 @@ def wilcoxon_exact(diffs:list[Decimal])->dict:
             'decision':decision}
 
 def analyze(protocol:dict,registry:dict,catalog_raw:bytes)->dict:
+    # 13 integer digits + 48 fractional digits + bounded sums fit exactly.
+    with localcontext(Context(prec=80, rounding=ROUND_HALF_EVEN)):
+        return _analyze_exact(protocol, registry, catalog_raw)
+
+def _analyze_exact(protocol:dict,registry:dict,catalog_raw:bytes)->dict:
     audit=validate(protocol,registry,catalog_raw)
     selected=[]
     for s in registry['slots']:
@@ -302,8 +307,12 @@ def analyze(protocol:dict,registry:dict,catalog_raw:bytes)->dict:
                       'planned':18}
         if rows:
             n=Decimal(len(rows))
-            group[proto]['mean_static_absolute_error']=decimal_str(sum((r['static_absolute_error'] for r in rows),Decimal(0))/n)
-            group[proto]['mean_ardrec_absolute_error']=decimal_str(sum((r['ardrec_absolute_error'] for r in rows),Decimal(0))/n)
+            sum_static=sum((r['static_absolute_error'] for r in rows),Decimal(0))
+            sum_ardrec=sum((r['ardrec_absolute_error'] for r in rows),Decimal(0))
+            # Means may recur; round only this descriptive presentation.
+            with localcontext(Context(prec=28, rounding=ROUND_HALF_EVEN)):
+                group[proto]['mean_static_absolute_error']=decimal_str(sum_static/n)
+                group[proto]['mean_ardrec_absolute_error']=decimal_str(sum_ardrec/n)
         else:
             group[proto]['mean_static_absolute_error']=None
             group[proto]['mean_ardrec_absolute_error']=None
