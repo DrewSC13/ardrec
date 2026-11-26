@@ -12,6 +12,43 @@ from ardrec.rules.kernel import A1Error
 from ardrec.benign_pipeline import VerificationError, GateError
 
 
+def architecture_main(argv: list[str]) -> int:
+    """Consulta declarativa; no verifica identidades ni concede autoridad."""
+    ap = argparse.ArgumentParser(description="ARDREC / arquitectura monousuario")
+    mode = ap.add_mutually_exclusive_group()
+    mode.add_argument('--json', action='store_true')
+    mode.add_argument('--texto', action='store_true')
+    args = ap.parse_args(argv)
+    policy = {
+        "schema": "ARDREC-ARCHITECTURE-v1",
+        "operator_model": "SINGLE_USER",
+        "human_operators": 1,
+        "external_operational_actors": 0,
+        "logical_role_separation": True,
+        "privilege_separation_required": True,
+        "working_directory": "REPOSITORY_ROOT",
+        "private_workspaces": ["experiments/raw/", "lab/private/", "runtime/", "local-reports/"],
+        "patch_archive": "SIBLING_ARCHIVE_ONLY",
+        "operator_identity_attested": False,
+        "independent_human_attested": False,
+        "operational_authority_granted": False,
+        "experimental_validation_granted": False,
+        "academic_validation": "SEPARATE_METHOD_REQUIREMENT",
+        "security_contracts": "UNCHANGED",
+    }
+    if args.json:
+        sys.stdout.buffer.write(canonical(policy) + b'\n')
+    else:
+        print('ARDREC / ARQUITECTURA DECLARADA / READ ONLY')
+        for key, value in policy.items():
+            if isinstance(value, bool):
+                value = 'YES' if value else 'NO'
+            elif isinstance(value, list):
+                value = ','.join(value)
+            print(f'{key.upper()}={value}')
+    return 0
+
+
 def main(argv=None) -> int:
     argv = sys.argv[1:] if argv is None else list(argv)
     if argv in (['--help'], ['-h']):
@@ -19,6 +56,7 @@ def main(argv=None) -> int:
 Uso: python -m ardrec [comando] [opciones]
 
 COMANDOS:
+  arquitectura  Modelo monousuario declarado (solo lectura)
   live       Observabilidad fisica de solo lectura
   caso       Archivo y reproduccion documental
   familias   Evaluacion offline de familias DEV
@@ -30,6 +68,7 @@ SESION DEV:
   --shadow-cycle      Recorrido hipotetico y proceso benigno
 
 AYUDA:
+  python -m ardrec arquitectura --help
   python -m ardrec live --help
   python -m ardrec caso --help
   python -m ardrec familias --help
@@ -37,11 +76,14 @@ AYUDA:
   python -m ardrec --durable-dev-root RUTA --help
 
 ALCANCE:
+  Un operador humano; separacion logica y de privilegios.
   La interfaz no concede autoridad operacional.
   P8 permanece NO-GO cuando no existe autorizacion valida.
   Los resultados DEV no constituyen observaciones experimentales.
 """)
         return 0
+    if argv and argv[0] == 'arquitectura':
+        return architecture_main(argv[1:])
     if argv and argv[0] == 'familias':
         from ardrec.coordination.family_cli import main as family_main
         return family_main(argv[1:])
