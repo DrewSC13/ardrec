@@ -82,6 +82,7 @@ jobs:
               ("R244", "test_r244_reference_supports.py", 8),
               ("R335", "test_r335_documentary_integrity.py", 7),
               ("R336", "test_r336_matrix_batch.py", 10),
+              ("R339", "test_r339_exact_rational_measurements.py", 12),
               ("R261", "test_r261_vm_functional_evidence.py", 8),
               ("R262", "test_r262_prospective_priority.py", 10),
               ("R267", "test_r267_pilot_controller.py", 8),
@@ -138,12 +139,12 @@ jobs:
                   flush=True,
               )
 
-          if total != 200:
+          if total != 212:
               raise SystemExit(
                   f"PROSPECTIVE_TEST_TOTAL_INVALID:{total}"
               )
 
-          print("PROSPECTIVE_REGRESSIONS=200/200")
+          print("PROSPECTIVE_REGRESSIONS=212/212")
           print("OPERATIONAL_ACTIVATION=NO")
           PYR239
 

@@ -163,7 +163,7 @@ def _validate_line(idx,row,expected,families):
         v=row[name];need(not v or HEX64.fullmatch(v),'DIGEST_REFERENCE_INVALID')
     val=row['static_estimate']
     if val:
-        try:r148._decimal(val)
+        try:r148._measurement(val)
         except r148.Stop as exc:raise Stop(str(exc)) from exc
     entered=[row[k]!='' for k in ENTRY_FIELDS]
     return 'COMPLETE' if all(entered) else ('PARTIAL' if any(entered) else 'EMPTY')

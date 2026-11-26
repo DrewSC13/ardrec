@@ -254,7 +254,7 @@ def candidate(row, entry, supports):
             "I2_SUPPORT_INTEGRITY_INVALID",
         )
 
-    static = r148._decimal(
+    static = r148._measurement(
         row["static_estimate"]
     )
 

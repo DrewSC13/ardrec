@@ -9,6 +9,8 @@ from ardrec.experiments import r148_paired_register as r148
 
 
 def normalized(value):
+    if type(value) is str and '/' in value:
+        return r148._measurement(value)
     number = Decimal(value)
 
     r148.need(
@@ -59,7 +61,7 @@ def analyze(protocol, registry, catalog):
         for slot in selected:
 
             static, ardrec, reference = (
-                normalized(slot[key])
+                Fraction(normalized(slot[key]))
                 for key in r148.VALUES
             )
 

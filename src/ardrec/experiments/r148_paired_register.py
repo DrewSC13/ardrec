@@ -132,6 +132,22 @@ def _decimal(value):
     need(-48 <= d.as_tuple().exponent <= 12, 'DECIMAL_EXPONENT_OUT_OF_RANGE')
     return d
 
+def _measurement(value):
+    """Preserve legacy decimals; permit bounded reduced normalized ratios.
+
+    Ratios are input measurements, not evidence or a change of scale.
+    Decimal strings retain the original validation and representation.
+    """
+    if type(value) is str and '/' in value:
+        need(re.fullmatch(r'(0|[1-9][0-9]{0,23})/[1-9][0-9]{0,23}', value, re.ASCII)
+             is not None, 'RATIONAL_TEXT_INVALID')
+        number = Fraction(value)
+        need(value == f'{number.numerator}/{number.denominator}',
+             'RATIONAL_NOT_REDUCED')
+        need(0 <= number <= 1, 'RATIONAL_OUTSIDE_NORMALIZED_SCALE')
+        return number
+    return _decimal(value)
+
 def _digest_or_none(value):
     return value is None or (type(value) is str and HEX64.fullmatch(value))
 
@@ -205,7 +221,7 @@ def validate(protocol:dict, registry:dict,catalog_raw:bytes)->dict:
                  s['exclusion_decision_sha256'] is None and
                  all(type(s[k]) is str and HEX64.fullmatch(s[k]) for k in REFS),
                  'MEASUREMENT_REFERENCE_MISSING')
-            vals=[_decimal(s[k]) for k in VALUES]
+            vals=[_measurement(s[k]) for k in VALUES]
             scale=registry.get('common_scale')
             need(type(scale) is dict and set(scale)=={'lower','upper'},
                  'COMMON_SCALE_REQUIRED')
@@ -229,7 +245,7 @@ def validate(protocol:dict, registry:dict,catalog_raw:bytes)->dict:
             'a6':'ND','a9':'NOT_PUBLISHED',
             'authority':'UNVERIFIED_DOCUMENTARY_STRUCTURE_ONLY'}
 
-def _midranks(values:list[Decimal])->list[int]:
+def _midranks(values:list[Decimal | Fraction])->list[int]:
     """Rank |difference| with averaged ties; return twice each midrank."""
     order=sorted(range(len(values)),key=lambda i:values[i])
     ranks=[0]*len(values)
@@ -243,14 +259,14 @@ def _midranks(values:list[Decimal])->list[int]:
         cursor=last
     return ranks
 
-def wilcoxon_exact(diffs:list[Decimal])->dict:
+def wilcoxon_exact(diffs:list[Decimal | Fraction])->dict:
     """Exact one-sided sign-flip tail, tie-aware; zeros retained in count.
 
     Conditional on observed nonzero absolute magnitudes. No normal
     approximation, no p-hacking selection, no continuity correction.
     """
     need(type(diffs) is list and len(diffs)<=54 and
-         all(type(x) is Decimal and x.is_finite() for x in diffs),
+         all(type(x) is Fraction or (type(x) is Decimal and x.is_finite()) for x in diffs),
          'DIFFERENCES_INVALID')
     nonzero=[d for d in diffs if d!=0]
     zero=len(diffs)-len(nonzero)
@@ -260,7 +276,7 @@ def wilcoxon_exact(diffs:list[Decimal])->dict:
                 'w_plus_twice':None,'w_total_twice':None,
                 'p_one_sided_exact':None,'p_fraction':None,
                 'decision':'NOT_TESTABLE_ALL_ZERO_OR_NO_PAIRS'}
-    ranks=_midranks([x.copy_abs() for x in nonzero])
+    ranks=_midranks([abs(x) if type(x) is Fraction else x.copy_abs() for x in nonzero])
     observed=sum(w for w,d in zip(ranks,nonzero) if d>0)
     distribution=[0]*(sum(ranks)+1)
     distribution[0]=1
@@ -289,9 +305,14 @@ def analyze(protocol:dict,registry:dict,catalog_raw:bytes)->dict:
 def _analyze_exact(protocol:dict,registry:dict,catalog_raw:bytes)->dict:
     audit=validate(protocol,registry,catalog_raw)
     selected=[]
+    # Keep the historical decimal-only report byte-compatible. If any ratio
+    # occurs, evaluate every pair on the same exact rational number domain.
+    rational_mode = any('/' in s[k] for s in registry['slots']
+                        if s['status']=='RECORDED_UNVERIFIED' for k in VALUES)
     for s in registry['slots']:
         if s['status']=='RECORDED_UNVERIFIED':
-            static,ardrec,ref=(_decimal(s[k]) for k in VALUES)
+            values = [_measurement(s[k]) for k in VALUES]
+            static,ardrec,ref = ([Fraction(v) for v in values] if rational_mode else values)
             selected.append({'slot_id':s['slot_id'],'protocol':s['protocol'],
                 'static_absolute_error':abs(static-ref),
                 'ardrec_absolute_error':abs(ardrec-ref),
@@ -306,13 +327,20 @@ def _analyze_exact(protocol:dict,registry:dict,catalog_raw:bytes)->dict:
         group[proto]={'recorded_unverified':len(rows),
                       'planned':18}
         if rows:
-            n=Decimal(len(rows))
-            sum_static=sum((r['static_absolute_error'] for r in rows),Decimal(0))
-            sum_ardrec=sum((r['ardrec_absolute_error'] for r in rows),Decimal(0))
-            # Means may recur; round only this descriptive presentation.
-            with localcontext(Context(prec=28, rounding=ROUND_HALF_EVEN)):
-                group[proto]['mean_static_absolute_error']=decimal_str(sum_static/n)
-                group[proto]['mean_ardrec_absolute_error']=decimal_str(sum_ardrec/n)
+            # Only the legacy descriptive text is rounded; the ranks are exact.
+            if rational_mode:
+                means = [sum((r[key] for r in rows), Fraction(0))/len(rows)
+                         for key in ('static_absolute_error', 'ardrec_absolute_error')]
+                with localcontext(Context(prec=28, rounding=ROUND_HALF_EVEN)):
+                    for key, mean in zip(('mean_static_absolute_error', 'mean_ardrec_absolute_error'), means):
+                        group[proto][key] = decimal_str(Decimal(mean.numerator)/Decimal(mean.denominator))
+            else:
+                n=Decimal(len(rows))
+                sum_static=sum((r['static_absolute_error'] for r in rows),Decimal(0))
+                sum_ardrec=sum((r['ardrec_absolute_error'] for r in rows),Decimal(0))
+                with localcontext(Context(prec=28, rounding=ROUND_HALF_EVEN)):
+                    group[proto]['mean_static_absolute_error']=decimal_str(sum_static/n)
+                    group[proto]['mean_ardrec_absolute_error']=decimal_str(sum_ardrec/n)
         else:
             group[proto]['mean_static_absolute_error']=None
             group[proto]['mean_ardrec_absolute_error']=None
