@@ -104,7 +104,17 @@ R294_TEST_IDS = frozenset({
 })
 R294_SOURCE_SHA256 = {'src/ardrec/experiments/journal_readback.py': 'd383c36bb6049338f999ea122722a151e8a893cb9061e1b176991e4b89459ccd', 'src/ardrec/experiments/study_cli.py': '4b29ab2e1769fada3185a03224ff7358107bc92b85d8975f566df7198572cd2c', 'tests/unit/test_r294_journal_readback.py': 'b524d8f9a4828b59e8b171c8390fe7ffe4e478fca3cb566162a4e5cc38680f63'}
 
+# R306: explicit reviewed revision of the R294 reader; historical pin preserved.
+R306_JOURNAL_PATH = 'src/ardrec/experiments/journal_readback.py'
+R306_JOURNAL_BASE_SHA256 = 'd383c36bb6049338f999ea122722a151e8a893cb9061e1b176991e4b89459ccd'
+R306_JOURNAL_CURRENT_SHA256 = '06b273b189c791c07ed8b49c7a149a94674959bd99e1da4c8f98322dabc511d7'
+
+
 def reviewed_source_digest(path, historical_digest):
+    if path == R306_JOURNAL_PATH:
+        require(historical_digest == R306_JOURNAL_BASE_SHA256,
+                'Fuente R294 modificada: huella histórica R306 alterada')
+        return R306_JOURNAL_CURRENT_SHA256
     if path == R287_ARCHIVE_PATH:
         require(historical_digest == R287_ARCHIVE_BASE_SHA256,
                 "Huella histórica R287 alterada")
@@ -503,7 +513,7 @@ def validate(root=ROOT, registry=None, evidence=None, *, discovered=None, check_
     for path, digest in R294_SOURCE_SHA256.items():
         require(
             hashlib.sha256(relative(root, path).read_bytes()).hexdigest()
-            == digest,
+            == reviewed_source_digest(path, digest),
             "Fuente R294 modificada: " + path,
         )
     r294_observed = sorted(

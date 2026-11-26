@@ -189,6 +189,22 @@ jobs:
                   raise SystemExit('R305_REGRESSION_FAILED: ' + pattern)
           PYR305
 
+      - name: R306 consistencia del diario / Journal consistency
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR306'
+          import unittest
+          for folder, pattern, expected in (
+              ('lab/tests', 'test_r306_journal_consistency.py', 18),
+              ('tests/unit', 'test_r294_journal_readback.py', 13),
+          ):
+              suite = unittest.defaultTestLoader.discover(folder, pattern=pattern)
+              if suite.countTestCases() != expected:
+                  raise SystemExit('R306_DISCOVERY_INVALID: ' + pattern)
+              result = unittest.TextTestRunner(verbosity=2).run(suite)
+              if not result.wasSuccessful() or result.skipped:
+                  raise SystemExit('R306_REGRESSION_FAILED: ' + pattern)
+          PYR306
+
       - name: R206 local prospective dispatch
         run: |
           PYTHONPATH=src python3 -B - <<'PYR206'
