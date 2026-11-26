@@ -5,6 +5,10 @@
 Prototipo academico de recalibracion dinamica del riesgo
 para servicios Linux SSH, FTP y SMB/Samba.
 
+ARDREC es un prototipo estrictamente monousuario: un solo operador humano
+para desarrollo, administracion y custodia del laboratorio. Los roles
+logicos y los privilegios del sistema permanecen separados.
+
 La rama de cierre integra los motores analiticos existentes,
 la persistencia durable DEV, la observabilidad fisica de
 solo lectura y las interfaces de evaluacion y estudio.
@@ -27,6 +31,7 @@ Desde la raiz del repositorio, con el entorno fijado:
 ```sh
 uv sync --locked
 uv run --no-sync python -B -m ardrec --help
+uv run --no-sync python -B -m ardrec arquitectura --json
 uv run --no-sync python -B -m ardrec live --help
 uv run --no-sync python -B -m ardrec caso --help
 uv run --no-sync python -B -m ardrec familias --help
@@ -44,8 +49,15 @@ uv run --no-sync python -B -m ardrec estudio --help
 
 ### Seguridad y reproducibilidad
 
-Repositorio publico; datos privados, claves y autorizaciones
-fuera del repositorio.
+Repositorio publico; datos privados, claves y autorizaciones nunca
+forman parte del contenido versionado. El trabajo se realiza desde la
+raiz de ARDREC; `experiments/raw/`, `lab/private/`, `runtime/` y
+`local-reports/` son rutas locales excluidas de Git. El archivo hermano
+`ardrec-patches/` solo conserva parches, scripts y evidencias; no es
+el espacio activo de desarrollo o investigacion.
+
+La consulta `arquitectura` describe el modelo de custodia y las rutas,
+no acredita identidad, concede permisos ni cambia estados.
 
 La custodia monousuario no acredita independencia humana.
 No se modifican los contratos operacionales R146/R163.
@@ -68,6 +80,7 @@ must not be reported as physical experimental observations.
 
 ### Documentacion / Documentation
 
+- [Decisión arquitectónica vigente](docs/adr/0001-arquitectura.md)
 - [Custodia monousuario](docs/development/R179_SINGLE_OPERATOR_BOUNDARY.md)
 - [Registro experimental](docs/development/p14-r148-registro-y-analisis-experimental-54-unidades.md)
 - [Seleccion de escenarios](docs/development/p14-r149-diseno-escenarios-54-unidades.md)
