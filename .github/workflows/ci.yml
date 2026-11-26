@@ -80,6 +80,7 @@ jobs:
               ("R240", "test_r240_revocation_history.py", 14),
               ("R243", "test_r243_paired_reconciliation.py", 12),
               ("R244", "test_r244_reference_supports.py", 8),
+              ("R335", "test_r335_documentary_integrity.py", 7),
               ("R261", "test_r261_vm_functional_evidence.py", 8),
               ("R262", "test_r262_prospective_priority.py", 10),
               ("R267", "test_r267_pilot_controller.py", 8),
@@ -136,12 +137,12 @@ jobs:
                   flush=True,
               )
 
-          if total != 183:
+          if total != 190:
               raise SystemExit(
                   f"PROSPECTIVE_TEST_TOTAL_INVALID:{total}"
               )
 
-          print("PROSPECTIVE_REGRESSIONS=183/183")
+          print("PROSPECTIVE_REGRESSIONS=190/190")
           print("OPERATIONAL_ACTIVATION=NO")
           PYR239
 

@@ -209,8 +209,8 @@ def locate_selected(rows, entry, working_sha256):
     )
 
     need(
-        not row["case_id"].upper().startswith("PILOT-")
-        and not row["scenario_id"].upper().startswith("PILOT-"),
+        not any(row[key].upper().startswith("PILOT-")
+                for key in ("case_id", "scenario_id", "service_instance_id")),
         "PILOT_IDENTITY_REUSE_FORBIDDEN",
     )
 
@@ -225,6 +225,12 @@ def candidate(row, entry, supports):
     )
 
     validate_entry(entry)
+
+    need(
+        not any(row[key].upper().startswith("PILOT-")
+                for key in ("case_id", "scenario_id", "service_instance_id")),
+        "PILOT_IDENTITY_REUSE_FORBIDDEN",
+    )
 
     need(
         row["slot_id"] == entry["slot_id"],
@@ -394,6 +400,13 @@ def build(
     })
 
 
+def _same_file(left, right):
+    # Ignore atime (ordinary reads may update it); keep nanosecond metadata.
+    fields = ("st_dev", "st_ino", "st_mode", "st_uid", "st_gid",
+              "st_nlink", "st_size", "st_mtime_ns", "st_ctime_ns")
+    return all(getattr(left, k) == getattr(right, k) for k in fields)
+
+
 def read_private(path, limit):
 
     path = Path(path)
@@ -406,7 +419,7 @@ def read_private(path, limit):
 
     fd = os.open(
         path,
-        os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC,
+        os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC | os.O_NONBLOCK,
     )
 
     try:
@@ -434,7 +447,9 @@ def read_private(path, limit):
         need(
             len(raw) == before.st_size
             and before.st_size == after.st_size
-            and before.st_mtime_ns == after.st_mtime_ns,
+            and before.st_mtime_ns == after.st_mtime_ns
+            and before.st_ctime_ns == after.st_ctime_ns
+            and _same_file(after, path.lstat()),
             "I2_SOURCE_CHANGED_DURING_READ",
         )
 
