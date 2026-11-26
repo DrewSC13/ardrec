@@ -276,6 +276,19 @@ jobs:
               raise SystemExit('R303_REGRESSION_FAILED')
           PYR303
 
+      - name: R304 persistencia analítica DEV / Native DEV analytical archive
+        run: |
+          PYTHONPATH=src python3 -B - <<'PYR304'
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'lab/tests', pattern='test_r304_dev_snapshot.py')
+          if suite.countTestCases() != 6:
+              raise SystemExit('R304_DISCOVERY_INVALID')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped:
+              raise SystemExit('R304_REGRESSION_FAILED')
+          PYR304
+
       - name: R197 prospective local pilot
         run: |
           PYTHONPATH=src python3 -B - <<'PYR197'

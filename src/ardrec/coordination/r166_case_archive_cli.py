@@ -536,6 +536,103 @@ def development_assessment(*, origin: Path, archive: Path, case_id: str,
     return record, "DEV_ASSESSMENT_CREATED" if written else "DEV_ASSESSMENT_REOPENED"
 
 
+def development_snapshot(*, origin: Path, archive: Path, case_id: str,
+                         scenario_pin: str, inputs: Path, input_pin: str,
+                         reopen: bool = False) -> tuple[dict, str]:
+    """Persist the R303 documentary projection in the native analytical archive."""
+    from ardrec.analytical import AnalyticalProjection, AnalysisValues, FrozenValues, ObjectReference
+    from ardrec.analytical_references import ROLES, OBJECT_FORMAT, MANIFEST_FORMAT, canonical, resolve_references
+    from ardrec.contracts import ND
+    from ardrec.persistence.analytical_archive import AnalyticalArchive, digest
+    from ardrec.state import ServicePhase
+    from ardrec.stopping.development_stop import preview_stop, verify_stop
+    from ardrec.experiments.initial_assessment import CONFIG_NAMES
+
+    case, _ = development_case(origin=origin, archive=archive, case_id=case_id,
+                               scenario_pin=scenario_pin, reopen=True)
+    assessment, _ = development_assessment(origin=origin, archive=archive,
+        case_id=case_id, scenario_pin=scenario_pin, inputs=inputs,
+        input_pin=input_pin, reopen=True)
+    stop = preview_stop(a6_classification="ND", accredited=False, vm_checked=False,
+                        operational_dispatch=False, source_sha256=assessment["sha256"])
+    need(verify_stop(stop), "DEV_STOP_INVALID")
+    ctx = dict(record_id=case_id, execution_id=case_id + ":documentary",
+               configuration_sha256=case["source_files"][CONFIG_NAMES[case["protocol"]]],
+               generation_index=0)
+    values = assessment["draft"]["calculated"]
+    bounds = assessment["interval"]["results"][0]
+    payloads = {
+        "characterization": {"case_sha256": case["sha256"], "protocol": case["protocol"],
+            "assessment_sha256": assessment["sha256"], "source_files": case["source_files"],
+            "initial_risk_candidate": values["initial_risk"],
+            "normalized_criticality_candidate": values["normalized_criticality"],
+            "baseline_closed": False},
+        "evidence_repository": {"a6": "ND", "documentary_support_pins": assessment["support_pins"],
+            "confirmed_evidence_count": 0, "support_semantics_verified": False},
+        "execution_counters": {"operational_attempts": 0, "development_observations": 0},
+        "objective_status": {"status": "ND", "technical_objective_accredited": False},
+        "history": {"case_sha256": case["sha256"], "assessment_sha256": assessment["sha256"],
+            "phase": "PREPARADO", "operational_publications": 0},
+        "convergence_window": {"hypothetical_rf_lower": bounds["rf_lower"],
+            "hypothetical_rf_upper": bounds["rf_upper"], "confirmed_samples": [],
+            "convergence_accredited": False},
+        "pending_controls": {"dispatch_allowed": False, "a3_authority": "ND",
+            "a8": stop, "p8": "NO-GO"},
+    }
+    refs, objects, bindings = {}, {}, []
+    for role in ROLES:
+        reference = case_id + ":" + role
+        raw = canonical(dict(format=OBJECT_FORMAT, context=ctx, service_scenario_id=case_id,
+                             role=role, reference=reference, payload=payloads[role]))
+        pin = digest(raw)
+        objects[pin] = raw
+        refs[role] = ObjectReference(reference, pin)
+        bindings.append(dict(service_scenario_id=case_id, role=role, reference=reference, sha256=pin))
+    baseline, evidence = ND("BASELINE_NOT_CLOSED"), ND("EVIDENCE_NOT_ACCREDITED")
+    projections = (AnalyticalProjection(**ctx, service_scenario_id=case_id,
+        operational_state=ServicePhase.PREPARADO,
+        frozen=FrozenValues(baseline, baseline, refs["characterization"]),
+        analysis=AnalysisValues(evidence, baseline, evidence, baseline, evidence, None),
+        references=tuple(refs[role] for role in ROLES[1:])),)
+    manifest = canonical(dict(format=MANIFEST_FORMAT, context=ctx,
+                              bindings=sorted(bindings, key=lambda b: b["role"])))
+    manifest_pin = digest(manifest)
+    resolved = resolve_references(projections, manifest,
+                                  expected_manifest_sha256=manifest_pin, load_object=objects.__getitem__)
+    archive = _abs_path(archive)
+    native_path = archive / (case_id + ".analytical")
+    index_path = archive / (case_id + ".snapshot.json")
+    # An existing index is a recovery request, never permission to replace a snapshot.
+    existing = index_path.exists() or index_path.is_symlink()
+    if reopen or existing:
+        previous = _json(_private_file(index_path, MAX_RECORD), "DEV_SNAPSHOT_INDEX_INVALID")
+        snapshot_pin = previous["snapshot_sha256"]
+        need(type(snapshot_pin) is str and HEX64.fullmatch(snapshot_pin) is not None,
+             "DEV_SNAPSHOT_PIN_INVALID")
+    else:
+        create = not native_path.exists() and not native_path.is_symlink()
+        with AnalyticalArchive(native_path, create=create) as native:
+            snapshot_pin = native.store(projections, manifest,
+                expected_manifest_sha256=manifest_pin, load_object=objects.__getitem__)
+    with AnalyticalArchive(native_path) as native:
+        recovered = native.load(snapshot_pin)
+        need(recovered.snapshot_sha256 == snapshot_pin and recovered.projections == projections
+             and recovered.references == resolved, "DEV_SNAPSHOT_READBACK_INVALID")
+    record = dict(schema="ARDREC-R304-DEV-SNAPSHOT-v1", scope="NON_OPERATIONAL_DOCUMENTARY_ANALYSIS",
+                  case_id=case_id, case_sha256=case["sha256"], assessment_sha256=assessment["sha256"],
+                  snapshot_sha256=snapshot_pin, manifest_sha256=manifest_pin, references=len(bindings),
+                  state="PREPARADO", a6="ND", a8=stop, confirmed_rf=None, attempts=0,
+                  execution_authorized=False, operational_a9_published=False,
+                  experimental_admission=False, p8="NO-GO")
+    record["sha256"] = _digest(f1.canonical(record))
+    expected = f1.canonical(record)
+    if reopen or existing:
+        need(_private_file(index_path, MAX_RECORD) == expected, "DEV_SNAPSHOT_INDEX_CHANGED")
+        return record, "DEV_SNAPSHOT_REOPENED"
+    written = _create_exclusive(index_path, expected)
+    return record, "DEV_SNAPSHOT_CREATED" if written else "DEV_SNAPSHOT_REOPENED"
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="python -m ardrec caso",
                                  description="R166: expediente documental privado, sin trafico ni A9 operacional")
@@ -550,13 +647,13 @@ def main(argv: list[str] | None = None) -> int:
         pp.add_argument("--manifiesto", required=True, type=Path)
         if name != "revisar":
             pp.add_argument("--archivo", required=True, type=Path)
-    for name in ("abrir-dev", "reabrir-dev", "valorar-dev", "reabrir-valoracion-dev"):
+    for name in ("abrir-dev", "reabrir-dev", "valorar-dev", "reabrir-valoracion-dev", "archivar-analisis-dev", "reabrir-analisis-dev"):
         pp = p.add_parser(name, help="caso prospectivo DEV sin autorizacion de ejecucion")
         pp.add_argument("--origen", required=True, type=Path)
         pp.add_argument("--archivo", required=True, type=Path)
         pp.add_argument("--id", required=True)
         pp.add_argument("--sha256", required=True, help="SHA-256 de scenario.json")
-        if name in ("valorar-dev", "reabrir-valoracion-dev"):
+        if name in ("valorar-dev", "reabrir-valoracion-dev", "archivar-analisis-dev", "reabrir-analisis-dev"):
             pp.add_argument("--valoracion", required=True, type=Path)
             pp.add_argument("--sha256-valoracion", required=True)
     for pp in p.choices.values():
@@ -597,6 +694,22 @@ def main(argv: list[str] | None = None) -> int:
                 print("RF_HYPOTHETICAL_INTERVAL=" + bounds["rf_lower"] + ".." + bounds["rf_upper"])
                 print("STATE=PREPARADO | A6=ND | RF_CONFIRMED=ND | P8=NO-GO")
                 print("RECORD_SHA256=" + record["sha256"])
+            return 0
+        if args.action in ("archivar-analisis-dev", "reabrir-analisis-dev"):
+            record, status = development_snapshot(
+                origin=args.origen, archive=args.archivo, case_id=args.id,
+                scenario_pin=args.sha256, inputs=args.valoracion,
+                input_pin=args.sha256_valoracion,
+                reopen=args.action == "reabrir-analisis-dev")
+            if args.json:
+                sys.stdout.buffer.write(f1.canonical(record))
+            else:
+                print("ARDREC / CASO DEV / " + status)
+                print("CASE_ID=" + record["case_id"])
+                print("SNAPSHOT_SHA256=" + record["snapshot_sha256"])
+                print("REFERENCES=" + str(record["references"]))
+                print("A8=" + record["a8"]["recommendation"])
+                print("STATE=PREPARADO | A6=ND | RF_CONFIRMED=ND | P8=NO-GO")
             return 0
         if args.action == "sellar":
             m = build_manifest(origin=args.origen, journal=args.journal,
