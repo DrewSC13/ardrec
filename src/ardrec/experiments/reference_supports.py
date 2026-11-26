@@ -192,6 +192,13 @@ def evaluate(
     })
 
 
+def _same_file(left, right):
+    # Ignore atime (ordinary reads may update it); keep nanosecond metadata.
+    fields = ("st_dev", "st_ino", "st_mode", "st_uid", "st_gid",
+              "st_nlink", "st_size", "st_mtime_ns", "st_ctime_ns")
+    return all(getattr(left, k) == getattr(right, k) for k in fields)
+
+
 def read_file(path, limit):
 
     fd = os.open(
@@ -222,7 +229,8 @@ def read_file(path, limit):
             len(raw) == before.st_size
             and before.st_size == after.st_size
             and before.st_mtime_ns == after.st_mtime_ns
-            and before.st_ctime_ns == after.st_ctime_ns,
+            and before.st_ctime_ns == after.st_ctime_ns
+            and _same_file(after, os.stat(path, follow_symlinks=False)),
             "FILE_CHANGED_DURING_READ",
         )
 

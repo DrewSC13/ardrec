@@ -104,7 +104,7 @@ def reconcile_selection(
         need(
             not any(
                 selected[key].upper().startswith("PILOT-")
-                for key in ("case_id", "scenario_id")
+                for key in ("case_id", "scenario_id", "service_instance_id")
             ),
             "PILOT_REUSE_FORBIDDEN",
         )
