@@ -3,6 +3,7 @@
 No reserva intentos, no realiza operaciones y no concede autoridad.
 """
 import hashlib
+import json
 import os
 import sqlite3
 import stat
@@ -213,6 +214,55 @@ def reconcile(snapshot):
     }
 
 
+def _verify_materialized(snapshot, row):
+    """Match replayed events against the private SQLite materialization.
+
+    This checks historical consistency only. Even a consistent receipt
+    is not accredited evidence. Legacy R205 receipts without a dispatch
+    claim remain readable because the original journal permits them.
+    """
+    plan_id, document, reservation, authorized, reserved, revoked = row
+    plan = json.loads(document)
+    native.verify_plan(plan)
+    need(
+        plan_id == snapshot["plan_id"] == plan["plan_id"]
+        and plan["sha256"] == snapshot["plan_sha256"],
+        "MATERIALIZED_PLAN_MISMATCH",
+    )
+    expected = {"reservation": None, "authorized": None,
+                "reserved": None, "revoked": None}
+    for event in snapshot["events"]:
+        action, now, detail = (event[k] for k in ("action", "timestamp", "detail"))
+        if action in ("REGISTERED", "EXPIRED", "ATTEMPT_UNCERTAIN"):
+            need(detail == "", "EVENT_DETAIL_INVALID:" + action)
+        if action in ("REGISTERED", "LOCAL_CONSENT_RECORDED",
+                      "ATTEMPT_RESERVED", "DISPATCH_CLAIMED"):
+            need(plan["created_at"] <= now < plan["expires_at"],
+                 "EVENT_OUTSIDE_PLAN_VALIDITY:" + action)
+        if action == "LOCAL_CONSENT_RECORDED":
+            expected["authorized"] = now
+        elif action == "ATTEMPT_RESERVED":
+            need(now >= expected["authorized"], "RESERVATION_TIME_INVALID")
+            expected["reserved"] = now
+            expected["reservation"] = detail
+        elif action == "DISPATCH_CLAIMED":
+            need(now >= expected["reserved"], "DISPATCH_TIME_INVALID")
+        elif action == "EXPIRED":
+            need(now >= plan["expires_at"] and now >= expected["authorized"],
+                 "EXPIRATION_TIME_INVALID")
+        elif action == "REVOKED":
+            expected["revoked"] = now
+        elif action == "RECEIPT_RECORDED_UNVERIFIED":
+            need(now >= expected["reserved"], "RECEIPT_TIME_INVALID")
+    need(
+        (reservation, authorized, reserved, revoked) == (
+            expected["reservation"], expected["authorized"],
+            expected["reserved"], expected["revoked"],
+        ),
+        "JOURNAL_MATERIALIZATION_MISMATCH",
+    )
+
+
 def evaluate(path, expected_sha256):
     raw = original_bytes(path, expected_sha256)
 
@@ -239,20 +289,22 @@ def evaluate(path, expected_sha256):
                 "SQLITE_FOREIGN_KEY_INVALID",
             )
 
-            plan_ids = [
-                row[0] for row in db.execute(
-                    "SELECT plan_id FROM plans ORDER BY plan_id LIMIT ?",
-                    (MAX_PLANS + 1,),
-                )
-            ]
+            rows = db.execute(
+                "SELECT plan_id, document, reservation_sha256, "
+                "authorized_at, reserved_at, revoked_at "
+                "FROM plans ORDER BY plan_id LIMIT ?",
+                (MAX_PLANS + 1,),
+            ).fetchall()
 
-        need(len(plan_ids) <= MAX_PLANS, "PLAN_LIMIT_EXCEEDED")
+        need(len(rows) <= MAX_PLANS, "PLAN_LIMIT_EXCEEDED")
 
         journal = native.Journal(copy)
-        records = [
-            reconcile(journal.snapshot(plan_id))
-            for plan_id in plan_ids
-        ]
+        records = []
+        for row in rows:
+            snapshot = journal.snapshot(row[0])
+            record = reconcile(snapshot)
+            _verify_materialized(snapshot, row)
+            records.append(record)
 
     need(
         original_bytes(path, expected_sha256) == raw,
