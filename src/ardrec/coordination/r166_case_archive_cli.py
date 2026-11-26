@@ -462,6 +462,80 @@ def development_case(*, origin: Path, archive: Path, case_id: str,
     return record, "DEV_CASE_OPENED" if written else "DEV_CASE_REOPENED"
 
 
+def development_assessment(*, origin: Path, archive: Path, case_id: str,
+                           scenario_pin: str, inputs: Path, input_pin: str,
+                           reopen: bool = False) -> tuple[dict, str]:
+    """Persist a documentary assessment and mathematical uncertainty, never operational risk."""
+    from ardrec.experiments import initial_assessment as a2
+    from ardrec.analytics.r58d_interval_kernel import build_intervals, verify_intervals
+
+    case, _ = development_case(origin=origin, archive=archive, case_id=case_id,
+                               scenario_pin=scenario_pin, reopen=True)
+    origin, archive, inputs = map(_abs_path, (origin, archive, inputs))
+    need(HEX64.fullmatch(input_pin) is not None, "ASSESSMENT_PIN_INVALID")
+    need(inputs.resolve(strict=True) == inputs, "ASSESSMENT_PATH_ALIAS")
+    _private_dir(inputs)
+    for folder in (origin, archive):
+        need(inputs != folder and inputs not in folder.parents and
+             folder not in inputs.parents, "ASSESSMENT_PATH_OVERLAP")
+    raw = _private_file(inputs / "ratings.json", MAX_FILE)
+    need(_digest(raw) == input_pin, "ASSESSMENT_PIN_MISMATCH")
+    entry = _json(raw, "ASSESSMENT_INPUT_INVALID")
+    need(set(entry) == {"schema", "case_id", "case_sha256", "ratings"} and
+         entry["schema"] == "ARDREC-R303-DEV-ASSESSMENT-INPUT-v1" and
+         entry["case_id"] == case_id and entry["case_sha256"] == case["sha256"],
+         "ASSESSMENT_CASE_BINDING_INVALID")
+    ratings = entry["ratings"]
+    need(type(ratings) is dict and set(ratings) == set(a2.DIMENSIONS),
+         "ASSESSMENT_DIMENSIONS_INVALID")
+    supports = {}
+    for rating in ratings.values():
+        need(type(rating) is dict and type(rating.get("support_sha256")) is str and
+             HEX64.fullmatch(rating["support_sha256"]) is not None,
+             "ASSESSMENT_SUPPORT_PIN_INVALID")
+        pin = rating["support_sha256"]
+        if pin not in supports:
+            supports[pin] = _private_file(inputs / (pin + ".bin"), MAX_FILE)
+            need(_digest(supports[pin]) == pin, "ASSESSMENT_SUPPORT_CHANGED")
+    source = {name: _private_file(origin / name, MAX_FILE)
+              for name in case["source_files"]}
+    need({name: _digest(data) for name, data in source.items()} == case["source_files"],
+         "ASSESSMENT_CASE_SOURCE_CHANGED")
+    draft = a2.draft_assessment(_json(source["scenario.json"], "SCENARIO_INVALID"),
+                                source[a2.CONFIG_NAMES[case["protocol"]]],
+                                _json(source["inventory.json"], "INVENTORY_INVALID"),
+                                ratings, supports)
+    values = draft["calculated"]
+    # The mathematical kernel uses uppercase DEV labels, not service identities.
+    interval = build_intervals([{
+        "service_id": case["protocol"] + "_DEV", "case_id": case_id.upper(),
+        "assessment_index": 0, "initial_risk": values["initial_risk"],
+        "normalized_criticality": values["normalized_criticality"],
+        "replacement_risk": values["initial_risk"],
+        "evidence": [{"evidence_id": "UNKNOWN", "kind": "UNRESOLVED",
+                      "lower": "0", "upper": "1"}],
+    }])
+    need(verify_intervals(interval), "ASSESSMENT_INTERVAL_INVALID")
+    record = {
+        "schema": "ARDREC-R303-DEV-ASSESSMENT-v1", "case_id": case_id,
+        "case_sha256": case["sha256"], "input_sha256": input_pin,
+        "input_directory": str(inputs), "scope": "DOCUMENTARY_UNVERIFIED",
+        "support_pins": sorted(supports), "draft": draft, "interval": interval,
+        "state": "PREPARADO", "a6": "ND", "confirmed_rf": None,
+        "baseline_closed": False, "attempts": 0, "execution_authorized": False,
+        "experimental_admission": False, "operational_a9_published": False,
+        "p7": "DRAFT_NOT_FROZEN", "p8": "NO-GO",
+    }
+    record["sha256"] = _digest(f1.canonical(record))
+    path = archive / (case_id + ".assessment.json")
+    expected = f1.canonical(record)
+    if reopen:
+        need(_private_file(path, MAX_RECORD) == expected, "ASSESSMENT_RECORD_CHANGED")
+        return record, "DEV_ASSESSMENT_REOPENED"
+    written = _create_exclusive(path, expected)
+    return record, "DEV_ASSESSMENT_CREATED" if written else "DEV_ASSESSMENT_REOPENED"
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="python -m ardrec caso",
                                  description="R166: expediente documental privado, sin trafico ni A9 operacional")
@@ -476,12 +550,15 @@ def main(argv: list[str] | None = None) -> int:
         pp.add_argument("--manifiesto", required=True, type=Path)
         if name != "revisar":
             pp.add_argument("--archivo", required=True, type=Path)
-    for name in ("abrir-dev", "reabrir-dev"):
+    for name in ("abrir-dev", "reabrir-dev", "valorar-dev", "reabrir-valoracion-dev"):
         pp = p.add_parser(name, help="caso prospectivo DEV sin autorizacion de ejecucion")
         pp.add_argument("--origen", required=True, type=Path)
         pp.add_argument("--archivo", required=True, type=Path)
         pp.add_argument("--id", required=True)
         pp.add_argument("--sha256", required=True, help="SHA-256 de scenario.json")
+        if name in ("valorar-dev", "reabrir-valoracion-dev"):
+            pp.add_argument("--valoracion", required=True, type=Path)
+            pp.add_argument("--sha256-valoracion", required=True)
     for pp in p.choices.values():
         g = pp.add_mutually_exclusive_group(required=True)
         g.add_argument("--texto", action="store_true")
@@ -500,6 +577,25 @@ def main(argv: list[str] | None = None) -> int:
                 print("CASE_ID=" + record["case_id"])
                 print("PROTOCOL=" + record["protocol"])
                 print("STATE=PREPARADO | ATTEMPTS=0 | A6/A7=ND | P8=NO-GO")
+                print("RECORD_SHA256=" + record["sha256"])
+            return 0
+        if args.action in ("valorar-dev", "reabrir-valoracion-dev"):
+            record, status = development_assessment(
+                origin=args.origen, archive=args.archivo, case_id=args.id,
+                scenario_pin=args.sha256, inputs=args.valoracion,
+                input_pin=args.sha256_valoracion,
+                reopen=args.action == "reabrir-valoracion-dev")
+            if args.json:
+                sys.stdout.buffer.write(f1.canonical(record))
+            else:
+                values = record["draft"]["calculated"]
+                bounds = record["interval"]["results"][0]
+                print("ARDREC / CASO DEV / " + status)
+                print("CASE_ID=" + record["case_id"])
+                print("R0_CANDIDATE=" + values["initial_risk"])
+                print("CN_CANDIDATE=" + values["normalized_criticality"])
+                print("RF_HYPOTHETICAL_INTERVAL=" + bounds["rf_lower"] + ".." + bounds["rf_upper"])
+                print("STATE=PREPARADO | A6=ND | RF_CONFIRMED=ND | P8=NO-GO")
                 print("RECORD_SHA256=" + record["sha256"])
             return 0
         if args.action == "sellar":
