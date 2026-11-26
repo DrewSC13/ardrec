@@ -72,7 +72,9 @@ R236_TEST_IDS = frozenset({
 # R287 is a local archive integrity change, not operational acceptance.
 R287_ARCHIVE_PATH = "src/ardrec/persistence/analytical_archive.py"
 R287_ARCHIVE_BASE_SHA256 = "0b0fd6050930541cd3d871d6e11f20b0a95b33ec2996a975aa0b6867e024b189"
-R287_ARCHIVE_CURRENT_SHA256 = "99e3e14ed6459f4c20d2754c2fd1eb8bfda86a9bc1081e6b155ee025fd54ce98"
+R287_ARCHIVE_REVIEWED_SHA256 = "99e3e14ed6459f4c20d2754c2fd1eb8bfda86a9bc1081e6b155ee025fd54ce98"
+# R334 extends readback; the original R26 and R287 pins remain historical.
+R287_ARCHIVE_CURRENT_SHA256 = "cc290728ec11d0cbf66a509f7d4c4e5da45787dcf3f9965da1fb377a63686c1c"
 R287_TEST_MODULE = "test_r287_archive_identity"
 R287_TEST_PATH = "tests/unit/test_r287_archive_identity.py"
 R287_TEST_SHA256 = "d804565098604bbe31717a06cfe81de0b37d2005dbed0943d9a80ae341268000"

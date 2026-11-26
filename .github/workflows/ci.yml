@@ -437,6 +437,8 @@ jobs:
               raise SystemExit('R187_REGRESSION_FAILED')
           PYR187
 
+      - name: R334 archivo analitico / Exact installed snapshot readback
+        run: PYTHONPATH=src:tests/unit python3 -B -m unittest discover -s lab/tests -p test_r334_archive_readback.py -v
       - name: R324 precision estadistica / Exact paired precision
         run: PYTHONPATH=src python3 -B -m unittest discover -s lab/tests -p test_r324_paired_precision.py -v
       - name: R184 paired statistical summary / resumen pareado

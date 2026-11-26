@@ -151,9 +151,17 @@ class AnalyticalArchive:
         try:
             initial = self._directory(folder)
             total = 0
+            entries = {}
             def read(reference):
                 nonlocal total
+                fingerprint(reference)
+                name = reference + '.json'
+                before = os.stat(name, dir_fd=folder, follow_symlinks=False)
+                if name in entries:
+                    self._same_entry(folder, name, entries[name])
                 raw = self._read(folder, reference)
+                self._same_entry(folder, name, before)
+                entries[name] = before
                 total += len(raw)
                 require(total <= MAX_ARCHIVE_BYTES, 'archive_too_large')
                 return raw
@@ -176,6 +184,17 @@ class AnalyticalArchive:
             self._check()
             final = self._directory(folder)
             require(self._identity(initial) == self._identity(final), 'snapshot_directory_changed')
+            self._same_entry(self._root, snapshot_sha256, final)
+            # Exact, bounded inventory: no unreferenced files or directories.
+            # Recheck every earlier read after the last object was resolved.
+            remaining = set(entries)
+            with os.scandir(folder) as listing:
+                for entry in listing:
+                    require(entry.name in remaining, 'snapshot_entries_mismatch')
+                    self._same_entry(folder, entry.name, entries[entry.name])
+                    remaining.remove(entry.name)
+            require(not remaining, 'snapshot_entries_mismatch')
+            self._check()
             self._same_entry(self._root, snapshot_sha256, final)
             return ArchivedReferences(snapshot_sha256, projections, resolved)
         finally:
@@ -258,6 +277,9 @@ class AnalyticalArchive:
             os.fsync(self._root)
             self._fault('root_synced')
             self._check()
+            installed = self._load(snapshot)
+            require(installed.projections == projections and installed.references == resolved,
+                    'archive_conflict')
             return snapshot
         except BaseException:
             self._poisoned = True
