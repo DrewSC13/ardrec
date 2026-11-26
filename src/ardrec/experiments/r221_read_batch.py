@@ -361,15 +361,17 @@ def prepare(folder, r219, patch_root):
 
 def load_batch(folder):
 
+    folder = Path(folder).absolute()
+    need(folder.resolve(strict=True) == folder, "BATCH_PATH_ALIAS")
     journal.private_directory(folder)
 
-    batch = durable.load(
+    batch = dispatch.private_document(
         folder / "batch.json"
     )
 
     evidence.verify_digest(batch)
 
-    coverage = durable.load(
+    coverage = dispatch.private_document(
         folder / "prior-coverage.json"
     )
 
@@ -424,15 +426,17 @@ def load_batch(folder):
 
 def load_case(folder, batch, case):
 
-    case_folder = folder / case["case_id"]
+    need(case in batch["cases"] and (case["case_id"], case["protocol"], case["profile"]) in fixture.CASES
+         and case["family"] == FAMILIES[case["protocol"]], "CASE_NOT_IN_BATCH")
+    case_folder = Path(folder).absolute() / case["case_id"]
 
     journal.private_directory(case_folder)
 
-    plan = durable.load(
+    plan = dispatch.private_document(
         case_folder / "plan.json"
     )
 
-    identity = durable.load(
+    identity = dispatch.private_document(
         case_folder / "fixture-identity.json"
     )
 
@@ -461,6 +465,7 @@ def load_case(folder, batch, case):
         and plan["fixture_sha256"]
             == identity["sha256"]
             == case["fixture_sha256"]
+        and plan["operator_uid"] == batch["operator_uid"] == os.geteuid()
         and plan["created_at"] == batch["created_at"]
         and plan["expires_at"] == batch["expires_at"],
         "CASE_PLAN_BINDING_INVALID",
@@ -546,6 +551,28 @@ def verify_result(case_folder, case, plan):
     }
 
 
+def validate_case_admission(database, folder, batch, case, consent_record, *, state):
+    """Re-read authoritative local references before reserve or fixed fixture entry."""
+    folder = Path(folder).absolute()
+    need(load_batch(folder) == batch, "BATCH_SOURCE_CHANGED")
+    stored = dispatch.private_document(folder / "batch-consent.json")
+    need(stored == consent_record and stored["schema"] == SCHEMA + "-consent"
+         and stored["batch_sha256"] == batch["sha256"]
+         and stored["operator_uid"] == os.geteuid()
+         and stored["human_operators"] == 1
+         and stored["consent_sha256"] == fixture.digest(batch_consent(batch).encode("ascii"))
+         and stored["authorized_plans"] == [c["plan_sha256"] for c in batch["cases"]]
+         and stored["historical_authority_granted"] is False
+         and stored["experimental_admission"] is False,
+         "CONSENT_BINDING_INVALID")
+    case_folder, plan = load_case(folder, batch, case)
+    need(database.path == folder / "attempts.sqlite3", "JOURNAL_PATH_MISMATCH")
+    snapshot = dispatch.check_plan_snapshot(database, plan, state, 0 if state == "AUTHORIZED" else 1)
+    need(not os.path.lexists(case_folder / "fixture-session"), "SESSION_ALREADY_EXISTS")
+    need(journal.clock() < plan["expires_at"], "PLAN_NOT_CURRENT")
+    return case_folder, plan, snapshot
+
+
 def execute_case(
     database,
     folder,
@@ -554,11 +581,8 @@ def execute_case(
     consent_record,
 ):
 
-    case_folder, plan = load_case(
-        folder,
-        batch,
-        case,
-    )
+    case_folder, plan, _ = validate_case_admission(
+        database, folder, batch, case, consent_record, state="AUTHORIZED")
 
     plan_id = plan["plan_id"]
 
@@ -574,13 +598,14 @@ def execute_case(
         head=plan["code_head"],
         tree=plan["code_tree"],
         runner_sha256=plan["runner_sha256"],
+        expected_plan_sha256=plan["sha256"],
     )
 
     try:
 
-        database.claim_dispatch(plan_id, token)
+        database.claim_dispatch(plan_id, token, expected_plan_sha256=plan["sha256"])
 
-        reserved = database.snapshot(plan_id)
+        reserved = dispatch.check_plan_snapshot(database, plan, "RESERVED", 1)
 
         need(
             reserved["state"] == "RESERVED"
@@ -614,8 +639,10 @@ def execute_case(
 
         dispatch.verify_checkout(plan)
 
+        _, rechecked_plan, current = validate_case_admission(
+            database, folder, batch, case, consent_record, state="RESERVED")
         need(
-            database.snapshot(plan_id) == reserved
+            rechecked_plan == plan and current == reserved
             and journal.clock() < plan["expires_at"],
             "DISPATCH_REVOKED_OR_EXPIRED",
         )
@@ -924,9 +951,8 @@ def execute(folder, consent):
 
     for case in batch["cases"]:
 
-        snapshot = database.snapshot(
-            case["plan_id"]
-        )
+        _, plan = load_case(folder, batch, case)
+        snapshot = dispatch.check_plan_snapshot(database, plan, "PLANNED", 0)
 
         need(
             snapshot["state"] == "PLANNED"
@@ -968,6 +994,7 @@ def execute(folder, consent):
             database.authorize(
                 plan["plan_id"],
                 journal.consent_for(plan),
+                expected_plan_sha256=plan["sha256"],
             )
 
         for case in batch["cases"]:

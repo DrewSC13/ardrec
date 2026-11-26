@@ -6,6 +6,8 @@ admission or experimental admission.
 from __future__ import annotations
 
 import os
+import stat
+import json
 import subprocess
 
 from pathlib import Path
@@ -45,7 +47,7 @@ def need(condition, reason):
 
 class DispatchJournal(journal.Journal):
 
-    def claim_dispatch(self, plan_id, token):
+    def claim_dispatch(self, plan_id, token, *, expected_plan_sha256=None):
 
         with self._transaction() as conn:
 
@@ -54,6 +56,8 @@ class DispatchJournal(journal.Journal):
             )
 
             plan = row["plan"]
+            if expected_plan_sha256 is not None:
+                need(plan["sha256"] == expected_plan_sha256, "JOURNAL_PLAN_PIN_MISMATCH")
 
             now = journal.clock()
 
@@ -84,6 +88,55 @@ class DispatchJournal(journal.Journal):
             )
 
         return True
+
+
+def private_bytes(path, limit, *, private=True):
+    """Read a bounded, owner-controlled regular file without following aliases."""
+    path = Path(path)
+    need(path.is_absolute() and path.resolve(strict=True) == path,
+         "SOURCE_PATH_ALIAS")
+    if private:
+        journal.private_directory(path.parent)
+    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC)
+    try:
+        before = os.fstat(fd)
+        def identity(st):
+            return (st.st_dev, st.st_ino, st.st_uid, st.st_mode, st.st_nlink,
+                    st.st_size, st.st_mtime_ns, st.st_ctime_ns)
+        mode = stat.S_IMODE(before.st_mode)
+        need(stat.S_ISREG(before.st_mode) and before.st_uid == os.geteuid()
+             and before.st_nlink == 1 and (mode == 0o600 if private else mode in (0o400, 0o440, 0o444, 0o600, 0o640, 0o644))
+             and 0 < before.st_size <= limit, "SOURCE_OWNER_MODE_SIZE_INVALID")
+        with os.fdopen(fd, "rb", closefd=False) as handle:
+            raw = handle.read(limit + 1)
+        need(len(raw) == before.st_size and identity(before) == identity(os.fstat(fd))
+             == identity(path.lstat()), "SOURCE_CHANGED_DURING_READ")
+        return raw
+    finally:
+        os.close(fd)
+
+
+def private_document(path):
+    raw = private_bytes(path, 262144)
+    value = json.loads(raw)
+    need(raw == ssh.canonical(value) + b"\n", "NONCANONICAL_DOCUMENT")
+    evidence.verify_digest(value)
+    return value
+
+
+def check_plan_snapshot(database, plan, state, attempts):
+    snapshot = database.snapshot(plan["plan_id"])
+    need(snapshot["plan_sha256"] == plan["sha256"] and snapshot["protocol"] == plan["protocol"],
+         "JOURNAL_PLAN_PIN_MISMATCH")
+    need(snapshot["state"] == state and snapshot["attempt_count"] == attempts,
+         "JOURNAL_PLAN_STATE_INVALID")
+    return snapshot
+
+
+def verify_ftp_archive(archive):
+    from ardrec.coordination import local_protocol_pilot as transport
+    raw = private_bytes(Path(archive).absolute(), transport.FTP_SOURCE_MAX_BYTES, private=False)
+    need(ssh.digest(raw) == transport.FTP_SOURCE_SHA256, "FTP_SOURCE_SHA256_INVALID")
 
 
 def verify_checkout(plan):
@@ -230,24 +283,28 @@ def dispatch_ftp(
         "ASSESSMENT_BOUNDARY_INVALID",
     )
 
-    folder = Path(folder)
-
+    folder = Path(folder).absolute()
+    need(folder.resolve(strict=True) == folder, "SESSION_PATH_ALIAS")
     journal.private_directory(folder)
 
     need(
-        not (folder / "fixture-session").exists(),
+        not os.path.lexists(folder / "fixture-session"),
         "SESSION_ALREADY_EXISTS",
     )
 
     plan_id = plan["plan_id"]
 
-    database.authorize(plan_id, consent)
+    check_plan_snapshot(database, plan, "PLANNED", 0)
+    need(consent == journal.consent_for(plan), "EXPLICIT_CONSENT_REQUIRED")
+    verify_ftp_archive(archive)
+    database.authorize(plan_id, consent, expected_plan_sha256=plan["sha256"])
 
     token = database.reserve(
         plan_id,
         head=plan["code_head"],
         tree=plan["code_tree"],
         runner_sha256=plan["runner_sha256"],
+        expected_plan_sha256=plan["sha256"],
     )
 
     try:
@@ -255,10 +312,10 @@ def dispatch_ftp(
         verify_checkout(plan)
 
         database.claim_dispatch(
-            plan_id, token
+            plan_id, token, expected_plan_sha256=plan["sha256"]
         )
 
-        reserved = database.snapshot(plan_id)
+        reserved = check_plan_snapshot(database, plan, "RESERVED", 1)
 
         need(
             reserved["state"] == "RESERVED"
@@ -288,7 +345,9 @@ def dispatch_ftp(
         )
 
         # Recheck immediately before entering the fixed local runner.
-        current = database.snapshot(plan_id)
+        verify_checkout(plan)
+        verify_ftp_archive(archive)
+        current = check_plan_snapshot(database, plan, "RESERVED", 1)
 
         need(
             current == reserved
