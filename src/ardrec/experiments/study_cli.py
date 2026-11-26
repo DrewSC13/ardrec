@@ -250,6 +250,8 @@ def main(argv=None):
         help="Consulta analitica con verificacion de fuentes",
     )
 
+    sources.add_argument("--diario-historico", type=Path)
+
     parser.add_argument("--unidad-replay", help="Reapertura historica por unidad o todas, con soportes de guardas")
     parser.add_argument("--cierre-piloto", type=Path)
     parser.add_argument("--recuperacion-piloto", type=Path)
@@ -292,6 +294,32 @@ def main(argv=None):
     parser.add_argument("--soportes-i2", type=Path)
 
     args = parser.parse_args(argv)
+
+    if args.diario_historico is not None:
+        allowed = {
+            "diario_historico", "sha256", "texto", "json",
+        }
+        if not args.sha256 or any(
+            value is not None and value is not False
+            for key, value in vars(args).items()
+            if key not in allowed
+        ):
+            parser.error("Opciones incompatibles con diario historico")
+
+        from ardrec.experiments import journal_readback
+
+        try:
+            report = journal_readback.evaluate(
+                args.diario_historico, args.sha256
+            )
+            if args.json:
+                sys.stdout.buffer.write(r148.canonical(report))
+            else:
+                sys.stdout.write(journal_readback.render_text(report))
+            return 0
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+            print("JOURNAL_READBACK_STOP=" + str(exc), file=sys.stderr)
+            return 2
 
     if args.unidad_replay is not None and args.archivo_piloto is None:
         parser.error("Unidad replay requiere archivo piloto")

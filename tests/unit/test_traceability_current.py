@@ -284,4 +284,38 @@ class CurrentTraceabilityTests(unittest.TestCase):
             checker.reviewed_source_digest(checker.R287_ARCHIVE_PATH, "0" * 64)
 
 
+
+    def test_r294_exact_inventory_and_baseline(self):
+        result = self.validate()
+        self.assertEqual(result["r294_journal_readback_tests"], 13)
+        self.assertEqual(result["r294_reviewed_source_count"], 3)
+        self.assertEqual(result["baseline_python_tests"], 405)
+        self.assertEqual(result["baseline_rust_tests"], 73)
+        self.assertEqual(result["open_findings"], ["AL-06", "AL-07"])
+        self.assertEqual(result["system_functional_acceptance"], "PENDING")
+        self.assertEqual(result["experimental_validation"], "NOT_RUN")
+
+    def test_r294_missing_method_rejected(self):
+        target = min(checker.R294_TEST_IDS)
+        self.inventory = [x for x in self.inventory if x != target]
+        with self.assertRaisesRegex(ValueError, "Metodos R294"):
+            self.validate()
+
+    def test_r294_unregistered_method_rejected(self):
+        self.inventory = [
+            *self.inventory,
+            checker.R294_TEST_MODULE + ".JournalReadbackTests.test_fake",
+        ]
+        with self.assertRaisesRegex(ValueError, "Metodos R294"):
+            self.validate()
+
+    def test_r294_source_pin_mismatch_rejected(self):
+        from unittest.mock import patch
+        for path in checker.R294_SOURCE_SHA256:
+            with self.subTest(path=path):
+                with patch.dict(checker.R294_SOURCE_SHA256, {path: "0"*64}):
+                    with self.assertRaisesRegex(ValueError, "Fuente R294 modificada"):
+                        self.validate()
+
+
 if __name__=='__main__':unittest.main()

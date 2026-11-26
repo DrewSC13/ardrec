@@ -85,6 +85,25 @@ R287_TEST_IDS = frozenset({
 })
 
 
+# R294: explicit historical journal readback extension.
+R294_TEST_MODULE = 'test_r294_journal_readback'
+R294_TEST_IDS = frozenset({
+    'test_r294_journal_readback.HistoricalDispatchCompatibilityTests.test_claim_preserves_counter_and_receipt',
+    'test_r294_journal_readback.HistoricalDispatchCompatibilityTests.test_claim_without_reservation_refused',
+    'test_r294_journal_readback.HistoricalDispatchCompatibilityTests.test_duplicate_claim_refused',
+    'test_r294_journal_readback.HistoricalDispatchCompatibilityTests.test_uncertain_after_claim_remains_uncertain',
+    'test_r294_journal_readback.HistoricalDispatchCompatibilityTests.test_wrong_reservation_binding_refused',
+    'test_r294_journal_readback.JournalReadbackTests.test_01_empty',
+    'test_r294_journal_readback.JournalReadbackTests.test_02_planned_and_idempotent',
+    'test_r294_journal_readback.JournalReadbackTests.test_03_revoked',
+    'test_r294_journal_readback.JournalReadbackTests.test_04_wrong_pin',
+    'test_r294_journal_readback.JournalReadbackTests.test_05_sidecar_rejected',
+    'test_r294_journal_readback.JournalReadbackTests.test_06_inconsistent_counter_rejected',
+    'test_r294_journal_readback.JournalReadbackTests.test_07_cli',
+    'test_r294_journal_readback.JournalReadbackTests.test_08_uncertain_reconciliation',
+})
+R294_SOURCE_SHA256 = {'src/ardrec/experiments/journal_readback.py': 'd383c36bb6049338f999ea122722a151e8a893cb9061e1b176991e4b89459ccd', 'src/ardrec/experiments/study_cli.py': '4b29ab2e1769fada3185a03224ff7358107bc92b85d8975f566df7198572cd2c', 'tests/unit/test_r294_journal_readback.py': 'b524d8f9a4828b59e8b171c8390fe7ffe4e478fca3cb566162a4e5cc38680f63'}
+
 def reviewed_source_digest(path, historical_digest):
     if path == R287_ARCHIVE_PATH:
         require(historical_digest == R287_ARCHIVE_BASE_SHA256,
@@ -481,10 +500,24 @@ def validate(root=ROOT, registry=None, evidence=None, *, discovered=None, check_
     r287_observed = sorted(x for x in observed if x.startswith(R287_TEST_MODULE + '.'))
     require(len(R287_TEST_IDS) == 5 and r287_observed == sorted(R287_TEST_IDS),
             "Metodos R287 ausentes, nuevos o renombrados")
+    for path, digest in R294_SOURCE_SHA256.items():
+        require(
+            hashlib.sha256(relative(root, path).read_bytes()).hexdigest()
+            == digest,
+            "Fuente R294 modificada: " + path,
+        )
+    r294_observed = sorted(
+        x for x in observed if x.startswith(R294_TEST_MODULE + '.')
+    )
+    require(
+        len(R294_TEST_IDS) == 13
+        and r294_observed == sorted(R294_TEST_IDS),
+        "Metodos R294 ausentes, nuevos o renombrados",
+    )
     baseline = sorted(
         x for x in observed
         if not x.startswith((TOOL_TEST + '.', R7_TEST_MODULE + '.',
-                             R8_TEST_MODULE + '.', R236_TEST_MODULE + '.', R287_TEST_MODULE + '.'))
+                             R8_TEST_MODULE + '.', R236_TEST_MODULE + '.', R287_TEST_MODULE + '.', R294_TEST_MODULE + '.'))
     )
     declared = sorted(c['unittest_id'] for c in checks.values() if c['kind'] == 'PYTHON_UNIT')
     require(baseline == declared and len(baseline) == 405, 'Métodos Python ausentes, nuevos o renombrados')
@@ -562,6 +595,8 @@ def validate(root=ROOT, registry=None, evidence=None, *, discovered=None, check_
     if check_note:require((root/NOTE).read_text()==render(registry), 'Markdown desactualizado respecto de JSON')
     return {'requirements':44,'system_criteria':27,'methodological_obligations':17,'algorithms':10,'invariants':15,
             'reference_oracles':51,'components':len(components),'baseline_python_tests':405,'baseline_rust_tests':73,'integration_scripts':7,
+            'r294_journal_readback_tests':len(r294_observed),
+            'r294_reviewed_source_count':len(R294_SOURCE_SHA256),
             'r287_archive_identity_tests':len(r287_observed),
             'r287_reviewed_archive_sha256':R287_ARCHIVE_CURRENT_SHA256,
             'development_obligations':7,'open_findings':['AL-06','AL-07'],'traceability':'PASS_REGISTERED_REQUIREMENTS',
