@@ -92,6 +92,7 @@ jobs:
               ("R355", "test_r355_native_review_generations.py", 6),
               ("R358", "test_r358_integrated_analytical_cycle.py", 10),
               ("R359", "test_r359_durable_source_guards.py", 12),
+              ("R360", "test_r360_native_evidence_provenance.py", 10),
               ("R277", "test_r277_ordinary_closure.py", 12),
               ("R278", "test_r278_pilot_readback.py", 8),
               ("R279", "test_r279_evidence_revision.py", 12),
@@ -143,12 +144,12 @@ jobs:
                   flush=True,
               )
 
-          if total != 245:
+          if total != 255:
               raise SystemExit(
                   f"PROSPECTIVE_TEST_TOTAL_INVALID:{total}"
               )
 
-          print("PROSPECTIVE_REGRESSIONS=245/245")
+          print("PROSPECTIVE_REGRESSIONS=255/255")
           print("OPERATIONAL_ACTIVATION=NO")
           PYR239
 
