@@ -31,6 +31,7 @@ from ardrec.analytical_references import (
 from ardrec.analytics.exact_preview import rational
 
 from ardrec.contracts import ND
+from ardrec.coordination.native_review_semantics import verify_review_semantics
 
 from ardrec.coordination import (
     local_evidence_bridge as evidence,
@@ -390,11 +391,15 @@ def build_snapshot(review, observation, generation):
         "SNAPSHOT_COVERAGE_INVALID",
     )
 
-    resolve_references(
+    resolved = resolve_references(
         projections,
         manifest,
         expected_manifest_sha256=digest(manifest),
         load_object=objects.__getitem__,
+    )
+
+    verify_review_semantics(
+        projections, resolved, review, observation, generation
     )
 
     return projections, manifest, objects
@@ -485,11 +490,19 @@ def persist_review_pair(archive_path, review, observation):
 
     with AnalyticalArchive(archive_path) as archive:
 
-        for pin, snapshot in zip(
+        for generation, (pin, snapshot) in enumerate(zip(
             pins, (first, second)
-        ):
-            verify_readback(
+        )):
+            recovered = verify_readback(
                 archive, pin, snapshot
+            )
+
+            verify_review_semantics(
+                recovered.projections,
+                recovered.references,
+                review,
+                observation if generation == 1 else None,
+                generation,
             )
 
     return durable.seal({
