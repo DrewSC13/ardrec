@@ -127,6 +127,7 @@ def attempt_provenance(attempt, bindings):
         "service_scenario_id": key[0],
         "derived_case_id": key[1],
         "attempt_id": request["attempt_id"],
+        "protocol": request["payload"]["protocol"],
         "decision_index": request["decision_index"],
         "request_sha256": byte_hash(attempt.request),
         "report_sha256": None,
